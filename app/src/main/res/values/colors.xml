@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="red">#900</color>
+    <color name="green">#090</color>
+    <color name="blue">#009</color>
+    <color name="white">#FFF</color>
+    <color name="black">#000</color>
+	<color name="material_iced_white">#f7f7f7</color>
+	<color name="darkerGrey">#444</color>
+	<color name="basicGrey">#cfcfcf</color>
+	<color name="borderGrey">#cfcfcf</color>
+	<color name="material_stone_black">#2b2929</color>
+	<color name="lightGrey">#e4e4e4</color>
+	<color name="cobaltBlue">#3333ff</color>
+	<color name="wallpaperGrey">#e4e4e4</color>
+	<color name="basicRed">#f25244</color>
+	<color name="cobaltGreen">#59da9a</color>
+	<color name="material_mustard_yellow">#eae44e</color>
+</resources>
