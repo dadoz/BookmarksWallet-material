@@ -5,12 +5,14 @@
               android:layout_height="wrap_content"
               android:orientation="vertical">
     <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/abc_action_bar_subtitle_top_margin_material"
+            android:layout_marginBottom="@dimen/abc_action_bar_subtitle_bottom_margin_material"
             android:text="@string/app_name"
             android:textSize="@dimen/abc_text_size_title_material_toolbar"/>
     <com.nispok.views.SlidingTabLayout
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 </LinearLayout>

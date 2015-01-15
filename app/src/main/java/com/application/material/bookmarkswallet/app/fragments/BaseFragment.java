@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.adapter.BaseFragmentPagerAdapter;
 import com.application.material.bookmarkswallet.app.adapter.BasePagerAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
@@ -60,13 +61,14 @@ public class BaseFragment extends Fragment {
                 container, false);
         ButterKnife.inject(this, baseFragment);
 
-
         Toolbar toolbar = (Toolbar) baseFragment.findViewById(R.id.toolbarId);
 
         mainActivityRef.initActionBarWithToolbar(toolbar);
+
         SlidingTabLayout slidingTabLayout = (SlidingTabLayout) mainActivityRef.
                 getSupportActionBar().getCustomView().findViewById(R.id.sliding_tabs);
-        viewPager.setAdapter(new BasePagerAdapter(mainActivityRef, 2));
+        slidingTabLayout.setCustomTabView(R.layout.custom_tab_template, R.id.tab_label_id);
+        viewPager.setAdapter(new BaseFragmentPagerAdapter(mainActivityRef.getSupportFragmentManager(), mainActivityRef, 2));
         slidingTabLayout.setViewPager(viewPager);
 
 //		setHasOptionsMenu(true);

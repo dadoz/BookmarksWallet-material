@@ -9,12 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.application.material.bookmarkswallet.app.adapter.BasePagerAdapter;
 import com.application.material.bookmarkswallet.app.fragments.BaseFragment;
-import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
-import com.nispok.views.SlidingTabLayout;
 
 
 public class MainActivity extends ActionBarActivity
