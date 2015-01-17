@@ -2,6 +2,7 @@ package com.application.material.bookmarkswallet.app;
 
 //import android.app.Activity;
 import android.app.ActionBar;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import com.application.material.bookmarkswallet.app.fragments.BaseFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
@@ -18,6 +20,7 @@ public class MainActivity extends ActionBarActivity
         implements OnChangeFragmentWrapperInterface, OnInitActionBarInterface {
 
     private String TAG = "MainActivity";
+    private String EXTRA_DATA = "EXTRA_DATA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +105,12 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void startActivityWrapper(Class activityClassName, int requestCode, Bundle bundle) {
-
+    public void startActivityForResultWrapper(Class activityClassName, int requestCode, Bundle bundle) {
+        Intent intent = new Intent(this, activityClassName);
+        if(bundle != null) {
+            intent.putExtra(EXTRA_DATA, bundle);
+        }
+        startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -122,5 +129,24 @@ public class MainActivity extends ActionBarActivity
             e.printStackTrace();
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+//        if(requestCode == RESULT_OK) {
+//            switch (requestCode) {
+//                case
+//            }
+//        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "OnBackPressed - ");
+        super.onBackPressed();
+    }
+
 
 }

@@ -67,7 +67,10 @@ public class BaseFragment extends Fragment {
 
         SlidingTabLayout slidingTabLayout = (SlidingTabLayout) mainActivityRef.
                 getSupportActionBar().getCustomView().findViewById(R.id.sliding_tabs);
-        slidingTabLayout.setCustomTabView(R.layout.custom_tab_template, R.id.tab_label_id);
+
+        int[] colors = {getResources().getColor(R.color.material_mustard_yellow)};
+        slidingTabLayout.setDividerColors(colors);
+        slidingTabLayout.setSelectedIndicatorColors(colors);
         viewPager.setAdapter(new BaseFragmentPagerAdapter(mainActivityRef.getSupportFragmentManager(), mainActivityRef, 2));
         slidingTabLayout.setViewPager(viewPager);
 

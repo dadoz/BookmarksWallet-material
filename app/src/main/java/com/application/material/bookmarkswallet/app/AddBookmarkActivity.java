@@ -4,16 +4,20 @@ package com.application.material.bookmarkswallet.app;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.application.material.bookmarkswallet.app.fragments.AddBookmarkFragment;
 import com.application.material.bookmarkswallet.app.fragments.BaseFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
+import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 
 
-public class AddLinkActivity extends ActionBarActivity
-        implements OnChangeFragmentWrapperInterface {
+public class AddBookmarkActivity extends ActionBarActivity
+        implements OnChangeFragmentWrapperInterface, OnInitActionBarInterface {
 
     private String TAG = "MainActivity";
 
@@ -36,12 +40,11 @@ public class AddLinkActivity extends ActionBarActivity
     }
 
     public void onInitView() {
-//        LinksListFragment linksListFragment = new LinksListFragment();
-        BaseFragment baseFragment = new BaseFragment();
+        AddBookmarkFragment baseFragment = new AddBookmarkFragment();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainerFrameLayoutId,
-                        baseFragment, BaseFragment.FRAG_TAG).commit();
+                        baseFragment, AddBookmarkFragment.FRAG_TAG).commit();
     }
 
     @Override
@@ -59,10 +62,13 @@ public class AddLinkActivity extends ActionBarActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case  R.id.action_settings:
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -100,7 +106,25 @@ public class AddLinkActivity extends ActionBarActivity
     }
 
     @Override
-    public void startActivityWrapper(Class activityClassName, int requestCode, Bundle bundle) {
+    public void startActivityForResultWrapper(Class activityClassName, int requestCode, Bundle bundle) {
+
+    }
+
+    @Override
+    public void initActionBarWithToolbar(Toolbar toolbar) {
+        //set action bar
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        try {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayShowCustomEnabled(true);
+            actionBar.setCustomView(R.layout.actionbar_add_bookmark_layout);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }

@@ -12,6 +12,6 @@ public interface OnChangeFragmentWrapperInterface {
     public void setCurrentFragTag(String tag);
     public String popCurrentFragTag();
     public String getCurrentFragTag();
-    public void startActivityWrapper(Class activityClassName, int requestCode, Bundle bundle);
+    public void startActivityForResultWrapper(Class activityClassName, int requestCode, Bundle bundle);
 
 }

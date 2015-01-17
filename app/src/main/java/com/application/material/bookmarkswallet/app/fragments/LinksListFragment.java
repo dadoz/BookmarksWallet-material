@@ -18,6 +18,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.adapter.LinkAdapter;
 import com.application.material.bookmarkswallet.app.dbAdapter.DbAdapter;
@@ -76,6 +77,25 @@ public class LinksListFragment extends Fragment
 		addLinkButton.setOnClickListener(this);
 	}
 
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.addLinkButtonId:
+				mainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
+						AddBookmarkFragment.ADD_REQUEST, null);
+				break;
+		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		final String linkUrlFinal = ((Link) linksListView.getAdapter().getItem(position)).getLinkUrl();
+		openLinkOnBrowser(linkUrlFinal);
+		openLinkOnBrowser(linkUrlFinal);
+		Toast.makeText(mainActivityRef, "hey openLink in browser", Toast.LENGTH_SHORT).show();
+	}
+
+
 	public void openLinkOnBrowser(String linkUrl){
 		try {
 			if(! checkURL(linkUrl)) {
@@ -123,25 +143,6 @@ public class LinksListFragment extends Fragment
 	private boolean checkURL(String linkUrl) {
 		return true;
 	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-			case R.id.addLinkButtonId:
-				Toast.makeText(mainActivityRef, "hey add link now :)", Toast.LENGTH_SHORT).show();
-				break;
-		}
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		final String linkUrlFinal = ((Link) linksListView.getAdapter().getItem(position)).getLinkUrl();
-		openLinkOnBrowser(linkUrlFinal);
-		openLinkOnBrowser(linkUrlFinal);
-		Toast.makeText(mainActivityRef, "hey openLink in browser", Toast.LENGTH_SHORT).show();
-	}
-
-
 
 //    public void onInitView(){
 //    	final ListView linksListView = (ListView)getActivity().findViewById(R.id.linksListId);

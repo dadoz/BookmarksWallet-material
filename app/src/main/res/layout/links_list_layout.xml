@@ -18,8 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_icon="@android:drawable/ic_menu_gallery"
-            fab:fab_colorNormal="@color/material_mustard_yellow"
-            fab:fab_colorPressed="@color/material_mustard_yellow"
+            fab:fab_colorNormal="@color/material_blue_200"
+            fab:fab_colorPressed="@color/material_blue_200"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_centerHorizontal="true" />

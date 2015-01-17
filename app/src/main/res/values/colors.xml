@@ -15,5 +15,9 @@
 	<color name="wallpaperGrey">#e4e4e4</color>
 	<color name="basicRed">#f25244</color>
 	<color name="cobaltGreen">#59da9a</color>
+
+	<color name="material_grey">#9e9e9e</color>
+	<color name="material_grey_200">#eeeeee</color>
 	<color name="material_mustard_yellow">#eae44e</color>
+	<color name="material_blue_200">#48468f</color>
 </resources>
