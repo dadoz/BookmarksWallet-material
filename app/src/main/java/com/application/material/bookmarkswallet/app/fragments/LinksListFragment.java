@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +24,9 @@ import butterknife.InjectView;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.adapter.LinkAdapter;
+import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.dbAdapter.DbAdapter;
+import com.application.material.bookmarkswallet.app.decorator.DividerItemDecoration;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Link;
 import com.application.material.bookmarkswallet.app.R;
@@ -29,14 +34,23 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 
 
 public class LinksListFragment extends Fragment
-		implements View.OnClickListener, ListView.OnItemClickListener {
+		implements View.OnClickListener {
 	private static final String TAG = "LinksListFragment_TAG";
 	public static final String FRAG_TAG = "LinksListFragment";
 	public DbAdapter db;
 	private MainActivity mainActivityRef;
-	@InjectView(R.id.linksListId) ListView linksListView;
+	@InjectView(R.id.linksListId)
+	RecyclerView recyclerListView;
 	@InjectView(R.id.addLinkButtonId)
 	FloatingActionButton addLinkButton;
+	@InjectView(R.id.undoLinkDeletedLayoutId)
+	View undoLinkDeletedLayout;
+	@InjectView(R.id.undoButtonId)
+	View undoButton;
+	@InjectView(R.id.dismissButtonId)
+	View dismissButton;
+	private LinearLayoutManager linearLayoutManager;
+	private ArrayList<Link> linkListTest;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -69,16 +83,36 @@ public class LinksListFragment extends Fragment
 	}
 
 	private void onInitView() {
-		ArrayList linkListTest = getLinkListMockup();
-		LinkAdapter linkAdapter = new LinkAdapter(this, R.layout.link_row,
-				linkListTest);
-		linksListView.setAdapter(linkAdapter);
-		linksListView.setOnItemClickListener(this);
+		linkListTest = getLinkListMockup();
+//		LinkAdapter linkAdapter = new LinkAdapter(this, R.layout.link_row,
+//				linkListTest);
+		LinkRecyclerViewAdapter linkRecyclerViewAdapter =
+				new LinkRecyclerViewAdapter(this, linkListTest);
+
+
+		recyclerListView.setHasFixedSize(false);
+
+		//set linear layout manager
+		linearLayoutManager = new LinearLayoutManager(mainActivityRef);
+		recyclerListView.setLayoutManager(linearLayoutManager);
+
+		recyclerListView.setAdapter(linkRecyclerViewAdapter);
+		recyclerListView.setItemAnimator(new DefaultItemAnimator());
+
+		recyclerListView.addItemDecoration(new DividerItemDecoration(mainActivityRef,
+				DividerItemDecoration.VERTICAL_LIST));
+
+//		recyclerListView.setOnScrollListener(customScrollListener);
 		addLinkButton.setOnClickListener(this);
+		undoButton.setOnClickListener(this);
+		dismissButton.setOnClickListener(this);
 	}
 
 	@Override
 	public void onClick(View v) {
+		LinkRecyclerViewAdapter adapter = ((LinkRecyclerViewAdapter)
+				recyclerListView.getAdapter());
+
 		switch (v.getId()) {
 			case R.id.addLinkButtonId:
 				mainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
@@ -87,13 +121,28 @@ public class LinksListFragment extends Fragment
 		}
 	}
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		final String linkUrlFinal = ((Link) linksListView.getAdapter().getItem(position)).getLinkUrl();
-		openLinkOnBrowser(linkUrlFinal);
-		openLinkOnBrowser(linkUrlFinal);
-		Toast.makeText(mainActivityRef, "hey openLink in browser", Toast.LENGTH_SHORT).show();
-	}
+/*	public void toggleEditView(boolean isShowEditView) {
+		//TODO add animation from top to bottom for ex :D
+		LinkRecyclerViewAdapter adapter = ((LinkRecyclerViewAdapter)
+				recyclerListView.getAdapter());
+		int position = adapter.getSelectedItemPosition();
+		View selectedItemView = linearLayoutManager.g(position - 1);
+
+		if(selectedItemView == null) {
+			Log.e(TAG, "selectedItemView empty");
+			return;
+		}
+
+		selectedItemView.setOnClickListener(isShowEditView ? null : this);
+		selectedItemView.setBackgroundColor(getResources().getColor(isShowEditView ? R.color.material_grey_200 : R.color.white));
+		//data text view
+		selectedItemView.findViewById(R.id.linkTitleId).setVisibility(isShowEditView ? View.GONE : View.VISIBLE);
+		selectedItemView.findViewById(R.id.editLinkLayoutId).setVisibility(isShowEditView ? View.VISIBLE : View.GONE);
+
+		//button controller
+		selectedItemView.findViewById(R.id.linkEditButtonId).setVisibility(isShowEditView ? View.GONE : View.VISIBLE);
+		selectedItemView.findViewById(R.id.linkSaveButtonId).setVisibility(isShowEditView ? View.VISIBLE : View.GONE);
+	}*/
 
 
 	public void openLinkOnBrowser(String linkUrl){
@@ -107,7 +156,6 @@ public class LinksListFragment extends Fragment
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW,
 					Uri.parse(linkUrl));
 			getActivity().startActivity(browserIntent);
-
 		} catch(Exception e) {
 			Log.e(TAG, "error - " + e);
 			Toast.makeText(mainActivityRef, "I cant load your URL "
@@ -115,7 +163,40 @@ public class LinksListFragment extends Fragment
 		}
 	}
 
-	public boolean deleteLink(Link linkObj, ListView linksListView,
+	RecyclerView.OnScrollListener customScrollListener = new RecyclerView.OnScrollListener() {
+		int mLastFirstVisibleItem = 0;
+
+		@Override
+		public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+		}
+
+		@Override
+		public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+			super.onScrolled(recyclerView, dx, dy);
+			final int currentFirstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+
+			if (currentFirstVisibleItem > this.mLastFirstVisibleItem) {
+				mainActivityRef.getSupportActionBar().hide();
+			} else if (currentFirstVisibleItem < this.mLastFirstVisibleItem) {
+				mainActivityRef.getSupportActionBar().show();
+			}
+
+			this.mLastFirstVisibleItem = currentFirstVisibleItem;
+		}
+	};
+
+	public void linkDeleteUpdateUI(boolean isDeleting) {
+		undoLinkDeletedLayout.setVisibility(isDeleting ? View.VISIBLE : View.GONE);
+		addLinkButton.setVisibility(isDeleting ? View.GONE : View.VISIBLE);
+	}
+
+	public void setUndoLayoutListener(LinkRecyclerViewAdapter.ViewHolder undoLayoutListener) {
+		undoButton.setOnClickListener(undoLayoutListener);
+		dismissButton.setOnClickListener(undoLayoutListener);
+	}
+
+
+	public boolean deleteLink(Link linkObj, ListView recyclerListView,
 							  boolean isNetworkAvailable) {
 //		if(!isNetworkAvailable){
 //			NetworkNotAvailableDialog m = new NetworkNotAvailableDialog();
@@ -145,7 +226,7 @@ public class LinksListFragment extends Fragment
 	}
 
 //    public void onInitView(){
-//    	final ListView linksListView = (ListView)getActivity().findViewById(R.id.linksListId);
+//    	final ListView recyclerListView = (ListView)getActivity().findViewById(R.id.linksListId);
 //
 //    	ArrayList<Link> linksDataList = DbConnector.getLinksWrappLocalDb(db);
 //    	if(linksDataList==null){
@@ -173,7 +254,7 @@ public class LinksListFragment extends Fragment
 //
 //    	Collections.reverse(linksDataList);
 //    	ArrayAdapter<Link> adapter=new LinkCustomAdapter(getActivity(), R.layout.link_row, linksDataList);
-//		linksListView.setAdapter(adapter);
+//		recyclerListView.setAdapter(adapter);
 //    	Utils.setLinksList(linksDataList);
 //    }
 
@@ -212,7 +293,12 @@ public class LinksListFragment extends Fragment
 		linksUrlArray.add("underground");
 		linksUrlArray.add("heavy metal");
 		linksUrlArray.add("underground");
+		linksUrlArray.add("underground");
+		linksUrlArray.add("heavy metal");
+		linksUrlArray.add("underground");
 		linksUrlArray.add("hey_ure_fkin_my_shitty_dog_are_u_sure_u_want_to_cose_ure_crazy");
+		linksUrlArray.add("bla1");
+		linksUrlArray.add("link2");
 		linksUrlArray.add("bla1");
 		linksUrlArray.add("link2");
     	String linkUrl = "http://www.google.it";

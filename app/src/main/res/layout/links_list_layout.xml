@@ -4,14 +4,51 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/material_grey_200"
     android:orientation="vertical">
-    <ListView
-        android:id="@+id/linksListId"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-    </ListView>
+    <!--<ListView-->
+        <!--android:id="@+id/linksListId"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical">-->
+    <!--</ListView>-->
 
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/linksListId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical" />
+
+    <RelativeLayout
+            android:id="@+id/undoLinkDeletedLayoutId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:minHeight="@dimen/abc_action_bar_default_height_material"
+            android:layout_alignParentBottom="true"
+            android:background="@color/material_stone_black">
+        <TextView
+                android:id="@+id/dismissButtonId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/medium_padding"
+                android:textSize="@dimen/text_size_14"
+                android:text="DISMISS"
+                android:textColor="@color/white" />
+        <TextView
+                android:id="@+id/undoButtonId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/medium_padding"
+                android:textSize="@dimen/text_size_14"
+                android:text="UNDO"
+                android:textColor="@color/material_mustard_yellow" />
+
+    </RelativeLayout>
 
     <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/addLinkButtonId"
@@ -20,8 +57,10 @@
             fab:fab_icon="@android:drawable/ic_menu_gallery"
             fab:fab_colorNormal="@color/material_blue_200"
             fab:fab_colorPressed="@color/material_blue_200"
+            android:layout_marginBottom="100dip"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>

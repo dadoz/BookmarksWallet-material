@@ -11,4 +11,6 @@
     <dimen name="action_bar_add_bookmark_height">140dp</dimen>
     <dimen name="text_size_20">20sp</dimen>
     <dimen name="cardview_min_height">100dip</dimen>
+    <dimen name="link_row_height">100dip</dimen>
+    <dimen name="big_padding">30dip</dimen>
 </resources>

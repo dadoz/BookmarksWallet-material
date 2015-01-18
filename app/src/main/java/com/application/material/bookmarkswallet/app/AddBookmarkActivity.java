@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.application.material.bookmarkswallet.app.fragments.AddBookmarkFragment;
 import com.application.material.bookmarkswallet.app.fragments.BaseFragment;
+import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 
@@ -56,17 +57,13 @@ public class AddBookmarkActivity extends ActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         switch (id) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
             case  R.id.action_settings:
+                changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -78,11 +75,20 @@ public class AddBookmarkActivity extends ActionBarActivity
             Log.e(TAG, "null fragment injected");
             return;
         }
-
         fragment.setArguments(bundle);
+
+        if(tag.equals(AddBookmarkFragment.FRAG_TAG)) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainerFrameLayoutId, fragment, tag)
+                    .commit();
+            return;
+        }
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainerFrameLayoutId, fragment, tag)
+                .addToBackStack(null)
                 .commit();
+
     }
 
     @Override
@@ -111,7 +117,7 @@ public class AddBookmarkActivity extends ActionBarActivity
     }
 
     @Override
-    public void initActionBarWithToolbar(Toolbar toolbar) {
+    public void initActionBarWithCustomView(Toolbar toolbar) {
         //set action bar
         setSupportActionBar(toolbar);
 
@@ -127,4 +133,28 @@ public class AddBookmarkActivity extends ActionBarActivity
         }
 
     }
+
+    @Override
+    public void initActionBar(Toolbar toolbar, String title) {
+        //set action bar
+        setSupportActionBar(toolbar);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        try {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayShowCustomEnabled(true);
+            actionBar.setTitle(title != null ?
+                    title :
+                    getResources().getString(R.string.app_name));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void toggleEditActionBar(String title, boolean isSelecting) {
+    }
+
 }

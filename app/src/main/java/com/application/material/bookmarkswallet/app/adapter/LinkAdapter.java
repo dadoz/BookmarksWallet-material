@@ -30,7 +30,7 @@ public class LinkAdapter extends ArrayAdapter<Link> {
         LayoutInflater inflater = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE));
         View view = inflater.inflate(R.layout.link_row, null);
 
-        TextView linkTitle = (TextView) view.findViewById(R.id.link_title_id);
+        TextView linkTitle = (TextView) view.findViewById(R.id.linkTitleId);
         linkTitle.setText(getItem(position).getLinkName());
 
         return view;

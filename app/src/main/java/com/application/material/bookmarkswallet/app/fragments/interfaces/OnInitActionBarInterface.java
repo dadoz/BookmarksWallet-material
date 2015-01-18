@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
  * Created by davide on 07/11/14.
  */
 public interface OnInitActionBarInterface {
-    public void initActionBarWithToolbar(Toolbar toolbar);
+    public void initActionBarWithCustomView(Toolbar toolbar);
+    public void initActionBar(Toolbar toolbar, String title);
+    public void toggleEditActionBar(String title, boolean isSelecting);
 
 }

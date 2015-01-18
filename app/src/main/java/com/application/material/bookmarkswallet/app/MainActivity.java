@@ -10,8 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import com.application.material.bookmarkswallet.app.fragments.BaseFragment;
+import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
+import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 
@@ -21,6 +24,7 @@ public class MainActivity extends ActionBarActivity
 
     private String TAG = "MainActivity";
     private String EXTRA_DATA = "EXTRA_DATA";
+    private boolean isItemSelected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,16 +62,15 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case  R.id.action_settings:
+                changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -77,10 +80,18 @@ public class MainActivity extends ActionBarActivity
             Log.e(TAG, "null fragment injected");
             return;
         }
-
         fragment.setArguments(bundle);
+
+        if(tag.equals(BaseFragment.FRAG_TAG)) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainerFrameLayoutId, fragment, tag)
+                    .commit();
+            return;
+        }
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainerFrameLayoutId, fragment, tag)
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -113,8 +124,9 @@ public class MainActivity extends ActionBarActivity
         startActivityForResult(intent, requestCode);
     }
 
+    //TODO refactor it :D
     @Override
-    public void initActionBarWithToolbar(Toolbar toolbar) {
+    public void initActionBarWithCustomView(Toolbar toolbar) {
         //set action bar
         setSupportActionBar(toolbar);
 
@@ -128,6 +140,41 @@ public class MainActivity extends ActionBarActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void initActionBar(Toolbar toolbar, String title) {
+        //set action bar
+        setSupportActionBar(toolbar);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        try {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayShowCustomEnabled(false);
+            actionBar.setTitle(title != null ?
+                    title :
+                    getResources().getString(R.string.app_name));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void toggleEditActionBar(String title, boolean isSelecting) {
+        isItemSelected = isSelecting;
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(isSelecting);
+        actionBar.setDisplayShowCustomEnabled(! isSelecting);
+        actionBar.setDisplayShowTitleEnabled(isSelecting);
+        actionBar.setTitle(title != null ?
+                title :
+                getResources().getString(R.string.app_name));
+        actionBar.setBackgroundDrawable(getResources().
+                getDrawable(isSelecting ?
+                        R.color.material_blue_200 :
+                        R.color.material_mustard_yellow));
     }
 
     @Override
@@ -145,7 +192,18 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onBackPressed() {
         Log.d(TAG, "OnBackPressed - ");
+        if(isItemSelected) {
+            toggleEditActionBar(null, false);
+            //notify to frag toggle selctedItemView
+            Fragment fragment  = getSupportFragmentManager()
+                    .findFragmentByTag(BaseFragment.FRAG_TAG);
+            if(fragment != null) {
+                ((BaseFragment) fragment).notifyToggleEditView(false);
+            }
+            return;
+        }
         super.onBackPressed();
+
     }
 
 

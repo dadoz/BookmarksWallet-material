@@ -63,7 +63,7 @@ public class BaseFragment extends Fragment {
 
         Toolbar toolbar = (Toolbar) baseFragment.findViewById(R.id.toolbarId);
 
-        mainActivityRef.initActionBarWithToolbar(toolbar);
+        mainActivityRef.initActionBarWithCustomView(toolbar);
 
         SlidingTabLayout slidingTabLayout = (SlidingTabLayout) mainActivityRef.
                 getSupportActionBar().getCustomView().findViewById(R.id.sliding_tabs);
@@ -76,5 +76,24 @@ public class BaseFragment extends Fragment {
 
 //		setHasOptionsMenu(true);
         return baseFragment;
+    }
+
+    public void notifyToggleEditView(boolean isSelecting) {
+        //LinkList frag index
+        int linkListFragmentIndex = 0;
+        try {
+
+            LinksListFragment fragment = (LinksListFragment)
+                    ((BaseFragmentPagerAdapter) viewPager.getAdapter())
+                            .getItem(linkListFragmentIndex);
+
+            if (fragment != null) {
+//                fragment.toggleEditView(isSelecting);
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.e(TAG, "cannot toggle edit view");
     }
 }

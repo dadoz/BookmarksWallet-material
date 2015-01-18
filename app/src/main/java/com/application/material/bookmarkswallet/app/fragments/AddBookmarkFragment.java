@@ -72,7 +72,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         addBookmarkView = inflater.inflate(R.layout.add_bookmark_fragment, null);
         ButterKnife.inject(this, addBookmarkView);
         Toolbar toolbar = (Toolbar) addBookmarkView.findViewById(R.id.toolbarId);
-        addBookmarkActivityRef.initActionBarWithToolbar(toolbar);
+        addBookmarkActivityRef.initActionBarWithCustomView(toolbar);
 
         //get view from actionbar
         View customView = addBookmarkActivityRef.getSupportActionBar().getCustomView();
