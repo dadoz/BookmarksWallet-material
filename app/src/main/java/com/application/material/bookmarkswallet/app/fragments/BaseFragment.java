@@ -73,6 +73,7 @@ public class BaseFragment extends Fragment {
         slidingTabLayout.setSelectedIndicatorColors(colors);
         viewPager.setAdapter(new BaseFragmentPagerAdapter(mainActivityRef.getSupportFragmentManager(), mainActivityRef, 2));
         slidingTabLayout.setViewPager(viewPager);
+        viewPager.setOnTouchListener(null);
 
 //		setHasOptionsMenu(true);
         return baseFragment;

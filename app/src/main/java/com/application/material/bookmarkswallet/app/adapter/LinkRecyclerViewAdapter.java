@@ -53,7 +53,6 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         //fill view with data
-        holder.mMainView.setOnClickListener(holder);
         holder.mLabelView.setText(mDataset.get(position).getLinkName());
         holder.mEditLabelView.setText(mDataset.get(position).getLinkName());
         holder.mEditUrlView.setText(mDataset.get(position).getLinkUrl());
@@ -137,14 +136,14 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.linkLayoutId:
-                    Toast.makeText(mActivityRef, "open url", Toast.LENGTH_SHORT).show();
-
-//                int position = recyclerListView.getChildPosition(v);
-
-//                String linkUrl = linkListTest.get(position).getLinkUrl();
-//                openLinkOnBrowser(linkUrl);
-                    break;
+//                case R.id.linkLayoutId:
+//                    Toast.makeText(mActivityRef, "open url", Toast.LENGTH_SHORT).show();
+//
+////                int position = recyclerListView.getChildPosition(v);
+//
+////                String linkUrl = linkListTest.get(position).getLinkUrl();
+////                openLinkOnBrowser(linkUrl);
+//                    break;
                 case R.id.linkEditButtonId:
                     Toast.makeText(mActivityRef, "edit" + getPosition(), Toast.LENGTH_SHORT).show();
                     ((MainActivity) mActivityRef).toggleEditActionBar("Edit link", true);
@@ -182,8 +181,6 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         }
     }
 
-
-
     public void setSelectedItemPosition(int selectedItemPosition) {
         this.mSelectedItemPosition = selectedItemPosition;
     }
@@ -191,6 +188,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     public void deselectedItemPosition() {
         this.mSelectedItemPosition = -1;
     }
+
 
 /*
 

@@ -2,7 +2,6 @@ package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,31 +15,29 @@ import android.view.ViewGroup;
 import android.widget.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.MainActivity;
-import com.application.material.bookmarkswallet.app.adapter.LinkAdapter;
 import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.dbAdapter.DbAdapter;
-import com.application.material.bookmarkswallet.app.decorator.DividerItemDecoration;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Link;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.touchListener.RecyclerItemClickListener;
+import com.application.material.bookmarkswallet.app.touchListener.*;
+import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
-
 public class LinksListFragment extends Fragment
-		implements View.OnClickListener {
+		implements View.OnClickListener, OnItemClickListener, SwipeDismissRecyclerViewTouchListener.DismissCallbacks {
 	private static final String TAG = "LinksListFragment_TAG";
 	public static final String FRAG_TAG = "LinksListFragment";
 	public DbAdapter db;
 	private MainActivity mainActivityRef;
 	@InjectView(R.id.linksListId)
-	RecyclerView recyclerListView;
+	RecyclerView mRecyclerView;
 	@InjectView(R.id.addLinkButtonId)
 	FloatingActionButton addLinkButton;
 	@InjectView(R.id.undoLinkDeletedLayoutId)
@@ -50,7 +47,8 @@ public class LinksListFragment extends Fragment
 	@InjectView(R.id.dismissButtonId)
 	View dismissButton;
 	private LinearLayoutManager linearLayoutManager;
-	private ArrayList<Link> linkListTest;
+	private ArrayList<Link> mItems;
+	private SwipeDismissRecyclerViewTouchListener touchListener;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -83,36 +81,44 @@ public class LinksListFragment extends Fragment
 	}
 
 	private void onInitView() {
-		linkListTest = getLinkListMockup();
-//		LinkAdapter linkAdapter = new LinkAdapter(this, R.layout.link_row,
-//				linkListTest);
+		mItems = getLinkListMockup();
 		LinkRecyclerViewAdapter linkRecyclerViewAdapter =
-				new LinkRecyclerViewAdapter(this, linkListTest);
+				new LinkRecyclerViewAdapter(this, mItems);
 
-
-		recyclerListView.setHasFixedSize(true);
-
-		//set linear layout manager
+		mRecyclerView.setHasFixedSize(true);
 		linearLayoutManager = new LinearLayoutManager(mainActivityRef);
-		recyclerListView.setLayoutManager(linearLayoutManager);
+		mRecyclerView.setLayoutManager(linearLayoutManager);
 
-		recyclerListView.setAdapter(linkRecyclerViewAdapter);
-		recyclerListView.setItemAnimator(new DefaultItemAnimator());
+		mRecyclerView.setAdapter(linkRecyclerViewAdapter);
+		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-//		recyclerListView.addItemDecoration(new DividerItemDecoration(mainActivityRef,
+		touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this);
+		mRecyclerView.setOnTouchListener(touchListener);
+		mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
+//		mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(mainActivityRef, this));
+//		mRecyclerView.addItemDecoration(new DividerItemDecoration(mainActivityRef,
 //				DividerItemDecoration.VERTICAL_LIST));
+//		mRecyclerView.setOnScrollListener(customScrollListener);
 
-//		recyclerListView.setOnScrollListener(customScrollListener);
 		addLinkButton.setOnClickListener(this);
 		undoButton.setOnClickListener(this);
 		dismissButton.setOnClickListener(this);
 	}
 
 	@Override
-	public void onClick(View v) {
-		LinkRecyclerViewAdapter adapter = ((LinkRecyclerViewAdapter)
-				recyclerListView.getAdapter());
+	public void onItemClick(View view, int position) {
+		Toast.makeText(mainActivityRef, "Clicked " + view.getId(), Toast.LENGTH_SHORT).show();
+		try {
+			String url = (mItems.get(position)).getLinkUrl();
+			openLinkOnBrowser(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
+	}
+
+	@Override
+	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.addLinkButtonId:
 				mainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
@@ -121,6 +127,16 @@ public class LinksListFragment extends Fragment
 		}
 	}
 
+	@Override
+	public boolean canDismiss(int position) {
+		return true;
+	}
+
+	@Override
+	public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
+		Log.e(TAG, "removing action");
+
+	}
 
 	public void openLinkOnBrowser(String linkUrl){
 		try {
@@ -173,7 +189,7 @@ public class LinksListFragment extends Fragment
 	}
 
 
-	public boolean deleteLink(Link linkObj, ListView recyclerListView,
+	public boolean deleteLink(Link linkObj, ListView mRecyclerView,
 							  boolean isNetworkAvailable) {
 //		if(!isNetworkAvailable){
 //			NetworkNotAvailableDialog m = new NetworkNotAvailableDialog();
@@ -202,8 +218,10 @@ public class LinksListFragment extends Fragment
 		return true;
 	}
 
+
+
 //    public void onInitView(){
-//    	final ListView recyclerListView = (ListView)getActivity().findViewById(R.id.linksListId);
+//    	final ListView mRecyclerView = (ListView)getActivity().findViewById(R.id.linksListId);
 //
 //    	ArrayList<Link> linksDataList = DbConnector.getLinksWrappLocalDb(db);
 //    	if(linksDataList==null){
@@ -231,7 +249,7 @@ public class LinksListFragment extends Fragment
 //
 //    	Collections.reverse(linksDataList);
 //    	ArrayAdapter<Link> adapter=new LinkCustomAdapter(getActivity(), R.layout.link_row, linksDataList);
-//		recyclerListView.setAdapter(adapter);
+//		mRecyclerView.setAdapter(adapter);
 //    	Utils.setLinksList(linksDataList);
 //    }
 
@@ -285,6 +303,5 @@ public class LinksListFragment extends Fragment
 		}
     	return linksDataList;
     }
-
 
 }
