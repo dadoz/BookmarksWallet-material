@@ -2,6 +2,7 @@ package com.application.material.bookmarkswallet.app.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,13 +24,13 @@ import java.util.ArrayList;
  * Created by davide on 17/01/15.
  */
 public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerViewAdapter.ViewHolder> {
+    private String TAG = "LinkRecyclerViewAdapter";
     private static Fragment mFragmentRef;
     private ArrayList<Link> mDataset;
     private static Context mActivityRef;
-    private String TAG = "LinkRecyclerViewAdapter";
     private static Link deletedItem = null;
     private static int deletedItemPosition = -1;
-    private int selectedItemPosition = -1;
+    private int mSelectedItemPosition = -1;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public LinkRecyclerViewAdapter(Fragment fragmentRef, ArrayList<Link> myDataset) {
@@ -52,7 +53,6 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         //fill view with data
-//        holder.mTextView.setText(mDataset[position]);
         holder.mMainView.setOnClickListener(holder);
         holder.mLabelView.setText(mDataset.get(position).getLinkName());
         holder.mEditLabelView.setText(mDataset.get(position).getLinkName());
@@ -60,6 +60,15 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         holder.mEditButtonView.setOnClickListener(holder);
         holder.mSaveButtonView.setOnClickListener(holder);
         holder.mDeleteButtonView.setOnClickListener(holder);
+
+        //BUG - big huge whtever u want
+        boolean isSelectedItem = mSelectedItemPosition == position;
+        holder.itemView.setBackgroundColor(isSelectedItem ?
+                mActivityRef.getResources().getColor(R.color.material_grey_200) :
+                mActivityRef.getResources().getColor(R.color.white));
+        holder.mEditLinkView.setVisibility(isSelectedItem ? View.VISIBLE : View.GONE);
+        holder.mEditButtonView.setVisibility(isSelectedItem ? View.GONE : View.VISIBLE);
+        holder.mSaveButtonView.setVisibility(isSelectedItem ? View.VISIBLE : View.GONE);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -83,10 +92,10 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         notifyItemRemoved(position);
     }
 
-    public void update(int position, View view) {
+    public void update(int position, String linkName, String linkUrl) {
         Link linkToBeUpdated = mDataset.get(position);
-        linkToBeUpdated.setLinkName(((EditText) view.findViewById(R.id.editLinkTitleId)).getText().toString());
-        linkToBeUpdated.setLinkUrl(((EditText) view.findViewById(R.id.editLinkUrlId)).getText().toString());
+        linkToBeUpdated.setLinkName(linkName);
+        linkToBeUpdated.setLinkUrl(linkUrl);
 
 //        deselectedItemPosition();
         notifyDataSetChanged();
@@ -103,6 +112,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         private final EditText mEditUrlView;
         private final EditText mEditLabelView;
         private final LinkRecyclerViewAdapter mAdapterRef;
+        private final View mEditLinkView;
         // each data item is just a string in this case
         public ImageView mIconView;
         public TextView mLabelView;
@@ -112,6 +122,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
             super(v);
             mAdapterRef = adapterRef;
             mMainView = v.findViewById(R.id.linkLayoutId);
+            mEditLinkView = v.findViewById(R.id.editLinkLayoutId);
             mIconView = (ImageView) v.findViewById(R.id.linkIconId);
             mLabelView = (TextView) v.findViewById(R.id.linkTitleId);
             mEditButtonView = (TextView) v.findViewById(R.id.linkEditButtonId);
@@ -137,33 +148,18 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
                 case R.id.linkEditButtonId:
                     Toast.makeText(mActivityRef, "edit" + getPosition(), Toast.LENGTH_SHORT).show();
                     ((MainActivity) mActivityRef).toggleEditActionBar("Edit link", true);
+                    mAdapterRef.setSelectedItemPosition(getPosition());
+                    mAdapterRef.notifyDataSetChanged();
 
-
-//                    mAdapterRef.toggle(mMainView);
-//                if(adapter.isSelectedItem()) {
-//                    break;
-//                }
-//
-//                View itemView = (View) v.getParent();
-//                adapter.setSelectedItemPosition(recyclerListView.getChildPosition(itemView));
-//
-//                mainActivityRef.toggleEditActionBar("Edit link", true);
-//                Log.e(TAG, "hey edit" + adapter.getSelectedItemPosition());
-//				toggleEditView(true);
-//                addLinkButton.setVisibility(View.GONE);
                     break;
                 case R.id.linkSaveButtonId:
                     Toast.makeText(mActivityRef, "save", Toast.LENGTH_SHORT).show();
-//				itemView = (View) v.getParent();
-//                position = adapter.getSelectedItemPosition();
-//                ((LinkRecyclerViewAdapter) recyclerListView.getAdapter()).
-//                        update(position, recyclerListView.getChildAt(position));
+                    mAdapterRef.deselectedItemPosition();
+                    mAdapterRef.notifyDataSetChanged();
+                    (mAdapterRef).update(getPosition(), mEditLabelView.getText().toString(),
+                            mEditUrlView.getText().toString());
+                    ((MainActivity) mActivityRef).toggleEditActionBar(null, false);
 
-//                mainActivityRef.toggleEditActionBar(null, false);
-//				toggleEditView(false);
-//                Log.e(TAG, "hey saving " + position);
-
-//                addLinkButton.setVisibility(View.VISIBLE);
                     break;
                 case R.id.linkDeleteButtonId:
                     Toast.makeText(mActivityRef, "delete", Toast.LENGTH_SHORT).show();
@@ -188,7 +184,13 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
 
 
 
+    public void setSelectedItemPosition(int selectedItemPosition) {
+        this.mSelectedItemPosition = selectedItemPosition;
+    }
 
+    public void deselectedItemPosition() {
+        this.mSelectedItemPosition = -1;
+    }
 
 /*
 
@@ -206,13 +208,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     }
 
 
-    public void setSelectedItemPosition(int selectedItemPosition) {
-        this.selectedItemPosition = selectedItemPosition;
-    }
 
-    public void deselectedItemPosition() {
-        this.selectedItemPosition = -1;
-    }
 
     public int getSelectedItemPosition() {
         return selectedItemPosition;

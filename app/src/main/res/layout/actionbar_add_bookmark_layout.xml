@@ -32,5 +32,5 @@
             android:gravity="center_vertical"
             android:textColor="@color/material_blue_200"
             android:textSize="@dimen/text_size_14"
-            android:text="paste from clipboard"/>
+            android:text="PASTE CLIPBOARD"/>
 </LinearLayout>

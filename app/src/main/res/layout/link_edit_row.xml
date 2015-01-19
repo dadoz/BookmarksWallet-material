@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/editLinkLayoutId"
+        android:visibility="gone"
+        android:padding="@dimen/medium_padding"
+        android:background="@color/material_grey_200"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/big_padding"
+        android:layout_marginBottom="@dimen/big_padding"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+    <EditText
+            android:id="@+id/editLinkTitleId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_20"
+            android:padding="@dimen/medium_padding"
+            android:text=" - "
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:focusable="true" />
+    <EditText
+            android:id="@+id/editLinkUrlId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/medium_padding"
+            android:text=" - "
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="@dimen/text_size_14"
+            android:textColor="@color/material_grey" />
+</LinearLayout>

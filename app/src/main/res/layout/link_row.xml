@@ -67,41 +67,10 @@
 			android:maxLines="2"
 			android:textColor="@color/material_stone_black" />
 
-
-	<!-- edit layout -->
-	<LinearLayout
-			android:visibility="gone"
-			android:id="@+id/editLinkLayoutId"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_toRightOf="@id/linkIconId"
-			android:layout_toLeftOf="@id/linkEditButtonId"
-			android:layout_marginTop="@dimen/big_padding"
-			android:layout_marginBottom="@dimen/big_padding"
-			android:layout_centerVertical="true"
-			android:orientation="vertical">
-
-		<EditText
-				android:id="@+id/editLinkTitleId"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:layout_toLeftOf="@id/linkEditButtonId"
-				android:textSize="@dimen/text_size_20"
-				android:padding="@dimen/medium_padding"
-				android:text=" - "
-				android:ellipsize="end"
-				android:maxLines="2"
-				android:focusable="true" />
-		<EditText
-				android:id="@+id/editLinkUrlId"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:padding="@dimen/medium_padding"
-				android:text=" - "
-				android:ellipsize="end"
-				android:maxLines="2"
-				android:textSize="@dimen/text_size_14"
-				android:textColor="@color/material_blue_200" />
-	</LinearLayout>
-
+	<include layout="@layout/link_edit_row"
+			 android:layout_toRightOf="@id/linkIconId"
+			 android:layout_toLeftOf="@id/linkSaveButtonId"
+			 android:layout_centerInParent="true"
+			 android:layout_height="wrap_content"
+			 android:layout_width="fill_parent"/>
 </RelativeLayout>

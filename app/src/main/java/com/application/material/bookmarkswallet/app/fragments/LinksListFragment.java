@@ -90,7 +90,7 @@ public class LinksListFragment extends Fragment
 				new LinkRecyclerViewAdapter(this, linkListTest);
 
 
-		recyclerListView.setHasFixedSize(false);
+		recyclerListView.setHasFixedSize(true);
 
 		//set linear layout manager
 		linearLayoutManager = new LinearLayoutManager(mainActivityRef);
@@ -99,8 +99,8 @@ public class LinksListFragment extends Fragment
 		recyclerListView.setAdapter(linkRecyclerViewAdapter);
 		recyclerListView.setItemAnimator(new DefaultItemAnimator());
 
-		recyclerListView.addItemDecoration(new DividerItemDecoration(mainActivityRef,
-				DividerItemDecoration.VERTICAL_LIST));
+//		recyclerListView.addItemDecoration(new DividerItemDecoration(mainActivityRef,
+//				DividerItemDecoration.VERTICAL_LIST));
 
 //		recyclerListView.setOnScrollListener(customScrollListener);
 		addLinkButton.setOnClickListener(this);
@@ -116,33 +116,10 @@ public class LinksListFragment extends Fragment
 		switch (v.getId()) {
 			case R.id.addLinkButtonId:
 				mainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
-						AddBookmarkFragment.ADD_REQUEST, null);
+						AddBookmarkActivity.ADD_REQUEST, null);
 				break;
 		}
 	}
-
-/*	public void toggleEditView(boolean isShowEditView) {
-		//TODO add animation from top to bottom for ex :D
-		LinkRecyclerViewAdapter adapter = ((LinkRecyclerViewAdapter)
-				recyclerListView.getAdapter());
-		int position = adapter.getSelectedItemPosition();
-		View selectedItemView = linearLayoutManager.g(position - 1);
-
-		if(selectedItemView == null) {
-			Log.e(TAG, "selectedItemView empty");
-			return;
-		}
-
-		selectedItemView.setOnClickListener(isShowEditView ? null : this);
-		selectedItemView.setBackgroundColor(getResources().getColor(isShowEditView ? R.color.material_grey_200 : R.color.white));
-		//data text view
-		selectedItemView.findViewById(R.id.linkTitleId).setVisibility(isShowEditView ? View.GONE : View.VISIBLE);
-		selectedItemView.findViewById(R.id.editLinkLayoutId).setVisibility(isShowEditView ? View.VISIBLE : View.GONE);
-
-		//button controller
-		selectedItemView.findViewById(R.id.linkEditButtonId).setVisibility(isShowEditView ? View.GONE : View.VISIBLE);
-		selectedItemView.findViewById(R.id.linkSaveButtonId).setVisibility(isShowEditView ? View.VISIBLE : View.GONE);
-	}*/
 
 
 	public void openLinkOnBrowser(String linkUrl){

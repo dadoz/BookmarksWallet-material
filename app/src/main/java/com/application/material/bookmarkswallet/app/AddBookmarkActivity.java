@@ -20,6 +20,8 @@ import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitA
 public class AddBookmarkActivity extends ActionBarActivity
         implements OnChangeFragmentWrapperInterface, OnInitActionBarInterface {
 
+    public static final int ADD_REQUEST = 99;
+    public static String LINK_URL_EXTRA = "LINK_URL_EXTRA";
     private String TAG = "MainActivity";
 
     @Override

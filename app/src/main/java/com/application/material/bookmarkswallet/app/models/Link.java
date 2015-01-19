@@ -13,7 +13,9 @@ public class Link {
 	private boolean linkDeleted;
 	private int linkPosition;
 	
-	public Link(int linkId,String linkIconPath,String linkName,String linkUrl,int userId,String delIcon,boolean linkDeleted){
+	public Link(int linkId, String linkIconPath, String linkName,
+				String linkUrl, int userId, String delIcon,
+				boolean linkDeleted) {
 		//TODO add linkOrderInList into db
 //		this.linkOrderInList=linkOrderInList;
 		this.linkId=linkId;

@@ -1,12 +1,10 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipDescription;
-import android.content.ClipboardManager;
-import android.content.Context;
+import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,13 +21,13 @@ import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
+import com.application.material.bookmarkswallet.app.models.Link;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 /**
  * Created by davide on 30/06/14.
  */
 public class AddBookmarkFragment extends Fragment implements View.OnClickListener {
-    public static int ADD_REQUEST = 99;
     public static String FRAG_TAG = "AddBookmarkFragment";
     private View addBookmarkView;
     private AddBookmarkActivity addBookmarkActivityRef;
@@ -100,6 +98,18 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
             case R.id.addLinkButtonId:
                 Toast.makeText(addBookmarkActivityRef, "hey saving", Toast.LENGTH_SHORT).show();
                 //activity result
+                String linkUrl = addBookmarkUrlEditText.getText().toString();
+                if(linkUrl.equals("")) {
+                    Toast.makeText(addBookmarkActivityRef, "bookmark url not valid", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
+//                Link link = new Link(-1, null, "name from url", linkUrl, -1, null, false);
+
+                Intent intent = new Intent();
+                intent.putExtra(AddBookmarkActivity.LINK_URL_EXTRA, linkUrl);
+                addBookmarkActivityRef.setResult(Activity.RESULT_OK, intent);
+                addBookmarkActivityRef.finish();
                 break;
             case R.id.pasteFromClipboardButtonId:
                 if(! hasClipboardText()) {
@@ -114,7 +124,6 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
 
                 addBookmarkUrlEditText.setText(bookmarkUrl);
 //                Toast.makeText(addBookmarkActivityRef, "paste from clipboard", Toast.LENGTH_SHORT).show();
-                //activity result
                 break;
 
         }

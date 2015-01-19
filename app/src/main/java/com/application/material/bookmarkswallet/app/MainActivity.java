@@ -12,11 +12,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import com.application.material.bookmarkswallet.app.fragments.AddBookmarkFragment;
 import com.application.material.bookmarkswallet.app.fragments.BaseFragment;
 import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
 import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
+import com.application.material.bookmarkswallet.app.models.Link;
 
 
 public class MainActivity extends ActionBarActivity
@@ -175,17 +178,21 @@ public class MainActivity extends ActionBarActivity
                 getDrawable(isSelecting ?
                         R.color.material_blue_200 :
                         R.color.material_mustard_yellow));
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-//        if(requestCode == RESULT_OK) {
-//            switch (requestCode) {
-//                case
-//            }
-//        }
+        if(resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case AddBookmarkActivity.ADD_REQUEST:
+                    String url = data.getExtras().getString(AddBookmarkActivity.LINK_URL_EXTRA);
+                    Log.e(TAG, url);
+                    break;
+            }
+        }
     }
 
 
