@@ -1,7 +1,5 @@
 package com.application.material.bookmarkswallet.app;
 
-//import android.app.Activity;
-import android.app.ActionBar;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -10,16 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import com.application.material.bookmarkswallet.app.fragments.AddBookmarkFragment;
 import com.application.material.bookmarkswallet.app.fragments.BaseFragment;
 import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
 import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
-import com.application.material.bookmarkswallet.app.models.Link;
 
 
 public class MainActivity extends ActionBarActivity
@@ -48,12 +41,12 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void onInitView() {
-//        LinksListFragment linksListFragment = new LinksListFragment();
-        BaseFragment baseFragment = new BaseFragment();
+        LinksListFragment linksListFragment = new LinksListFragment();
+//        BaseFragment baseFragment = new BaseFragment();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainerFrameLayoutId,
-                        baseFragment, BaseFragment.FRAG_TAG).commit();
+                        linksListFragment, LinksListFragment.FRAG_TAG).commit();
     }
 
     @Override
@@ -85,7 +78,7 @@ public class MainActivity extends ActionBarActivity
         }
         fragment.setArguments(bundle);
 
-        if(tag.equals(BaseFragment.FRAG_TAG)) {
+        if(tag.equals(LinksListFragment.FRAG_TAG)) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragmentContainerFrameLayoutId, fragment, tag)
                     .commit();

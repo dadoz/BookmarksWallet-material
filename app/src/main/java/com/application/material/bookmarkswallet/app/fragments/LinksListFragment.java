@@ -5,9 +5,8 @@ import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.*;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +20,11 @@ import butterknife.InjectView;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.animators.CustomDefaultAnimator;
 import com.application.material.bookmarkswallet.app.dbAdapter.DbAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Link;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.touchListener.RecyclerItemClickListener;
 import com.application.material.bookmarkswallet.app.touchListener.*;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -75,6 +74,9 @@ public class LinksListFragment extends Fragment
 				container, false);
 		ButterKnife.inject(this, addReviewView);
 
+		Toolbar toolbar = (Toolbar) addReviewView.findViewById(R.id.toolbarId);
+		mainActivityRef.initActionBar(toolbar, null);
+
 //		setHasOptionsMenu(true);
 		onInitView();
 		return addReviewView;
@@ -90,7 +92,7 @@ public class LinksListFragment extends Fragment
 		mRecyclerView.setLayoutManager(linearLayoutManager);
 
 		mRecyclerView.setAdapter(linkRecyclerViewAdapter);
-		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//		mRecyclerView.setItemAnimator(new CustomDefaultAnimator());
 
 		touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this);
 		mRecyclerView.setOnTouchListener(touchListener);
@@ -127,6 +129,7 @@ public class LinksListFragment extends Fragment
 		}
 	}
 
+	//SWIPE ACTION
 	@Override
 	public boolean canDismiss(int position) {
 		return true;
@@ -134,7 +137,13 @@ public class LinksListFragment extends Fragment
 
 	@Override
 	public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
-		Log.e(TAG, "removing action");
+		Log.e(TAG, reverseSortedPositions.toString() + "removing action");
+		((LinkRecyclerViewAdapter) recyclerView.getAdapter()).remove(reverseSortedPositions[0]);
+		//                    deletedItemPosition = getPosition();
+//                    deletedItem = mAdapterRef.mDataset.get(getPosition()); //TODO replace
+//                    mAdapterRef.remove(getPosition());
+//
+//                    ((LinksListFragment) mFragmentRef).linkDeleteUpdateUI(true);
 
 	}
 
@@ -156,6 +165,17 @@ public class LinksListFragment extends Fragment
 		}
 	}
 
+	public void linkDeleteUpdateUI(boolean isDeleting) {
+		undoLinkDeletedLayout.setVisibility(isDeleting ? View.VISIBLE : View.GONE);
+		addLinkButton.setVisibility(isDeleting ? View.GONE : View.VISIBLE);
+	}
+
+	public void setUndoLayoutListener(LinkRecyclerViewAdapter.ViewHolder undoLayoutListener) {
+		undoButton.setOnClickListener(undoLayoutListener);
+		dismissButton.setOnClickListener(undoLayoutListener);
+	}
+
+/*
 	RecyclerView.OnScrollListener customScrollListener = new RecyclerView.OnScrollListener() {
 		int mLastFirstVisibleItem = 0;
 
@@ -176,17 +196,8 @@ public class LinksListFragment extends Fragment
 
 			this.mLastFirstVisibleItem = currentFirstVisibleItem;
 		}
-	};
+	};*/
 
-	public void linkDeleteUpdateUI(boolean isDeleting) {
-		undoLinkDeletedLayout.setVisibility(isDeleting ? View.VISIBLE : View.GONE);
-		addLinkButton.setVisibility(isDeleting ? View.GONE : View.VISIBLE);
-	}
-
-	public void setUndoLayoutListener(LinkRecyclerViewAdapter.ViewHolder undoLayoutListener) {
-		undoButton.setOnClickListener(undoLayoutListener);
-		dismissButton.setOnClickListener(undoLayoutListener);
-	}
 
 
 	public boolean deleteLink(Link linkObj, ListView mRecyclerView,

@@ -63,7 +63,7 @@ public class BaseFragment extends Fragment {
 
         Toolbar toolbar = (Toolbar) baseFragment.findViewById(R.id.toolbarId);
 
-        mainActivityRef.initActionBarWithCustomView(toolbar);
+//        mainActivityRef.initActionBarWithCustomView(toolbar);
 
         SlidingTabLayout slidingTabLayout = (SlidingTabLayout) mainActivityRef.
                 getSupportActionBar().getCustomView().findViewById(R.id.sliding_tabs);
