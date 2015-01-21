@@ -25,7 +25,7 @@ import java.util.ArrayList;
  */
 public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerViewAdapter.ViewHolder> {
     private String TAG = "LinkRecyclerViewAdapter";
-    private static Fragment mFragmentRef;
+    private static Fragment mFragmentRef; //TODO rm it
     private ArrayList<Link> mDataset;
     private static Context mActivityRef;
     private static Link deletedItem = null;
@@ -37,6 +37,14 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         mDataset = myDataset;
         mActivityRef = fragmentRef.getActivity();
         mFragmentRef = fragmentRef;
+    }
+
+    public Link getDeletedItem() {
+        return deletedItem;
+    }
+
+    public int getDeletedItemPosition() {
+        return deletedItemPosition;
     }
 
     // Create new views (invoked by the layout manager)
@@ -58,7 +66,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         holder.mEditUrlView.setText(mDataset.get(position).getLinkUrl());
         holder.mEditButtonView.setOnClickListener(holder);
         holder.mSaveButtonView.setOnClickListener(holder);
-        holder.mDeleteButtonView.setOnClickListener(holder);
+//        holder.mDeleteButtonView.setOnClickListener(holder);
 
         //BUG - big huge whtever u want
         boolean isSelectedItem = mSelectedItemPosition == position;
@@ -82,6 +90,12 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         notifyItemInserted(mDataset.size());
     }
 
+    public void addOnPosition(Link item, int position) {
+        mDataset.add(position, item);
+        notifyItemInserted(position);
+    }
+
+
     public void remove(int position) {
 //        int position = mDataset.indexOf(item);
         deletedItemPosition = position;
@@ -101,12 +115,13 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     }
 
 
+
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView mSaveButtonView;
-        private final TextView mDeleteButtonView;
+//        private final TextView mDeleteButtonView;
         private final TextView mEditButtonView;
         private final EditText mEditUrlView;
         private final EditText mEditLabelView;
@@ -124,13 +139,11 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
             mEditLinkView = v.findViewById(R.id.editLinkLayoutId);
             mIconView = (ImageView) v.findViewById(R.id.linkIconId);
             mLabelView = (TextView) v.findViewById(R.id.linkTitleId);
-            mEditButtonView = (TextView) v.findViewById(R.id.linkEditButtonId);
-            mSaveButtonView = (TextView) v.findViewById(R.id.linkSaveButtonId);
-            mDeleteButtonView = (TextView) v.findViewById(R.id.linkDeleteButtonId);
             mEditUrlView = (EditText) v.findViewById(R.id.editLinkUrlId);
             mEditLabelView = (EditText) v.findViewById(R.id.editLinkTitleId);
-            ((LinksListFragment) mFragmentRef).setUndoLayoutListener(this);
 
+            mEditButtonView = (TextView) v.findViewById(R.id.linkEditButtonId);
+            mSaveButtonView = (TextView) v.findViewById(R.id.linkSaveButtonId);
         }
 
         @Override
@@ -160,24 +173,23 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
                     ((MainActivity) mActivityRef).toggleEditActionBar(null, false);
 
                     break;
-                case R.id.linkDeleteButtonId:
-                    Toast.makeText(mActivityRef, "delete", Toast.LENGTH_SHORT).show();
-                    deletedItemPosition = getPosition();
-                    deletedItem = mAdapterRef.mDataset.get(getPosition()); //TODO replace
-                    mAdapterRef.remove(getPosition());
-
-                    ((LinksListFragment) mFragmentRef).linkDeleteUpdateUI(true);
-                    break;
-                case R.id.undoButtonId:
-                    Toast.makeText(mActivityRef, "undo", Toast.LENGTH_SHORT).show();
-//                    mAdapterRef.add(deletedItem, deletedItemPosition);
-                    mAdapterRef.add(deletedItem);
-                    ((LinksListFragment) mFragmentRef).linkDeleteUpdateUI(false);
-                    break;
-                case R.id.dismissButtonId:
-                    Toast.makeText(mActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
-                    ((LinksListFragment) mFragmentRef).linkDeleteUpdateUI(false);
-                    break;
+//                case R.id.linkDeleteButtonId:
+//                    Toast.makeText(mActivityRef, "delete", Toast.LENGTH_SHORT).show();
+//                    deletedItemPosition = getPosition();
+//                    deletedItem = mAdapterRef.mDataset.get(getPosition()); //TODO replace
+//                    mAdapterRef.remove(getPosition());
+//
+//                    break;
+//                case R.id.undoButtonId:
+//                    Toast.makeText(mActivityRef, "undo", Toast.LENGTH_SHORT).show();
+////                    mAdapterRef.add(deletedItem, deletedItemPosition);
+//                    mAdapterRef.add(deletedItem);
+//                    ((LinksListFragment) mFragmentRef).linkDeleteUpdateUI(false);
+//                    break;
+//                case R.id.dismissButtonId:
+//                    Toast.makeText(mActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
+//                    ((LinksListFragment) mFragmentRef).linkDeleteUpdateUI(false);
+//                    break;
             }
         }
     }

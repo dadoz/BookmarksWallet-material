@@ -121,8 +121,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     //TODO refactor it :D
-    @Override
-    public void initActionBarWithCustomView(Toolbar toolbar) {
+/*    public void initActionBarWithCustomView(Toolbar toolbar) {
         //set action bar
         setSupportActionBar(toolbar);
 
@@ -136,16 +135,18 @@ public class MainActivity extends ActionBarActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }*/
+    @Override
+    public void initActionBarWithCustomView(Toolbar toolbar) {
     }
 
-    @Override
     public void initActionBar(Toolbar toolbar, String title) {
         //set action bar
         setSupportActionBar(toolbar);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         try {
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.setDisplayShowHomeEnabled(false);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayShowCustomEnabled(false);
@@ -157,13 +158,12 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    @Override
     public void toggleEditActionBar(String title, boolean isSelecting) {
         isItemSelected = isSelecting;
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(isSelecting);
-        actionBar.setDisplayShowCustomEnabled(! isSelecting);
-        actionBar.setDisplayShowTitleEnabled(isSelecting);
+//        actionBar.setDisplayShowCustomEnabled(! isSelecting);
+        actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(title != null ?
                 title :
                 getResources().getString(R.string.app_name));
@@ -171,7 +171,6 @@ public class MainActivity extends ActionBarActivity
                 getDrawable(isSelecting ?
                         R.color.material_blue_200 :
                         R.color.material_mustard_yellow));
-
     }
 
     @Override

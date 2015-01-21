@@ -5,12 +5,11 @@ import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.*;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 
 import java.util.ArrayList;
@@ -30,7 +29,9 @@ import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRe
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 public class LinksListFragment extends Fragment
-		implements View.OnClickListener, OnItemClickListener, SwipeDismissRecyclerViewTouchListener.DismissCallbacks {
+		implements View.OnClickListener,
+			SwipeDismissRecyclerViewTouchListener.DismissCallbacks,
+			RecyclerView.OnItemTouchListener {
 	private static final String TAG = "LinksListFragment_TAG";
 	public static final String FRAG_TAG = "LinksListFragment";
 	public DbAdapter db;
@@ -48,6 +49,7 @@ public class LinksListFragment extends Fragment
 	private LinearLayoutManager linearLayoutManager;
 	private ArrayList<Link> mItems;
 	private SwipeDismissRecyclerViewTouchListener touchListener;
+	private GestureDetectorCompat detector;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -97,6 +99,9 @@ public class LinksListFragment extends Fragment
 		touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this);
 		mRecyclerView.setOnTouchListener(touchListener);
 		mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
+
+		detector = new GestureDetectorCompat(mainActivityRef, new RecyclerViewOnGestureListener());
+		mRecyclerView.addOnItemTouchListener(this);
 //		mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(mainActivityRef, this));
 //		mRecyclerView.addItemDecoration(new DividerItemDecoration(mainActivityRef,
 //				DividerItemDecoration.VERTICAL_LIST));
@@ -107,25 +112,38 @@ public class LinksListFragment extends Fragment
 		dismissButton.setOnClickListener(this);
 	}
 
-	@Override
-	public void onItemClick(View view, int position) {
-		Toast.makeText(mainActivityRef, "Clicked " + view.getId(), Toast.LENGTH_SHORT).show();
-		try {
-			String url = (mItems.get(position)).getLinkUrl();
-			openLinkOnBrowser(url);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
+//	@Override
+//	public void onItemClick(View view, int position) {
+//		Toast.makeText(mainActivityRef, "Clicked " + view.getId(), Toast.LENGTH_SHORT).show();
+//		try {
+//			String url = (mItems.get(position)).getLinkUrl();
+//			openLinkOnBrowser(url);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
 
 	@Override
 	public void onClick(View v) {
+		LinkRecyclerViewAdapter adapter = (LinkRecyclerViewAdapter) mRecyclerView.getAdapter();
 		switch (v.getId()) {
 			case R.id.addLinkButtonId:
 				mainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
 						AddBookmarkActivity.ADD_REQUEST, null);
 				break;
+			case R.id.undoButtonId:
+				Toast.makeText(mainActivityRef, "undo", Toast.LENGTH_SHORT).show();
+				Link deletedItem = adapter.getDeletedItem();
+				int deletedItemPosition = adapter.getDeletedItemPosition();
+				adapter.addOnPosition(deletedItem, deletedItemPosition);
+				setUndoDeletedLinkLayout(false);
+				break;
+			case R.id.dismissButtonId:
+				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
+				setUndoDeletedLinkLayout(false);
+				break;
+
 		}
 	}
 
@@ -138,12 +156,55 @@ public class LinksListFragment extends Fragment
 	@Override
 	public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
 		Log.e(TAG, reverseSortedPositions.toString() + "removing action");
-		((LinkRecyclerViewAdapter) recyclerView.getAdapter()).remove(reverseSortedPositions[0]);
-		//                    deletedItemPosition = getPosition();
-//                    deletedItem = mAdapterRef.mDataset.get(getPosition()); //TODO replace
-//                    mAdapterRef.remove(getPosition());
-//
-//                    ((LinksListFragment) mFragmentRef).linkDeleteUpdateUI(true);
+		int position = reverseSortedPositions[0];
+		((LinkRecyclerViewAdapter) recyclerView.getAdapter()).remove(position);
+		setUndoDeletedLinkLayout(true);
+	}
+
+
+	//onclick listener
+	@Override
+	public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+		detector.onTouchEvent(motionEvent);
+		return false;
+	}
+
+	@Override
+	public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+
+	}
+
+	private class RecyclerViewOnGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+		@Override
+		public boolean onSingleTapConfirmed(MotionEvent e) {
+			View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
+			int position = mRecyclerView.getChildPosition(view);
+
+			// handle single tap
+			Log.e(TAG, "Hey tocuh ");
+			String url = (mItems.get(position)).getLinkUrl();
+			openLinkOnBrowser(url);
+
+			return super.onSingleTapConfirmed(e);
+		}
+
+		public void onLongPress(MotionEvent e) {
+			View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
+			int position = mRecyclerView.getChildPosition(view);
+
+			// handle long press
+			Log.e(TAG, "Hey long touch ");
+
+			super.onLongPress(e);
+		}
+	}
+
+
+
+	public void addLinkOnRecyclerView(String url) {
+		Link link = new Link(-1, null, "NEW FAKE", url, -1, null, false);
+		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(link);
 
 	}
 
@@ -165,15 +226,16 @@ public class LinksListFragment extends Fragment
 		}
 	}
 
-	public void linkDeleteUpdateUI(boolean isDeleting) {
+	//TODO rename it
+	public void setUndoDeletedLinkLayout(boolean isDeleting) {
 		undoLinkDeletedLayout.setVisibility(isDeleting ? View.VISIBLE : View.GONE);
 		addLinkButton.setVisibility(isDeleting ? View.GONE : View.VISIBLE);
 	}
-
+/*
 	public void setUndoLayoutListener(LinkRecyclerViewAdapter.ViewHolder undoLayoutListener) {
 		undoButton.setOnClickListener(undoLayoutListener);
 		dismissButton.setOnClickListener(undoLayoutListener);
-	}
+	}*/
 
 /*
 	RecyclerView.OnScrollListener customScrollListener = new RecyclerView.OnScrollListener() {
@@ -315,9 +377,4 @@ public class LinksListFragment extends Fragment
     	return linksDataList;
     }
 
-	public void addLinkOnRecyclerView(String url) {
-		Link link = new Link(-1, null, "NEW FAKE", url, -1, null, false);
-		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(link);
-
-	}
 }

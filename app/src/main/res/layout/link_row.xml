@@ -31,16 +31,6 @@
 			android:text="EDIT"
 			android:textColor="@color/material_blue_200" />
 	<TextView
-			android:id="@+id/linkDeleteButtonId"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentTop="true"
-			android:padding="@dimen/medium_padding"
-			android:textSize="@dimen/text_size_14"
-			android:text="DELETE"
-			android:textColor="@color/material_red" />
-	<TextView
 			android:id="@+id/linkSaveButtonId"
 			android:visibility="gone"
 			android:layout_width="wrap_content"
