@@ -181,8 +181,17 @@ public class MainActivity extends ActionBarActivity
         if(resultCode == RESULT_OK) {
             switch (requestCode) {
                 case AddBookmarkActivity.ADD_REQUEST:
-                    String url = data.getExtras().getString(AddBookmarkActivity.LINK_URL_EXTRA);
-                    Log.e(TAG, url);
+                    try {
+                        LinksListFragment fragment = (LinksListFragment)
+                                getSupportFragmentManager().findFragmentByTag(LinksListFragment.FRAG_TAG);
+                        String url = data.getExtras().getString(AddBookmarkActivity.LINK_URL_EXTRA);
+                        fragment.addLinkOnRecyclerView(url);
+
+                        Log.e(TAG, url);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
         }

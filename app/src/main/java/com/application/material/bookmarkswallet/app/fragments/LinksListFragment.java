@@ -92,7 +92,7 @@ public class LinksListFragment extends Fragment
 		mRecyclerView.setLayoutManager(linearLayoutManager);
 
 		mRecyclerView.setAdapter(linkRecyclerViewAdapter);
-//		mRecyclerView.setItemAnimator(new CustomDefaultAnimator());
+		mRecyclerView.setItemAnimator(null);
 
 		touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this);
 		mRecyclerView.setOnTouchListener(touchListener);
@@ -315,4 +315,9 @@ public class LinksListFragment extends Fragment
     	return linksDataList;
     }
 
+	public void addLinkOnRecyclerView(String url) {
+		Link link = new Link(-1, null, "NEW FAKE", url, -1, null, false);
+		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(link);
+
+	}
 }

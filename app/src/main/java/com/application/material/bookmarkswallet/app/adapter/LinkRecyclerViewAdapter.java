@@ -77,9 +77,9 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     }
 
 
-    public void add(Link item, int position) {
-        mDataset.add(position, item);
-        notifyItemInserted(position);
+    public void add(Link item) {
+        mDataset.add(item);
+        notifyItemInserted(mDataset.size());
     }
 
     public void remove(int position) {
@@ -170,7 +170,8 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
                     break;
                 case R.id.undoButtonId:
                     Toast.makeText(mActivityRef, "undo", Toast.LENGTH_SHORT).show();
-                    mAdapterRef.add(deletedItem, deletedItemPosition);
+//                    mAdapterRef.add(deletedItem, deletedItemPosition);
+                    mAdapterRef.add(deletedItem);
                     ((LinksListFragment) mFragmentRef).linkDeleteUpdateUI(false);
                     break;
                 case R.id.dismissButtonId:
