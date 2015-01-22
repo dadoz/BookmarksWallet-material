@@ -14,7 +14,7 @@
 
     <EditText
             android:id="@+id/editLinkTitleId"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_20"
             android:padding="@dimen/medium_padding"
@@ -24,7 +24,7 @@
             android:focusable="true" />
     <EditText
             android:id="@+id/editLinkUrlId"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/medium_padding"
             android:text=" - "

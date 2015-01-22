@@ -5,7 +5,7 @@
 			  android:layout_width="match_parent"
 			  android:layout_height="wrap_content"
 			  android:orientation="horizontal"
-			  android:background="@color/white"
+			  android:background="@drawable/custom_item_selector"
 			  android:minHeight="@dimen/link_row_height">
 
 	<!--link_action_layout_id    -->
@@ -20,16 +20,16 @@
 			android:src="@drawable/web_icon_blue" />
 
 	<!-- BUTTONS -->
-	<TextView
-			android:id="@+id/linkEditButtonId"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentBottom="true"
-			android:padding="@dimen/medium_padding"
-			android:textSize="@dimen/text_size_14"
-			android:text="EDIT"
-			android:textColor="@color/material_blue_200" />
+	<!--<TextView-->
+			<!--android:id="@+id/linkEditButtonId"-->
+			<!--android:layout_width="wrap_content"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:layout_alignParentRight="true"-->
+			<!--android:layout_alignParentBottom="true"-->
+			<!--android:padding="@dimen/medium_padding"-->
+			<!--android:textSize="@dimen/text_size_14"-->
+			<!--android:text="EDIT"-->
+			<!--android:textColor="@color/material_blue_200" />-->
 	<TextView
 			android:id="@+id/linkSaveButtonId"
 			android:visibility="gone"
@@ -49,7 +49,6 @@
 			android:layout_height="wrap_content"
 			android:layout_centerInParent="true"
 			android:layout_toRightOf="@id/linkIconId"
-			android:layout_toLeftOf="@id/linkEditButtonId"
 			android:padding="@dimen/medium_padding"
 			android:text=" - "
 			android:textSize="@dimen/text_size_20"

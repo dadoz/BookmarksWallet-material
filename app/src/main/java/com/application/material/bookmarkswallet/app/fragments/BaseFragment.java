@@ -79,22 +79,22 @@ public class BaseFragment extends Fragment {
         return baseFragment;
     }
 
-    public void notifyToggleEditView(boolean isSelecting) {
-        //LinkList frag index
-        int linkListFragmentIndex = 0;
-        try {
-
-            LinksListFragment fragment = (LinksListFragment)
-                    ((BaseFragmentPagerAdapter) viewPager.getAdapter())
-                            .getItem(linkListFragmentIndex);
-
-            if (fragment != null) {
-//                fragment.toggleEditView(isSelecting);
-                return;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Log.e(TAG, "cannot toggle edit view");
-    }
+//    public void notifyToggleEditView(boolean isSelecting) {
+//        //LinkList frag index
+//        int linkListFragmentIndex = 0;
+//        try {
+//
+//            LinksListFragment fragment = (LinksListFragment)
+//                    ((BaseFragmentPagerAdapter) viewPager.getAdapter())
+//                            .getItem(linkListFragmentIndex);
+//
+//            if (fragment != null) {
+////                fragment.toggleEditView(isSelecting);
+//                return;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        Log.e(TAG, "cannot toggle edit view");
+//    }
 }

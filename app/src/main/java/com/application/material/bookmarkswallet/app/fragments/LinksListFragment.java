@@ -90,6 +90,11 @@ public class LinksListFragment extends Fragment
 				new LinkRecyclerViewAdapter(this, mItems);
 
 		mRecyclerView.setHasFixedSize(true);
+//		mRecyclerView.setClickable(true);
+//		mRecyclerView.setFocusableInTouchMode(true);
+//		mRecyclerView.setFocusable(true);
+//		mRecyclerView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+
 		linearLayoutManager = new LinearLayoutManager(mainActivityRef);
 		mRecyclerView.setLayoutManager(linearLayoutManager);
 
@@ -111,18 +116,6 @@ public class LinksListFragment extends Fragment
 		undoButton.setOnClickListener(this);
 		dismissButton.setOnClickListener(this);
 	}
-
-//	@Override
-//	public void onItemClick(View view, int position) {
-//		Toast.makeText(mainActivityRef, "Clicked " + view.getId(), Toast.LENGTH_SHORT).show();
-//		try {
-//			String url = (mItems.get(position)).getLinkUrl();
-//			openLinkOnBrowser(url);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//	}
 
 	@Override
 	public void onClick(View v) {
@@ -182,7 +175,6 @@ public class LinksListFragment extends Fragment
 			int position = mRecyclerView.getChildPosition(view);
 
 			// handle single tap
-			Log.e(TAG, "Hey tocuh ");
 			String url = (mItems.get(position)).getLinkUrl();
 			openLinkOnBrowser(url);
 
@@ -195,12 +187,33 @@ public class LinksListFragment extends Fragment
 
 			// handle long press
 			Log.e(TAG, "Hey long touch ");
-
+			editLinkRecyclerView(position);
 			super.onLongPress(e);
 		}
 	}
 
+	public void saveLinkRecyclerView(int position) {
+		Toast.makeText(mainActivityRef, "save", Toast.LENGTH_SHORT).show();
+		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).deselectedItemPosition();
+		(mRecyclerView.getAdapter()).notifyDataSetChanged();
+//		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).update(position,
+//				mEditLabelView.getText().toString(), mEditUrlView.getText().toString());
+		mainActivityRef.toggleEditActionBar(null, false);
 
+	}
+
+	public void undoEditLinkRecyclerView() {
+		Toast.makeText(mainActivityRef, "undo edit", Toast.LENGTH_SHORT).show();
+		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).deselectedItemPosition();
+		(mRecyclerView.getAdapter()).notifyDataSetChanged();
+	}
+
+	public void editLinkRecyclerView(int position) {
+		Toast.makeText(mainActivityRef, "edit" + position, Toast.LENGTH_SHORT).show();
+		mainActivityRef.toggleEditActionBar("Edit link", true);
+		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).setSelectedItemPosition(position);
+		mRecyclerView.getAdapter().notifyDataSetChanged();
+	}
 
 	public void addLinkOnRecyclerView(String url) {
 		Link link = new Link(-1, null, "NEW FAKE", url, -1, null, false);

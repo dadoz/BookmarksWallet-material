@@ -64,7 +64,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         holder.mLabelView.setText(mDataset.get(position).getLinkName());
         holder.mEditLabelView.setText(mDataset.get(position).getLinkName());
         holder.mEditUrlView.setText(mDataset.get(position).getLinkUrl());
-        holder.mEditButtonView.setOnClickListener(holder);
+//        holder.mEditButtonView.setOnClickListener(holder);
         holder.mSaveButtonView.setOnClickListener(holder);
 //        holder.mDeleteButtonView.setOnClickListener(holder);
 
@@ -74,7 +74,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
                 mActivityRef.getResources().getColor(R.color.material_grey_200) :
                 mActivityRef.getResources().getColor(R.color.white));
         holder.mEditLinkView.setVisibility(isSelectedItem ? View.VISIBLE : View.GONE);
-        holder.mEditButtonView.setVisibility(isSelectedItem ? View.GONE : View.VISIBLE);
+//        holder.mEditButtonView.setVisibility(isSelectedItem ? View.GONE : View.VISIBLE);
         holder.mSaveButtonView.setVisibility(isSelectedItem ? View.VISIBLE : View.GONE);
     }
 
@@ -122,7 +122,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView mSaveButtonView;
 //        private final TextView mDeleteButtonView;
-        private final TextView mEditButtonView;
+//        private final TextView mEditButtonView;
         private final EditText mEditUrlView;
         private final EditText mEditLabelView;
         private final LinkRecyclerViewAdapter mAdapterRef;
@@ -142,7 +142,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
             mEditUrlView = (EditText) v.findViewById(R.id.editLinkUrlId);
             mEditLabelView = (EditText) v.findViewById(R.id.editLinkTitleId);
 
-            mEditButtonView = (TextView) v.findViewById(R.id.linkEditButtonId);
+//            mEditButtonView = (TextView) v.findViewById(R.id.linkEditButtonId);
             mSaveButtonView = (TextView) v.findViewById(R.id.linkSaveButtonId);
         }
 
@@ -157,13 +157,13 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
 ////                String linkUrl = linkListTest.get(position).getLinkUrl();
 ////                openLinkOnBrowser(linkUrl);
 //                    break;
-                case R.id.linkEditButtonId:
-                    Toast.makeText(mActivityRef, "edit" + getPosition(), Toast.LENGTH_SHORT).show();
-                    ((MainActivity) mActivityRef).toggleEditActionBar("Edit link", true);
-                    mAdapterRef.setSelectedItemPosition(getPosition());
-                    mAdapterRef.notifyDataSetChanged();
-
-                    break;
+//                case R.id.linkEditButtonId:
+//                    Toast.makeText(mActivityRef, "edit" + getPosition(), Toast.LENGTH_SHORT).show();
+//                    ((MainActivity) mActivityRef).toggleEditActionBar("Edit link", true);
+//                    mAdapterRef.setSelectedItemPosition(getPosition());
+//                    mAdapterRef.notifyDataSetChanged();
+//
+//                    break;
                 case R.id.linkSaveButtonId:
                     Toast.makeText(mActivityRef, "save", Toast.LENGTH_SHORT).show();
                     mAdapterRef.deselectedItemPosition();

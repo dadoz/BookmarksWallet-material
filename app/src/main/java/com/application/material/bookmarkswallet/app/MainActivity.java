@@ -204,9 +204,9 @@ public class MainActivity extends ActionBarActivity
             toggleEditActionBar(null, false);
             //notify to frag toggle selctedItemView
             Fragment fragment  = getSupportFragmentManager()
-                    .findFragmentByTag(BaseFragment.FRAG_TAG);
+                    .findFragmentByTag(LinksListFragment.FRAG_TAG);
             if(fragment != null) {
-                ((BaseFragment) fragment).notifyToggleEditView(false);
+                ((LinksListFragment) fragment).undoEditLinkRecyclerView();
             }
             return;
         }
