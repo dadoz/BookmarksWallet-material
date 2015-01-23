@@ -52,7 +52,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -63,9 +63,9 @@ public class MainActivity extends ActionBarActivity
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case  R.id.action_settings:
-                changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
-                return true;
+//            case  R.id.action_settings:
+//                changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
+//                return true;
         }
         return super.onOptionsItemSelected(item);
     }

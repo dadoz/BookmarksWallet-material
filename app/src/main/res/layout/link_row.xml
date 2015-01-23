@@ -1,65 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:id="@+id/linkLayoutId"
-			  android:baselineAligned="false"
-			  android:layout_width="match_parent"
-			  android:layout_height="wrap_content"
-			  android:orientation="horizontal"
-			  android:background="@drawable/custom_item_selector"
-			  android:minHeight="@dimen/link_row_height">
 
-	<!--link_action_layout_id    -->
-	<ImageView
-			android:id="@+id/linkIconId"
-			android:contentDescription="link_icon_id"
-			android:layout_width="@dimen/fab_size_mini"
-			android:layout_height="@dimen/fab_size_mini"
-			android:layout_centerInParent="true"
-			android:layout_alignParentLeft="true"
-			android:layout_margin="@dimen/medium_padding"
-			android:src="@drawable/web_icon_blue" />
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_height="wrap_content"
+             android:layout_width="fill_parent">
 
-	<!-- BUTTONS -->
-	<!--<TextView-->
-			<!--android:id="@+id/linkEditButtonId"-->
-			<!--android:layout_width="wrap_content"-->
-			<!--android:layout_height="wrap_content"-->
-			<!--android:layout_alignParentRight="true"-->
-			<!--android:layout_alignParentBottom="true"-->
-			<!--android:padding="@dimen/medium_padding"-->
-			<!--android:textSize="@dimen/text_size_14"-->
-			<!--android:text="EDIT"-->
-			<!--android:textColor="@color/material_blue_200" />-->
-	<TextView
-			android:id="@+id/linkSaveButtonId"
-			android:visibility="gone"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentBottom="true"
-			android:padding="@dimen/medium_padding"
-			android:textSize="@dimen/text_size_14"
-			android:text="SAVE"
-			android:textColor="@color/material_stone_black" />
+    <RelativeLayout
+            android:id="@+id/linkLayoutId"
+            android:baselineAligned="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:minHeight="@dimen/link_row_height">
 
-	<!-- TITLE -->
-	<TextView
-			android:id="@+id/linkTitleId"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerInParent="true"
-			android:layout_toRightOf="@id/linkIconId"
-			android:padding="@dimen/medium_padding"
-			android:text=" - "
-			android:textSize="@dimen/text_size_20"
-			android:ellipsize="end"
-			android:maxLines="2"
-			android:textColor="@color/material_stone_black" />
+        <!--link_action_layout_id    -->
+        <ImageView
+                android:id="@+id/linkIconId"
+                android:contentDescription="link_icon_id"
+                android:layout_width="@dimen/fab_size_mini"
+                android:layout_height="@dimen/fab_size_mini"
+                android:layout_centerInParent="true"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="@dimen/medium_padding"
+                android:src="@drawable/web_icon_blue"/>
 
-	<include layout="@layout/link_edit_row"
-			 android:layout_toRightOf="@id/linkIconId"
-			 android:layout_toLeftOf="@id/linkSaveButtonId"
-			 android:layout_centerInParent="true"
-			 android:layout_height="wrap_content"
-			 android:layout_width="fill_parent"/>
-</RelativeLayout>
+        <!-- DATE -->
+        <TextView
+                android:id="@+id/linkEditButtonId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:padding="@dimen/medium_padding"
+                android:textSize="@dimen/text_size_14"
+                android:text="01.01.2015"
+                android:textColor="@color/material_grey"/>
+
+        <!-- TITLE -->
+        <TextView
+                android:id="@+id/linkTitleId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toRightOf="@id/linkIconId"
+                android:padding="@dimen/medium_padding"
+                android:text=" - "
+                android:textSize="@dimen/text_size_20"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/material_stone_black"/>
+
+        <include layout="@layout/link_edit_row"
+                 android:layout_toRightOf="@id/linkIconId"
+                 android:layout_centerInParent="true"
+                 android:layout_height="wrap_content"
+                 android:layout_width="fill_parent"/>
+    </RelativeLayout>
+
+    <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="?android:attr/selectableItemBackground"/>-->
+</FrameLayout>

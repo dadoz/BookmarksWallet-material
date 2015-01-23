@@ -79,7 +79,7 @@ public class LinksListFragment extends Fragment
 		Toolbar toolbar = (Toolbar) addReviewView.findViewById(R.id.toolbarId);
 		mainActivityRef.initActionBar(toolbar, null);
 
-//		setHasOptionsMenu(true);
+		setHasOptionsMenu(true);
 		onInitView();
 		return addReviewView;
 	}
@@ -90,21 +90,22 @@ public class LinksListFragment extends Fragment
 				new LinkRecyclerViewAdapter(this, mItems);
 
 		mRecyclerView.setHasFixedSize(true);
-//		mRecyclerView.setClickable(true);
-//		mRecyclerView.setFocusableInTouchMode(true);
-//		mRecyclerView.setFocusable(true);
-//		mRecyclerView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 
 		linearLayoutManager = new LinearLayoutManager(mainActivityRef);
+//		ArrayList<View> viewList = mRecyclerView.getFocusables(View.FOCUS_DOWN);
+//		linearLayoutManager.onAddFocusables(mRecyclerView, viewList, View.FOCUS_DOWN,  View.FOCUSABLES_TOUCH_MODE);
+
 		mRecyclerView.setLayoutManager(linearLayoutManager);
 
 		mRecyclerView.setAdapter(linkRecyclerViewAdapter);
 		mRecyclerView.setItemAnimator(null);
 
+		//SWIPE
 		touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this);
 		mRecyclerView.setOnTouchListener(touchListener);
 		mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
 
+		//ON ITEM CLICK and LONG CLICK
 		detector = new GestureDetectorCompat(mainActivityRef, new RecyclerViewOnGestureListener());
 		mRecyclerView.addOnItemTouchListener(this);
 //		mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(mainActivityRef, this));
@@ -115,6 +116,28 @@ public class LinksListFragment extends Fragment
 		addLinkButton.setOnClickListener(this);
 		undoButton.setOnClickListener(this);
 		dismissButton.setOnClickListener(this);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		boolean isItemSelected = ((LinkRecyclerViewAdapter) mRecyclerView.
+				getAdapter()).isItemSelected();
+		inflater.inflate(isItemSelected ? R.menu.save_edit_link_menu :
+				R.menu.menu_main, menu);
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_save_edit_link:
+				saveEditLinkRecyclerView();
+				break;
+			case  R.id.action_settings:
+                mainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
+                return true;
+
+		}
+		return true;
 	}
 
 	@Override
@@ -174,6 +197,10 @@ public class LinksListFragment extends Fragment
 			View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
 			int position = mRecyclerView.getChildPosition(view);
 
+			LinkRecyclerViewAdapter.ViewHolder holder =
+					(LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
+							findViewHolderForPosition(position);
+			holder.itemView.setSelected(true);
 			// handle single tap
 			String url = (mItems.get(position)).getLinkUrl();
 			openLinkOnBrowser(url);
@@ -184,6 +211,11 @@ public class LinksListFragment extends Fragment
 		public void onLongPress(MotionEvent e) {
 			View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
 			int position = mRecyclerView.getChildPosition(view);
+			LinkRecyclerViewAdapter.ViewHolder holder =
+					(LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
+							findViewHolderForPosition(position);
+
+			holder.itemView.setSelected(true);
 
 			// handle long press
 			Log.e(TAG, "Hey long touch ");
@@ -192,20 +224,32 @@ public class LinksListFragment extends Fragment
 		}
 	}
 
-	public void saveLinkRecyclerView(int position) {
-		Toast.makeText(mainActivityRef, "save", Toast.LENGTH_SHORT).show();
-		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).deselectedItemPosition();
-		(mRecyclerView.getAdapter()).notifyDataSetChanged();
-//		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).update(position,
-//				mEditLabelView.getText().toString(), mEditUrlView.getText().toString());
-		mainActivityRef.toggleEditActionBar(null, false);
+	public void saveEditLinkRecyclerView() {
+		LinkRecyclerViewAdapter adapter = (LinkRecyclerViewAdapter)
+				mRecyclerView.getAdapter();
 
+		int position = adapter.getSelectedItemPosition();
+		Toast.makeText(mainActivityRef, "save", Toast.LENGTH_SHORT).show();
+
+		LinkRecyclerViewAdapter.ViewHolder holder =
+				(LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
+						findViewHolderForPosition(position);
+		adapter.update(position,holder.getEditLinkName(),
+				holder.getEditUrlName());
+
+		adapter.deselectedItemPosition();
+		adapter.notifyDataSetChanged();
+		mainActivityRef.toggleEditActionBar(null, false);
+		mainActivityRef.invalidateOptionsMenu();
+		mRecyclerView.addOnItemTouchListener(this);
 	}
 
 	public void undoEditLinkRecyclerView() {
 		Toast.makeText(mainActivityRef, "undo edit", Toast.LENGTH_SHORT).show();
 		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).deselectedItemPosition();
 		(mRecyclerView.getAdapter()).notifyDataSetChanged();
+		mainActivityRef.invalidateOptionsMenu();
+		mRecyclerView.addOnItemTouchListener(this);
 	}
 
 	public void editLinkRecyclerView(int position) {
@@ -213,6 +257,9 @@ public class LinksListFragment extends Fragment
 		mainActivityRef.toggleEditActionBar("Edit link", true);
 		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).setSelectedItemPosition(position);
 		mRecyclerView.getAdapter().notifyDataSetChanged();
+		mainActivityRef.invalidateOptionsMenu();
+		mRecyclerView.removeOnItemTouchListener(this);
+
 	}
 
 	public void addLinkOnRecyclerView(String url) {
