@@ -13,4 +13,5 @@
     <dimen name="cardview_min_height">100dip</dimen>
     <dimen name="link_row_height">100dip</dimen>
     <dimen name="big_padding">30dip</dimen>
+    <dimen name="row_timestamp_width">140dip</dimen>
 </resources>

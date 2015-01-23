@@ -26,29 +26,47 @@
 
         <!-- DATE -->
         <TextView
-                android:id="@+id/linkEditButtonId"
+                android:id="@+id/linkTimestampId"
                 android:layout_width="wrap_content"
+                android:maxWidth="@dimen/row_timestamp_width"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:padding="@dimen/medium_padding"
                 android:textSize="@dimen/text_size_14"
-                android:text="01.01.2015"
-                android:textColor="@color/material_grey"/>
+                android:text="08:15"
+                android:textColor="@color/material_blue_200"/>
 
         <!-- TITLE -->
+<LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:layout_toRightOf="@id/linkIconId"
+        android:layout_toLeftOf="@id/linkTimestampId">
+
         <TextView
                 android:id="@+id/linkTitleId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_toRightOf="@id/linkIconId"
-                android:padding="@dimen/medium_padding"
+                android:paddingLeft="@dimen/medium_padding"
+                android:paddingBottom="@dimen/medium_padding"
                 android:text=" - "
                 android:textSize="@dimen/text_size_20"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textColor="@color/material_stone_black"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/medium_padding"
+                android:text="http://www.google.it"
+                android:textSize="@dimen/text_size_14"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/material_grey"/>
+</LinearLayout>
 
         <include layout="@layout/link_edit_row"
                  android:layout_toRightOf="@id/linkIconId"

@@ -92,8 +92,6 @@ public class LinksListFragment extends Fragment
 		mRecyclerView.setHasFixedSize(true);
 
 		linearLayoutManager = new LinearLayoutManager(mainActivityRef);
-//		ArrayList<View> viewList = mRecyclerView.getFocusables(View.FOCUS_DOWN);
-//		linearLayoutManager.onAddFocusables(mRecyclerView, viewList, View.FOCUS_DOWN,  View.FOCUSABLES_TOUCH_MODE);
 
 		mRecyclerView.setLayoutManager(linearLayoutManager);
 

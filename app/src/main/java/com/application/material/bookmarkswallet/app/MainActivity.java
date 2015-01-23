@@ -144,10 +144,12 @@ public class MainActivity extends ActionBarActivity
         //set action bar
         setSupportActionBar(toolbar);
 
+        boolean isHomeView = title == null;
+
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         try {
-            actionBar.setDisplayHomeAsUpEnabled(false);
-            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(! isHomeView);
+            actionBar.setDisplayShowHomeEnabled(! isHomeView);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayShowCustomEnabled(false);
             actionBar.setTitle(title != null ?

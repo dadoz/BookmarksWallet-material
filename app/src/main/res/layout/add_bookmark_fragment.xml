@@ -16,94 +16,91 @@
             android:minHeight="?attr/actionBarSize"
             app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
     </android.support.v7.widget.Toolbar>
-<LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@id/toolbarId">
-    <android.support.v7.widget.CardView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_padding"
-            android:background="@color/white">
-        <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/cardview_min_height"
-                android:padding="@dimen/small_padding"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/periodAddBookmarkTextId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/material_blue_200"
-                    android:textSize="@dimen/abc_text_size_title_material"
-                    android:text=" - "/>
-            <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/medium_padding"
-                    android:orientation="horizontal">
-                <TextView
-                        android:id="@+id/bokmarksCounterTextId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/abc_text_size_display_1_material"
-                        android:textColor="@color/material_blue_200"
-                        android:paddingRight="@dimen/medium_padding"
-                        android:text=" - "/>
-                <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="new bookmars added"/>
 
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_padding"
-            android:background="@color/white">
-
-        <LinearLayout
+        <android.support.v7.widget.CardView
+                android:id="@+id/infoCardId"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/cardview_min_height"
-                android:padding="@dimen/small_padding"
-                android:orientation="horizontal">
-            <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/abc_text_size_title_material"
-                    android:paddingRight="@dimen/medium_padding"
-                    android:src="@drawable/abc_ic_menu_copy_mtrl_am_alpha"/>
+                android:layout_margin="@dimen/medium_padding"
+                android:layout_below="@id/toolbarId"
+                android:background="@color/white">
             <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/medium_padding"
+                    android:minHeight="@dimen/cardview_min_height"
+                    android:padding="@dimen/small_padding"
                     android:orientation="vertical">
                 <TextView
-                        android:layout_width="fill_parent"
+                        android:id="@+id/periodAddBookmarkTextId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/material_blue_200"
+                        android:textSize="@dimen/abc_text_size_title_material"
+                        android:text=" - "/>
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/medium_padding"
+                        android:orientation="horizontal">
+                    <TextView
+                            android:id="@+id/bokmarksCounterTextId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/abc_text_size_display_1_material"
+                            android:textColor="@color/material_blue_200"
+                            android:paddingRight="@dimen/medium_padding"
+                            android:text=" - "/>
+                    <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:text="new bookmars added"/>
+
+                </LinearLayout>
+                </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+                android:id="@+id/importFromChromeCardId"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_padding"
+                android:layout_below="@id/infoCardId"
+                android:background="@color/white">
+
+            <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/cardview_min_height"
+                    android:padding="@dimen/small_padding"
+                    android:orientation="horizontal">
+                <ImageView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/abc_text_size_title_material"
-                        android:textColor="@color/material_blue_200"
                         android:paddingRight="@dimen/medium_padding"
-                        android:text="Import from Chrome"/>
-                <TextView
-                        android:layout_width="fill_parent"
+                        android:src="@drawable/abc_ic_menu_copy_mtrl_am_alpha"/>
+                <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="tap icon to export your bookmark list"/>
+                        android:layout_marginTop="@dimen/medium_padding"
+                        android:orientation="vertical">
+                    <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/abc_text_size_title_material"
+                            android:textColor="@color/material_blue_200"
+                            android:paddingRight="@dimen/medium_padding"
+                            android:text="Import from Chrome"/>
+                    <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:text="tap icon to export your bookmark list"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+        </android.support.v7.widget.CardView>
 
     <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/addLinkButtonId"

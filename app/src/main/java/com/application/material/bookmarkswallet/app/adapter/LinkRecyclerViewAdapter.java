@@ -25,18 +25,15 @@ import java.util.ArrayList;
  */
 public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerViewAdapter.ViewHolder> {
     private String TAG = "LinkRecyclerViewAdapter";
-    private static Fragment mFragmentRef; //TODO rm it
     private ArrayList<Link> mDataset;
     private static Context mActivityRef;
     private static Link deletedItem = null;
     private static int deletedItemPosition = -1;
     private int mSelectedItemPosition = -1;
 
-    // Provide a suitable constructor (depends on the kind of dataset)
     public LinkRecyclerViewAdapter(Fragment fragmentRef, ArrayList<Link> myDataset) {
         mDataset = myDataset;
         mActivityRef = fragmentRef.getActivity();
-        mFragmentRef = fragmentRef;
     }
 
     public Link getDeletedItem() {
@@ -47,21 +44,17 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         return deletedItemPosition;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public LinkRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.link_row, parent, false);
-        v.setClickable(true);
         ViewHolder vh = new ViewHolder(v, this);
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        //fill view with data
         holder.mLabelView.setText(mDataset.get(position).getLinkName());
         holder.mEditLabelView.setText(mDataset.get(position).getLinkName());
         holder.mEditUrlView.setText(mDataset.get(position).getLinkUrl());
@@ -75,7 +68,6 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
 
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return mDataset.size();
@@ -94,7 +86,6 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
 
 
     public void remove(int position) {
-//        int position = mDataset.indexOf(item);
         deletedItemPosition = position;
         deletedItem = mDataset.get(position);
 
@@ -107,7 +98,6 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         linkToBeUpdated.setLinkName(linkName);
         linkToBeUpdated.setLinkUrl(linkUrl);
 
-//        deselectedItemPosition();
         notifyDataSetChanged();
     }
 
@@ -119,84 +109,23 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         return mSelectedItemPosition;
     }
 
-
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
-//        private final TextView mSaveButtonView;
-//        private final TextView mDeleteButtonView;
-//        private final TextView mEditButtonView;
         private final EditText mEditUrlView;
         private final EditText mEditLabelView;
-        private final LinkRecyclerViewAdapter mAdapterRef;
         private final View mEditLinkView;
-        // each data item is just a string in this case
         public ImageView mIconView;
         public TextView mLabelView;
         public View mMainView;
 
         public ViewHolder(View v, LinkRecyclerViewAdapter adapterRef) {
             super(v);
-            mAdapterRef = adapterRef;
             mMainView = v.findViewById(R.id.linkLayoutId);
             mEditLinkView = v.findViewById(R.id.editLinkLayoutId);
             mIconView = (ImageView) v.findViewById(R.id.linkIconId);
             mLabelView = (TextView) v.findViewById(R.id.linkTitleId);
             mEditUrlView = (EditText) v.findViewById(R.id.editLinkUrlId);
             mEditLabelView = (EditText) v.findViewById(R.id.editLinkTitleId);
-
-//            mEditButtonView = (TextView) v.findViewById(R.id.linkEditButtonId);
-//            mSaveButtonView = (TextView) v.findViewById(R.id.linkSaveButtonId);
         }
-
-//        @Override
-//        public void onClick(View v) {
-//            switch (v.getId()) {
-//                case R.id.linkLayoutId:
-//                    Toast.makeText(mActivityRef, "open url", Toast.LENGTH_SHORT).show();
-//
-////                int position = recyclerListView.getChildPosition(v);
-//
-////                String linkUrl = linkListTest.get(position).getLinkUrl();
-////                openLinkOnBrowser(linkUrl);
-//                    break;
-//                case R.id.linkEditButtonId:
-//                    Toast.makeText(mActivityRef, "edit" + getPosition(), Toast.LENGTH_SHORT).show();
-//                    ((MainActivity) mActivityRef).toggleEditActionBar("Edit link", true);
-//                    mAdapterRef.setSelectedItemPosition(getPosition());
-//                    mAdapterRef.notifyDataSetChanged();
-//
-//                    break;
-//                case R.id.linkSaveButtonId:
-//                    Toast.makeText(mActivityRef, "save", Toast.LENGTH_SHORT).show();
-//                    mAdapterRef.deselectedItemPosition();
-//                    mAdapterRef.notifyDataSetChanged();
-//                    (mAdapterRef).update(getPosition(), mEditLabelView.getText().toString(),
-//                            mEditUrlView.getText().toString());
-//                    ((MainActivity) mActivityRef).toggleEditActionBar(null, false);
-//
-//                    break;
-//                case R.id.linkDeleteButtonId:
-//                    Toast.makeText(mActivityRef, "delete", Toast.LENGTH_SHORT).show();
-//                    deletedItemPosition = getPosition();
-//                    deletedItem = mAdapterRef.mDataset.get(getPosition()); //TODO replace
-//                    mAdapterRef.remove(getPosition());
-//
-//                    break;
-//                case R.id.undoButtonId:
-//                    Toast.makeText(mActivityRef, "undo", Toast.LENGTH_SHORT).show();
-////                    mAdapterRef.add(deletedItem, deletedItemPosition);
-//                    mAdapterRef.add(deletedItem);
-//                    ((LinksListFragment) mFragmentRef).linkDeleteUpdateUI(false);
-//                    break;
-//                case R.id.dismissButtonId:
-//                    Toast.makeText(mActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
-//                    ((LinksListFragment) mFragmentRef).linkDeleteUpdateUI(false);
-//                    break;
-//            }
-//        }
-
         public String getEditLinkName() {
             return mEditLabelView.getText().toString();
         }
@@ -213,31 +142,4 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         this.mSelectedItemPosition = -1;
     }
 
-
-/*
-
-    public void notifyRemoveIsEnd() {
-        deletedItemPosition = -1;
-        deletedItem = null;
-    }
-
-    public int getDeletedItemPosition() {
-        return deletedItemPosition;
-    }
-
-    public Link getDeletedItem() {
-        return deletedItem;
-    }
-
-
-
-
-    public int getSelectedItemPosition() {
-        return selectedItemPosition;
-    }
-
-    public boolean isSelectedItem() {
-        return selectedItemPosition != -1;
-    }
-*/
 }
