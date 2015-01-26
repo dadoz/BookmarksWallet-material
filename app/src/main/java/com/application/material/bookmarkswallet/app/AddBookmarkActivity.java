@@ -53,8 +53,7 @@ public class AddBookmarkActivity extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        return false;
     }
 
     @Override
@@ -63,9 +62,6 @@ public class AddBookmarkActivity extends ActionBarActivity
         switch (id) {
             case android.R.id.home:
                 onBackPressed();
-                return true;
-            case  R.id.action_settings:
-                changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -144,7 +140,7 @@ public class AddBookmarkActivity extends ActionBarActivity
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         try {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setTitle(title != null ?

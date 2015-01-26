@@ -61,7 +61,7 @@ public class SettingsFragment extends Fragment {
 		
 		ListView settingsList = (ListView) getView().findViewById(R.id.settingsListId);
 
-		ArrayList<String> settingsNameList=new ArrayList<String>();
+		ArrayList<String> settingsNameList = new ArrayList<String>();
 		settingsNameList.add("Remove ads");
 		settingsNameList.add("Rate it!");
 		settingsNameList.add("Send a feedback");

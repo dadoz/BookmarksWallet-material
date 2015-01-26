@@ -1,6 +1,9 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -133,6 +136,11 @@ public class LinksListFragment extends Fragment
 			case  R.id.action_settings:
                 mainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
                 return true;
+			case  R.id.action_export:
+//				Toast.makeText(mainActivityRef,
+//						"all bookmarks exported into folder: bla", Toast.LENGTH_SHORT).show();
+				showExportDialog();
+                return true;
 
 		}
 		return true;
@@ -264,6 +272,12 @@ public class LinksListFragment extends Fragment
 		Link link = new Link(-1, null, "NEW FAKE", url, -1, null, false);
 		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(link);
 
+	}
+
+	private void showExportDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef);
+		Dialog dialog = builder.setTitle("bla").create();
+		dialog.show();
 	}
 
 	public void openLinkOnBrowser(String linkUrl){

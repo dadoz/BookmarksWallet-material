@@ -8,9 +8,7 @@ import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +17,7 @@ import butterknife.InjectView;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 import com.application.material.bookmarkswallet.app.models.Link;
@@ -79,6 +78,8 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         pasteFromClipboardButton = customView.
                 findViewById(R.id.pasteFromClipboardButtonId);
 
+        setHasOptionsMenu(true);
+
         onInitView();
         return addBookmarkView;
     }
@@ -128,6 +129,24 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
 
         }
     }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_settings, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case  R.id.action_settings:
+                addBookmarkActivityRef.changeFragment(
+                        new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
+                return true;
+
+        }
+        return true;
+    }
+
 
     public boolean hasClipboardText() {
         // If the clipboard doesn't contain data, disable the paste menu item.

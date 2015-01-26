@@ -58,6 +58,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         holder.mLabelView.setText(mDataset.get(position).getLinkName());
         holder.mEditLabelView.setText(mDataset.get(position).getLinkName());
         holder.mEditUrlView.setText(mDataset.get(position).getLinkUrl());
+        holder.mUrlView.setText(mDataset.get(position).getLinkUrl());
 
         //BUG - big huge whtever u want
         boolean isSelectedItem = mSelectedItemPosition == position;
@@ -115,6 +116,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         private final View mEditLinkView;
         public ImageView mIconView;
         public TextView mLabelView;
+        public TextView mUrlView;
         public View mMainView;
 
         public ViewHolder(View v, LinkRecyclerViewAdapter adapterRef) {
@@ -123,6 +125,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
             mEditLinkView = v.findViewById(R.id.editLinkLayoutId);
             mIconView = (ImageView) v.findViewById(R.id.linkIconId);
             mLabelView = (TextView) v.findViewById(R.id.linkTitleId);
+            mUrlView = (TextView) v.findViewById(R.id.linkUrlId);
             mEditUrlView = (EditText) v.findViewById(R.id.editLinkUrlId);
             mEditLabelView = (EditText) v.findViewById(R.id.editLinkTitleId);
         }
