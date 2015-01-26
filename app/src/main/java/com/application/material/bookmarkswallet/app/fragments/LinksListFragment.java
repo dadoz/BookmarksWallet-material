@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -27,6 +28,7 @@ import com.application.material.bookmarkswallet.app.dbAdapter.DbAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Link;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.parser.CSVParser;
 import com.application.material.bookmarkswallet.app.touchListener.*;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -276,7 +278,20 @@ public class LinksListFragment extends Fragment
 
 	private void showExportDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef);
-		Dialog dialog = builder.setTitle("bla").create();
+		Dialog dialog = builder.setTitle("bla").
+				setMessage("csv format").
+				setPositiveButton("ok", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						boolean isFileCreated = CSVParser.writeFile(mItems);
+
+						Toast.makeText(mainActivityRef, isFileCreated ?
+								CSVParser.EXPORT_FILE_NAME + " file saved! checkout on Download folder." :
+								"Error to save " + CSVParser.EXPORT_FILE_NAME + " Please contact us!",
+								Toast.LENGTH_SHORT).show();
+					}
+				}).
+				create();
 		dialog.show();
 	}
 

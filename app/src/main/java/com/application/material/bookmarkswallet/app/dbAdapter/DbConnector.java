@@ -377,7 +377,7 @@ public class DbConnector {
         db.open();
 
         Log.d(TAG,"fake delte obj --"+linkObj.getLinkName());
-        db.fakeDeleteLinkById(linkObj.getLinkId());
+//        db.fakeDeleteLinkById(linkObj.getLinkId());
 
         db.close();
         return true;
@@ -399,8 +399,8 @@ public class DbConnector {
         db.open();
         int linkId;
         boolean emptyDb = true;
-        Cursor mCursor = db.getMaxOnLinkId();
-
+//        Cursor mCursor = db.getMaxOnLinkId();
+        Cursor mCursor = null;
         linkId= Utils.EMPTY_LINKID;
         if (mCursor!=null) {
             emptyDb=false;
@@ -424,31 +424,4 @@ public class DbConnector {
         }
         return false;
     }
-
-//    public void displayLinkLocalDb(Cursor c){
-//    	Toast.makeText(this,"id "+ c.getString(0)+" icon "+ c.getString(1)+" bool "+
-//    			c.getString(2)+"  bool "+ c.getString(3)+" bool "+ c.getString(4)+
-//    			"  bool "+ c.getString(5)+" bool " + c.getString(6)+" bool "+
-//    			c.getString(7), Toast.LENGTH_LONG).show();
-//    }
-
-//
-//    public void ToastMessageWrapper(String message){
-//    	Toast.makeText(this,message,Toast.LENGTH_LONG).show();
-//    }
-//
-//    public void DBTestFunctionLocalDb(DbAdapter db){
-//
-//       	//generate new db - insert rows into it
-//       	//insertOneRowDb(db,"aaaa","title1","author1");
-//       	//insertOneRowDb(db,"zzzz","title2","author2");
-//       	//db.deleteAllRows();
-//
-//       	//get all row from db
-//       	//getOneRowDb(db,3);
-//    	//getAllRowsDb(db);
-//    	deleteAllRowsDb(db);
-//       	//insertOneRowDb(db,"aaaa","title1","author1");
-//       	getAllRowsDb(db);
-//    }
 }

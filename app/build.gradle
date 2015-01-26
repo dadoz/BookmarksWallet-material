@@ -16,6 +16,11 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.0.1"
 
+    packagingOptions {
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+    }
+
     defaultConfig {
         applicationId "com.application.material.bookmarkswallet.app"
         minSdkVersion 14
@@ -23,13 +28,16 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])

@@ -97,4 +97,8 @@ public class Link {
 		return -1;
 	}
 
+//	@Override
+//	public String toString() {
+//		return "bla";
+//	}
 }
