@@ -25,6 +25,7 @@ import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.animators.CustomDefaultAnimator;
 import com.application.material.bookmarkswallet.app.dbAdapter.DbAdapter;
+import com.application.material.bookmarkswallet.app.dbAdapter.DbConnector;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Link;
 import com.application.material.bookmarkswallet.app.R;
@@ -55,6 +56,7 @@ public class LinksListFragment extends Fragment
 	private ArrayList<Link> mItems;
 	private SwipeDismissRecyclerViewTouchListener touchListener;
 	private GestureDetectorCompat detector;
+	private DbConnector dbConnector;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -83,6 +85,13 @@ public class LinksListFragment extends Fragment
 
 		Toolbar toolbar = (Toolbar) addReviewView.findViewById(R.id.toolbarId);
 		mainActivityRef.initActionBar(toolbar, null);
+		dbConnector = DbConnector.getInstance(mainActivityRef);
+
+//		//TODO TEST
+//		DbConnector dbConnector = DbConnector.getInstance(mainActivityRef);
+//		for(Link obj : getLinkListMockup()) {
+//			dbConnector.insertLink(obj);
+//		}
 
 		setHasOptionsMenu(true);
 		onInitView();
@@ -90,7 +99,14 @@ public class LinksListFragment extends Fragment
 	}
 
 	private void onInitView() {
-		mItems = getLinkListMockup();
+		mItems = dbConnector.getLinkList();
+//		mItems = getLinkListMockup();
+
+		if(mItems == null) {
+			mItems = new ArrayList<Link>();
+		}
+
+
 		LinkRecyclerViewAdapter linkRecyclerViewAdapter =
 				new LinkRecyclerViewAdapter(this, mItems);
 
@@ -165,6 +181,8 @@ public class LinksListFragment extends Fragment
 				break;
 			case R.id.dismissButtonId:
 				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
+				deletedItem = adapter.getDeletedItem();
+				dbConnector.deleteLinkById(deletedItem.getLinkId());
 				setUndoDeletedLinkLayout(false);
 				break;
 
@@ -273,7 +291,7 @@ public class LinksListFragment extends Fragment
 	public void addLinkOnRecyclerView(String url) {
 		Link link = new Link(-1, null, "NEW FAKE", url, -1, null, false);
 		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(link);
-
+		dbConnector.insertLink(link);
 	}
 
 	private void showExportDialog() {
