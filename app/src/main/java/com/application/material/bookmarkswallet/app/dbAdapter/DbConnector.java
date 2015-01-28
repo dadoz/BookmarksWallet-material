@@ -2,6 +2,7 @@ package com.application.material.bookmarkswallet.app.dbAdapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import com.application.material.bookmarkswallet.app.dbAdapter.sample.Utils;
 import com.application.material.bookmarkswallet.app.models.Link;
 
 import java.util.ArrayList;

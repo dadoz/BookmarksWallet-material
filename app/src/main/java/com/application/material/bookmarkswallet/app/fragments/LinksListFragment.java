@@ -3,7 +3,6 @@ package com.application.material.bookmarkswallet.app.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
@@ -23,14 +22,12 @@ import butterknife.InjectView;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.animators.CustomDefaultAnimator;
 import com.application.material.bookmarkswallet.app.dbAdapter.DbAdapter;
 import com.application.material.bookmarkswallet.app.dbAdapter.DbConnector;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Link;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.parser.CSVParser;
-import com.application.material.bookmarkswallet.app.touchListener.*;
+import com.application.material.bookmarkswallet.app.exportFeature.CSVExportParser;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
@@ -301,11 +298,11 @@ public class LinksListFragment extends Fragment
 				setPositiveButton("ok", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						boolean isFileCreated = CSVParser.writeFile(mItems);
+						boolean isFileCreated = CSVExportParser.writeFile(mItems);
 
 						Toast.makeText(mainActivityRef, isFileCreated ?
-								CSVParser.EXPORT_FILE_NAME + " file saved! checkout on Download folder." :
-								"Error to save " + CSVParser.EXPORT_FILE_NAME + " Please contact us!",
+								CSVExportParser.EXPORT_FILE_NAME + " file saved! checkout on Download folder." :
+								"Error to save " + CSVExportParser.EXPORT_FILE_NAME + " Please contact us!",
 								Toast.LENGTH_SHORT).show();
 					}
 				}).

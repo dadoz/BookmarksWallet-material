@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
@@ -15,12 +15,9 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
-import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
-import com.application.material.bookmarkswallet.app.models.Link;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 /**
@@ -35,6 +32,8 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     @InjectView(R.id.bokmarksCounterTextId)
     TextView bokmarksCounterText;
     @InjectView(R.id.periodAddBookmarkTextId) TextView periodAddBookmarkText;
+    @InjectView(R.id.importFromChromeCardId)
+    CardView importFromChromeCard;
     private ClipboardManager clipboard;
     private String TAG = "AddBookmarkFragment";
     private EditText addBookmarkUrlEditText;
@@ -55,7 +54,6 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         //mmmmm
         clipboard = (ClipboardManager) addBookmarkActivityRef.
                 getSystemService(Context.CLIPBOARD_SERVICE);
-
     }
 
     @Override
@@ -90,6 +88,9 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         periodAddBookmarkText.setText("01.01.15 - 02.01.15");
         bokmarksCounterText.setText("20");
         pasteFromClipboardButton.setOnClickListener(this);
+
+        //sync chrome browser
+        importFromChromeCard.setOnClickListener(this);
     }
 
 
@@ -126,7 +127,8 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
                 addBookmarkUrlEditText.setText(bookmarkUrl);
 //                Toast.makeText(addBookmarkActivityRef, "paste from clipboard", Toast.LENGTH_SHORT).show();
                 break;
-
+            case R.id.importFromChromeCardId:
+                break;
         }
     }
     @Override

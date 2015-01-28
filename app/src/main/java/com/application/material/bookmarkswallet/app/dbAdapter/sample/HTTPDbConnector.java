@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.dbAdapter;
+package com.application.material.bookmarkswallet.app.dbAdapter.sample;
 
 import android.util.Log;
 import com.application.material.bookmarkswallet.app.models.Link;

@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.parser;
+package com.application.material.bookmarkswallet.app.exportFeature;
 
 import android.os.Environment;
 import com.application.material.bookmarkswallet.app.models.Link;
@@ -11,10 +11,10 @@ import java.util.ArrayList;
 /**
  * Created by davide on 26/01/15.
  */
-public class CSVParser {
+public class CSVExportParser {
     public static final String EXPORT_FILE_NAME = "bookmarksExport.csv";
 
-    public CSVParser() {
+    public CSVExportParser() {
     }
 
     public static boolean writeFile(ArrayList<Link> data) {
