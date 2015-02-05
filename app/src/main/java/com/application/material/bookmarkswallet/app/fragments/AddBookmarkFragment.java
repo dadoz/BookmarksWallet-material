@@ -2,13 +2,23 @@ package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
 import android.content.*;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceCategory;
+import android.provider.Browser;
+import android.provider.MediaStore;
+import android.provider.UserDictionary;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
+import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +29,8 @@ import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+
+import java.io.FileFilter;
 
 /**
  * Created by davide on 30/06/14.
@@ -32,12 +44,14 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     @InjectView(R.id.bokmarksCounterTextId)
     TextView bokmarksCounterText;
     @InjectView(R.id.periodAddBookmarkTextId) TextView periodAddBookmarkText;
-    @InjectView(R.id.importFromChromeCardId)
-    CardView importFromChromeCard;
+    @InjectView(R.id.importCardView)
+    CardView importCardView;
     private ClipboardManager clipboard;
     private String TAG = "AddBookmarkFragment";
     private EditText addBookmarkUrlEditText;
     private View pasteFromClipboardButton;
+    public static int PICK_IMAGE_REQ_CODE;
+    private long ANIM_DURATION_FAB = 400;
 
     @Override
     public void onAttach(Activity activity) {
@@ -84,15 +98,17 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
 
     private void onInitView() {
         addLinkButton.setOnClickListener(this);
+        setACustomAnimation();
         //TODO please replace
-        periodAddBookmarkText.setText("01.01.15 - 02.01.15");
-        bokmarksCounterText.setText("20");
         pasteFromClipboardButton.setOnClickListener(this);
 
-        //sync chrome browser
-        importFromChromeCard.setOnClickListener(this);
-    }
+        //TODO sync chrome browser
+        importCardView.setOnClickListener(this);
 
+        //TODO set info card
+        periodAddBookmarkText.setText("01.01.15 - 02.01.15");
+        bokmarksCounterText.setText("20");
+    }
 
     @Override
     public void onClick(View v) {
@@ -127,8 +143,22 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
                 addBookmarkUrlEditText.setText(bookmarkUrl);
 //                Toast.makeText(addBookmarkActivityRef, "paste from clipboard", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.importFromChromeCardId:
+            case R.id.importCardView:
+                if(android.os.Build.MANUFACTURER.equals("samsung")) {
+                    intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
+                    intent.putExtra("CONTENT_TYPE", "*/*");
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    addBookmarkActivityRef.startActivityForResult(intent, PICK_IMAGE_REQ_CODE);
+                    break;
+                }
+
+                intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("file/*");
+                addBookmarkActivityRef.startActivityForResult(intent, PICK_IMAGE_REQ_CODE);
                 break;
+//            case R.id.importFromCSVCardId:
+                //stored bookmarks from phone browser!
+//                break;
         }
     }
     @Override
@@ -149,7 +179,15 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         return true;
     }
 
+    public void setACustomAnimation() {
+        addLinkButton.animate()
+                .translationY(0)
+                .setInterpolator(new OvershootInterpolator(1.f))
+                .setStartDelay(300)
+                .setDuration(ANIM_DURATION_FAB)
+                .start();
 
+    }
     public boolean hasClipboardText() {
         // If the clipboard doesn't contain data, disable the paste menu item.
         // If it does contain data, decide if you can handle the data.

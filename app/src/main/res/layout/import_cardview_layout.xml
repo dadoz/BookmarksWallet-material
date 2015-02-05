@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/infoCardVIewId"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/medium_padding"
+        android:layout_marginRight="@dimen/medium_padding"
+        android:background="@color/white">
+
+        <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                        android:id="@+id/importIconId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/icon_size"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:paddingRight="@dimen/medium_padding"
+                        android:src="@drawable/ic_swap_horiz_black_48dp"/>
+                <LinearLayout
+                        android:id="@+id/infoMainLayoutId"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/medium_padding"
+                        android:layout_toRightOf="@id/importIconId"
+                        android:orientation="vertical">
+                        <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/abc_text_size_title_material"
+                                android:textColor="@color/material_blue_grey"
+                                android:paddingRight="@dimen/medium_padding"
+                                android:text="Import bookmarks"/>
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="new bookmarks added"/>
+
+                        <!--TODO replace with listview-->
+                        <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:layout_marginTop="@dimen/medium_padding"
+                                android:orientation="horizontal">
+                                <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:src="@drawable/ic_book_black_24dp"/>
+                                <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="csv format"/>
+                                <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:layout_marginTop="@dimen/medium_padding"
+                                android:orientation="horizontal">
+                                <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:src="@drawable/ic_book_black_24dp"/>
+                                <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="html format (Chrome/Firefox)"/>
+                                <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"/>
+
+                        </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                        android:id="@+id/divisorLineId"
+                        android:layout_below="@id/infoMainLayoutId"
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dip"
+                        android:layout_marginTop="@dimen/medium_padding"
+                        android:orientation="vertical"
+                        android:background="@color/material_grey_200"/>
+
+                <RelativeLayout
+                        android:layout_below="@id/divisorLineId"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/medium_padding"
+                        android:orientation="horizontal">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:textSize="@dimen/abc_text_size_title_material"
+                                android:textColor="@color/material_blue_grey"
+                                android:text="IMPORT"/>
+                </RelativeLayout>
+
+
+        </RelativeLayout>
+
+</android.support.v7.widget.CardView>

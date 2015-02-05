@@ -66,9 +66,9 @@
             android:id="@+id/addLinkButtonId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_icon="@android:drawable/ic_menu_gallery"
-            fab:fab_colorNormal="@color/material_blue_200"
-            fab:fab_colorPressed="@color/material_blue_200"
+            fab:fab_icon="@drawable/ic_add_white_48dp"
+            fab:fab_colorNormal="@color/material_blue_grey"
+            fab:fab_colorPressed="@color/material_blue_grey"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_centerHorizontal="true" />

@@ -20,5 +20,8 @@
 	<color name="material_grey">#9e9e9e</color>
 	<color name="material_grey_200">#eeeeee</color>
 	<color name="material_mustard_yellow">#eae44e</color>
-	<color name="material_blue_200">#48468f</color>
+	<!--<color name="material_mustard_yellow">#ff5722</color>-->
+	<color name="material_indigo">#48468f</color>
+	<color name="material_blue">#5677fc</color>
+	<color name="material_blue_grey">#607d8b</color>
 </resources>

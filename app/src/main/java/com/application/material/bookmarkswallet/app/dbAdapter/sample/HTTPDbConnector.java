@@ -70,9 +70,7 @@ public class HTTPDbConnector {
                         json_data.getString("iconPath"),
                         json_data.getString("linkName"),
                         json_data.getString("linkUrl"),
-                        json_data.getInt("links_user_id"),
-                        delIconPathDb,
-                        isDeletedLink);
+                        json_data.getInt("links_user_id"));
                 linksObjList.add(linkObj);
                 //get LINK icon from URL
 //	            try{

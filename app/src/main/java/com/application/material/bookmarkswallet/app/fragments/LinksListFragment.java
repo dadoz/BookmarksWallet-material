@@ -3,7 +3,12 @@ package com.application.material.bookmarkswallet.app.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.provider.Browser;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -85,8 +90,7 @@ public class LinksListFragment extends Fragment
 		dbConnector = DbConnector.getInstance(mainActivityRef);
 
 //		//TODO TEST
-//		DbConnector dbConnector = DbConnector.getInstance(mainActivityRef);
-//		for(Link obj : getLinkListMockup()) {
+//		for(Link obj : getBookmarksByProvider()) {
 //			dbConnector.insertLink(obj);
 //		}
 
@@ -286,7 +290,7 @@ public class LinksListFragment extends Fragment
 	}
 
 	public void addLinkOnRecyclerView(String url) {
-		Link link = new Link(-1, null, "NEW FAKE", url, -1, null, false);
+		Link link = new Link(-1, null, "NEW FAKE", url, -1);
 		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(link);
 		dbConnector.insertLink(link);
 	}
@@ -333,6 +337,38 @@ public class LinksListFragment extends Fragment
 		undoLinkDeletedLayout.setVisibility(isDeleting ? View.VISIBLE : View.GONE);
 		addLinkButton.setVisibility(isDeleting ? View.GONE : View.VISIBLE);
 	}
+
+	public ArrayList<Link> getBookmarksByProvider() {
+		//TODO asyncTask
+		ArrayList<Link> bookmarkList = new ArrayList<Link>();
+		try {
+			ContentResolver cr = mainActivityRef.getContentResolver();
+			String[] projection = {
+					Browser.BookmarkColumns.FAVICON,
+					Browser.BookmarkColumns.TITLE,
+					Browser.BookmarkColumns.URL
+			};
+			Cursor cursor = cr.query(Browser.BOOKMARKS_URI, projection, null, null, null);
+			int urlId = cursor.getColumnIndex(Browser.BookmarkColumns.URL);
+			int titleId = cursor.getColumnIndex(Browser.BookmarkColumns.TITLE);
+			int faviconId = cursor.getColumnIndex(Browser.BookmarkColumns.FAVICON);
+
+			if(cursor.moveToFirst()) {
+				do {
+					Log.e(TAG, "hey " + cursor.getString(urlId));
+//					Bitmap favicon = BitmapFactory.decodeByteArray(cursor.getBlob(faviconId), 0, 0, null);
+					bookmarkList.add(new Link(-1, null, cursor.getString(titleId), cursor.getString(urlId), -1));
+					Toast.makeText(mainActivityRef, cursor.getString(titleId) + " - " + cursor.getString(urlId), Toast.LENGTH_LONG).show();
+				} while(cursor.moveToNext());
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return bookmarkList;
+	}
+
 /*
 	public void setUndoLayoutListener(LinkRecyclerViewAdapter.ViewHolder undoLayoutListener) {
 		undoButton.setOnClickListener(undoLayoutListener);
@@ -474,7 +510,7 @@ public class LinksListFragment extends Fragment
     	String linkUrl = "http://www.google.it";
     	int userId = 0;
     	for(int i = 0; i < linksUrlArray.size(); i ++) {
-			linksDataList.add(new Link(i, "ic_launcher", linksUrlArray.get(i), linkUrl, userId, "del_icon", deletedLinkFlag));
+			linksDataList.add(new Link(i, "ic_launcher", linksUrlArray.get(i), linkUrl, userId));
 		}
     	return linksDataList;
     }

@@ -14,4 +14,7 @@
     <dimen name="link_row_height">100dip</dimen>
     <dimen name="big_padding">30dip</dimen>
     <dimen name="row_timestamp_width">140dip</dimen>
+    <dimen name="icon_size">48dp</dimen>
+    <dimen name="text_size_30">30sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
 </resources>

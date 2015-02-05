@@ -34,7 +34,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/abc_text_size_title_material"
-                        android:textColor="@color/material_blue_200"
+                        android:textColor="@color/material_blue_grey"
                         android:paddingRight="@dimen/medium_padding"
                         android:text="Import from Chrome"/>
                 <TextView
@@ -74,7 +74,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/abc_text_size_title_material"
-                        android:textColor="@color/material_blue_200"
+                        android:textColor="@color/material_blue_grey"
                         android:paddingRight="@dimen/medium_padding"
                         android:text="Export to your SD"/>
                 <TextView

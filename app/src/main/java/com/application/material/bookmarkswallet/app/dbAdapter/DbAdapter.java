@@ -27,10 +27,10 @@ public class DbAdapter {
                     ROWID_KEY + " integer primary key," +
                     LINK_ORDER_IN_LIST_KEY + " integer," +
                     LINK_NAME_KEY + " text not null," +
-                    ICON_PATH_KEY + " text not null," +
+                    ICON_PATH_KEY + " text," +
                     LINK_URL_KEY + " text not null," +
-                    LINK_USER_ID_KEY + " text not null," +
-                    LINK_DELETED_STATUS_KEY + " text not null" +
+                    LINK_USER_ID_KEY + " text," +
+                    LINK_DELETED_STATUS_KEY + " text" +
                     ");";
     private static SQLiteDatabase db;
     private DatabaseHelper dbHelper;
@@ -58,18 +58,18 @@ public class DbAdapter {
         }
     }
 
-    public long insertLink(int linkId, String linkOrderInList,
-                           String linkName, String iconPath,
-                           String linkUrl, String linksUserId,
-                           boolean linkDeletedStatus) {
+    public long insertLink(String linkName, String linkUrl,
+                           String iconPath, String linksUserId) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(ROWID_KEY, linkId);
-        initialValues.put(LINK_ORDER_IN_LIST_KEY, linkOrderInList);
+//        initialValues.put(ROWID_KEY, linkId);
         initialValues.put(LINK_NAME_KEY, linkName);
         initialValues.put(ICON_PATH_KEY, iconPath);
         initialValues.put(LINK_URL_KEY, linkUrl);
         initialValues.put(LINK_USER_ID_KEY, linksUserId);
-        initialValues.put(LINK_DELETED_STATUS_KEY, linkDeletedStatus);
+
+        //deprecated
+        initialValues.put(LINK_ORDER_IN_LIST_KEY, -1);
+        initialValues.put(LINK_DELETED_STATUS_KEY, false);
         return db.insert(LINKS_TABLE_NAME, null, initialValues);
     }
 

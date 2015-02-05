@@ -2,6 +2,8 @@ package com.application.material.bookmarkswallet.app;
 
 //import android.app.Activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -22,7 +24,7 @@ public class AddBookmarkActivity extends ActionBarActivity
 
     public static final int ADD_REQUEST = 99;
     public static String LINK_URL_EXTRA = "LINK_URL_EXTRA";
-    private String TAG = "MainActivity";
+    private String TAG = "AddBookmarkActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,4 +157,15 @@ public class AddBookmarkActivity extends ActionBarActivity
     public void toggleEditActionBar(String title, boolean isSelecting) {
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e(TAG, "on result");
+        if(resultCode == RESULT_OK) {
+            if(requestCode == AddBookmarkFragment.PICK_IMAGE_REQ_CODE) {
+                Uri fileUrl = data.getData();
+                Log.e(TAG, fileUrl.getPath());
+            }
+        }
+    }
 }
+

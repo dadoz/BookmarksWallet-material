@@ -89,16 +89,16 @@ public class Utils {
 	}
 	
 	public static int getLinkIdByLinkName(String value){
-    	if(linksListStatic!=null)
-    		for(Link link: linksListStatic)
-    			return link.getLinkIdFromLinkName(value);
+//    	if(linksListStatic!=null)
+//    		for(Link link: linksListStatic)
+//    			return link.getLinkIdFromLinkName(value);
     		return EMPTY_LINKID;
     }
 	    
 	public static String getUrlByLinkName(String linkName){
-		for(int i=0;i<linksListStatic.size();i++)
-			if(!linksListStatic.get(i).findLinkNameBool(linkName))
-				return linksListStatic.get(i).getLinkUrl();
+//		for(int i=0;i<linksListStatic.size();i++)
+//			if(!linksListStatic.get(i).findLinkNameBool(linkName))
+//				return linksListStatic.get(i).getLinkUrl();
 		return null;
 	}
 

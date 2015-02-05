@@ -171,7 +171,7 @@ public class MainActivity extends ActionBarActivity
                 getResources().getString(R.string.app_name));
         actionBar.setBackgroundDrawable(getResources().
                 getDrawable(isSelecting ?
-                        R.color.material_blue_200 :
+                        R.color.material_blue_grey :
                         R.color.material_mustard_yellow));
     }
 

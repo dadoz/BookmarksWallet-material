@@ -12,9 +12,9 @@ public interface BookmarksDataInterface {
     boolean insertLink(Link linkObj);
 
     /**INSERT ROW in dbAdapterAdapter - overloading insert function*/
-    boolean insertLink(int linkId, int linkOrderInList,
-                                     String linkName, String iconPath,
-                                     String linkUrl, int linksUserId);
+//    boolean insertLink(int linkId, int linkOrderInList,
+//                                     String linkName, String iconPath,
+//                                     String linkUrl, int linksUserId);
     /**GET ALL ROWS from dbAdapter**/
     ArrayList<Link> getLinkList();
 

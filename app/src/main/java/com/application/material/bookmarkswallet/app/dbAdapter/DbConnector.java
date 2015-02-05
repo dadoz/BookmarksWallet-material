@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app.dbAdapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import com.application.material.bookmarkswallet.app.dbAdapter.sample.Utils;
 import com.application.material.bookmarkswallet.app.models.Link;
@@ -81,29 +82,10 @@ public class DbConnector implements BookmarksDataInterface {
         }
 
         dbAdapter.open();
-        dbAdapter.insertLink(linkObj.getLinkId(), EMPTY_LINK_LIST, linkObj.getLinkName(), linkObj.getIconPath(),
-                linkObj.getLinkUrl(), Integer.toString(linkObj.getUserId()), linkObj.isLinkDeleted());
+        long result = dbAdapter.insertLink(linkObj.getLinkName(), linkObj.getLinkUrl(), linkObj.getIconPath(),
+                Integer.toString(linkObj.getUserId()));
         dbAdapter.close();
-        return true;
-    }
-
-    /**
-     * INSERT ROW in dbAdapter - overloading insert function
-     */
-    @Override
-    public boolean insertLink(int linkId, int linkOrderInList,
-                              String linkName, String iconPath,
-                              String linkUrl, int linksUserId) {
-        if (linkUrl == null) {
-            return false;
-        }
-
-        dbAdapter.open();
-        dbAdapter.insertLink(linkId, Integer.toString(linkOrderInList), linkName, iconPath,
-                linkUrl, Integer.toString(linksUserId), false);
-
-        dbAdapter.close();
-        return true;
+        return result != -1;
     }
 
     /**
@@ -111,28 +93,18 @@ public class DbConnector implements BookmarksDataInterface {
      */
     @Override
     public ArrayList<Link> getLinkList() {
-        boolean emptyDb = true;
         ArrayList<Link> linkList = new ArrayList<Link>();
         dbAdapter.open();
 
         Cursor c = dbAdapter.getLinks();
         if (c.moveToFirst()) {
-            emptyDb = false;
             do {
-                //TODO add c.getInt(1) in Link obj - linkOrderInList
-                //TODO to be fixed inconPath pos 3 in dbAdapter but must be in pos 2
-//        		public Link(int linkId,String linkIconPath,String linkName,String linkUrl,int userId,String delIcon,boolean linkDeleted){
-
-                if (!getBooleanByInt(c.getInt(6)))
-                    linkList.add(new Link(c.getInt(0), c.getString(3), c.getString(2), c.getString(4),
-                            c.getInt(5), null, getBooleanByInt(c.getInt(6))));
+                linkList.add(new Link(c.getInt(0), c.getString(3), c.getString(2), c.getString(4), c.getInt(5)));
             } while (c.moveToNext());
         }
 
         dbAdapter.close();
-        if (emptyDb)
-            return null;
-        return linkList;
+        return linkList.size() == 0 ? null : linkList;
     }
 
     /**
@@ -153,7 +125,7 @@ public class DbConnector implements BookmarksDataInterface {
 //        		public Link(int linkId,String linkIconPath,String linkName,String linkUrl,int userId,String delIcon,boolean linkDeleted){
 
                 linkList.add(new Link(c.getInt(0), c.getString(3), c.getString(2), c.getString(4),
-                        c.getInt(5), null, getBooleanByInt(c.getInt(6))));
+                        c.getInt(5)));
             } while (c.moveToNext());
         }
 
@@ -174,8 +146,7 @@ public class DbConnector implements BookmarksDataInterface {
         Cursor c = dbAdapter.getLinkById(linkId);
         if (c.moveToFirst()) {
             linkObj = new Link(c.getInt(0), c.getString(2),
-                    c.getString(3), c.getString(4), c.getInt(5),
-                    null, getBooleanByInt(c.getInt(6)));
+                    c.getString(3), c.getString(4), c.getInt(5));
         }
 
         dbAdapter.close();
@@ -223,9 +194,8 @@ public class DbConnector implements BookmarksDataInterface {
         dbAdapter.open();
         //TODO not sure if linkId is the same as rowId
         long rowId = linkObj.getLinkId();
-        dbAdapter.updateLink(rowId, Integer.toString(linkObj.getLinkOrderInList()), linkObj.getLinkName(),
-                linkObj.getIconPath(), linkObj.getLinkUrl(), Integer.toString(linkObj.getUserId()),
-                linkObj.isLinkDeleted());
+        dbAdapter.updateLink(rowId, null, linkObj.getLinkName(),
+                linkObj.getIconPath(), linkObj.getLinkUrl(), Integer.toString(linkObj.getUserId()), false);
         dbAdapter.close();
     }
 }
