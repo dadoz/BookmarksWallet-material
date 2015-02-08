@@ -2,11 +2,10 @@
 
 <android.support.v7.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/infoCardVIewId"
+        android:id="@+id/importCardViewId"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/medium_padding"
-        android:layout_marginRight="@dimen/medium_padding"
+        android:layout_margin="@dimen/medium_padding"
         android:background="@color/white">
 
         <RelativeLayout
@@ -19,6 +18,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:paddingRight="@dimen/medium_padding"
+                        android:layout_marginTop="@dimen/medium_padding"
                         android:src="@drawable/ic_swap_horiz_black_48dp"/>
                 <LinearLayout
                         android:id="@+id/infoMainLayoutId"
@@ -55,6 +55,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="csv format"/>
                                 <CheckBox
+                                        android:id="@+id/csvFormatCheckboxId"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"/>
 
@@ -74,6 +75,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="html format (Chrome/Firefox)"/>
                                 <CheckBox
+                                        android:id="@+id/htmlFormatCheckboxId"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"/>
 
@@ -97,11 +99,12 @@
                         android:orientation="horizontal">
 
                         <TextView
+                                android:id="@+id/importButtonId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:textSize="@dimen/abc_text_size_title_material"
-                                android:textColor="@color/material_blue_grey"
+                                android:textColor="@color/material_mustard_yellow"
                                 android:text="IMPORT"/>
                 </RelativeLayout>
 

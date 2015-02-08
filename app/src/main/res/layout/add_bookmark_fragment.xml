@@ -17,70 +17,22 @@
             app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
     </android.support.v7.widget.Toolbar>
 
-    <ScrollView
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/addBookmarkRecyclerViewId"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@id/toolbarId">
+    </android.support.v7.widget.RecyclerView>
 
-        <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+    <!--<include layout="@layout/info_cardview_layout"-->
+             <!--android:layout_width="wrap_content"-->
+             <!--android:layout_height="wrap_content"-->
+             <!--android:layout_margin="@dimen/medium_padding"/>-->
+    <!--<include layout="@layout/import_cardview_layout"-->
+             <!--android:layout_width="wrap_content"-->
+             <!--android:layout_height="wrap_content"-->
+             <!--android:layout_margin="@dimen/medium_padding" />-->
 
-            <include layout="@layout/info_cardview_layout" />
-            <include layout="@layout/import_cardview_layout" />
-            <!--<android.support.v7.widget.CardView-->
-                    <!--android:id="@+id/importFromCSVCardId"-->
-                    <!--android:layout_width="fill_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_margin="@dimen/medium_padding"-->
-                    <!--android:layout_below="@id/importFromChromeCardId"-->
-                    <!--android:background="@color/white">-->
-
-                <!--<LinearLayout-->
-                        <!--android:layout_width="fill_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:minHeight="@dimen/cardview_min_height"-->
-                        <!--android:padding="@dimen/small_padding"-->
-                        <!--android:orientation="horizontal">-->
-                    <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="@dimen/icon_size"-->
-                            <!--android:layout_gravity="center_vertical"-->
-                            <!--android:paddingRight="@dimen/medium_padding"-->
-                            <!--android:src="@drawable/ic_swap_horiz_black_48dp"/>-->
-                    <!--<LinearLayout-->
-                            <!--android:layout_width="fill_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_marginTop="@dimen/medium_padding"-->
-                            <!--android:orientation="vertical">-->
-                        <!--<TextView-->
-                                <!--android:layout_width="fill_parent"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:textSize="@dimen/abc_text_size_title_material"-->
-                                <!--android:textColor="@color/material_blue_grey"-->
-                                <!--android:paddingRight="@dimen/medium_padding"-->
-                                <!--android:text="Import from CSV file"/>-->
-                        <!--<TextView-->
-                                <!--android:layout_width="fill_parent"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:text="import bookmarks from CSV file. Just select the CSV file(.csv) from your local storage."/>-->
-
-                        <!--<TextView-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:layout_gravity="right"-->
-                                <!--android:textColor="@color/material_grey"-->
-                                <!--android:text="help and guide >"/>-->
-
-                    <!--</LinearLayout>-->
-
-                <!--</LinearLayout>-->
-
-            <!--</android.support.v7.widget.CardView>-->
-
-        </LinearLayout>
-    </ScrollView>
     <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/addLinkButtonId"
             android:layout_width="wrap_content"

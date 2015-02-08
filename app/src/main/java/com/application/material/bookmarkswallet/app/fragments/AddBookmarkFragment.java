@@ -14,8 +14,7 @@ import android.provider.MediaStore;
 import android.provider.UserDictionary;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.*;
 import android.util.Log;
 import android.view.*;
 import android.view.animation.OvershootInterpolator;
@@ -26,11 +25,17 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.adapter.AddBookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.animators.SlideInOutBottomItemAnimator;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
+import com.application.material.bookmarkswallet.app.models.BookmarkCardview;
+import com.application.material.bookmarkswallet.app.models.BookmarkCardview.CardviewTypeEnum;
+import com.application.material.bookmarkswallet.app.models.Info;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.io.FileFilter;
+import java.util.ArrayList;
 
 /**
  * Created by davide on 30/06/14.
@@ -41,17 +46,21 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     private AddBookmarkActivity addBookmarkActivityRef;
     @InjectView(R.id.addLinkButtonId)
     FloatingActionButton addLinkButton;
-    @InjectView(R.id.bokmarksCounterTextId)
-    TextView bokmarksCounterText;
-    @InjectView(R.id.periodAddBookmarkTextId) TextView periodAddBookmarkText;
-    @InjectView(R.id.importCardView)
-    CardView importCardView;
+    @InjectView(R.id.addBookmarkRecyclerViewId)
+    RecyclerView mAddBookmarkRecyclerView;
+//    @InjectView(R.id.infoCounterTextviewId)
+//    TextView infoCounterTextview;
+//    @InjectView(R.id.infoPeriodTextviewId) TextView infoPeriodTextview;
+//    @InjectView(R.id.importCardViewId)
+//    CardView importCardView;
     private ClipboardManager clipboard;
     private String TAG = "AddBookmarkFragment";
     private EditText addBookmarkUrlEditText;
     private View pasteFromClipboardButton;
     public static int PICK_IMAGE_REQ_CODE;
     private long ANIM_DURATION_FAB = 400;
+    private AddBookmarkRecyclerViewAdapter mAdapter;
+    private ArrayList<BookmarkCardview> cardviewList;
 
     @Override
     public void onAttach(Activity activity) {
@@ -97,18 +106,32 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     }
 
     private void onInitView() {
+        cardviewList = new ArrayList<BookmarkCardview>();
         addLinkButton.setOnClickListener(this);
-        setACustomAnimation();
+//        setACustomAnimation();
         //TODO please replace
         pasteFromClipboardButton.setOnClickListener(this);
 
-        //TODO sync chrome browser
-        importCardView.setOnClickListener(this);
+        RecyclerView.LayoutManager lm = new LinearLayoutManager(addBookmarkActivityRef);
+        mAddBookmarkRecyclerView.setLayoutManager(lm);
+//        SlideInOutBottomItemAnimator da = new SlideInOutBottomItemAnimator(mAddBookmarkRecyclerView);
+//        da.setAddDuration(1000);
+//        mAddBookmarkRecyclerView.setItemAnimator(da);
 
-        //TODO set info card
-        periodAddBookmarkText.setText("01.01.15 - 02.01.15");
-        bokmarksCounterText.setText("20");
+        cardviewList.add(new Info(CardviewTypeEnum.INFO_CARDVIEW,
+                "Info", "01.01.15 - 02.01.15", 17));
+        cardviewList.add(new BookmarkCardview(CardviewTypeEnum.IMPORT_CARDVIEW, "Import"));
+
+        mAdapter = new AddBookmarkRecyclerViewAdapter(this, cardviewList);
+        mAddBookmarkRecyclerView.setAdapter(mAdapter);
+
+        //ANIMATION
+        setACustomAnimation();
+        //fill data to be animated
+
     }
+
+    public void onViewCreated(View v, Bundle savedInstance) { super.onViewCreated(v, savedInstance); }
 
     @Override
     public void onClick(View v) {
@@ -143,7 +166,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
                 addBookmarkUrlEditText.setText(bookmarkUrl);
 //                Toast.makeText(addBookmarkActivityRef, "paste from clipboard", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.importCardView:
+            case R.id.importButtonId:
                 if(android.os.Build.MANUFACTURER.equals("samsung")) {
                     intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
                     intent.putExtra("CONTENT_TYPE", "*/*");
@@ -224,4 +247,5 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         Log.e(TAG, "Clipboard contains an invalid data type");
         return null;
     }
+
 }
