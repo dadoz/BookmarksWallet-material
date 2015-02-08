@@ -11,26 +11,32 @@
             android:paddingBottom="@dimen/action_bar_title_padding"
             android:text="Add bookmark"
             android:textSize="@dimen/abc_text_size_title_material_toolbar"/>
-
-    <EditText
-            android:id="@+id/addBookmarkUrlEditTextId"
+    <LinearLayout
+            android:id="@+id/addBookmarkLayoutId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_14"
-            android:minWidth="@dimen/abc_search_view_preferred_width"
-            android:hint="type bookmark url..."/>
+            android:orientation="vertical">
+        <EditText
+                android:id="@+id/addBookmarkUrlEditTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_14"
+                android:minWidth="@dimen/abc_search_view_preferred_width"
+                android:hint="type bookmark url..."/>
 
-    <Button
-            android:id="@+id/pasteFromClipboardButtonId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="@dimen/abc_search_view_preferred_width"
-            android:background="@color/material_mustard_yellow"
-            android:paddingTop="@dimen/medium_padding"
-            android:paddingLeft="@dimen/small_padding"
-            android:paddingBottom="@dimen/medium_padding"
-            android:gravity="center_vertical"
-            android:textColor="@color/material_blue_grey"
-            android:textSize="@dimen/text_size_14"
-            android:text="PASTE CLIPBOARD"/>
+        <Button
+                android:id="@+id/pasteFromClipboardButtonId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/abc_search_view_preferred_width"
+                android:background="@color/material_mustard_yellow"
+                android:paddingTop="@dimen/medium_padding"
+                android:paddingLeft="@dimen/small_padding"
+                android:paddingBottom="@dimen/medium_padding"
+                android:gravity="center_vertical"
+                android:textColor="@color/material_blue_grey"
+                android:textSize="@dimen/text_size_14"
+                android:text="PASTE CLIPBOARD"/>
+
+    </LinearLayout>
 </LinearLayout>

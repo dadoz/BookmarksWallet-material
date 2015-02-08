@@ -28,58 +28,69 @@
                         android:layout_toRightOf="@id/importIconId"
                         android:orientation="vertical">
                         <TextView
+                                android:id="@+id/importTitleViewId"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textSize="@dimen/abc_text_size_title_material"
                                 android:textColor="@color/material_blue_grey"
                                 android:paddingRight="@dimen/medium_padding"
-                                android:text="Import bookmarks"/>
+                                android:text="title"/>
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="new bookmarks added"/>
 
                         <!--TODO replace with listview-->
-                        <LinearLayout
+                        <RelativeLayout
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:layout_marginTop="@dimen/medium_padding"
-                                android:orientation="horizontal">
+                                android:layout_marginTop="@dimen/medium_padding">
                                 <ImageView
+                                        android:id="@+id/csvFormatIconId"
+                                        android:layout_centerVertical="true"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:src="@drawable/ic_book_black_24dp"/>
                                 <TextView
+                                        android:layout_toRightOf="@id/csvFormatIconId"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:maxWidth="@dimen/import_label_width"
                                         android:text="csv format"/>
                                 <CheckBox
+                                        android:layout_alignParentRight="true"
                                         android:id="@+id/csvFormatCheckboxId"
+                                        android:layout_centerVertical="true"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"/>
 
-                        </LinearLayout>
-                        <LinearLayout
+                        </RelativeLayout>
+                        <RelativeLayout
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
-                                android:layout_marginTop="@dimen/medium_padding"
-                                android:orientation="horizontal">
+                                android:layout_marginTop="@dimen/medium_padding">
                                 <ImageView
+                                        android:id="@+id/htmlFormatIconId"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
                                         android:src="@drawable/ic_book_black_24dp"/>
                                 <TextView
+                                        android:layout_toRightOf="@id/htmlFormatIconId"
+                                        android:maxWidth="@dimen/import_label_width"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
                                         android:text="html format (Chrome/Firefox)"/>
                                 <CheckBox
+                                        android:layout_alignParentRight="true"
                                         android:id="@+id/htmlFormatCheckboxId"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"/>
 
-                        </LinearLayout>
+                        </RelativeLayout>
 
                 </LinearLayout>
                 <LinearLayout
@@ -95,16 +106,16 @@
                         android:layout_below="@id/divisorLineId"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/medium_padding"
                         android:orientation="horizontal">
 
                         <TextView
                                 android:id="@+id/importButtonId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:padding="@dimen/medium_padding"
                                 android:layout_alignParentRight="true"
                                 android:textSize="@dimen/abc_text_size_title_material"
-                                android:textColor="@color/material_mustard_yellow"
+                                android:textColor="@color/material_blue_grey"
                                 android:text="IMPORT"/>
                 </RelativeLayout>
 

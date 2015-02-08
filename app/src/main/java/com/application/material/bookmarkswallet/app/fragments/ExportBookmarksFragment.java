@@ -15,7 +15,7 @@ public class ExportBookmarksFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        importExportView = inflater.inflate(R.layout.import_export_layout, null);
+        importExportView = inflater.inflate(R.layout.import_cardview_layout, null);
         return importExportView;
     }
 

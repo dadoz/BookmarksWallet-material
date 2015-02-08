@@ -17,6 +17,7 @@ import com.application.material.bookmarkswallet.app.models.BookmarkCardview;
 import com.application.material.bookmarkswallet.app.models.BookmarkCardview.CardviewTypeEnum;
 import com.application.material.bookmarkswallet.app.models.Info;
 import com.application.material.bookmarkswallet.app.models.Link;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -73,6 +74,8 @@ public class AddBookmarkRecyclerViewAdapter extends
                                 getCounter()));
                 ((InfoViewHolder) holder).mPeriodTextview.
                         setText(((Info) mDataset.get(0)).getPeriod());
+                ((InfoViewHolder) holder).mTitleView.
+                        setText((mDataset.get(0)).getTitle());
                 setAnimation(((InfoViewHolder) holder).mMainView, position);
                 return;
             }
@@ -82,6 +85,8 @@ public class AddBookmarkRecyclerViewAdapter extends
                 ((ImportViewHolder) holder).mCsvFormatCheckbox.setChecked(true);
                 ((ImportViewHolder) holder).mHtmlFormatCheckbox.setChecked(false);
                 ((ImportViewHolder) holder).mImportButton.setOnClickListener(clickListenerRef);
+                ((ImportViewHolder) holder).mTitleView.
+                        setText((mDataset.get(1)).getTitle());
                 setAnimation(((ImportViewHolder) holder).mMainView, position);
             }
 
@@ -119,12 +124,14 @@ public class AddBookmarkRecyclerViewAdapter extends
         private final TextView mCounterTextview;
         private final TextView mPeriodTextview;
         public final CardviewTypeEnum mViewType;
+        private final TextView mTitleView;
 
         public InfoViewHolder(View v) {
             super(v);
             //INFO
             mViewType = CardviewTypeEnum.INFO_CARDVIEW;
             mMainView = v;
+            mTitleView = (TextView) v.findViewById(R.id.infoTitleViewId);
             mCounterTextview = (TextView) v.findViewById(R.id.infoCounterTextviewId);
             mPeriodTextview = (TextView) v.findViewById(R.id.infoPeriodTextviewId);
         }
@@ -136,12 +143,14 @@ public class AddBookmarkRecyclerViewAdapter extends
         private final CheckBox mCsvFormatCheckbox;
         private final CheckBox mHtmlFormatCheckbox;
         public final CardviewTypeEnum mViewType;
+        private final TextView mTitleView;
 
         public ImportViewHolder(View v) {
             super(v);
 //            , boolean isHtmlFormatEnabled
             mViewType = CardviewTypeEnum.IMPORT_CARDVIEW;
             mMainView = v;
+            mTitleView = (TextView) v.findViewById(R.id.importTitleViewId);
             mCsvFormatCheckbox = (CheckBox) v.findViewById(R.id.csvFormatCheckboxId);
             mHtmlFormatCheckbox = (CheckBox) v.findViewById(R.id.htmlFormatCheckboxId);
             mImportButton = (TextView) v.findViewById(R.id.importButtonId);

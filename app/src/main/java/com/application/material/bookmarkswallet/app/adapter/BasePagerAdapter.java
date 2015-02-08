@@ -73,7 +73,7 @@ public class BasePagerAdapter extends PagerAdapter {
                         container, false);
                 break;
             case 1:
-                view = mainActivityRef.getLayoutInflater().inflate(R.layout.import_export_layout,
+                view = mainActivityRef.getLayoutInflater().inflate(R.layout.add_bookmark_fragment,
                         container, false);
         }
 

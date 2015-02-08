@@ -18,6 +18,7 @@ import android.support.v7.widget.*;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.*;
 
 import java.util.ArrayList;
@@ -251,6 +252,15 @@ public class LinksListFragment extends Fragment
 		}
 	}
 
+	private void toggleAddLinkButton(boolean isVisible) {
+		//hide fab button
+		addLinkButton.animate().
+				translationY(isVisible ? 170 : 0).
+				setInterpolator(new DecelerateInterpolator(3.f)).
+				setStartDelay(200).
+				start();
+	}
+
 	public void saveEditLinkRecyclerView() {
 		LinkRecyclerViewAdapter adapter = (LinkRecyclerViewAdapter)
 				mRecyclerView.getAdapter();
@@ -269,6 +279,7 @@ public class LinksListFragment extends Fragment
 		mainActivityRef.toggleEditActionBar(null, false);
 		mainActivityRef.invalidateOptionsMenu();
 		mRecyclerView.addOnItemTouchListener(this);
+		toggleAddLinkButton(false);
 	}
 
 	public void undoEditLinkRecyclerView() {
@@ -277,6 +288,7 @@ public class LinksListFragment extends Fragment
 		(mRecyclerView.getAdapter()).notifyDataSetChanged();
 		mainActivityRef.invalidateOptionsMenu();
 		mRecyclerView.addOnItemTouchListener(this);
+		toggleAddLinkButton(false);
 	}
 
 	public void editLinkRecyclerView(int position) {
@@ -286,6 +298,7 @@ public class LinksListFragment extends Fragment
 		mRecyclerView.getAdapter().notifyDataSetChanged();
 		mainActivityRef.invalidateOptionsMenu();
 		mRecyclerView.removeOnItemTouchListener(this);
+		toggleAddLinkButton(true);
 
 	}
 

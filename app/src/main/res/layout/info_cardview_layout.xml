@@ -30,12 +30,13 @@
             android:layout_toRightOf="@id/infoIconId"
             android:orientation="vertical">
         <TextView
+                android:id="@+id/infoTitleViewId"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/abc_text_size_title_material"
                 android:textColor="@color/material_blue_grey"
                 android:paddingRight="@dimen/medium_padding"
-                android:text="Info"/>
+                android:text="title"/>
         <TextView
                 android:id="@+id/infoPeriodTextviewId"
                 android:layout_width="fill_parent"

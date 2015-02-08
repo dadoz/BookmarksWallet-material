@@ -1,5 +1,6 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.*;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.widget.*;
 import android.util.Log;
 import android.view.*;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -43,11 +45,11 @@ import java.util.ArrayList;
 public class AddBookmarkFragment extends Fragment implements View.OnClickListener {
     public static String FRAG_TAG = "AddBookmarkFragment";
     private View addBookmarkView;
-    private AddBookmarkActivity addBookmarkActivityRef;
+    private AddBookmarkActivity mAddActivityRef;
     @InjectView(R.id.addLinkButtonId)
     FloatingActionButton addLinkButton;
     @InjectView(R.id.addBookmarkRecyclerViewId)
-    RecyclerView mAddBookmarkRecyclerView;
+    RecyclerView mRecyclerView;
 //    @InjectView(R.id.infoCounterTextviewId)
 //    TextView infoCounterTextview;
 //    @InjectView(R.id.infoPeriodTextviewId) TextView infoPeriodTextview;
@@ -73,9 +75,9 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
             throw new ClassCastException(activity.toString()
                     + " must implement OnInitActionBarInterface");
         }
-        addBookmarkActivityRef = (AddBookmarkActivity) activity;
+        mAddActivityRef = (AddBookmarkActivity) activity;
         //mmmmm
-        clipboard = (ClipboardManager) addBookmarkActivityRef.
+        clipboard = (ClipboardManager) mAddActivityRef.
                 getSystemService(Context.CLIPBOARD_SERVICE);
     }
 
@@ -90,10 +92,10 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         addBookmarkView = inflater.inflate(R.layout.add_bookmark_fragment, null);
         ButterKnife.inject(this, addBookmarkView);
         Toolbar toolbar = (Toolbar) addBookmarkView.findViewById(R.id.toolbarId);
-        addBookmarkActivityRef.initActionBarWithCustomView(toolbar);
+        mAddActivityRef.initActionBarWithCustomView(toolbar);
 
         //get view from actionbar
-        View customView = addBookmarkActivityRef.getSupportActionBar().getCustomView();
+        View customView = mAddActivityRef.getSupportActionBar().getCustomView();
         addBookmarkUrlEditText = (EditText) customView.
                 findViewById(R.id.addBookmarkUrlEditTextId);
         pasteFromClipboardButton = customView.
@@ -112,19 +114,47 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         //TODO please replace
         pasteFromClipboardButton.setOnClickListener(this);
 
-        RecyclerView.LayoutManager lm = new LinearLayoutManager(addBookmarkActivityRef);
-        mAddBookmarkRecyclerView.setLayoutManager(lm);
-//        SlideInOutBottomItemAnimator da = new SlideInOutBottomItemAnimator(mAddBookmarkRecyclerView);
-//        da.setAddDuration(1000);
-//        mAddBookmarkRecyclerView.setItemAnimator(da);
+        RecyclerView.LayoutManager lm = new LinearLayoutManager(mAddActivityRef);
+        mRecyclerView.setLayoutManager(lm);
 
         cardviewList.add(new Info(CardviewTypeEnum.INFO_CARDVIEW,
                 "Info", "01.01.15 - 02.01.15", 17));
         cardviewList.add(new BookmarkCardview(CardviewTypeEnum.IMPORT_CARDVIEW, "Import"));
 
         mAdapter = new AddBookmarkRecyclerViewAdapter(this, cardviewList);
-        mAddBookmarkRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                Log.e(TAG, "hey :" + newState);
+
+                if(newState == 2) {
+                    //hide action bar
+                    final View addBookmarkLayoutId = mAddActivityRef.getSupportActionBar().
+                            getCustomView().findViewById(R.id.addBookmarkLayoutId);
+
+                    final boolean isVisible = addBookmarkLayoutId.getVisibility() == View.VISIBLE;
+                    addBookmarkLayoutId.setVisibility(addBookmarkLayoutId.
+                            getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+
+
+                    //hide fab button
+                    addLinkButton.animate().
+                            translationY(isVisible ? -300 : 0).
+                            setInterpolator(new DecelerateInterpolator(3.f)).
+                            start();
+                }
+
+            }
+
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                Log.e(TAG, "hey");
+//            }
+        });
         //ANIMATION
         setACustomAnimation();
         //fill data to be animated
@@ -137,11 +167,11 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addLinkButtonId:
-                Toast.makeText(addBookmarkActivityRef, "hey saving", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mAddActivityRef, "hey saving", Toast.LENGTH_SHORT).show();
                 //activity result
                 String linkUrl = addBookmarkUrlEditText.getText().toString();
                 if(linkUrl.equals("")) {
-                    Toast.makeText(addBookmarkActivityRef, "bookmark url not valid", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mAddActivityRef, "bookmark url not valid", Toast.LENGTH_SHORT).show();
                     break;
                 }
 
@@ -149,12 +179,12 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
 
                 Intent intent = new Intent();
                 intent.putExtra(AddBookmarkActivity.LINK_URL_EXTRA, linkUrl);
-                addBookmarkActivityRef.setResult(Activity.RESULT_OK, intent);
-                addBookmarkActivityRef.finish();
+                mAddActivityRef.setResult(Activity.RESULT_OK, intent);
+                mAddActivityRef.finish();
                 break;
             case R.id.pasteFromClipboardButtonId:
                 if(! hasClipboardText()) {
-                    Toast.makeText(addBookmarkActivityRef, "no text in clipboard", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mAddActivityRef, "no text in clipboard", Toast.LENGTH_SHORT).show();
                     break;
                 }
 
@@ -164,20 +194,20 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
                 }
 
                 addBookmarkUrlEditText.setText(bookmarkUrl);
-//                Toast.makeText(addBookmarkActivityRef, "paste from clipboard", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mAddActivityRef, "paste from clipboard", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.importButtonId:
                 if(android.os.Build.MANUFACTURER.equals("samsung")) {
                     intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
                     intent.putExtra("CONTENT_TYPE", "*/*");
                     intent.addCategory(Intent.CATEGORY_DEFAULT);
-                    addBookmarkActivityRef.startActivityForResult(intent, PICK_IMAGE_REQ_CODE);
+                    mAddActivityRef.startActivityForResult(intent, PICK_IMAGE_REQ_CODE);
                     break;
                 }
 
                 intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("file/*");
-                addBookmarkActivityRef.startActivityForResult(intent, PICK_IMAGE_REQ_CODE);
+                mAddActivityRef.startActivityForResult(intent, PICK_IMAGE_REQ_CODE);
                 break;
 //            case R.id.importFromCSVCardId:
                 //stored bookmarks from phone browser!
@@ -194,7 +224,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case  R.id.action_settings:
-                addBookmarkActivityRef.changeFragment(
+                mAddActivityRef.changeFragment(
                         new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
                 return true;
 
