@@ -1,34 +1,22 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
-import android.animation.Animator;
 import android.app.Activity;
 import android.content.*;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.preference.PreferenceCategory;
-import android.provider.Browser;
-import android.provider.MediaStore;
-import android.provider.UserDictionary;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
 import android.support.v7.widget.*;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.AddBookmarkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.animators.SlideInOutBottomItemAnimator;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 import com.application.material.bookmarkswallet.app.models.BookmarkCardview;
@@ -36,13 +24,12 @@ import com.application.material.bookmarkswallet.app.models.BookmarkCardview.Card
 import com.application.material.bookmarkswallet.app.models.Info;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
-import java.io.FileFilter;
 import java.util.ArrayList;
 
 /**
  * Created by davide on 30/06/14.
  */
-public class AddBookmarkFragment extends Fragment implements View.OnClickListener {
+public class AddBookmarkFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     public static String FRAG_TAG = "AddBookmarkFragment";
     private View addBookmarkView;
     private AddBookmarkActivity mAddActivityRef;
@@ -124,20 +111,35 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         mAdapter = new AddBookmarkRecyclerViewAdapter(this, cardviewList);
         mRecyclerView.setAdapter(mAdapter);
 
+        View addBookmarkLayoutTemp = mAddActivityRef.getSupportActionBar().
+                getCustomView().findViewById(R.id.addBookmarkLayoutId);
+        final ViewGroup parent = ((ViewGroup) addBookmarkLayoutTemp.getParent());
+        addLinkButton.setTag(true);
+
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                Log.e(TAG, "hey :" + newState);
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Log.e(TAG, "hey : " + dy);
 
-                if(newState == 2) {
-                    //hide action bar
-                    final View addBookmarkLayoutId = mAddActivityRef.getSupportActionBar().
-                            getCustomView().findViewById(R.id.addBookmarkLayoutId);
+                if(dy > 0) {
 
-                    final boolean isVisible = addBookmarkLayoutId.getVisibility() == View.VISIBLE;
-                    addBookmarkLayoutId.setVisibility(addBookmarkLayoutId.
-                            getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                    boolean isVisible = (Boolean) addLinkButton.getTag();
+
+                    if(isVisible) {
+                        View addBookmarkLayout = mAddActivityRef.getSupportActionBar().
+                                getCustomView().findViewById(R.id.addBookmarkLayoutId);
+                        addBookmarkLayout.setVisibility(View.GONE);
+                        parent.removeView(addBookmarkLayout);
+                    } else {
+                        mAddActivityRef.getLayoutInflater().
+                                inflate(R.layout.actionbar_add_bookmark_inner_layout, parent);
+                    }
 
 
                     //hide fab button
@@ -145,15 +147,9 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
                             translationY(isVisible ? -300 : 0).
                             setInterpolator(new DecelerateInterpolator(3.f)).
                             start();
+                    addLinkButton.setTag(! isVisible);
                 }
-
             }
-
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                Log.e(TAG, "hey");
-//            }
         });
         //ANIMATION
         setACustomAnimation();
@@ -197,6 +193,9 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
 //                Toast.makeText(mAddActivityRef, "paste from clipboard", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.importButtonId:
+                boolean isCsvImport = ((CheckBox) addBookmarkView.
+                        findViewById(R.id.csvFormatCheckboxId)).isChecked();
+                Log.e(TAG, "csv - " + isCsvImport);
                 if(android.os.Build.MANUFACTURER.equals("samsung")) {
                     intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
                     intent.putExtra("CONTENT_TYPE", "*/*");
@@ -276,6 +275,31 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         // text or a Uri. Report an error.
         Log.e(TAG, "Clipboard contains an invalid data type");
         return null;
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        //reset
+        CheckBox htmlFormatCheckbox = ((CheckBox) addBookmarkView.findViewById(R.id.htmlFormatCheckboxId));
+        CheckBox csvFormatCheckbox = ((CheckBox) addBookmarkView.findViewById(R.id.csvFormatCheckboxId));
+
+        csvFormatCheckbox.setOnCheckedChangeListener(null);
+        htmlFormatCheckbox.setOnCheckedChangeListener(null);
+
+        switch (buttonView.getId()) {
+            case R.id.csvFormatCheckboxId:
+                htmlFormatCheckbox.setChecked(false);
+                Toast.makeText(mAddActivityRef, "csvFormatCheckboxId", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.htmlFormatCheckboxId:
+                csvFormatCheckbox.setChecked(false);
+                Toast.makeText(mAddActivityRef, "htmlFormatCheckboxId", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        csvFormatCheckbox.setOnCheckedChangeListener(this);
+        htmlFormatCheckbox.setOnCheckedChangeListener(this);
+        Log.e(TAG, "is checked " + isChecked);
     }
 
 }

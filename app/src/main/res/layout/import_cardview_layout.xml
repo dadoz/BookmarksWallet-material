@@ -93,17 +93,8 @@
                         </RelativeLayout>
 
                 </LinearLayout>
-                <LinearLayout
-                        android:id="@+id/divisorLineId"
-                        android:layout_below="@id/infoMainLayoutId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dip"
-                        android:layout_marginTop="@dimen/medium_padding"
-                        android:orientation="vertical"
-                        android:background="@color/material_grey_200"/>
-
                 <RelativeLayout
-                        android:layout_below="@id/divisorLineId"
+                        android:layout_below="@id/infoMainLayoutId"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -115,7 +106,7 @@
                                 android:padding="@dimen/medium_padding"
                                 android:layout_alignParentRight="true"
                                 android:textSize="@dimen/abc_text_size_title_material"
-                                android:textColor="@color/material_blue_grey"
+                                android:textColor="@color/material_green"
                                 android:text="IMPORT"/>
                 </RelativeLayout>
 

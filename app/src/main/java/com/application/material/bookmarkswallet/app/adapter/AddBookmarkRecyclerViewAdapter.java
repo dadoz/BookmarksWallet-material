@@ -8,10 +8,7 @@ import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.BookmarkCardview;
 import com.application.material.bookmarkswallet.app.models.BookmarkCardview.CardviewTypeEnum;
@@ -83,7 +80,11 @@ public class AddBookmarkRecyclerViewAdapter extends
             if(position == CardviewTypeEnum.IMPORT_CARDVIEW.ordinal()) {
                 //useful - init checkbox
                 ((ImportViewHolder) holder).mCsvFormatCheckbox.setChecked(true);
+                ((ImportViewHolder) holder).mCsvFormatCheckbox.
+                        setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) clickListenerRef);
                 ((ImportViewHolder) holder).mHtmlFormatCheckbox.setChecked(false);
+                ((ImportViewHolder) holder).mHtmlFormatCheckbox.
+                        setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) clickListenerRef);
                 ((ImportViewHolder) holder).mImportButton.setOnClickListener(clickListenerRef);
                 ((ImportViewHolder) holder).mTitleView.
                         setText((mDataset.get(1)).getTitle());

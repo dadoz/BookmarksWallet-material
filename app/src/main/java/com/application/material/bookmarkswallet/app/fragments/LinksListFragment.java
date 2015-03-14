@@ -34,6 +34,7 @@ import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChang
 import com.application.material.bookmarkswallet.app.models.Link;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.exportFeature.CSVExportParser;
+import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
@@ -46,7 +47,7 @@ public class LinksListFragment extends Fragment
 	public DbAdapter db;
 	private MainActivity mainActivityRef;
 	@InjectView(R.id.linksListId)
-	RecyclerView mRecyclerView;
+	RecyclerViewCustom mRecyclerView;
 	@InjectView(R.id.addLinkButtonId)
 	FloatingActionButton addLinkButton;
 	@InjectView(R.id.undoLinkDeletedLayoutId)
@@ -55,11 +56,13 @@ public class LinksListFragment extends Fragment
 	View undoButton;
 	@InjectView(R.id.dismissButtonId)
 	View dismissButton;
+	private View emptyLinkListView;
 	private LinearLayoutManager linearLayoutManager;
 	private ArrayList<Link> mItems;
 	private SwipeDismissRecyclerViewTouchListener touchListener;
 	private GestureDetectorCompat detector;
 	private DbConnector dbConnector;
+	private View mLinkListView;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -82,11 +85,14 @@ public class LinksListFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstance) {
-		View addReviewView = inflater.inflate(R.layout.links_list_layout,
+		mLinkListView = inflater.inflate(R.layout.links_list_layout,
 				container, false);
-		ButterKnife.inject(this, addReviewView);
+		ButterKnife.inject(this, mLinkListView);
 
-		Toolbar toolbar = (Toolbar) addReviewView.findViewById(R.id.toolbarId);
+		inflater.inflate(R.layout.empty_link_list_layout, (ViewGroup) mLinkListView.findViewById(R.id.mainContainerViewId));
+		emptyLinkListView = mLinkListView.findViewById(R.id.emptyLinkListViewId);
+
+		Toolbar toolbar = (Toolbar) mLinkListView.findViewById(R.id.toolbarId);
 		mainActivityRef.initActionBar(toolbar, null);
 		dbConnector = DbConnector.getInstance(mainActivityRef);
 
@@ -97,7 +103,7 @@ public class LinksListFragment extends Fragment
 
 		setHasOptionsMenu(true);
 		onInitView();
-		return addReviewView;
+		return mLinkListView;
 	}
 
 	private void onInitView() {
@@ -111,7 +117,10 @@ public class LinksListFragment extends Fragment
 
 		LinkRecyclerViewAdapter linkRecyclerViewAdapter =
 				new LinkRecyclerViewAdapter(this, mItems);
-
+		//empty recyclerview
+		//set an observer on recyclerview
+		emptyLinkListView.findViewById(R.id.importLocalBookmarksButtonId).setOnClickListener(this);
+		mRecyclerView.setEmptyView(emptyLinkListView);
 		mRecyclerView.setHasFixedSize(true);
 
 		linearLayoutManager = new LinearLayoutManager(mainActivityRef);
@@ -170,6 +179,11 @@ public class LinksListFragment extends Fragment
 	public void onClick(View v) {
 		LinkRecyclerViewAdapter adapter = (LinkRecyclerViewAdapter) mRecyclerView.getAdapter();
 		switch (v.getId()) {
+			case R.id.importLocalBookmarksButtonId:
+				for(Link obj : getBookmarksByProvider()) {
+					dbConnector.insertLink(obj);
+				}
+				break;
 			case R.id.addLinkButtonId:
 				mainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
 						AddBookmarkActivity.ADD_REQUEST, null);

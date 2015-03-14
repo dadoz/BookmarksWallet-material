@@ -23,13 +23,18 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:orientation="vertical">-->
     <!--</ListView>-->
-
-    <android.support.v7.widget.RecyclerView
+<RelativeLayout
+        android:id="@+id/mainContainerViewId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbarId">
+    <com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom
             android:id="@+id/linksListId"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/toolbarId"
             android:scrollbars="vertical" />
+
+</RelativeLayout>
 
     <RelativeLayout
             android:id="@+id/undoLinkDeletedLayoutId"
