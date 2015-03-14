@@ -144,7 +144,7 @@ public class MainActivity extends ActionBarActivity
         //set action bar
         setSupportActionBar(toolbar);
 
-        boolean isHomeView = title == null;
+        boolean isHomeView = (title == null);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         try {

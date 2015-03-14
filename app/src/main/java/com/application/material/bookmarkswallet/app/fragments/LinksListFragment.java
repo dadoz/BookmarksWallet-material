@@ -159,6 +159,9 @@ public class LinksListFragment extends Fragment
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+			case R.id.action_delete_all:
+				deleteAllLinks();
+				break;
 			case R.id.action_save_edit_link:
 				saveEditLinkRecyclerView();
 				break;
@@ -181,6 +184,7 @@ public class LinksListFragment extends Fragment
 		switch (v.getId()) {
 			case R.id.importLocalBookmarksButtonId:
 				for(Link obj : getBookmarksByProvider()) {
+					((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(obj);
 					dbConnector.insertLink(obj);
 				}
 				break;
@@ -396,6 +400,12 @@ public class LinksListFragment extends Fragment
 		return bookmarkList;
 	}
 
+	public boolean deleteAllLinks() {
+		//with dialog
+		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).removeAll();
+		return dbConnector.deleteAllLinks();
+	}
+
 /*
 	public void setUndoLayoutListener(LinkRecyclerViewAdapter.ViewHolder undoLayoutListener) {
 		undoButton.setOnClickListener(undoLayoutListener);
@@ -439,11 +449,6 @@ public class LinksListFragment extends Fragment
 		return true;
 	}
 
-	public boolean deleteAllLinks(){
-//		DeleteAllLinksDialog m = new DeleteAllLinksDialog();
-//        m.show(getFragmentManager(), "DeleteLinkDialog");
-		return true;
-	}
 
 	public boolean editLink(){
 //		EditLinkDialog m = new EditLinkDialog();

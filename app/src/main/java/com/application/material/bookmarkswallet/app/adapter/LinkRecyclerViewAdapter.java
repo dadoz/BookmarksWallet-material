@@ -91,6 +91,11 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         notifyItemRemoved(position);
     }
 
+    public void removeAll() {
+        mDataset.removeAll(mDataset);
+        notifyItemRemoved(0);
+    }
+
     public void update(int position, String linkName, String linkUrl) {
         Link linkToBeUpdated = mDataset.get(position);
         linkToBeUpdated.setLinkName(linkName);

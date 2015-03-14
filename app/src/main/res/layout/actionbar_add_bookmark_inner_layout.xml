@@ -23,7 +23,7 @@
             android:paddingLeft="@dimen/small_padding"
             android:paddingBottom="@dimen/medium_padding"
             android:gravity="center_vertical"
-            android:textColor="@color/material_grey"
+            android:textColor="@color/material_green"
             android:textSize="@dimen/text_size_14"
             android:text="PASTE CLIPBOARD"/>
 

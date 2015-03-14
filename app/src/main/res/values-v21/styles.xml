@@ -6,6 +6,7 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:textColorPrimary">@color/material_stone_black</item>
+        <item name="colorPrimaryDark">@color/material_mustard_yellow_600</item>
         <item name="colorPrimary">@color/material_mustard_yellow</item>
 
     </style>

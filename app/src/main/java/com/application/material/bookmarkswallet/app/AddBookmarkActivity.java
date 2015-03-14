@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.application.material.bookmarkswallet.app.fragments.AddBookmarkFragment;
 import com.application.material.bookmarkswallet.app.fragments.BaseFragment;
+import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
 import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
@@ -167,5 +168,12 @@ public class AddBookmarkActivity extends ActionBarActivity
             }
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "OnBackPressed addBookmarks - ");
+        super.onBackPressed();
+    }
+
 }
 

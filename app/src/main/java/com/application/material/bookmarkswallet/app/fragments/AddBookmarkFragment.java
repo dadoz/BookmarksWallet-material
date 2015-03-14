@@ -228,7 +228,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
                 return true;
 
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     public void setACustomAnimation() {
