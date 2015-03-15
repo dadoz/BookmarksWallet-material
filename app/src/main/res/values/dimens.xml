@@ -20,4 +20,5 @@
     <dimen name="import_label_width">130dip</dimen>
     <dimen name="button_size">30dip</dimen>
     <dimen name="export_bookmarks_framelayout_height">180dip</dimen>
+    <dimen name="text_size_18">18sp</dimen>
 </resources>

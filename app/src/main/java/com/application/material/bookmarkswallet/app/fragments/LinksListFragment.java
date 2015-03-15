@@ -97,6 +97,7 @@ public class LinksListFragment extends Fragment
 
 		Toolbar toolbar = (Toolbar) mLinkListView.findViewById(R.id.toolbarId);
 		mainActivityRef.initActionBar(toolbar, null);
+		mainActivityRef.setDefaultActionMenu(R.layout.actionbar_link_list_inner_layout, this);
 
 //		mExportBookmarksRevealView = mainActivityRef.getLayoutInflater().
 //				inflate(R.layout.reveal_layout, null);
@@ -169,11 +170,9 @@ public class LinksListFragment extends Fragment
 			case  R.id.action_settings:
                 mainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
                 return true;
-			case  R.id.action_export:
-//				Toast.makeText(mainActivityRef,
-//						"all bookmarks exported into folder: bla", Toast.LENGTH_SHORT).show();
-				showExportDialog();
-				return true;
+//			case  R.id.action_export:
+//				showExportDialog();
+//				return true;
 
 		}
 		return true;
@@ -197,10 +196,6 @@ public class LinksListFragment extends Fragment
 					dbConnector.insertLink(obj);
 				}
 				break;
-			case R.id.addLinkButtonId:
-				mainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
-						AddBookmarkActivity.ADD_REQUEST, null);
-				break;
 			case R.id.undoButtonId:
 				Toast.makeText(mainActivityRef, "undo", Toast.LENGTH_SHORT).show();
 				Link deletedItem = adapter.getDeletedItem();
@@ -214,7 +209,21 @@ public class LinksListFragment extends Fragment
 				dbConnector.deleteLinkById(deletedItem.getLinkId());
 				setUndoDeletedLinkLayout(false);
 				break;
-
+			case R.id.actionbarInfoActionIconId:
+				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
+				mainActivityRef.showLayoutByMenuAction(R.id.actionbarInfoActionIconId);
+				break;
+			case R.id.actionbarImportActionIconId:
+				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
+				break;
+			case R.id.actionbarExportActionIconId:
+				exportAction();
+				break;
+			case R.id.addLinkButtonId:
+//				mainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
+//						AddBookmarkActivity.ADD_REQUEST, null);
+				mainActivityRef.showLayoutByMenuAction(R.id.addLinkButtonId);
+				break;
 		}
 	}
 
@@ -335,7 +344,7 @@ public class LinksListFragment extends Fragment
 		dbConnector.insertLink(link);
 	}
 
-	private void showExportDialog() {
+	private void exportAction() {
 		mExportBookmarksRevealView.findViewById(R.id.exportConfirmButtonId).
 				setOnClickListener(this);
 		mExportBookmarksRevealView.findViewById(R.id.dismissExportButtonId).

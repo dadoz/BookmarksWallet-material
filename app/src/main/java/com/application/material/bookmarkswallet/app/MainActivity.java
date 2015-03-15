@@ -8,15 +8,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import com.application.material.bookmarkswallet.app.fragments.BaseFragment;
 import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
 import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
+import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeActionbarLayoutAction;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 
 
 public class MainActivity extends ActionBarActivity
-        implements OnChangeFragmentWrapperInterface, OnInitActionBarInterface {
+        implements OnChangeFragmentWrapperInterface, OnInitActionBarInterface,
+        OnChangeActionbarLayoutAction {
 
     private String TAG = "MainActivity";
     private String EXTRA_DATA = "EXTRA_DATA";
@@ -150,11 +154,12 @@ public class MainActivity extends ActionBarActivity
         try {
             actionBar.setDisplayHomeAsUpEnabled(! isHomeView);
             actionBar.setDisplayShowHomeEnabled(! isHomeView);
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayShowCustomEnabled(false);
-            actionBar.setTitle(title != null ?
-                    title :
-                    getResources().getString(R.string.app_name));
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayShowCustomEnabled(true);
+            actionBar.setCustomView(R.layout.actionbar_link_list_layout);
+//            actionBar.setTitle(title != null ?
+//                    title :
+//                    getResources().getString(R.string.app_name));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -217,4 +222,47 @@ public class MainActivity extends ActionBarActivity
     }
 
 
+    @Override
+    public View setDefaultActionMenu(int layoutId, View.OnClickListener listenerRef) {
+        View view = getLayoutInflater().inflate(layoutId, null);
+        //TODO refactor it
+        view.findViewById(R.id.actionbarExportActionIconId).setOnClickListener(listenerRef);
+        view.findViewById(R.id.actionbarImportActionIconId).setOnClickListener(listenerRef);
+        view.findViewById(R.id.actionbarInfoActionIconId).setOnClickListener(listenerRef);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null) {
+            ((ViewGroup) actionBar.getCustomView()).addView(view);
+        }
+        return view;
+    }
+
+    @Override
+    public void showDefaultActionMenu(View actionMenu) {
+
+    }
+
+    @Override
+    public void showLayoutByMenuAction(int actionId) {
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        View customView = actionBar.getCustomView();
+        switch (actionId) {
+            case R.id.actionbarInfoActionIconId:
+                View view = getLayoutInflater().inflate(R.layout.actionbar_info_action_layout, null);
+                customView.findViewById(R.id.actionbarLinkListInnerLayoutId).setVisibility(View.GONE);
+                ((ViewGroup) customView).addView(view);
+                break;
+            case R.id.addLinkButtonId:
+                view = getLayoutInflater().inflate(R.layout.actionbar_add_bookmark_inner_layout, null);
+                customView.findViewById(R.id.actionbarLinkListInnerLayoutId).setVisibility(View.GONE);
+                ((ViewGroup) customView).addView(view);
+                break;
+//            case R.id.actionbarExportActionIconId:
+//                break;
+        }
+    }
+
+    @Override
+    public void hideLayoutByMenuAction() {
+
+    }
 }
