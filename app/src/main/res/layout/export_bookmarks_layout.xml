@@ -1,0 +1,56 @@
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/exportFrameLayoutId"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/export_bookmarks_framelayout_height"
+                android:orientation="vertical">
+                <ImageView
+                        android:id="@+id/exportConfirmButtonId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/large_padding"
+                        android:src="@drawable/ic_archive_grey600_48dp"/>
+
+                <TextView
+                        android:id="@+id/exportInfoTextId"
+                        android:layout_below="@id/exportConfirmButtonId"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tap to download \nto your phone all bookmarks!"/>
+                <TextView
+                        android:id="@+id/exportSuccessTextId"
+                        android:layout_below="@id/exportConfirmButtonId"
+                        android:layout_centerHorizontal="true"
+                        android:visibility="gone"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Eureka:\n bookmarks exported with Success!\n checkout on Download folder."/>
+                <TextView
+                        android:id="@+id/exportErrorTextId"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/exportConfirmButtonId"
+                        android:visibility="gone"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Error to export bookmarks! Please contact us!"/>
+                <TextView
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:id="@+id/dismissExportButtonId"
+                        android:textSize="@dimen/abc_text_size_medium_material"
+                        android:textColor="@color/material_green"
+                        android:layout_margin="@dimen/medium_padding"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DISMISS"/>
+        </RelativeLayout>
+
+</FrameLayout>

@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.fragments.ExportBookmarksFragment;
+import com.application.material.bookmarkswallet.app.fragments.ImportBookmarksFragment;
 import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
 
 /**
@@ -36,7 +36,7 @@ public class BaseFragmentPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new LinksListFragment();
             case 1:
-                return new ExportBookmarksFragment();
+                return new ImportBookmarksFragment();
         }
         return null;
     }

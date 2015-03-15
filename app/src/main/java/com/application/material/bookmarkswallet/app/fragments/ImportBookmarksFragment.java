@@ -10,7 +10,7 @@ import com.application.material.bookmarkswallet.app.R;
 /**
  * Created by davide on 30/06/14.
  */
-public class ExportBookmarksFragment extends Fragment {
+public class ImportBookmarksFragment extends Fragment {
     private View importExportView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -6,8 +6,7 @@ import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.provider.Browser;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
@@ -18,6 +17,7 @@ import android.support.v7.widget.*;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.*;
 
@@ -30,10 +30,10 @@ import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.dbAdapter.DbAdapter;
 import com.application.material.bookmarkswallet.app.dbAdapter.DbConnector;
+import com.application.material.bookmarkswallet.app.exportFeature.CSVExportParser;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Link;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.exportFeature.CSVExportParser;
 import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -63,6 +63,8 @@ public class LinksListFragment extends Fragment
 	private GestureDetectorCompat detector;
 	private DbConnector dbConnector;
 	private View mLinkListView;
+	private View mExportBookmarksRevealView;
+	private AlertDialog exportDialog;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -73,6 +75,7 @@ public class LinksListFragment extends Fragment
 		}
 		mainActivityRef =  (MainActivity) activity;
 		db = new DbAdapter(getActivity());
+		dbConnector = DbConnector.getInstance(mainActivityRef);
 
 //		dataApplication = (DataApplication) addActivityRef.getApplication();
 	}
@@ -94,12 +97,13 @@ public class LinksListFragment extends Fragment
 
 		Toolbar toolbar = (Toolbar) mLinkListView.findViewById(R.id.toolbarId);
 		mainActivityRef.initActionBar(toolbar, null);
-		dbConnector = DbConnector.getInstance(mainActivityRef);
 
-//		//TODO TEST
-//		for(Link obj : getBookmarksByProvider()) {
-//			dbConnector.insertLink(obj);
-//		}
+//		mExportBookmarksRevealView = mainActivityRef.getLayoutInflater().
+//				inflate(R.layout.reveal_layout, null);
+//		((ViewGroup) mExportBookmarksRevealView).addView(mainActivityRef.getLayoutInflater().
+//				inflate(R.layout.export_bookmarks_layout, null));
+		mExportBookmarksRevealView = mainActivityRef.getLayoutInflater().
+				inflate(R.layout.export_bookmarks_layout, null);
 
 		setHasOptionsMenu(true);
 		onInitView();
@@ -159,9 +163,6 @@ public class LinksListFragment extends Fragment
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.action_delete_all:
-				deleteAllLinks();
-				break;
 			case R.id.action_save_edit_link:
 				saveEditLinkRecyclerView();
 				break;
@@ -172,7 +173,7 @@ public class LinksListFragment extends Fragment
 //				Toast.makeText(mainActivityRef,
 //						"all bookmarks exported into folder: bla", Toast.LENGTH_SHORT).show();
 				showExportDialog();
-                return true;
+				return true;
 
 		}
 		return true;
@@ -182,6 +183,14 @@ public class LinksListFragment extends Fragment
 	public void onClick(View v) {
 		LinkRecyclerViewAdapter adapter = (LinkRecyclerViewAdapter) mRecyclerView.getAdapter();
 		switch (v.getId()) {
+			case R.id.dismissExportButtonId:
+				if(exportDialog != null) {
+					exportDialog.dismiss();
+				}
+				break;
+			case R.id.exportConfirmButtonId:
+				exportBoomarks();
+				break;
 			case R.id.importLocalBookmarksButtonId:
 				for(Link obj : getBookmarksByProvider()) {
 					((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(obj);
@@ -327,25 +336,50 @@ public class LinksListFragment extends Fragment
 	}
 
 	private void showExportDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef);
-		Dialog dialog = builder.setTitle("bla").
-				setMessage("csv format").
-				setPositiveButton("ok", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						boolean isFileCreated = CSVExportParser.writeFile(mItems);
+		mExportBookmarksRevealView.findViewById(R.id.exportConfirmButtonId).
+				setOnClickListener(this);
+		mExportBookmarksRevealView.findViewById(R.id.dismissExportButtonId).
+				setOnClickListener(this);
 
-						Toast.makeText(mainActivityRef, isFileCreated ?
-								CSVExportParser.EXPORT_FILE_NAME + " file saved! checkout on Download folder." :
-								"Error to save " + CSVExportParser.EXPORT_FILE_NAME + " Please contact us!",
-								Toast.LENGTH_SHORT).show();
-					}
-				}).
-				create();
-		dialog.show();
+		if(exportDialog == null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef);
+			exportDialog = builder.
+					setTitle("Bookmarks export!").
+					setView(mExportBookmarksRevealView).
+					create();
+		}
+		exportDialog.show();
 	}
 
-	public void openLinkOnBrowser(String linkUrl){
+	public void exportBoomarks() {
+		View view = mExportBookmarksRevealView.findViewById(R.id.exportFrameLayoutId);
+		view.setBackgroundColor(mainActivityRef.getResources().getColor(R.color.material_green));
+		if (Build.VERSION.SDK_INT >= 21) {
+			ViewAnimationUtils.createCircularReveal(view,
+					view.getWidth() / 2, view.getHeight() / 2, 0, view.getHeight()).start();
+		}
+
+		boolean isFileCreated = CSVExportParser.writeFile(mItems);
+		if(isFileCreated) {
+			(view.findViewById(R.id.exportInfoTextId)).setVisibility(View.GONE);
+			(view.findViewById(R.id.exportSuccessTextId)).setVisibility(View.VISIBLE);
+			((TextView) view.findViewById(R.id.exportSuccessTextId)).
+					append(CSVExportParser.EXPORT_FILE_NAME);
+
+			((TextView) view.findViewById(R.id.dismissExportButtonId)).
+					setTextColor(mainActivityRef.getResources().getColor(R.color.white));
+
+			(view.findViewById(R.id.exportConfirmButtonId)).setOnClickListener(null);
+			((ImageView) view.findViewById(R.id.exportConfirmButtonId)).setImageDrawable(
+					mainActivityRef.getResources().getDrawable(R.drawable.ic_check_circle_white_48dp));
+		}
+//		Toast.makeText(mainActivityRef, isFileCreated ?
+//				CSVExportParser.EXPORT_FILE_NAME + " file saved! checkout on Download folder." :
+//				"Error to save " + CSVExportParser.EXPORT_FILE_NAME + " Please contact us!", Toast.LENGTH_SHORT).show();
+
+	}
+
+	public void openLinkOnBrowser(String linkUrl) {
 		try {
 			if(! checkURL(linkUrl)) {
 				Toast.makeText(mainActivityRef, "your URL is wrong "
@@ -400,11 +434,11 @@ public class LinksListFragment extends Fragment
 		return bookmarkList;
 	}
 
-	public boolean deleteAllLinks() {
-		//with dialog
-		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).removeAll();
-		return dbConnector.deleteAllLinks();
-	}
+//	public boolean deleteAllLinks() {
+//		with dialog
+//		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).removeAll();
+//		return dbConnector.deleteAllLinks();
+//	}
 
 /*
 	public void setUndoLayoutListener(LinkRecyclerViewAdapter.ViewHolder undoLayoutListener) {
