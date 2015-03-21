@@ -1,41 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/material_grey_200"
-    android:orientation="vertical">
-    <android.support.v7.widget.Toolbar
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/toolbarId"
-            android:background="@color/material_mustard_yellow"
-            android:layout_width="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:fab="http://schemas.android.com/apk/res-auto"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/material_grey_200"
+        android:orientation="vertical">
+
+    <RelativeLayout
+            android:id="@+id/mainContainerViewId"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:minHeight="?attr/actionBarSize"
-            app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
-    </android.support.v7.widget.Toolbar>
+            android:layout_below="@id/toolbarId">
+        <com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom
+                android:id="@+id/linksListId"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"/>
+    </RelativeLayout>
 
-    <!--<ListView-->
-        <!--android:id="@+id/linksListId"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="vertical">-->
-    <!--</ListView>-->
-<RelativeLayout
-        android:id="@+id/mainContainerViewId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbarId">
-    <com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom
-            android:id="@+id/linksListId"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical" />
-
-</RelativeLayout>
-
+    <!--BOTTOM bar-->
     <RelativeLayout
             android:id="@+id/undoLinkDeletedLayoutId"
             android:layout_width="fill_parent"
@@ -53,7 +37,7 @@
                 android:padding="@dimen/medium_padding"
                 android:textSize="@dimen/text_size_14"
                 android:text="DISMISS"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"/>
         <TextView
                 android:id="@+id/undoButtonId"
                 android:layout_width="wrap_content"
@@ -63,7 +47,7 @@
                 android:padding="@dimen/medium_padding"
                 android:textSize="@dimen/text_size_14"
                 android:text="UNDO"
-                android:textColor="@color/material_mustard_yellow" />
+                android:textColor="@color/material_mustard_yellow"/>
 
     </RelativeLayout>
 
@@ -76,7 +60,5 @@
             fab:fab_colorPressed="@color/material_blue_grey"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_centerHorizontal="true" />
-
-
+            android:layout_centerHorizontal="true"/>
 </RelativeLayout>

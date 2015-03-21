@@ -24,16 +24,17 @@ import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.dbAdapter.DbConnector;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
+import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 
 import java.util.ArrayList;
 
 public class SettingsFragment extends Fragment implements AdapterView.OnItemClickListener {
-
 	public static String FRAG_TAG = "SettingsFragment_FRAG";
 	private Activity mActivityRef;
 	private View settingsView;
 	private DbConnector dbConnector;
 	private ListView mSettingsList;
+	private ActionBarHandlerSingleton mActionBarHandlerRef;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -42,27 +43,21 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnLoadViewHandlerInterface");
 		}
-		if (! (activity instanceof OnInitActionBarInterface)) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnInitActionBarInterface");
-		}
+//		if (! (activity instanceof OnInitActionBarInterface)) {
+//			throw new ClassCastException(activity.toString()
+//					+ " must implement OnInitActionBarInterface");
+//		}
 		mActivityRef = activity;
 		dbConnector = DbConnector.getInstance(mActivityRef);
-
+		mActionBarHandlerRef = ActionBarHandlerSingleton.getInstance(mActivityRef);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState) {
 		settingsView = inflater.inflate(R.layout.settings_layout, null);
-
-		Toolbar toolbar = (Toolbar) settingsView .findViewById(R.id.toolbarId);
-		try {
-			((AddBookmarkActivity) mActivityRef).initActionBar(toolbar, "Settings");
-		} catch (ClassCastException e) {
-			((MainActivity) mActivityRef).initActionBar(toolbar, "Settings");
-		}
-
+//		Toolbar toolbar = (Toolbar) settingsView .findViewById(R.id.toolbarId);
+//		mActionBarHandlerRef.initActionBar(toolbar, "Settings");
 		return settingsView;
 	}
 

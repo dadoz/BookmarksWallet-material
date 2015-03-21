@@ -4,32 +4,26 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import com.application.material.bookmarkswallet.app.fragments.BaseFragment;
 import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
-import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
-import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeActionbarLayoutAction;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
+import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 
 
 public class MainActivity extends ActionBarActivity
-        implements OnChangeFragmentWrapperInterface, OnInitActionBarInterface,
-        OnChangeActionbarLayoutAction {
+        implements OnChangeFragmentWrapperInterface {
 
     private String TAG = "MainActivity";
     private String EXTRA_DATA = "EXTRA_DATA";
-    private boolean isItemSelected = false;
+    private ActionBarHandlerSingleton mActionBarHandlerRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mActionBarHandlerRef = ActionBarHandlerSingleton.getInstance(this);
 
         onInitView();
     }
@@ -46,7 +40,7 @@ public class MainActivity extends ActionBarActivity
 
     public void onInitView() {
         LinksListFragment linksListFragment = new LinksListFragment();
-//        BaseFragment baseFragment = new BaseFragment();
+        mActionBarHandlerRef.initActionBar();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainerFrameLayoutId,
@@ -55,8 +49,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //DEMANDING ON FRAGMENT
         return true;
     }
 
@@ -97,12 +90,10 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void pushCurrentFragTag(String tag) {
-
     }
 
     @Override
     public void setCurrentFragTag(String tag) {
-
     }
 
     @Override
@@ -122,62 +113,6 @@ public class MainActivity extends ActionBarActivity
             intent.putExtra(EXTRA_DATA, bundle);
         }
         startActivityForResult(intent, requestCode);
-    }
-
-    //TODO refactor it :D
-/*    public void initActionBarWithCustomView(Toolbar toolbar) {
-        //set action bar
-        setSupportActionBar(toolbar);
-
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        try {
-            actionBar.setDisplayHomeAsUpEnabled(false);
-            actionBar.setDisplayShowHomeEnabled(false);
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setCustomView(R.layout.actionbar_sliding_tabs_layout);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
-    @Override
-    public void initActionBarWithCustomView(Toolbar toolbar) {
-    }
-
-    public void initActionBar(Toolbar toolbar, String title) {
-        //set action bar
-        setSupportActionBar(toolbar);
-
-        boolean isHomeView = (title == null);
-
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        try {
-            actionBar.setDisplayHomeAsUpEnabled(! isHomeView);
-            actionBar.setDisplayShowHomeEnabled(! isHomeView);
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setCustomView(R.layout.actionbar_link_list_layout);
-//            actionBar.setTitle(title != null ?
-//                    title :
-//                    getResources().getString(R.string.app_name));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void toggleEditActionBar(String title, boolean isSelecting) {
-        isItemSelected = isSelecting;
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(isSelecting);
-//        actionBar.setDisplayShowCustomEnabled(! isSelecting);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(title != null ?
-                title :
-                getResources().getString(R.string.app_name));
-        actionBar.setBackgroundDrawable(getResources().
-                getDrawable(isSelecting ?
-                        R.color.material_blue_grey :
-                        R.color.material_mustard_yellow));
     }
 
     @Override
@@ -203,13 +138,15 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-
     @Override
     public void onBackPressed() {
         Log.d(TAG, "OnBackPressed - ");
-        if(isItemSelected) {
-            toggleEditActionBar(null, false);
-            //notify to frag toggle selctedItemView
+        mActionBarHandlerRef.initToggleSettings(mActionBarHandlerRef.isChangeFragment(), false);
+        mActionBarHandlerRef.toggleActionBar(null);
+        mActionBarHandlerRef.hideLayoutByMenuAction();
+
+        if(! mActionBarHandlerRef.isChangeFragment()) {
+            mActionBarHandlerRef.setIsChangeFragment(true);
             Fragment fragment  = getSupportFragmentManager()
                     .findFragmentByTag(LinksListFragment.FRAG_TAG);
             if(fragment != null) {
@@ -218,51 +155,6 @@ public class MainActivity extends ActionBarActivity
             return;
         }
         super.onBackPressed();
-
-    }
-
-
-    @Override
-    public View setDefaultActionMenu(int layoutId, View.OnClickListener listenerRef) {
-        View view = getLayoutInflater().inflate(layoutId, null);
-        //TODO refactor it
-        view.findViewById(R.id.actionbarExportActionIconId).setOnClickListener(listenerRef);
-        view.findViewById(R.id.actionbarImportActionIconId).setOnClickListener(listenerRef);
-        view.findViewById(R.id.actionbarInfoActionIconId).setOnClickListener(listenerRef);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
-            ((ViewGroup) actionBar.getCustomView()).addView(view);
-        }
-        return view;
-    }
-
-    @Override
-    public void showDefaultActionMenu(View actionMenu) {
-
-    }
-
-    @Override
-    public void showLayoutByMenuAction(int actionId) {
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        View customView = actionBar.getCustomView();
-        switch (actionId) {
-            case R.id.actionbarInfoActionIconId:
-                View view = getLayoutInflater().inflate(R.layout.actionbar_info_action_layout, null);
-                customView.findViewById(R.id.actionbarLinkListInnerLayoutId).setVisibility(View.GONE);
-                ((ViewGroup) customView).addView(view);
-                break;
-            case R.id.addLinkButtonId:
-                view = getLayoutInflater().inflate(R.layout.actionbar_add_bookmark_inner_layout, null);
-                customView.findViewById(R.id.actionbarLinkListInnerLayoutId).setVisibility(View.GONE);
-                ((ViewGroup) customView).addView(view);
-                break;
-//            case R.id.actionbarExportActionIconId:
-//                break;
-        }
-    }
-
-    @Override
-    public void hideLayoutByMenuAction() {
 
     }
 }

@@ -13,15 +13,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.application.material.bookmarkswallet.app.fragments.AddBookmarkFragment;
-import com.application.material.bookmarkswallet.app.fragments.BaseFragment;
-import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
-import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 
 
 public class AddBookmarkActivity extends ActionBarActivity
-        implements OnChangeFragmentWrapperInterface, OnInitActionBarInterface {
+        implements OnChangeFragmentWrapperInterface {
 
     public static final int ADD_REQUEST = 99;
     public static String LINK_URL_EXTRA = "LINK_URL_EXTRA";
@@ -117,7 +114,6 @@ public class AddBookmarkActivity extends ActionBarActivity
 
     }
 
-    @Override
     public void initActionBarWithCustomView(Toolbar toolbar) {
         //set action bar
         setSupportActionBar(toolbar);
@@ -135,9 +131,10 @@ public class AddBookmarkActivity extends ActionBarActivity
 
     }
 
-    @Override
-    public void initActionBar(Toolbar toolbar, String title) {
+    public void initActionBar() {
         //set action bar
+        Toolbar toolbar = null;
+        String title = null;
         setSupportActionBar(toolbar);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -154,8 +151,7 @@ public class AddBookmarkActivity extends ActionBarActivity
         }
     }
 
-    @Override
-    public void toggleEditActionBar(String title, boolean isSelecting) {
+    public void toggleActionBar(String title, boolean b, boolean c) {
     }
 
     @Override

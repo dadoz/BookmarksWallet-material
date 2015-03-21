@@ -6,6 +6,7 @@
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/actionBarCustomTitleId"
             android:paddingTop="@dimen/action_bar_title_padding"
             android:paddingBottom="@dimen/action_bar_title_padding"
             android:text="Bookmark Wallet"

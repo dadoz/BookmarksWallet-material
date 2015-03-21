@@ -3,9 +3,10 @@
 
     <string name="app_name">BookmarksWallet</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">settings</string>
 
     <string name="links_tab_name">bookmarks</string>
     <string name="import_export_tab_name">import/export</string>
+    <string name="terms_and_licences">terms and licence</string>
 
 </resources>

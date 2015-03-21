@@ -9,7 +9,14 @@ import android.support.v7.widget.Toolbar;
  */
 public interface OnInitActionBarInterface {
     public void initActionBarWithCustomView(Toolbar toolbar);
-    public void initActionBar(Toolbar toolbar, String title);
-    public void toggleEditActionBar(String title, boolean isSelecting);
+    public void initActionBar();
+
+    public void initToggleSettings(boolean isFragment, boolean isColor);
+    public void toggleActionBar(String title);
+    public boolean isChangeFragment();
+    public void setIsChangeFragment(boolean value);
+    public boolean isChangeColor();
+    public void setIsChangeColor(boolean value);
+
 
 }

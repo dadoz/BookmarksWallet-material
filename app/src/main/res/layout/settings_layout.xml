@@ -1,25 +1,10 @@
-	<LinearLayout
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:orientation="vertical">
-		<android.support.v7.widget.Toolbar
-				xmlns:app="http://schemas.android.com/apk/res-auto"
-				android:id="@+id/toolbarId"
-				android:background="@color/material_mustard_yellow"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:minHeight="?attr/actionBarSize"
-				app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
-		</android.support.v7.widget.Toolbar>
+<ListView
+		xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/settingsListId"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@android:color/background_light"
+	android:padding="10dip">
 
-	    <ListView
-	        android:id="@+id/settingsListId"
-	        android:layout_width="fill_parent"
-	        android:layout_height="fill_parent"
-	        android:background="@android:color/background_light"
-	        android:padding="10dip">
-	        
-	    </ListView>
-	    	    	    
-	</LinearLayout>
+</ListView>
+

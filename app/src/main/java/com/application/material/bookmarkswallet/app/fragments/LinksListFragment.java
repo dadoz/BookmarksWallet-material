@@ -2,9 +2,7 @@ package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.Browser;
@@ -14,10 +12,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.*;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.*;
 
@@ -25,7 +21,6 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.dbAdapter.DbAdapter;
@@ -35,6 +30,7 @@ import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChang
 import com.application.material.bookmarkswallet.app.models.Link;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
+import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
@@ -65,6 +61,7 @@ public class LinksListFragment extends Fragment
 	private View mLinkListView;
 	private View mExportBookmarksRevealView;
 	private AlertDialog exportDialog;
+	private ActionBarHandlerSingleton mActionBarHandlerRef;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -76,6 +73,7 @@ public class LinksListFragment extends Fragment
 		mainActivityRef =  (MainActivity) activity;
 		db = new DbAdapter(getActivity());
 		dbConnector = DbConnector.getInstance(mainActivityRef);
+		mActionBarHandlerRef = ActionBarHandlerSingleton.getInstance(mainActivityRef);
 
 //		dataApplication = (DataApplication) addActivityRef.getApplication();
 	}
@@ -92,17 +90,10 @@ public class LinksListFragment extends Fragment
 				container, false);
 		ButterKnife.inject(this, mLinkListView);
 
+		//TODO refactor it
 		inflater.inflate(R.layout.empty_link_list_layout, (ViewGroup) mLinkListView.findViewById(R.id.mainContainerViewId));
 		emptyLinkListView = mLinkListView.findViewById(R.id.emptyLinkListViewId);
-
-		Toolbar toolbar = (Toolbar) mLinkListView.findViewById(R.id.toolbarId);
-		mainActivityRef.initActionBar(toolbar, null);
-		mainActivityRef.setDefaultActionMenu(R.layout.actionbar_link_list_inner_layout, this);
-
-//		mExportBookmarksRevealView = mainActivityRef.getLayoutInflater().
-//				inflate(R.layout.reveal_layout, null);
-//		((ViewGroup) mExportBookmarksRevealView).addView(mainActivityRef.getLayoutInflater().
-//				inflate(R.layout.export_bookmarks_layout, null));
+		//TODO export reveal view
 		mExportBookmarksRevealView = mainActivityRef.getLayoutInflater().
 				inflate(R.layout.export_bookmarks_layout, null);
 
@@ -169,10 +160,17 @@ public class LinksListFragment extends Fragment
 				break;
 			case  R.id.action_settings:
                 mainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
+
+				mActionBarHandlerRef.hideLayoutByMenuAction();
+				mActionBarHandlerRef.initToggleSettings(true, false);
+				mActionBarHandlerRef.toggleActionBar("Setting");
                 return true;
-//			case  R.id.action_export:
-//				showExportDialog();
-//				return true;
+			case  R.id.action_export:
+				exportAction();
+				return true;
+			case  R.id.action_import:
+				Toast.makeText(mainActivityRef, "Import cardview", Toast.LENGTH_SHORT).show();
+				return true;
 
 		}
 		return true;
@@ -211,18 +209,20 @@ public class LinksListFragment extends Fragment
 				break;
 			case R.id.actionbarInfoActionIconId:
 				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
-				mainActivityRef.showLayoutByMenuAction(R.id.actionbarInfoActionIconId);
+				mActionBarHandlerRef.initToggleSettings(false, false);
+				mActionBarHandlerRef.showLayoutByMenuAction(R.id.actionbarInfoActionIconId);
 				break;
 			case R.id.actionbarImportActionIconId:
 				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
 				break;
-			case R.id.actionbarExportActionIconId:
-				exportAction();
-				break;
+//			case R.id.actionbarExportActionIconId:
+//				exportAction();
+//				break;
 			case R.id.addLinkButtonId:
 //				mainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
 //						AddBookmarkActivity.ADD_REQUEST, null);
-				mainActivityRef.showLayoutByMenuAction(R.id.addLinkButtonId);
+				mActionBarHandlerRef.initToggleSettings(false, false);
+				mActionBarHandlerRef.showLayoutByMenuAction(R.id.addLinkButtonId);
 				break;
 		}
 	}
@@ -312,7 +312,10 @@ public class LinksListFragment extends Fragment
 
 		adapter.deselectedItemPosition();
 		adapter.notifyDataSetChanged();
-		mainActivityRef.toggleEditActionBar(null, false);
+
+		mActionBarHandlerRef.initToggleSettings(false, false);
+		mActionBarHandlerRef.toggleActionBar(null);
+
 		mainActivityRef.invalidateOptionsMenu();
 		mRecyclerView.addOnItemTouchListener(this);
 		toggleAddLinkButton(false);
@@ -329,7 +332,8 @@ public class LinksListFragment extends Fragment
 
 	public void editLinkRecyclerView(int position) {
 		Toast.makeText(mainActivityRef, "edit" + position, Toast.LENGTH_SHORT).show();
-		mainActivityRef.toggleEditActionBar("Edit link", true);
+		mActionBarHandlerRef.initToggleSettings(false, true);
+		mActionBarHandlerRef.toggleActionBar("Edit link");
 		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).setSelectedItemPosition(position);
 		mRecyclerView.getAdapter().notifyDataSetChanged();
 		mainActivityRef.invalidateOptionsMenu();
