@@ -43,15 +43,15 @@ public class AddBookmarkRecyclerViewAdapter extends
                                                    int viewType) {
         switch (viewType) {
             case 0:
-                //INFO
-                View v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.info_cardview_layout, parent, false);
-                return new InfoViewHolder(v);
-            case 1:
                 //IMPORT BOOKMARK
-                v = LayoutInflater.from(parent.getContext())
+                View v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.import_cardview_layout, parent, false);
                 return new ImportViewHolder(v);
+            case 1:
+                //INFO
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.info_cardview_layout, parent, false);
+                return new InfoViewHolder(v);
         }
 
         return null;

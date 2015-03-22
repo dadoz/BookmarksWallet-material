@@ -173,7 +173,8 @@ public class LinksListFragment extends Fragment
 				exportAction();
 				return true;
 			case  R.id.action_import:
-				Toast.makeText(mainActivityRef, "Import cardview", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(mainActivityRef, "Import cardview", Toast.LENGTH_SHORT).show();
+				mainActivityRef.changeFragment(new ImportBookmarkFragment(), null, ImportBookmarkFragment.FRAG_TAG);
 				return true;
 
 		}
