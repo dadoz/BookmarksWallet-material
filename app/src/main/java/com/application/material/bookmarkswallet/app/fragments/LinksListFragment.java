@@ -110,6 +110,7 @@ public class LinksListFragment extends Fragment
 			mItems = new ArrayList<Link>();
 		}
 
+		mLinkListView.findViewById(R.id.infoButtonLayoutId).setOnClickListener(this);
 
 		LinkRecyclerViewAdapter linkRecyclerViewAdapter =
 				new LinkRecyclerViewAdapter(this, mItems);
@@ -223,6 +224,11 @@ public class LinksListFragment extends Fragment
 //						AddBookmarkActivity.ADD_REQUEST, null);
 				mActionBarHandlerRef.initToggleSettings(false, false);
 				mActionBarHandlerRef.showLayoutByMenuAction(R.id.addLinkButtonId);
+				break;
+			case R.id.infoButtonLayoutId:
+				mActionBarHandlerRef.initToggleSettings(false, false);
+				mActionBarHandlerRef.showLayoutByMenuAction(R.id.infoButtonLayoutId);
+
 				break;
 		}
 	}

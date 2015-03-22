@@ -87,8 +87,11 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         android.support.v7.app.ActionBar actionBar = getActionBar();
 
         setTitle(title);
-        actionBar.setDisplayHomeAsUpEnabled(title != null);
-        actionBar.setDisplayShowHomeEnabled(title != null);
+        boolean isHomeUpEnabled = title != null &&
+                ! title.equals("Add bookmark") &&
+                ! title.equals("Info");
+        actionBar.setDisplayHomeAsUpEnabled(isHomeUpEnabled);
+        actionBar.setDisplayShowHomeEnabled(isHomeUpEnabled);
         actionBar.setBackgroundDrawable(mActivtyRef.getResources().
                 getDrawable(isChangeColor ?
                         R.color.material_blue_grey :
@@ -120,7 +123,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         View view = null;
         String title = null;
         switch (actionId) {
-            case R.id.actionbarInfoActionIconId:
+            case R.id.infoButtonLayoutId:
                 title = "Info";
                 view = actionbarInfoActionView;
                 break;
@@ -144,7 +147,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     public void hideLayoutByMenuAction() {
         //remove view if I'll find it
         View view = getActionBar().getCustomView().
-                findViewById(R.id.actionbarInfoActionIconId);
+                findViewById(R.id.infoLayoutId);
             ((ViewGroup) getActionBar().getCustomView()).removeView(view);
 
         view = getActionBar().getCustomView().
