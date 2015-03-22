@@ -22,6 +22,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     private final View actionbarAddBookmarkInnerView;
     private boolean isChangeColor;
     private boolean isChangeFragment;
+    private View infoView;
 
     private ActionBarHandlerSingleton() {
         actionbarInfoActionView = mActivtyRef.getLayoutInflater().
@@ -96,6 +97,14 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
                 getDrawable(isChangeColor ?
                         R.color.material_blue_grey :
                         R.color.material_mustard_yellow));
+
+        if(infoView != null) {
+            infoView.setVisibility(title == null && ! isChangeColor ? View.VISIBLE : View.GONE);
+        }
+
+        if(isChangeColor) {
+            hideLayoutByMenuAction();
+        }
     }
 
     @Override
@@ -126,11 +135,16 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
             case R.id.infoButtonLayoutId:
                 title = "Info";
                 view = actionbarInfoActionView;
+
                 break;
             case R.id.addLinkButtonId:
                 title = "Add bookmark";
                 view = actionbarAddBookmarkInnerView;
                 break;
+        }
+
+        if(infoView != null) {
+            infoView.setVisibility(View.GONE);
         }
 
         if(getActionBar() != null &&
@@ -175,4 +189,11 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         isChangeColor = value;
     }
 
+    public void setInfoView(View infoView) {
+        this.infoView = infoView;
+    }
+
+    public View getInfoView() {
+        return infoView;
+    }
 }

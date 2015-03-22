@@ -91,7 +91,8 @@ public class LinksListFragment extends Fragment
 		ButterKnife.inject(this, mLinkListView);
 
 		//TODO refactor it
-		inflater.inflate(R.layout.empty_link_list_layout, (ViewGroup) mLinkListView.findViewById(R.id.mainContainerViewId));
+		inflater.inflate(R.layout.empty_link_list_layout,
+				(ViewGroup) mLinkListView.findViewById(R.id.mainContainerViewId));
 		emptyLinkListView = mLinkListView.findViewById(R.id.emptyLinkListViewId);
 		//TODO export reveal view
 		mExportBookmarksRevealView = mainActivityRef.getLayoutInflater().
@@ -111,6 +112,8 @@ public class LinksListFragment extends Fragment
 		}
 
 		mLinkListView.findViewById(R.id.infoButtonLayoutId).setOnClickListener(this);
+		mActionBarHandlerRef.setInfoView(mLinkListView.
+				findViewById(R.id.infoButtonLayoutId));
 
 		LinkRecyclerViewAdapter linkRecyclerViewAdapter =
 				new LinkRecyclerViewAdapter(this, mItems);
