@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.dbAdapter.DbAdapter;
@@ -224,10 +225,8 @@ public class LinksListFragment extends Fragment
 //				exportAction();
 //				break;
 			case R.id.addLinkButtonId:
-//				mainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
-//						AddBookmarkActivity.ADD_REQUEST, null);
-				mActionBarHandlerRef.initToggleSettings(false, false);
-				mActionBarHandlerRef.showLayoutByMenuAction(R.id.addLinkButtonId);
+				mainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
+						AddBookmarkActivity.ADD_REQUEST, null);
 				break;
 			case R.id.infoButtonLayoutId:
 				mActionBarHandlerRef.initToggleSettings(false, false);
@@ -456,6 +455,53 @@ public class LinksListFragment extends Fragment
 
 		return bookmarkList;
 	}
+
+	private void importBookmarkList() {
+//		case R.id.importButtonId:
+//		boolean isCsvImport = ((CheckBox) addBookmarkView.
+//				findViewById(R.id.csvFormatCheckboxId)).isChecked();
+//		Log.e(TAG, "csv - " + isCsvImport);
+//		if(android.os.Build.MANUFACTURER.equals("samsung")) {
+//			intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
+//			intent.putExtra("CONTENT_TYPE", "*/*");
+//			intent.addCategory(Intent.CATEGORY_DEFAULT);
+//			mAddActivityRef.startActivityForResult(intent, PICK_IMAGE_REQ_CODE);
+//			break;
+//		}
+//
+//		intent = new Intent(Intent.ACTION_GET_CONTENT);
+//		intent.setType("file/*");
+//		mAddActivityRef.startActivityForResult(intent, PICK_IMAGE_REQ_CODE);
+//		break;
+
+	}
+
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//		//reset
+//		CheckBox htmlFormatCheckbox = ((CheckBox) addBookmarkView.findViewById(R.id.htmlFormatCheckboxId));
+//		CheckBox csvFormatCheckbox = ((CheckBox) addBookmarkView.findViewById(R.id.csvFormatCheckboxId));
+//
+//		csvFormatCheckbox.setOnCheckedChangeListener(null);
+//		htmlFormatCheckbox.setOnCheckedChangeListener(null);
+//
+//		switch (buttonView.getId()) {
+//			case R.id.csvFormatCheckboxId:
+//				htmlFormatCheckbox.setChecked(false);
+//				Toast.makeText(mAddActivityRef, "csvFormatCheckboxId", Toast.LENGTH_SHORT).show();
+//				break;
+//			case R.id.htmlFormatCheckboxId:
+//				csvFormatCheckbox.setChecked(false);
+//				Toast.makeText(mAddActivityRef, "htmlFormatCheckboxId", Toast.LENGTH_SHORT).show();
+//				break;
+//		}
+//
+//		csvFormatCheckbox.setOnCheckedChangeListener(this);
+//		htmlFormatCheckbox.setOnCheckedChangeListener(this);
+//		Log.e(TAG, "is checked " + isChecked);
+	}
+
+
+
 
 //	public boolean deleteAllLinks() {
 //		with dialog

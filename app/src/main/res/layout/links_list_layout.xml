@@ -7,27 +7,8 @@
         android:background="@color/material_grey_200"
         android:orientation="vertical">
 
-        <LinearLayout
-                android:id="@+id/infoButtonLayoutId"
-                android:background="@color/material_blue_grey"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/small_padding"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_info_outline_white_36dp"/>
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:layout_marginLeft="@dimen/medium_padding"
-                        android:layout_alignParentTop="true"
-                        android:text="Info : 20 Jan - 30 Feb"/>
-
-        </LinearLayout>
+        <include layout="@layout/info_bar_layout"
+                 android:id="@+id/infoButtonLayoutId"/>
         <RelativeLayout
                 android:id="@+id/mainContainerViewId"
                 android:layout_below="@id/infoButtonLayoutId"

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:layout_height="wrap_content"
-      android:layout_width="wrap_content"
-      android:animateLayoutChanges="true"
-      android:orientation="vertical">
+            android:id="@+id/actionbarLinkListLayoutId"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical">
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -13,11 +14,6 @@
             android:text="Bookmark Wallet"
             android:textColor="@color/material_stone_black"
             android:textSize="@dimen/abc_text_size_title_material_toolbar"/>
-    <!--<LinearLayout-->
-            <!--android:id="@+id/actionMenuContainerLayoutId"-->
-            <!--android:animateLayoutChanges="true"-->
-            <!--android:background="@color/material_blue_grey"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="horizontal"/>-->
+
+    <include layout="@layout/actionbar_info_action_layout" />
 </LinearLayout>

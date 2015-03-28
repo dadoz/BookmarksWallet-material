@@ -6,42 +6,64 @@
                 android:background="@color/material_grey_200"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
-    <android.support.v7.widget.Toolbar
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/toolbarId"
-            android:background="@color/material_mustard_yellow"
+    <LinearLayout
+            android:id="@+id/clipboardLayoutId"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:minHeight="?attr/actionBarSize"
-            app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
-    </android.support.v7.widget.Toolbar>
+            android:background="@color/material_mustard_yellow">
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/large_padding"
+                android:paddingRight="@dimen/large_padding"
+                android:paddingBottom="40dip"
+                android:textColor="@color/material_stone_black"
+                android:text="Paste clipboard or type in new bookmark url"/>
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/addBookmarkRecyclerViewId"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_below="@id/toolbarId">
-    </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
 
-    <!--<include layout="@layout/info_cardview_layout"-->
-             <!--android:layout_width="wrap_content"-->
-             <!--android:layout_height="wrap_content"-->
-             <!--android:layout_margin="@dimen/medium_padding"/>-->
-    <!--<include layout="@layout/import_cardview_layout"-->
-             <!--android:layout_width="wrap_content"-->
-             <!--android:layout_height="wrap_content"-->
-             <!--android:layout_margin="@dimen/medium_padding" />-->
+        <EditText
 
-    <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addLinkButtonId"
+                android:layout_below="@id/clipboardLayoutId"
+                android:layout_marginTop="40dip"
+                android:id="@+id/urlEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/large_padding"
+                android:layout_marginRight="@dimen/large_padding"
+                android:textColor="@color/material_stone_black"
+                android:minWidth="@dimen/abc_search_view_preferred_width"
+                android:hint="type bookmark url..."/>
+
+    <!--<ImageView-->
+            <!--android:id="@+id/addLinkButtonId"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/ic_done_black_48dp"/>-->
+
+        <!--<TextView-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="100dip"-->
+                <!--android:paddingLeft="@dimen/large_padding"-->
+                <!--android:paddingRight="@dimen/large_padding"-->
+                <!--android:gravity="center"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:background="@color/material_red"-->
+                <!--android:textSize="@dimen/text_size_20"-->
+                <!--android:text="Something wrong in the url - (error message)"/>-->
+
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/pasteFromClipboardButtonId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_icon="@drawable/ic_star_white_48dp"
+            fab:fab_icon="@drawable/ic_content_paste_white_48dp"
             fab:fab_colorNormal="@color/material_blue_grey"
             fab:fab_colorPressed="@color/material_blue_grey"
-            android:layout_marginTop="@dimen/fab_margin_top"
+            android:layout_marginTop="@dimen/large_padding"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_alignParentLeft="true"/>
 </RelativeLayout>

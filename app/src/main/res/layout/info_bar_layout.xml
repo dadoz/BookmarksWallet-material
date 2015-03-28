@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:background="@color/material_mustard_yellow"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:padding="@dimen/small_padding"
+android:orientation="horizontal">
+<ImageView
+        android:id="@+id/infoIconId"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/small_padding"
+        android:src="@drawable/ic_info_outline_black_36dp"/>
+<TextView
+        android:layout_toRightOf="@id/infoIconId"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/material_stone_black"
+        android:layout_marginLeft="@dimen/medium_padding"
+        android:text="20 Jan - 30 Feb"/>
+<ImageView
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_expand_more_black_18dp"/>
+</RelativeLayout>
