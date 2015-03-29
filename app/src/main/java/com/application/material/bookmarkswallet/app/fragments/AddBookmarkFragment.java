@@ -2,31 +2,19 @@ package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
 import android.content.*;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.*;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.*;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.AddBookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeActionbarLayoutAction;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
-import com.application.material.bookmarkswallet.app.models.BookmarkCardview;
-import com.application.material.bookmarkswallet.app.models.BookmarkCardview.CardviewTypeEnum;
-import com.application.material.bookmarkswallet.app.models.Info;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 import com.application.material.bookmarkswallet.app.singleton.ClipboardSingleton;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
 
 /**
  * Created by davide on 30/06/14.
@@ -48,6 +36,7 @@ public class AddBookmarkFragment extends Fragment implements
 
     public static int PICK_IMAGE_REQ_CODE;
     private long ANIM_DURATION_FAB = 400;
+    private OnChangeActionbarLayoutAction mActionBarHandlerRef;
 
     @Override
     public void onAttach(Activity activity) {
@@ -58,6 +47,8 @@ public class AddBookmarkFragment extends Fragment implements
         }
         mAddActivityRef = (AddBookmarkActivity) activity;
         mClipboardSingleton = ClipboardSingleton.getInstance(mAddActivityRef);
+        mActionBarHandlerRef = ActionBarHandlerSingleton.getInstance(mAddActivityRef);
+
     }
 
     @Override
@@ -78,6 +69,9 @@ public class AddBookmarkFragment extends Fragment implements
     }
 
     private void onInitView() {
+        mActionBarHandlerRef.setViewOnActionMenu(mAddBookmarkView.
+                findViewById(R.id.addBookmarkLayoutId), R.id.addBookmarkLayoutId);
+
         pasteFromClipboardButton.setOnClickListener(this);
     }
 
@@ -118,7 +112,7 @@ public class AddBookmarkFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.menu_settings, menu);
+        inflater.inflate(R.menu.add_new_bookmark_menu, menu);
     }
 
     @Override

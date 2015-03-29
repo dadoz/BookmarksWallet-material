@@ -1,5 +1,6 @@
 package com.application.material.bookmarkswallet.app.fragments.interfaces;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -10,11 +11,14 @@ import android.support.v7.widget.Toolbar;
 public interface OnInitActionBarInterface {
     public void initActionBarWithCustomView(Toolbar toolbar);
     public void initActionBar();
+    public void setActivtyRef(Activity activtyRef);
 
-    public void initToggleSettings(boolean isFragment, boolean isColor);
     public void toggleActionBar(String title);
-    public boolean isChangeFragment();
-    public void setIsChangeFragment(boolean value);
+    public void toggleActionBar(String title,boolean isFragment, boolean isColor);
+    public void toggleActionBar(String title, boolean isFragment, boolean isColor, int layoutId);
+
+    public boolean getOverrideBackPressed();
+    public void setOverrideBackPressed(boolean value);
     public boolean isChangeColor();
     public void setIsChangeColor(boolean value);
 

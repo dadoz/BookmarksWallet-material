@@ -35,7 +35,8 @@ public class AddBookmarkActivity extends ActionBarActivity
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
+        mActionBarHandlerSingleton.setActivtyRef(this);
         super.onResume();
     }
 

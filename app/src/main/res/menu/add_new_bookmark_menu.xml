@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity" >
     <item android:id="@+id/action_save_new_bookmark"
-        android:title="settings"
+        android:title="save new bookmark"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_settings_black_48dp"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_done_black_48dp"
+        app:showAsAction="always" />
 </menu>

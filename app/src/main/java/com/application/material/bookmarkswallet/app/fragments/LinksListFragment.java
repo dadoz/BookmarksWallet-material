@@ -113,8 +113,8 @@ public class LinksListFragment extends Fragment
 		}
 
 		mLinkListView.findViewById(R.id.infoButtonLayoutId).setOnClickListener(this);
-		mActionBarHandlerRef.setInfoView(mLinkListView.
-				findViewById(R.id.infoButtonLayoutId));
+		mActionBarHandlerRef.setViewOnActionMenu(mLinkListView.
+				findViewById(R.id.infoButtonLayoutId), R.id.infoButtonLayoutId);
 
 		LinkRecyclerViewAdapter linkRecyclerViewAdapter =
 				new LinkRecyclerViewAdapter(this, mItems);
@@ -166,9 +166,7 @@ public class LinksListFragment extends Fragment
 			case  R.id.action_settings:
                 mainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
 
-				mActionBarHandlerRef.hideLayoutByMenuAction();
-				mActionBarHandlerRef.initToggleSettings(true, false);
-				mActionBarHandlerRef.toggleActionBar("Setting");
+				mActionBarHandlerRef.toggleActionBar("Setting", false, false);
                 return true;
 			case  R.id.action_export:
 				exportAction();
@@ -215,8 +213,8 @@ public class LinksListFragment extends Fragment
 				break;
 			case R.id.actionbarInfoActionIconId:
 				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
-				mActionBarHandlerRef.initToggleSettings(false, false);
-				mActionBarHandlerRef.showLayoutByMenuAction(R.id.actionbarInfoActionIconId);
+//				mActionBarHandlerRef.initToggleSettings(false, false);
+//				mActionBarHandlerRef.showLayoutByMenuAction(R.id.actionbarInfoActionIconId);
 				break;
 			case R.id.actionbarImportActionIconId:
 				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
@@ -229,8 +227,8 @@ public class LinksListFragment extends Fragment
 						AddBookmarkActivity.ADD_REQUEST, null);
 				break;
 			case R.id.infoButtonLayoutId:
-				mActionBarHandlerRef.initToggleSettings(false, false);
-				mActionBarHandlerRef.showLayoutByMenuAction(R.id.infoButtonLayoutId);
+//				mActionBarHandlerRef.initToggleSettings(false, false);
+//				mActionBarHandlerRef.showLayoutByMenuAction(R.id.infoButtonLayoutId);
 
 				break;
 		}
@@ -322,8 +320,7 @@ public class LinksListFragment extends Fragment
 		adapter.deselectedItemPosition();
 		adapter.notifyDataSetChanged();
 
-		mActionBarHandlerRef.initToggleSettings(false, false);
-		mActionBarHandlerRef.toggleActionBar(null);
+		mActionBarHandlerRef.toggleActionBar(null, true, false, R.id.infoButtonLayoutId);
 
 		mainActivityRef.invalidateOptionsMenu();
 		mRecyclerView.addOnItemTouchListener(this);
@@ -341,8 +338,10 @@ public class LinksListFragment extends Fragment
 
 	public void editLinkRecyclerView(int position) {
 		Toast.makeText(mainActivityRef, "edit" + position, Toast.LENGTH_SHORT).show();
-		mActionBarHandlerRef.initToggleSettings(false, true);
-		mActionBarHandlerRef.toggleActionBar("Edit link");
+
+		mActionBarHandlerRef.setEditMode(true);
+		mActionBarHandlerRef.toggleActionBar("Edit link", true, true, R.id.infoButtonLayoutId);
+
 		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).setSelectedItemPosition(position);
 		mRecyclerView.getAdapter().notifyDataSetChanged();
 		mainActivityRef.invalidateOptionsMenu();

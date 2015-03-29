@@ -1,5 +1,6 @@
 package com.application.material.bookmarkswallet.app;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -17,19 +18,20 @@ public class MainActivity extends ActionBarActivity
 
     private String TAG = "MainActivity";
     private String EXTRA_DATA = "EXTRA_DATA";
-    private ActionBarHandlerSingleton mActionBarHandlerRef;
+    private ActionBarHandlerSingleton mActionBarHandlerSingleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mActionBarHandlerRef = ActionBarHandlerSingleton.getInstance(this);
+        mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(this);
 
         onInitView();
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
+        mActionBarHandlerSingleton.setActivtyRef(this);
         super.onResume();
     }
 
@@ -40,7 +42,7 @@ public class MainActivity extends ActionBarActivity
 
     public void onInitView() {
         LinksListFragment linksListFragment = new LinksListFragment();
-        mActionBarHandlerRef.initActionBar();
+        mActionBarHandlerSingleton.initActionBar();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainerFrameLayoutId,
@@ -141,15 +143,20 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onBackPressed() {
         Log.d(TAG, "OnBackPressed - ");
-        mActionBarHandlerRef.initToggleSettings(mActionBarHandlerRef.isChangeFragment(), false);
-        mActionBarHandlerRef.toggleActionBar(null);
-        mActionBarHandlerRef.hideLayoutByMenuAction();
+        boolean isBackOverridden = mActionBarHandlerSingleton.getOverrideBackPressed();
+        boolean isEditMode = mActionBarHandlerSingleton.isEditMode();
+        mActionBarHandlerSingleton.toggleActionBar(null,
+                isBackOverridden, false); // u always must change color back to yellow
 
-        if(! mActionBarHandlerRef.isChangeFragment()) {
-            mActionBarHandlerRef.setIsChangeFragment(true);
+        if(isBackOverridden) {
+            mActionBarHandlerSingleton.setOverrideBackPressed(false);
             Fragment fragment  = getSupportFragmentManager()
                     .findFragmentByTag(LinksListFragment.FRAG_TAG);
-            if(fragment != null) {
+            if(fragment != null &&
+                    isEditMode) {
+                mActionBarHandlerSingleton.setEditMode(false);
+                mActionBarHandlerSingleton.toggleLayoutByActionMenu(R.id.infoButtonLayoutId);
+
                 ((LinksListFragment) fragment).undoEditLinkRecyclerView();
             }
             return;

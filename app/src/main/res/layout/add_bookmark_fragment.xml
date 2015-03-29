@@ -9,18 +9,9 @@
     <LinearLayout
             android:id="@+id/clipboardLayoutId"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/material_mustard_yellow">
-        <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/large_padding"
-                android:paddingRight="@dimen/large_padding"
-                android:paddingBottom="40dip"
-                android:textColor="@color/material_stone_black"
-                android:text="Paste clipboard or type in new bookmark url"/>
-
-    </LinearLayout>
+            android:layout_height="40dip"
+            android:background="@color/material_mustard_yellow"
+            android:orientation="horizontal" />
 
         <EditText
 
@@ -34,6 +25,13 @@
                 android:textColor="@color/material_stone_black"
                 android:minWidth="@dimen/abc_search_view_preferred_width"
                 android:hint="type bookmark url..."/>
+    <TextView
+            android:layout_below="@id/urlEditText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/large_padding"
+            android:textColor="@color/material_stone_black"
+            android:text="Paste clipboard or type in new bookmark url in the field above"/>
 
     <!--<ImageView-->
             <!--android:id="@+id/addLinkButtonId"-->
@@ -63,7 +61,6 @@
             fab:fab_icon="@drawable/ic_content_paste_white_48dp"
             fab:fab_colorNormal="@color/material_blue_grey"
             fab:fab_colorPressed="@color/material_blue_grey"
-            android:layout_marginTop="@dimen/large_padding"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"/>
 </RelativeLayout>

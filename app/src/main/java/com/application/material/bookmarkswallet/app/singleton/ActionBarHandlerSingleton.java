@@ -23,9 +23,11 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     private static Activity mActivtyRef;
     private static ActionBarHandlerSingleton mSingletonRef;
     private View actionbarInfoActionView;
+    private View actionbarAddBookmarkActionView;
     private boolean isChangeColor;
-    private boolean isChangeFragment;
+    private boolean isBackOverridden;
     private View infoView;
+    private boolean editMode;
 
     private ActionBarHandlerSingleton() {
     }
@@ -37,16 +39,21 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     }
 
     @Override
+    public void setActivtyRef(Activity activtyRef) {
+        mActivtyRef = activtyRef;
+    }
+
+    @Override
     public void initActionBarWithCustomView(Toolbar toolbar) {
     }
 
     public void initActionBar() {
         android.support.v7.app.ActionBar actionBar = setActionBar();
         try {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setCustomView(R.layout.actionbar_link_list_layout);
-            actionbarInfoActionView = getActionBar().getCustomView().findViewById(R.id.infoLayoutId);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayShowCustomEnabled(false);
+//            actionBar.setCustomView(R.layout.actionbar_link_list_layout);
+//            actionbarInfoActionView = getActionBar().getCustomView().findViewById(R.id.infoLayoutId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,9 +74,8 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
 
     private boolean setTitle(String title) {
         try {
-            ((TextView) getActionBar().getCustomView().
-                    findViewById(R.id.actionBarCustomTitleId)).
-                    setText(title == null ? "Bookmark Wallet" : title);
+            String appName = mActivtyRef.getResources().getString(R.string.app_name);
+            getActionBar().setTitle(title == null ? appName : title);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -78,9 +84,18 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     }
 
     @Override
-    public void initToggleSettings(boolean isFragment, boolean isColor) {
-        isChangeFragment = isFragment;
+    public void toggleActionBar(String title, boolean isBack, boolean isColor, int layoutId) {
+        isBackOverridden = isBack;
         isChangeColor = isColor;
+        toggleActionBar(title);
+        toggleLayoutByActionMenu(layoutId);
+    }
+
+    @Override
+    public void toggleActionBar(String title, boolean isBack, boolean isColor) {
+        isBackOverridden = isBack;
+        isChangeColor = isColor;
+        toggleActionBar(title);
     }
 
     @Override
@@ -88,66 +103,78 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         android.support.v7.app.ActionBar actionBar = getActionBar();
 
         setTitle(title);
-        boolean isHomeUpEnabled = title != null &&
-                ! title.equals("Add bookmark") &&
-                ! title.equals("Info");
+        boolean isHomeUpEnabled = title != null;
         actionBar.setDisplayHomeAsUpEnabled(isHomeUpEnabled);
         actionBar.setDisplayShowHomeEnabled(isHomeUpEnabled);
         actionBar.setBackgroundDrawable(mActivtyRef.getResources().
                 getDrawable(isChangeColor ?
                         R.color.material_blue_grey :
                         R.color.material_mustard_yellow));
+    }
 
-        if(infoView != null) {
-            infoView.setVisibility(title == null && ! isChangeColor ? View.VISIBLE : View.GONE);
+    @Override
+    public void setViewOnActionMenu(View view, int layoutId) {
+        switch (layoutId) {
+            case R.id.infoButtonLayoutId:
+                actionbarInfoActionView = view;
+                break;
+            case R.id.addBookmarkLayoutId:
+                actionbarAddBookmarkActionView = view;
+                break;
         }
 
-        if(isChangeColor) {
-            hideLayoutByMenuAction();
+    }
+
+    @Override
+    public void toggleLayoutByActionMenu(int layoutId) {
+        switch (layoutId) {
+            case R.id.infoButtonLayoutId:
+                int visibility = actionbarInfoActionView.getVisibility();
+                actionbarInfoActionView.setVisibility(visibility == View.VISIBLE ?
+                        View.GONE : View.VISIBLE);
+                break;
+            case R.id.addBookmarkLayoutId:
+                visibility = actionbarAddBookmarkActionView.getVisibility();
+                actionbarAddBookmarkActionView.setVisibility(visibility == View.VISIBLE ?
+                        View.GONE : View.VISIBLE);
+                break;
+        }
+
+    }
+
+    @Override
+    public void showLayoutByActionMenu(int layoutId) {
+        switch (layoutId) {
+            case R.id.infoButtonLayoutId:
+                actionbarInfoActionView.setVisibility(View.VISIBLE);
+                break;
+            case R.id.addBookmarkLayoutId:
+                actionbarAddBookmarkActionView.setVisibility(View.VISIBLE);
+                break;
+        }
+
+    }
+
+    @Override
+    public void hideLayoutByActionMenu(int layoutId) {
+        switch (layoutId) {
+            case R.id.infoButtonLayoutId:
+                actionbarInfoActionView.setVisibility(View.GONE);
+                break;
+            case R.id.addBookmarkLayoutId:
+                actionbarAddBookmarkActionView.setVisibility(View.GONE);
+                break;
         }
     }
 
-//    @Override
-//    public View setDefaultActionMenu(int layoutId, View.OnClickListener listenerRef) {
-//        return null;
-//    }
-
-//    @Override
-//    public void showDefaultActionMenu(View actionMenu) {
-//    }
-
     @Override
-    public void showLayoutByMenuAction(int actionId) {
-        View view = actionbarInfoActionView;
-        String title = "Info";
-
-        toggleActionBar(title);
-        actionbarInfoActionView.setVisibility(View.VISIBLE);
-
-//        if(getActionBar() != null &&
-//                view != null) {
-//
-//            toggleActionBar(title);
-//            if (view.getParent() == null) {
-//                ((ViewGroup) getActionBar().getCustomView()).addView(view);
-//            }
-//        }
+    public boolean getOverrideBackPressed() {
+        return isBackOverridden;
     }
 
     @Override
-    public void hideLayoutByMenuAction() {
-        //remove view if I'll find it
-        actionbarInfoActionView.setVisibility(View.GONE);
-    }
-
-    @Override
-    public boolean isChangeFragment() {
-        return isChangeFragment;
-    }
-
-    @Override
-    public void setIsChangeFragment(boolean value) {
-        isChangeFragment = value;
+    public void setOverrideBackPressed(boolean value) {
+        isBackOverridden = value;
     }
 
     @Override
@@ -166,6 +193,14 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
 
     public View getInfoView() {
         return infoView;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
     }
 
 /*    private void setListenerOnLayoutTransition() {
