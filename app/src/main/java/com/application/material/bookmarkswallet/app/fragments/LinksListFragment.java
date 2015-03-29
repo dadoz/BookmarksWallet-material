@@ -62,7 +62,7 @@ public class LinksListFragment extends Fragment
 	private View mLinkListView;
 	private View mExportBookmarksRevealView;
 	private AlertDialog exportDialog;
-	private ActionBarHandlerSingleton mActionBarHandlerRef;
+	private ActionBarHandlerSingleton mActionBarHandlerSingleton;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -74,7 +74,7 @@ public class LinksListFragment extends Fragment
 		mainActivityRef =  (MainActivity) activity;
 		db = new DbAdapter(getActivity());
 		dbConnector = DbConnector.getInstance(mainActivityRef);
-		mActionBarHandlerRef = ActionBarHandlerSingleton.getInstance(mainActivityRef);
+		mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mainActivityRef);
 
 //		dataApplication = (DataApplication) addActivityRef.getApplication();
 	}
@@ -113,8 +113,8 @@ public class LinksListFragment extends Fragment
 		}
 
 		mLinkListView.findViewById(R.id.infoButtonLayoutId).setOnClickListener(this);
-		mActionBarHandlerRef.setViewOnActionMenu(mLinkListView.
-				findViewById(R.id.infoButtonLayoutId), R.id.infoButtonLayoutId);
+		mActionBarHandlerSingleton.setViewOnActionMenu(mLinkListView.
+				findViewById(R.id.infoButtonLayoutId), R.id.infoButtonLayoutId, this);
 
 		LinkRecyclerViewAdapter linkRecyclerViewAdapter =
 				new LinkRecyclerViewAdapter(this, mItems);
@@ -165,14 +165,14 @@ public class LinksListFragment extends Fragment
 				break;
 			case  R.id.action_settings:
                 mainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
-
-				mActionBarHandlerRef.toggleActionBar("Setting", false, false);
+				mActionBarHandlerSingleton.toggleActionBar(SettingsFragment.TITLE, false, false);
                 return true;
 			case  R.id.action_export:
 				exportAction();
 				return true;
 			case  R.id.action_import:
 //				Toast.makeText(mainActivityRef, "Import cardview", Toast.LENGTH_SHORT).show();
+				mActionBarHandlerSingleton.toggleActionBar(ImportBookmarkFragment.TITLE, false, false);
 				mainActivityRef.changeFragment(new ImportBookmarkFragment(), null, ImportBookmarkFragment.FRAG_TAG);
 				return true;
 
@@ -213,8 +213,8 @@ public class LinksListFragment extends Fragment
 				break;
 			case R.id.actionbarInfoActionIconId:
 				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
-//				mActionBarHandlerRef.initToggleSettings(false, false);
-//				mActionBarHandlerRef.showLayoutByMenuAction(R.id.actionbarInfoActionIconId);
+//				mActionBarHandlerSingleton.initToggleSettings(false, false);
+//				mActionBarHandlerSingleton.showLayoutByMenuAction(R.id.actionbarInfoActionIconId);
 				break;
 			case R.id.actionbarImportActionIconId:
 				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
@@ -227,8 +227,9 @@ public class LinksListFragment extends Fragment
 						AddBookmarkActivity.ADD_REQUEST, null);
 				break;
 			case R.id.infoButtonLayoutId:
-//				mActionBarHandlerRef.initToggleSettings(false, false);
-//				mActionBarHandlerRef.showLayoutByMenuAction(R.id.infoButtonLayoutId);
+				mActionBarHandlerSingleton.toggleInnerLayoutByActionMenu(v.getId());
+//				mActionBarHandlerSingleton.initToggleSettings(false, false);
+//				mActionBarHandlerSingleton.showLayoutByMenuAction(R.id.infoButtonLayoutId);
 
 				break;
 		}
@@ -320,7 +321,7 @@ public class LinksListFragment extends Fragment
 		adapter.deselectedItemPosition();
 		adapter.notifyDataSetChanged();
 
-		mActionBarHandlerRef.toggleActionBar(null, true, false, R.id.infoButtonLayoutId);
+		mActionBarHandlerSingleton.toggleActionBar(null, true, false, R.id.infoButtonLayoutId);
 
 		mainActivityRef.invalidateOptionsMenu();
 		mRecyclerView.addOnItemTouchListener(this);
@@ -339,8 +340,8 @@ public class LinksListFragment extends Fragment
 	public void editLinkRecyclerView(int position) {
 		Toast.makeText(mainActivityRef, "edit" + position, Toast.LENGTH_SHORT).show();
 
-		mActionBarHandlerRef.setEditMode(true);
-		mActionBarHandlerRef.toggleActionBar("Edit link", true, true, R.id.infoButtonLayoutId);
+		mActionBarHandlerSingleton.setEditMode(true);
+		mActionBarHandlerSingleton.toggleActionBar("Edit link", true, true, R.id.infoButtonLayoutId);
 
 		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).setSelectedItemPosition(position);
 		mRecyclerView.getAdapter().notifyDataSetChanged();

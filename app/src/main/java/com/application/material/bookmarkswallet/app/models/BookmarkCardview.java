@@ -5,7 +5,7 @@ package com.application.material.bookmarkswallet.app.models;
  */
 public class BookmarkCardview {
 
-    public enum CardviewTypeEnum { INFO_CARDVIEW, IMPORT_CARDVIEW }
+    public enum CardviewTypeEnum { IMPORT_CARDVIEW, INFO_CARDVIEW}
     private final CardviewTypeEnum type;
     private String title;
 

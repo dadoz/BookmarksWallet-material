@@ -36,7 +36,7 @@ public class AddBookmarkFragment extends Fragment implements
 
     public static int PICK_IMAGE_REQ_CODE;
     private long ANIM_DURATION_FAB = 400;
-    private OnChangeActionbarLayoutAction mActionBarHandlerRef;
+    private ActionBarHandlerSingleton mActionBarHandlerSingleton;
 
     @Override
     public void onAttach(Activity activity) {
@@ -47,7 +47,7 @@ public class AddBookmarkFragment extends Fragment implements
         }
         mAddActivityRef = (AddBookmarkActivity) activity;
         mClipboardSingleton = ClipboardSingleton.getInstance(mAddActivityRef);
-        mActionBarHandlerRef = ActionBarHandlerSingleton.getInstance(mAddActivityRef);
+        mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mAddActivityRef);
 
     }
 
@@ -69,9 +69,9 @@ public class AddBookmarkFragment extends Fragment implements
     }
 
     private void onInitView() {
-        mActionBarHandlerRef.setViewOnActionMenu(mAddBookmarkView.
+        mActionBarHandlerSingleton.setViewOnActionMenu(mAddBookmarkView.
                 findViewById(R.id.addBookmarkLayoutId), R.id.addBookmarkLayoutId);
-
+        mActionBarHandlerSingleton.setTitle("New Bookmark");
         pasteFromClipboardButton.setOnClickListener(this);
     }
 

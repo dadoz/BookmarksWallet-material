@@ -72,7 +72,8 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
 
     }
 
-    private boolean setTitle(String title) {
+    @Override
+    public boolean setTitle(String title) {
         try {
             String appName = mActivtyRef.getResources().getString(R.string.app_name);
             getActionBar().setTitle(title == null ? appName : title);
@@ -122,7 +123,19 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
                 actionbarAddBookmarkActionView = view;
                 break;
         }
-
+    }
+    @Override
+    public void setViewOnActionMenu(View view, int layoutId, View.OnClickListener listener) {
+        switch (layoutId) {
+            case R.id.infoButtonLayoutId:
+                actionbarInfoActionView = view;
+                actionbarInfoActionView.setOnClickListener(listener);
+                break;
+            case R.id.addBookmarkLayoutId:
+                actionbarAddBookmarkActionView = view;
+                actionbarAddBookmarkActionView.setOnClickListener(listener);
+                break;
+        }
     }
 
     @Override
@@ -168,6 +181,30 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     }
 
     @Override
+    public void toggleInnerLayoutByActionMenu(int layoutId) {
+        switch (layoutId) {
+            case R.id.infoButtonLayoutId:
+                View innerView = actionbarInfoActionView.findViewById(R.id.actionbarInfoInnerLayoutId);
+                View outerView = actionbarInfoActionView.findViewById(R.id.actionbarInfoOuterLayoutId);
+                //inner template
+                innerView.setVisibility(innerView.getVisibility() == View.VISIBLE ?
+                        View.GONE : View.VISIBLE);
+
+                //outer template
+                outerView.setVisibility(outerView.getVisibility() == View.VISIBLE ?
+                        View.GONE : View.VISIBLE);
+                break;
+            case R.id.addBookmarkLayoutId:
+//                visibility = actionbarAddBookmarkActionView.getVisibility();
+//                actionbarAddBookmarkActionView.setVisibility(visibility == View.VISIBLE ?
+//                        View.GONE : View.VISIBLE);
+                break;
+        }
+
+    }
+
+
+    @Override
     public boolean getOverrideBackPressed() {
         return isBackOverridden;
     }
@@ -203,28 +240,4 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         this.editMode = editMode;
     }
 
-/*    private void setListenerOnLayoutTransition() {
-        final int[] animCounter = {4};
-        View animatedLayout = getActionBar().getCustomView().findViewById(R.id.actionbarLinkListLayoutId);
-        LayoutTransition layoutTransition = new LayoutTransition();
-        layoutTransition.addTransitionListener(new LayoutTransition.TransitionListener() {
-
-            @Override
-            public void endTransition(LayoutTransition arg0, ViewGroup arg1,
-                                      View arg2, int arg3) {
-                animCounter[0] --;
-                if(animCounter[0] == 0) {
-                    toggleActionBar(null);
-                    animCounter[0] = 4;
-                }
-            }
-
-            @Override
-            public void startTransition(LayoutTransition transition,
-                                        ViewGroup container, View view, int transitionType) {
-                Log.e(TAG, "start transition");
-
-            }});
-        ((LinearLayout) animatedLayout).setLayoutTransition(layoutTransition);
-    }*/
 }

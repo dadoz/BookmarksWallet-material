@@ -12,6 +12,7 @@ public interface OnInitActionBarInterface {
     public void initActionBarWithCustomView(Toolbar toolbar);
     public void initActionBar();
     public void setActivtyRef(Activity activtyRef);
+    public boolean setTitle(String title);
 
     public void toggleActionBar(String title);
     public void toggleActionBar(String title,boolean isFragment, boolean isColor);

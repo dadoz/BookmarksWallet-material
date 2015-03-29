@@ -15,5 +15,5 @@
             android:textColor="@color/material_stone_black"
             android:textSize="@dimen/abc_text_size_title_material_toolbar"/>
 
-    <include layout="@layout/actionbar_info_action_layout" />
+    <include layout="@layout/actionbar_info_action_inner_layout" />
 </LinearLayout>

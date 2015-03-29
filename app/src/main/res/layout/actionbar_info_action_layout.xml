@@ -1,54 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/infoLayoutId"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/material_mustard_yellow"
-              android:visibility="gone"
-              android:orientation="vertical">
-    <LinearLayout
-            android:layout_width="wrap_content"
+    <RelativeLayout
+            android:id="@+id/actionbarInfoOuterLayoutId"
+            android:background="@color/material_mustard_yellow"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/medium_padding"
-            android:gravity="bottom"
+            android:padding="@dimen/small_padding"
             android:orientation="horizontal">
         <ImageView
+                android:id="@+id/expandMoreIconId"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_bookmark_outline_white_36dp"/>
+                android:src="@drawable/ic_expand_more_black_36dp"/>
         <TextView
+                android:layout_toLeftOf="@id/expandMoreIconId"
+                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_30"
-                android:textColor="@color/white"
-                android:text="7 "/>
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="bookmarks added"/>
-    </LinearLayout>
-
-    <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_padding"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_14"
+                android:textSize="@dimen/text_size_20"
                 android:textColor="@color/material_stone_black"
-                android:text="24 Feb - 30 Mar"/>
-
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/small_padding"
-                android:src="@drawable/ic_refresh_black_24dp"/>
-
-    </LinearLayout>
+                android:layout_marginRight="@dimen/medium_padding"
+                android:text="20 Jan - 30 Feb"/>
+    </RelativeLayout>
+    <include layout="@layout/actionbar_info_action_inner_layout"/>
 </LinearLayout>

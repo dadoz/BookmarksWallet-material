@@ -27,6 +27,7 @@ import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitA
 import com.application.material.bookmarkswallet.app.models.BookmarkCardview;
 import com.application.material.bookmarkswallet.app.models.BookmarkCardview.CardviewTypeEnum;
 import com.application.material.bookmarkswallet.app.models.Info;
+import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 public class ImportBookmarkFragment extends Fragment implements
         View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     public static String FRAG_TAG = "ExportBookmarkFragment";
+    public static String TITLE = "Import";
     private View addBookmarkView;
     private MainActivity mMainActivityRef;
     @InjectView(R.id.addBookmarkRecyclerViewId)
@@ -45,6 +47,7 @@ public class ImportBookmarkFragment extends Fragment implements
     public static int PICK_IMAGE_REQ_CODE;
     private AddBookmarkRecyclerViewAdapter mAdapter;
     private ArrayList<BookmarkCardview> cardviewList;
+    private ActionBarHandlerSingleton mActionBarHandlerSingleton;
 
     @Override
     public void onAttach(Activity activity) {
@@ -54,6 +57,7 @@ public class ImportBookmarkFragment extends Fragment implements
                     + " must implement OnLoadViewHandlerInterface");
         }
         mMainActivityRef = (MainActivity) activity;
+        mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mMainActivityRef);
     }
 
     @Override
@@ -73,6 +77,7 @@ public class ImportBookmarkFragment extends Fragment implements
     }
 
     private void onInitView() {
+        mActionBarHandlerSingleton.setTitle(TITLE);
         cardviewList = new ArrayList<BookmarkCardview>();
         RecyclerView.LayoutManager lm = new LinearLayoutManager(mMainActivityRef);
         mRecyclerView.setLayoutManager(lm);
@@ -119,6 +124,7 @@ public class ImportBookmarkFragment extends Fragment implements
             case  R.id.action_settings:
                 mMainActivityRef.changeFragment(
                         new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
+                mActionBarHandlerSingleton.toggleActionBar(SettingsFragment.TITLE, false, false);
                 return true;
 
         }

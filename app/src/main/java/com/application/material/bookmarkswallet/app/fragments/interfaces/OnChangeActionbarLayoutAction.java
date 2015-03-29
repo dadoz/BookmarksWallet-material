@@ -10,4 +10,6 @@ public interface OnChangeActionbarLayoutAction {
     public void hideLayoutByActionMenu(int layoutId);
     public void toggleLayoutByActionMenu(int actionId);
     public void setViewOnActionMenu(View view, int layoutId);
+    public void setViewOnActionMenu(View view, int layoutId, View.OnClickListener listener);
+    public void toggleInnerLayoutByActionMenu(int layoutId);
 }

@@ -65,17 +65,6 @@ public class AddBookmarkRecyclerViewAdapter extends
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         try {
-            if(position == CardviewTypeEnum.INFO_CARDVIEW.ordinal()) {
-                ((InfoViewHolder) holder).mCounterTextview.
-                        setText(Integer.toString(((Info) mDataset.get(0)).
-                                getCounter()));
-                ((InfoViewHolder) holder).mPeriodTextview.
-                        setText(((Info) mDataset.get(0)).getPeriod());
-                ((InfoViewHolder) holder).mTitleView.
-                        setText((mDataset.get(0)).getTitle());
-                setAnimation(((InfoViewHolder) holder).mMainView, position);
-                return;
-            }
 
             if(position == CardviewTypeEnum.IMPORT_CARDVIEW.ordinal()) {
                 //useful - init checkbox
@@ -87,8 +76,20 @@ public class AddBookmarkRecyclerViewAdapter extends
                         setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) clickListenerRef);
                 ((ImportViewHolder) holder).mImportButton.setOnClickListener(clickListenerRef);
                 ((ImportViewHolder) holder).mTitleView.
-                        setText((mDataset.get(1)).getTitle());
+                        setText((mDataset.get(0)).getTitle());
                 setAnimation(((ImportViewHolder) holder).mMainView, position);
+            }
+
+            if(position == CardviewTypeEnum.INFO_CARDVIEW.ordinal()) {
+                ((InfoViewHolder) holder).mCounterTextview.
+                        setText(Integer.toString(((Info) mDataset.get(0)).
+                                getCounter()));
+                ((InfoViewHolder) holder).mPeriodTextview.
+                        setText(((Info) mDataset.get(0)).getPeriod());
+                ((InfoViewHolder) holder).mTitleView.
+                        setText((mDataset.get(1)).getTitle());
+                setAnimation(((InfoViewHolder) holder).mMainView, position);
+                return;
             }
 
         } catch (Exception e) {

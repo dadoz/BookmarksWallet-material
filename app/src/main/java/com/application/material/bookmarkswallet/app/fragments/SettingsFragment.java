@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 public class SettingsFragment extends Fragment implements AdapterView.OnItemClickListener {
 	public static String FRAG_TAG = "SettingsFragment_FRAG";
+	public static String TITLE = "Settings";
 	private Activity mActivityRef;
 	private View settingsView;
 	private DbConnector dbConnector;
