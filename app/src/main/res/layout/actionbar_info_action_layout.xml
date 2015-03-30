@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/infoButtonLayoutId"
+        android:background="@color/material_mustard_yellow"
+        android:elevation="10dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
     <RelativeLayout
             android:id="@+id/actionbarInfoOuterLayoutId"
-            android:background="@color/material_mustard_yellow"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/small_padding"

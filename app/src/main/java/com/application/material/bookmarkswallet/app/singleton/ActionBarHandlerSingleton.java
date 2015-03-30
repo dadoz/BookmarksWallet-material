@@ -3,15 +3,19 @@ package com.application.material.bookmarkswallet.app.singleton;
 import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.animators.ScrollManager;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeActionbarLayoutAction;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 
 /**
  * Created by davide on 18/03/15.
@@ -22,6 +26,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     private static final String TAG = "ActionBarHandlerSingleton";
     private static Activity mActivtyRef;
     private static ActionBarHandlerSingleton mSingletonRef;
+    private static ScrollManager scrollManager;
     private View actionbarInfoActionView;
     private View actionbarAddBookmarkActionView;
     private boolean isChangeColor;
@@ -34,6 +39,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
 
     public static ActionBarHandlerSingleton getInstance(Activity activityRef) {
         mActivtyRef = activityRef;
+        scrollManager = new ScrollManager();
         return mSingletonRef == null ?
                 mSingletonRef = new ActionBarHandlerSingleton() : mSingletonRef;
     }
@@ -52,15 +58,42 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         try {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayShowCustomEnabled(false);
-//            actionBar.setCustomView(R.layout.actionbar_link_list_layout);
-//            actionbarInfoActionView = getActionBar().getCustomView().findViewById(R.id.infoLayoutId);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private android.support.v7.app.ActionBar setActionBar() {
-        Toolbar toolbar = (Toolbar) mActivtyRef.findViewById(R.id.toolbarId);
+        final Toolbar toolbar = (Toolbar) mActivtyRef.findViewById(R.id.toolbarId);
+        ((ActionBarActivity) mActivtyRef).setSupportActionBar(toolbar);
+        android.support.v7.app.ActionBar actionBar =
+                ((ActionBarActivity) mActivtyRef).getSupportActionBar();
+        return actionBar;
+    }
+
+    public void initActionBar(final RecyclerView recyclerView, final FloatingActionButton fab) {
+        android.support.v7.app.ActionBar actionBar = setActionBar(recyclerView, fab);
+        try {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayShowCustomEnabled(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private android.support.v7.app.ActionBar setActionBar(final RecyclerView recyclerView, final FloatingActionButton fab) {
+        final Toolbar toolbar = (Toolbar) mActivtyRef.findViewById(R.id.toolbarId);
+        toolbar.post(new Runnable() {
+            @Override public void run() {
+                scrollManager.attach(recyclerView);
+                if(actionbarInfoActionView != null) {
+                    scrollManager.addView(actionbarInfoActionView, ScrollManager.Direction.UP);
+                }
+                scrollManager.addView(fab, ScrollManager.Direction.DOWN);
+                scrollManager.setInitialOffset(toolbar.getHeight());
+            }
+        });
+
         ((ActionBarActivity) mActivtyRef).setSupportActionBar(toolbar);
         android.support.v7.app.ActionBar actionBar =
                 ((ActionBarActivity) mActivtyRef).getSupportActionBar();
@@ -239,5 +272,4 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     public void setEditMode(boolean editMode) {
         this.editMode = editMode;
     }
-
 }

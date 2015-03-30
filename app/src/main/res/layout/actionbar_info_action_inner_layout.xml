@@ -6,6 +6,7 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/small_padding"
                 android:background="@color/lightGrey"
+                android:elevation="-5dp"
                 android:visibility="gone"
                 android:orientation="vertical">
     <LinearLayout

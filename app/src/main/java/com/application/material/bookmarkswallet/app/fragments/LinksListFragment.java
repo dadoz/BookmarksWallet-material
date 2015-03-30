@@ -105,6 +105,10 @@ public class LinksListFragment extends Fragment
 	}
 
 	private void onInitView() {
+		View actionbarInfoView = mLinkListView.findViewById(R.id.infoButtonLayoutId);
+		mActionBarHandlerSingleton.initActionBar(mRecyclerView, addLinkButton);
+		mActionBarHandlerSingleton.setViewOnActionMenu(actionbarInfoView, R.id.infoButtonLayoutId, this);
+
 		mItems = dbConnector.getLinkList();
 //		mItems = getLinkListMockup();
 
@@ -113,8 +117,6 @@ public class LinksListFragment extends Fragment
 		}
 
 		mLinkListView.findViewById(R.id.infoButtonLayoutId).setOnClickListener(this);
-		mActionBarHandlerSingleton.setViewOnActionMenu(mLinkListView.
-				findViewById(R.id.infoButtonLayoutId), R.id.infoButtonLayoutId, this);
 
 		LinkRecyclerViewAdapter linkRecyclerViewAdapter =
 				new LinkRecyclerViewAdapter(this, mItems);

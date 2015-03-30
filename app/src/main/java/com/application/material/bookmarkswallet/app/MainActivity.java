@@ -42,7 +42,6 @@ public class MainActivity extends ActionBarActivity
 
     public void onInitView() {
         LinksListFragment linksListFragment = new LinksListFragment();
-        mActionBarHandlerSingleton.initActionBar();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainerFrameLayoutId,
