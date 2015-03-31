@@ -19,6 +19,7 @@ package com.application.material.bookmarkswallet.app.animators;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 public class ScrollManager extends RecyclerView.OnScrollListener {
 
     private static final int MIN_SCROLL_TO_HIDE = 10;
+    private final View infoView;
     private boolean hidden;
     private int accummulatedDy;
     private int totalDy;
@@ -41,7 +43,8 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
 
     public static enum Direction {UP, DOWN}
 
-    public ScrollManager() {
+    public ScrollManager(View view) {
+        infoView = view;
     }
 
     public void attach(RecyclerView recyclerView) {
@@ -95,6 +98,7 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
     }
 
     private void hideView(View view, Direction direction) {
+        //hide view
         int height = calculateTranslation(view);
         int translateY = direction == Direction.UP ? -height : height;
         runTranslateAnimation(view, translateY, new AccelerateInterpolator(3));
@@ -118,11 +122,42 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
         runTranslateAnimation(view, 0, new DecelerateInterpolator(3));
     }
 
-    private void runTranslateAnimation(View view, int translateY, Interpolator interpolator) {
+    private void runTranslateAnimation(View view, final int translateY, Interpolator interpolator) {
         Animator slideInAnimation = ObjectAnimator.ofFloat(view, "translationY", translateY);
         slideInAnimation.setDuration(view.getContext().getResources().getInteger(android.R.integer.config_mediumAnimTime));
         slideInAnimation.setInterpolator(interpolator);
         slideInAnimation.start();
+        final int[] ended = new int[1];
+        ended[0] = 1;
+
+        slideInAnimation.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if ((translateY != 0 && infoView.getVisibility() == View.GONE) ||
+                        (translateY == 0 && infoView.getVisibility() == View.VISIBLE)) {
+                    return;
+                }
+
+                Log.e("TAG", "animation");
+                infoView.setVisibility(translateY != 0 ? View.GONE : View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
     }
 
 

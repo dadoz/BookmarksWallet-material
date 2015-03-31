@@ -2,12 +2,19 @@ package com.application.material.bookmarkswallet.app;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
+import android.content.res.TypedArray;
+import android.support.v4.app.*;
+import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.transition.Transition;
+import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import com.application.material.bookmarkswallet.app.fragments.ImportBookmarkFragment;
 import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
@@ -75,18 +82,14 @@ public class MainActivity extends ActionBarActivity
             return;
         }
         fragment.setArguments(bundle);
+        FragmentTransaction transaction = getSupportFragmentManager().
+                beginTransaction();
 
-        if(tag.equals(LinksListFragment.FRAG_TAG)) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerFrameLayoutId, fragment, tag)
-                    .commit();
-            return;
+        transaction.replace(R.id.fragmentContainerFrameLayoutId, fragment, tag);
+        if(! tag.equals(LinksListFragment.FRAG_TAG)) {
+            transaction.addToBackStack(null);
         }
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainerFrameLayoutId, fragment, tag)
-                .addToBackStack(null)
-                .commit();
+        transaction.commit();
     }
 
     @Override
@@ -113,7 +116,10 @@ public class MainActivity extends ActionBarActivity
         if(bundle != null) {
             intent.putExtra(EXTRA_DATA, bundle);
         }
-        startActivityForResult(intent, requestCode);
+//        View decor = getWindow().getDecorView();
+//        enterTransition.excludeTarget(decor.findViewById(R.id.toolbarId), true);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
+            ActivityCompat.startActivityForResult(this, intent, requestCode, options.toBundle());
     }
 
     @Override

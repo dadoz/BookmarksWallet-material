@@ -5,11 +5,12 @@
              android:layout_width="fill_parent">
 
     <RelativeLayout
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
             android:id="@+id/linkLayoutId"
             android:baselineAligned="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
             android:orientation="horizontal"
             android:minHeight="@dimen/link_row_height">
 
@@ -38,35 +39,35 @@
                 android:textColor="@color/material_grey_200"/>
 
         <!-- TITLE -->
-<LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerInParent="true"
-        android:layout_toRightOf="@id/linkIconId"
-        android:layout_toLeftOf="@id/linkTimestampId">
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerInParent="true"
+                android:layout_toRightOf="@id/linkIconId"
+                android:layout_toLeftOf="@id/linkTimestampId">
 
-        <TextView
-                android:id="@+id/linkTitleId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/medium_padding"
-                android:text="bookmark name"
-                android:textSize="@dimen/text_size_24"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textColor="@color/material_blue_grey"/>
-        <TextView
-                android:id="@+id/linkUrlId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/medium_padding"
-                android:text="http://www.google.it"
-                android:textSize="@dimen/text_size_14"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/material_grey"/>
-</LinearLayout>
+            <TextView
+                    android:id="@+id/linkTitleId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/medium_padding"
+                    android:text="bookmark name"
+                    android:textSize="@dimen/text_size_24"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="@color/material_blue_grey"/>
+            <TextView
+                    android:id="@+id/linkUrlId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/medium_padding"
+                    android:text="http://www.google.it"
+                    android:textSize="@dimen/text_size_14"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/material_grey"/>
+        </LinearLayout>
 
         <include layout="@layout/link_edit_row"
                  android:layout_toRightOf="@id/linkIconId"
@@ -75,8 +76,4 @@
                  android:layout_width="fill_parent"/>
     </RelativeLayout>
 
-    <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="?android:attr/selectableItemBackground"/>-->
 </FrameLayout>

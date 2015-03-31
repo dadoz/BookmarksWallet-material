@@ -2,10 +2,14 @@ package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
 import android.content.*;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.*;
 import android.view.animation.OvershootInterpolator;
+import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -16,11 +20,14 @@ import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChang
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 import com.application.material.bookmarkswallet.app.singleton.ClipboardSingleton;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by davide on 30/06/14.
  */
 public class AddBookmarkFragment extends Fragment implements
-        View.OnClickListener {
+        View.OnClickListener, TextWatcher {
     public static String FRAG_TAG = "AddBookmarkFragment";
     private String TAG = "AddBookmarkFragment";
 
@@ -30,12 +37,9 @@ public class AddBookmarkFragment extends Fragment implements
     View pasteFromClipboardButton;
     @InjectView(R.id.urlEditText)
     EditText mUrlEditText;
-//    private View pasteFromClipboardButton;
-//    private ActionBarHandlerSingleton mActionBarHandlerRef;
     private ClipboardSingleton mClipboardSingleton;
 
     public static int PICK_IMAGE_REQ_CODE;
-    private long ANIM_DURATION_FAB = 400;
     private ActionBarHandlerSingleton mActionBarHandlerSingleton;
 
     @Override
@@ -71,8 +75,10 @@ public class AddBookmarkFragment extends Fragment implements
     private void onInitView() {
         mActionBarHandlerSingleton.setViewOnActionMenu(mAddBookmarkView.
                 findViewById(R.id.addBookmarkLayoutId), R.id.addBookmarkLayoutId);
+        ((EditText) mAddBookmarkView.findViewById(R.id.urlEditText)).addTextChangedListener(this);
         mActionBarHandlerSingleton.setTitle("New Bookmark");
         pasteFromClipboardButton.setOnClickListener(this);
+
     }
 
     public void onViewCreated(View v, Bundle savedInstance) { super.onViewCreated(v, savedInstance); }
@@ -80,21 +86,6 @@ public class AddBookmarkFragment extends Fragment implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.pasteFromClipboardButtonId:
-//                Toast.makeText(mAddActivityRef, "hey saving", Toast.LENGTH_SHORT).show();
-//                //activity result
-////                String linkUrl = mUrlEditText.getText().toString();
-//                String linkUrl = "";
-//                if(linkUrl.equals("")) {
-//                    Toast.makeText(mAddActivityRef, "bookmark url not valid", Toast.LENGTH_SHORT).show();
-//                    break;
-//                }
-//
-//                Intent intent = new Intent();
-//                intent.putExtra(AddBookmarkActivity.LINK_URL_EXTRA, linkUrl);
-//                mAddActivityRef.setResult(Activity.RESULT_OK, intent);
-//                mAddActivityRef.finish();
-//                break;
             case R.id.pasteFromClipboardButtonId:
                 if(! mClipboardSingleton.hasClipboardText()) {
                     Toast.makeText(mAddActivityRef, "no text in clipboard", Toast.LENGTH_SHORT).show();
@@ -123,11 +114,9 @@ public class AddBookmarkFragment extends Fragment implements
                         new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
                 return true;
             case  R.id.action_save_new_bookmark:
-                Toast.makeText(mAddActivityRef, "hey saving", Toast.LENGTH_SHORT).show();
-                //activity result
                 String linkUrl = mUrlEditText.getText().toString();
-                if(linkUrl.equals("")) {
-                    Toast.makeText(mAddActivityRef, "bookmark url not valid", Toast.LENGTH_SHORT).show();
+                if(! isValidUrl(linkUrl)) {
+                    invalidateLinkView(true);
                     return true;
                 }
 
@@ -141,15 +130,55 @@ public class AddBookmarkFragment extends Fragment implements
         return super.onOptionsItemSelected(item);
     }
 
-    public void setACustomAnimation() {
-        pasteFromClipboardButton.animate()
-                .translationY(0)
-                .setInterpolator(new OvershootInterpolator(1.f))
-                .setStartDelay(300)
-                .setDuration(ANIM_DURATION_FAB)
-                .start();
+    private boolean isValidUrl(String linkUrl) {
+        Pattern p = Pattern.
+                compile("(@)?(href=')?(HREF=')?(HREF=\")?(href=\")?(http://)?[a-zA-Z_0-9\\-]+(\\.\\w[a-zA-Z_0-9\\-]+)+(/[#&\\n\\-=?\\+\\%/\\.\\w]+)?");
+
+        Matcher m = p.matcher(linkUrl);
+        return ! linkUrl.equals("") &&
+                m.matches();
+    }
+
+    private void invalidateLinkView(boolean invalidate) {
+        View view = mAddBookmarkView.findViewById(R.id.addBookmarkMainContainerLayoutId);
+        mAddBookmarkView.findViewById(R.id.addBookmarkDescriptionTextId).setVisibility(invalidate ? View.GONE : View.VISIBLE);
+        mAddBookmarkView.findViewById(R.id.errorLayoutId).setVisibility(invalidate ? View.VISIBLE : View.GONE);
+        view.setBackgroundColor(mAddActivityRef.
+                getResources().getColor(invalidate ? R.color.material_red : R.color.lightGrey));
+
+        if(invalidate) {
+            if (Build.VERSION.SDK_INT >= 21) {
+                ViewAnimationUtils.createCircularReveal(view,
+                        view.getWidth() / 2,
+                        view.getHeight() / 2,
+                        0,
+                        view.getHeight()).start();
+            }
+        }
 
     }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        invalidateLinkView(false);
+    }
+
+//    public void setACustomAnimation() {
+//        pasteFromClipboardButton.animate()
+//                .translationY(0)
+//                .setInterpolator(new OvershootInterpolator(1.f))
+//                .setStartDelay(300)
+//                .setDuration(ANIM_DURATION_FAB)
+//                .start();
+//    }
 
     //    private void onInitView() {
 //        cardviewList = new ArrayList<BookmarkCardview>();

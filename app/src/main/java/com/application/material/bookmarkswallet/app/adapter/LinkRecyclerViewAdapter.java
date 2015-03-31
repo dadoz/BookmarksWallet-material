@@ -50,7 +50,8 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mLabelView.setText(mDataset.get(position).getLinkName());
-        holder.mEditLabelView.setText(mDataset.get(position).getLinkName());
+        holder.mEditLabelView.setText(mDataset.get(position).getLinkName().trim().equals("") ?
+                "Not set" : mDataset.get(position).getLinkName().trim());
         holder.mEditUrlView.setText(mDataset.get(position).getLinkUrl());
         holder.mUrlView.setText(mDataset.get(position).getLinkUrl());
 

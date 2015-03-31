@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.application.material.bookmarkswallet.app.fragments.AddBookmarkFragment;
+import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
@@ -78,18 +80,14 @@ public class AddBookmarkActivity extends ActionBarActivity
             return;
         }
         fragment.setArguments(bundle);
+        FragmentTransaction transaction = getSupportFragmentManager().
+                beginTransaction();
 
-        if(tag.equals(AddBookmarkFragment.FRAG_TAG)) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerFrameLayoutId, fragment, tag)
-                    .commit();
-            return;
+        transaction.replace(R.id.fragmentContainerFrameLayoutId, fragment, tag);
+        if(! tag.equals(LinksListFragment.FRAG_TAG)) {
+            transaction.addToBackStack(null);
         }
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainerFrameLayoutId, fragment, tag)
-                .addToBackStack(null)
-                .commit();
+        transaction.commit();
 
     }
 

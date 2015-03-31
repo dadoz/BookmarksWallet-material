@@ -6,8 +6,8 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/small_padding"
                 android:background="@color/lightGrey"
-                android:elevation="-5dp"
                 android:visibility="gone"
+                android:elevation="-5dp"
                 android:orientation="vertical">
     <LinearLayout
             android:layout_centerVertical="true"
@@ -32,16 +32,11 @@
                     android:textColor="@color/material_red"
                     android:text="bookmarks added"/>
         </LinearLayout>
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_18"
-                android:textColor="@color/material_stone_black"
-                android:text="24 Feb - 30 Mar"/>
     </LinearLayout>
 
 
     <ImageView
+            android:id="@+id/refreshInfoIconId"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"

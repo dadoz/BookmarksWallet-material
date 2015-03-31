@@ -2,12 +2,16 @@ package com.application.material.bookmarkswallet.app.singleton;
 
 import android.animation.LayoutTransition;
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,7 +43,6 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
 
     public static ActionBarHandlerSingleton getInstance(Activity activityRef) {
         mActivtyRef = activityRef;
-        scrollManager = new ScrollManager();
         return mSingletonRef == null ?
                 mSingletonRef = new ActionBarHandlerSingleton() : mSingletonRef;
     }
@@ -82,6 +85,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     }
 
     private android.support.v7.app.ActionBar setActionBar(final RecyclerView recyclerView, final FloatingActionButton fab) {
+        scrollManager = new ScrollManager(actionbarInfoActionView);
         final Toolbar toolbar = (Toolbar) mActivtyRef.findViewById(R.id.toolbarId);
         toolbar.post(new Runnable() {
             @Override public void run() {
@@ -218,14 +222,16 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         switch (layoutId) {
             case R.id.infoButtonLayoutId:
                 View innerView = actionbarInfoActionView.findViewById(R.id.actionbarInfoInnerLayoutId);
-                View outerView = actionbarInfoActionView.findViewById(R.id.actionbarInfoOuterLayoutId);
-                //inner template
                 innerView.setVisibility(innerView.getVisibility() == View.VISIBLE ?
                         View.GONE : View.VISIBLE);
 
-                //outer template
-                outerView.setVisibility(outerView.getVisibility() == View.VISIBLE ?
-                        View.GONE : View.VISIBLE);
+
+                // Get the Image container object
+                ImageView imgStatus = (ImageView) actionbarInfoActionView.findViewById(R.id.refreshInfoIconId);
+                Drawable d = mActivtyRef.getResources().getDrawable(R.drawable.ic_refresh_black_36dp);
+                int iconColor = mActivtyRef.getResources().getColor(R.color.material_red);
+                d.setColorFilter(iconColor, PorterDuff.Mode.SRC_ATOP);
+                imgStatus.setImageDrawable(d);
                 break;
             case R.id.addBookmarkLayoutId:
 //                visibility = actionbarAddBookmarkActionView.getVisibility();

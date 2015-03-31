@@ -4,11 +4,12 @@
         xmlns:fab="http://schemas.android.com/apk/res-auto"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/material_grey"
+        android:background="@color/material_grey_200"
         android:orientation="vertical">
 
     <include layout="@layout/actionbar_info_action_layout"/>
     <RelativeLayout
+            android:layout_below="@id/infoButtonLayoutId"
             android:id="@+id/mainContainerViewId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">

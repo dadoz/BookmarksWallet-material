@@ -10,6 +10,7 @@
 
     <RelativeLayout
             android:id="@+id/actionbarInfoOuterLayoutId"
+            android:background="?android:selectableItemBackground"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/small_padding"

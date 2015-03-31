@@ -3,7 +3,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:fab="http://schemas.android.com/apk/res-auto"
                 android:orientation="vertical"
-                android:background="@color/material_grey_200"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
     <LinearLayout
@@ -11,13 +10,20 @@
             android:layout_width="fill_parent"
             android:layout_height="40dip"
             android:background="@color/material_mustard_yellow"
-            android:orientation="horizontal" />
+            android:orientation="horizontal"/>
 
+    <LinearLayout
+            android:layout_below="@id/clipboardLayoutId"
+            android:id="@+id/addBookmarkMainContainerLayoutId"
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_height="fill_parent">
         <EditText
-
+                android:id="@+id/urlEditText"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:layout_below="@id/clipboardLayoutId"
                 android:layout_marginTop="40dip"
-                android:id="@+id/urlEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/large_padding"
@@ -25,36 +31,42 @@
                 android:textColor="@color/material_stone_black"
                 android:minWidth="@dimen/abc_search_view_preferred_width"
                 android:hint="type bookmark url..."/>
-    <TextView
-            android:layout_below="@id/urlEditText"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/large_padding"
-            android:textColor="@color/material_stone_black"
-            android:text="Paste clipboard or type in new bookmark url in the field above"/>
-
-    <!--<ImageView-->
-            <!--android:id="@+id/addLinkButtonId"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/ic_done_black_48dp"/>-->
-
-        <!--<TextView-->
-                <!--android:layout_alignParentBottom="true"-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="100dip"-->
-                <!--android:paddingLeft="@dimen/large_padding"-->
-                <!--android:paddingRight="@dimen/large_padding"-->
-                <!--android:gravity="center"-->
-                <!--android:textColor="@color/white"-->
-                <!--android:background="@color/material_red"-->
-                <!--android:textSize="@dimen/text_size_20"-->
-                <!--android:text="Something wrong in the url - (error message)"/>-->
+        <TextView
+                android:id="@+id/addBookmarkDescriptionTextId"
+                android:layout_below="@id/urlEditText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/large_padding"
+                android:textColor="@color/material_stone_black"
+                android:text="Paste clipboard or type in new bookmark url in the field above"/>
 
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
+        <LinearLayout
+                android:id="@+id/errorLayoutId"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/large_padding"
+                android:visibility="gone"
+                android:orientation="horizontal">
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_error_white_48dp"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/large_padding"
+                    android:textColor="@color/white"
+                    android:text="Wrong bookmark url:\nplease check it out or add http "/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/pasteFromClipboardButtonId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

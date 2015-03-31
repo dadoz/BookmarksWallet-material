@@ -106,11 +106,10 @@ public class LinksListFragment extends Fragment
 
 	private void onInitView() {
 		View actionbarInfoView = mLinkListView.findViewById(R.id.infoButtonLayoutId);
-		mActionBarHandlerSingleton.initActionBar(mRecyclerView, addLinkButton);
 		mActionBarHandlerSingleton.setViewOnActionMenu(actionbarInfoView, R.id.infoButtonLayoutId, this);
+		mActionBarHandlerSingleton.initActionBar(mRecyclerView, addLinkButton);
 
 		mItems = dbConnector.getLinkList();
-//		mItems = getLinkListMockup();
 
 		if(mItems == null) {
 			mItems = new ArrayList<Link>();
@@ -141,10 +140,6 @@ public class LinksListFragment extends Fragment
 		//ON ITEM CLICK and LONG CLICK
 		detector = new GestureDetectorCompat(mainActivityRef, new RecyclerViewOnGestureListener());
 		mRecyclerView.addOnItemTouchListener(this);
-//		mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(mainActivityRef, this));
-//		mRecyclerView.addItemDecoration(new DividerItemDecoration(mainActivityRef,
-//				DividerItemDecoration.VERTICAL_LIST));
-//		mRecyclerView.setOnScrollListener(customScrollListener);
 
 		addLinkButton.setOnClickListener(this);
 		undoButton.setOnClickListener(this);
@@ -397,9 +392,6 @@ public class LinksListFragment extends Fragment
 			((ImageView) view.findViewById(R.id.exportConfirmButtonId)).setImageDrawable(
 					mainActivityRef.getResources().getDrawable(R.drawable.ic_check_circle_white_48dp));
 		}
-//		Toast.makeText(mainActivityRef, isFileCreated ?
-//				CSVExportParser.EXPORT_FILE_NAME + " file saved! checkout on Download folder." :
-//				"Error to save " + CSVExportParser.EXPORT_FILE_NAME + " Please contact us!", Toast.LENGTH_SHORT).show();
 
 	}
 
@@ -419,6 +411,10 @@ public class LinksListFragment extends Fragment
 			Toast.makeText(mainActivityRef, "I cant load your URL "
 					+ e.getMessage(), Toast.LENGTH_SHORT).show();
 		}
+	}
+
+	private boolean checkURL(String linkUrl) {
+		return true;
 	}
 
 	//TODO rename it
@@ -447,7 +443,6 @@ public class LinksListFragment extends Fragment
 					Log.e(TAG, "hey " + cursor.getString(urlId));
 //					Bitmap favicon = BitmapFactory.decodeByteArray(cursor.getBlob(faviconId), 0, 0, null);
 					bookmarkList.add(new Link(-1, null, cursor.getString(titleId), cursor.getString(urlId), -1));
-					Toast.makeText(mainActivityRef, cursor.getString(titleId) + " - " + cursor.getString(urlId), Toast.LENGTH_LONG).show();
 				} while(cursor.moveToNext());
 
 			}
@@ -458,171 +453,6 @@ public class LinksListFragment extends Fragment
 		return bookmarkList;
 	}
 
-	private void importBookmarkList() {
-//		case R.id.importButtonId:
-//		boolean isCsvImport = ((CheckBox) addBookmarkView.
-//				findViewById(R.id.csvFormatCheckboxId)).isChecked();
-//		Log.e(TAG, "csv - " + isCsvImport);
-//		if(android.os.Build.MANUFACTURER.equals("samsung")) {
-//			intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
-//			intent.putExtra("CONTENT_TYPE", "*/*");
-//			intent.addCategory(Intent.CATEGORY_DEFAULT);
-//			mAddActivityRef.startActivityForResult(intent, PICK_IMAGE_REQ_CODE);
-//			break;
-//		}
-//
-//		intent = new Intent(Intent.ACTION_GET_CONTENT);
-//		intent.setType("file/*");
-//		mAddActivityRef.startActivityForResult(intent, PICK_IMAGE_REQ_CODE);
-//		break;
-
-	}
-
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//		//reset
-//		CheckBox htmlFormatCheckbox = ((CheckBox) addBookmarkView.findViewById(R.id.htmlFormatCheckboxId));
-//		CheckBox csvFormatCheckbox = ((CheckBox) addBookmarkView.findViewById(R.id.csvFormatCheckboxId));
-//
-//		csvFormatCheckbox.setOnCheckedChangeListener(null);
-//		htmlFormatCheckbox.setOnCheckedChangeListener(null);
-//
-//		switch (buttonView.getId()) {
-//			case R.id.csvFormatCheckboxId:
-//				htmlFormatCheckbox.setChecked(false);
-//				Toast.makeText(mAddActivityRef, "csvFormatCheckboxId", Toast.LENGTH_SHORT).show();
-//				break;
-//			case R.id.htmlFormatCheckboxId:
-//				csvFormatCheckbox.setChecked(false);
-//				Toast.makeText(mAddActivityRef, "htmlFormatCheckboxId", Toast.LENGTH_SHORT).show();
-//				break;
-//		}
-//
-//		csvFormatCheckbox.setOnCheckedChangeListener(this);
-//		htmlFormatCheckbox.setOnCheckedChangeListener(this);
-//		Log.e(TAG, "is checked " + isChecked);
-	}
-
-
-
-
-//	public boolean deleteAllLinks() {
-//		with dialog
-//		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).removeAll();
-//		return dbConnector.deleteAllLinks();
-//	}
-
-/*
-	public void setUndoLayoutListener(LinkRecyclerViewAdapter.ViewHolder undoLayoutListener) {
-		undoButton.setOnClickListener(undoLayoutListener);
-		dismissButton.setOnClickListener(undoLayoutListener);
-	}*/
-
-/*
-	RecyclerView.OnScrollListener customScrollListener = new RecyclerView.OnScrollListener() {
-		int mLastFirstVisibleItem = 0;
-
-		@Override
-		public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-		}
-
-		@Override
-		public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-			super.onScrolled(recyclerView, dx, dy);
-			final int currentFirstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
-
-			if (currentFirstVisibleItem > this.mLastFirstVisibleItem) {
-				mainActivityRef.getSupportActionBar().hide();
-			} else if (currentFirstVisibleItem < this.mLastFirstVisibleItem) {
-				mainActivityRef.getSupportActionBar().show();
-			}
-
-			this.mLastFirstVisibleItem = currentFirstVisibleItem;
-		}
-	};*/
-
-
-
-	public boolean deleteLink(Link linkObj, ListView mRecyclerView,
-							  boolean isNetworkAvailable) {
-//		if(!isNetworkAvailable){
-//			NetworkNotAvailableDialog m = new NetworkNotAvailableDialog();
-//	        m.show(getFragmentManager(), "NetworkNotAvailableDialog");
-//			return false;
-//		}
-//		DeleteLinkDialog m = new DeleteLinkDialog();
-//        m.show(getFragmentManager(), "DeleteLinkDialog");
-		return true;
-	}
-
-
-	public boolean editLink(){
-//		EditLinkDialog m = new EditLinkDialog();
-//        m.show(getFragmentManager(), "EditLinkDialog");
-		return true;
-	}
-
-	//TODO TO BE IMPLEMENTED
-	private boolean checkURL(String linkUrl) {
-		return true;
-	}
-
-
-
-//    public void onInitView(){
-//    	final ListView mRecyclerView = (ListView)getActivity().findViewById(R.id.linksListId);
-//
-//    	ArrayList<Link> linksDataList = DbConnector.getLinksWrappLocalDb(db);
-//    	if(linksDataList==null){
-//    		Log.d(TAG, "set list from JSON data");
-//    		try{
-//	    		//TODO change iconPath on DB
-//				linksDataList = DbConnector.getLinksListFromJSONData();
-//				for(Link link:linksDataList)
-//					DbConnector.insertLinkWrappLocalDb(db, link, false);
-//
-//	    	}catch(Exception e){
-//	    		Log.e(TAG, "error - " + e);
-//	    	}
-//    	}
-//    	if(linksDataList==null){
-//    		//TODO handle empty - need to be refreshed
-//    		toastMessageWrapper("empty List - img");
-//
-//    		//TEST
-//    		Link emptyLink=new Link(Utils.EMPTY_LINKID, Utils.EMPTY_STRING, "Empty list - sorry",
-//    				Utils.EMPTY_STRING, Utils.EMPTY_LINKID, Utils.EMPTY_STRING, false);
-//    		linksDataList=new ArrayList<Link>();
-//    		linksDataList.add(emptyLink);
-//    	}
-//
-//    	Collections.reverse(linksDataList);
-//    	ArrayAdapter<Link> adapter=new LinkCustomAdapter(getActivity(), R.layout.link_row, linksDataList);
-//		mRecyclerView.setAdapter(adapter);
-//    	Utils.setLinksList(linksDataList);
-//    }
-
-
-
-	/**SHARE LINK***/
-//	public boolean shareLink(Link linkObj,MenuItem item){
-//		TODO need to be fixed - it doesnt work
-//        ShareActionProvider actionProvider = (ShareActionProvider) item.getActionProvider();
-//        if(actionProvider==null){
-//        	Log.d(TAG, "providerNull");
-//        	return false;
-//        }
-//        actionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
-        // Note that you can set/change the intent any time,
-        // say when the user has selected an image.
-//        actionProvider.setShareIntent(createShareIntent(linkObj.getLinkUrl()));
-//		return true;
-//	}
-
-//    private Intent createShareIntent(String uri) {
-//        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-//        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-//        return shareIntent;
-//    }
 
 
 

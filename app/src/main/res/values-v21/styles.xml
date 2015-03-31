@@ -9,6 +9,9 @@
         <item name="colorPrimaryDark">@color/material_mustard_yellow_600</item>
         <item name="colorPrimary">@color/material_mustard_yellow</item>
 
+        <item name="android:windowEnterTransition">@android:transition/fade</item>
+        <item name="android:windowReturnTransition">@android:transition/fade</item>
+
     </style>
 
 </resources>
