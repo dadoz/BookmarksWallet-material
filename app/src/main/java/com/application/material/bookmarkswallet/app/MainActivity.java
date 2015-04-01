@@ -68,9 +68,6 @@ public class MainActivity extends ActionBarActivity
             case android.R.id.home:
                 onBackPressed();
                 return true;
-//            case  R.id.action_settings:
-//                changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
-//                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -116,8 +113,6 @@ public class MainActivity extends ActionBarActivity
         if(bundle != null) {
             intent.putExtra(EXTRA_DATA, bundle);
         }
-//        View decor = getWindow().getDecorView();
-//        enterTransition.excludeTarget(decor.findViewById(R.id.toolbarId), true);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
             ActivityCompat.startActivityForResult(this, intent, requestCode, options.toBundle());
     }
@@ -133,7 +128,7 @@ public class MainActivity extends ActionBarActivity
                         LinksListFragment fragment = (LinksListFragment)
                                 getSupportFragmentManager().findFragmentByTag(LinksListFragment.FRAG_TAG);
                         String url = data.getExtras().getString(AddBookmarkActivity.LINK_URL_EXTRA);
-                        fragment.addLinkOnRecyclerView(url);
+                        fragment.addLinkOnRecyclerViewWrapper(url);
 
                         Log.e(TAG, url);
 
@@ -162,7 +157,7 @@ public class MainActivity extends ActionBarActivity
                 mActionBarHandlerSingleton.setEditMode(false);
                 mActionBarHandlerSingleton.toggleLayoutByActionMenu(R.id.infoButtonLayoutId);
 
-                ((LinksListFragment) fragment).undoEditLinkRecyclerView();
+                ((LinksListFragment) fragment).undoEditLinkRecyclerViewWrapper();
             }
             return;
         }

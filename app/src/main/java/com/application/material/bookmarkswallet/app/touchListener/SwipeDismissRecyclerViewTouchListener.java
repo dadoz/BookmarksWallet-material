@@ -19,6 +19,7 @@ package com.application.material.bookmarkswallet.app.touchListener;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.SystemClock;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +31,7 @@ import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.widget.AbsListView;
 import android.widget.ListView;
+import com.application.material.bookmarkswallet.app.R;
 
 import java.util.ArrayList;
 import java.util.Collections;

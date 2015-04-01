@@ -1,36 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/infoButtonLayoutId"
         android:background="@color/material_mustard_yellow"
+        android:id="@+id/infoButtonLayoutId"
         android:elevation="10dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-    <RelativeLayout
-            android:id="@+id/actionbarInfoOuterLayoutId"
-            android:background="?android:selectableItemBackground"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/small_padding"
-            android:orientation="horizontal">
-        <ImageView
-                android:id="@+id/expandMoreIconId"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_expand_more_black_36dp"/>
         <TextView
-                android:layout_toLeftOf="@id/expandMoreIconId"
-                android:layout_centerVertical="true"
+                android:background="?android:selectableItemBackground"
+                android:padding="@dimen/medium_padding"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_20"
                 android:textColor="@color/material_stone_black"
-                android:layout_marginRight="@dimen/medium_padding"
-                android:text="20 Jan - 30 Feb"/>
-    </RelativeLayout>
+                android:layout_marginLeft="@dimen/medium_padding"
+                android:layout_gravity="left"
+                android:text="INFO"/>
     <include layout="@layout/actionbar_info_action_inner_layout"/>
 </LinearLayout>

@@ -7,29 +7,41 @@
         android:background="@color/material_grey_200"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/big_padding"
-        android:layout_marginBottom="@dimen/big_padding"
         android:layout_centerVertical="true"
         android:orientation="vertical">
 
     <EditText
+            android:layout_centerVertical="true"
+
             android:id="@+id/editLinkTitleId"
+            android:minWidth="@dimen/abc_search_view_preferred_width"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_20"
             android:padding="@dimen/medium_padding"
-            android:text=" - "
             android:ellipsize="end"
             android:maxLines="2"
             android:focusable="true" />
-    <EditText
-            android:id="@+id/editLinkUrlId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/medium_padding"
-            android:text=" - "
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textSize="@dimen/text_size_14"
-            android:textColor="@color/material_grey" />
+    <!--<TextView-->
+            <!--android:id="@+id/editLinkUrlId"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="@dimen/medium_padding"-->
+            <!--android:text=" - "-->
+            <!--android:ellipsize="end"-->
+            <!--android:maxLines="2"-->
+            <!--android:textSize="@dimen/text_size_14"-->
+            <!--android:textColor="@color/material_grey" />-->
+        <TextView
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
+                android:id="@+id/editUrlLabelId"
+                android:layout_gravity="right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/medium_padding"
+                android:textSize="@dimen/abc_text_size_title_material"
+                android:textColor="@color/material_green"
+                android:text="EDIT URL"/>
+
 </LinearLayout>

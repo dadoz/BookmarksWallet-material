@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+        android:padding="@dimen/medium_padding">
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Change url and save it back."/>
+
+    <EditText
+            android:id="@+id/editLinkUrDialoglId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="@dimen/abc_search_view_preferred_width"
+            android:padding="@dimen/medium_padding"
+            android:text=" - "
+            android:ellipsize="end"
+            android:minLines="2"
+            android:maxLines="8"
+            android:textSize="@dimen/text_size_14"
+            android:textColor="@color/material_grey" />
+
+    <TextView
+            android:layout_gravity="right"
+            android:id="@+id/saveEditUrlDialogId"
+            android:textSize="@dimen/abc_text_size_medium_material"
+            android:textColor="@color/material_green"
+            android:layout_margin="@dimen/medium_padding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SAVE"/>
+
+</LinearLayout>

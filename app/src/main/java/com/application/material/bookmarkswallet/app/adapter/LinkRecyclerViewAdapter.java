@@ -18,6 +18,7 @@ import java.util.ArrayList;
  * Created by davide on 17/01/15.
  */
 public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerViewAdapter.ViewHolder> {
+    private final Fragment mListenerRef;
     private String TAG = "LinkRecyclerViewAdapter";
     private ArrayList<Link> mDataset;
     private static Context mActivityRef;
@@ -28,6 +29,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     public LinkRecyclerViewAdapter(Fragment fragmentRef, ArrayList<Link> myDataset) {
         mDataset = myDataset;
         mActivityRef = fragmentRef.getActivity();
+        mListenerRef = fragmentRef;
     }
 
     public Link getDeletedItem() {
@@ -49,11 +51,12 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mLabelView.setText(mDataset.get(position).getLinkName());
-        holder.mEditLabelView.setText(mDataset.get(position).getLinkName().trim().equals("") ?
+        holder.mLabelView.setText(mDataset.get(position).getLinkName().trim().equals("") ?
                 "Not set" : mDataset.get(position).getLinkName().trim());
-        holder.mEditUrlView.setText(mDataset.get(position).getLinkUrl());
+        holder.mEditLabelView.setText(mDataset.get(position).getLinkName());
         holder.mUrlView.setText(mDataset.get(position).getLinkUrl());
+        holder.mEditUrlLabelView.setTag(mDataset.get(position).getLinkUrl());
+        holder.mEditUrlLabelView.setOnClickListener((View.OnClickListener) mListenerRef);
 
         //BUG - big huge whtever u want
         boolean isSelectedItem = mSelectedItemPosition == position;
@@ -61,14 +64,10 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
                 mActivityRef.getResources().getColor(R.color.material_grey_200) :
                 mActivityRef.getResources().getColor(R.color.white));
         holder.mEditLinkView.setVisibility(isSelectedItem ? View.VISIBLE : View.GONE);
-
     }
 
     @Override
     public int getItemCount() {
-//        if(mDataset == null) {
-//            return 0;
-//        }
         return mDataset.size();
     }
 
@@ -99,8 +98,12 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
 
     public void update(int position, String linkName, String linkUrl) {
         Link linkToBeUpdated = mDataset.get(position);
-        linkToBeUpdated.setLinkName(linkName);
-        linkToBeUpdated.setLinkUrl(linkUrl);
+        if(linkName != null) {
+            linkToBeUpdated.setLinkName(linkName);
+        }
+        if(linkUrl != null) {
+            linkToBeUpdated.setLinkUrl(linkUrl);
+        }
 
         notifyDataSetChanged();
     }
@@ -114,13 +117,17 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final EditText mEditUrlView;
+//        private final TextView mEditUrlView;
+        private final TextView mEditUrlLabelView;
         private final EditText mEditLabelView;
         private final View mEditLinkView;
+//        private final TextView mEditUrlView;
         public ImageView mIconView;
         public TextView mLabelView;
         public TextView mUrlView;
         public View mMainView;
+        private String editNameTemp;
+        private String editUrlTemp;
 
         public ViewHolder(View v, LinkRecyclerViewAdapter adapterRef) {
             super(v);
@@ -129,14 +136,20 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
             mIconView = (ImageView) v.findViewById(R.id.linkIconId);
             mLabelView = (TextView) v.findViewById(R.id.linkTitleId);
             mUrlView = (TextView) v.findViewById(R.id.linkUrlId);
-            mEditUrlView = (EditText) v.findViewById(R.id.editLinkUrlId);
+//            mEditUrlView = (TextView) v.findViewById(R.id.editLinkUrlId);
+            mEditUrlLabelView = (TextView) v.findViewById(R.id.editUrlLabelId);
             mEditLabelView = (EditText) v.findViewById(R.id.editLinkTitleId);
         }
         public String getEditLinkName() {
-            return mEditLabelView.getText().toString();
+//            return mEditLabelView.getText().toString();
+            return editNameTemp = mEditLabelView.getText().toString();
         }
         public String getEditUrlName() {
-            return mEditUrlView.getText().toString();
+            return editUrlTemp;
+        }
+
+        public void setEditUrlName(String value) {
+            editUrlTemp = value;
         }
     }
 

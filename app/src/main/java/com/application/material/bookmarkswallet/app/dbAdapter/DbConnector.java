@@ -104,7 +104,8 @@ public class DbConnector implements BookmarksDataInterface {
         }
 
         dbAdapter.close();
-        return linkList.size() == 0 ? null : linkList;
+        return linkList;
+//        return linkList.size() == 0 ? linkList : linkList;
     }
 
     /**
