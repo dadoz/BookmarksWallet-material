@@ -25,7 +25,7 @@ import java.util.ArrayList;
 /**
  * Created by davide on 31/03/15.
  */
-public class RecyclerViewActionsSingleton {
+public class RecyclerViewActionsSingleton implements View.OnClickListener {
     private static final String TAG = "RecyclerViewActionsSingleton";
     private static RecyclerViewActionsSingleton mInstance;
     private static RecyclerView mRecyclerView;
@@ -179,6 +179,19 @@ public class RecyclerViewActionsSingleton {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.saveEditUrlDialogId:
+                saveEditLinkDialog();
+                break;
+            case R.id.editUrlLabelId:
+                String url = (String) v.getTag();
+                editLinkDialog(url);
+                break;
+        }
+
+    }
 
     public ArrayList<Link> getBookmarksByProvider() {
         //TODO asyncTask
@@ -209,8 +222,6 @@ public class RecyclerViewActionsSingleton {
 
         return bookmarkList;
     }
-
-
 
 
     public ArrayList<Link> getLinkListMockup() {

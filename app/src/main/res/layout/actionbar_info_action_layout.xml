@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:background="@color/material_mustard_yellow"
         android:id="@+id/infoButtonLayoutId"
-        android:elevation="10dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:elevation="10dp"
         android:orientation="vertical">
-        <TextView
-                android:background="?android:selectableItemBackground"
-                android:padding="@dimen/medium_padding"
-                android:layout_width="wrap_content"
+        <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_20"
-                android:textColor="@color/material_stone_black"
-                android:layout_marginLeft="@dimen/medium_padding"
-                android:layout_gravity="left"
-                android:text="INFO"/>
+                android:background="@color/material_mustard_yellow">
+                <TextView
+                        android:background="?android:selectableItemBackground"
+                        android:padding="@dimen/medium_padding"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_20"
+                        android:textColor="@color/material_stone_black"
+                        android:layout_marginLeft="@dimen/medium_padding"
+                        android:layout_gravity="left"
+                        android:text="INFO"/>
+
+        </LinearLayout>
     <include layout="@layout/actionbar_info_action_inner_layout"/>
 </LinearLayout>

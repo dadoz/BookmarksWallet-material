@@ -122,9 +122,9 @@ public class LinksListFragment extends Fragment
 		LinkRecyclerViewAdapter linkRecyclerViewAdapter =
 				new LinkRecyclerViewAdapter(this, mItems);
 
-		//empty recyclerview set an observer on recyclerview
-		detector = new GestureDetectorCompat(mainActivityRef, new RecyclerViewOnGestureListener());
-		touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this);
+		detector = new GestureDetectorCompat(mainActivityRef, new RecyclerViewOnGestureListener()); //ONCLICK - ONLONGCLICK
+		touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this); //LISTENER TO SWIPE
+
 		linearLayoutManager = new LinearLayoutManager(mainActivityRef);
 		emptyLinkListView.findViewById(R.id.importLocalBookmarksButtonId).setOnClickListener(this);
 
@@ -220,18 +220,12 @@ public class LinksListFragment extends Fragment
 			case R.id.actionbarImportActionIconId:
 				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
 				break;
-//			case R.id.actionbarExportActionIconId:
-//				exportAction();
-//				break;
 			case R.id.addLinkButtonId:
 				mainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
 						AddBookmarkActivity.ADD_REQUEST, null);
 				break;
 			case R.id.infoButtonLayoutId:
 				mActionBarHandlerSingleton.toggleInnerLayoutByActionMenu(v.getId());
-//				mActionBarHandlerSingleton.initToggleSettings(false, false);
-//				mActionBarHandlerSingleton.showLayoutByMenuAction(R.id.infoButtonLayoutId);
-
 				break;
 		}
 	}
@@ -286,6 +280,12 @@ public class LinksListFragment extends Fragment
 
 	private class RecyclerViewOnGestureListener extends GestureDetector.SimpleOnGestureListener {
 		@Override
+		public void onShowPress(MotionEvent event) {
+			View view = mRecyclerView.findChildViewUnder(event.getX(), event.getY());
+			view.findViewById(R.id.linkLayoutId).setPressed(true);
+		}
+
+		@Override
 		public boolean onSingleTapConfirmed(MotionEvent e) {
 			View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
 			int position = mRecyclerView.getChildPosition(view);
@@ -301,6 +301,7 @@ public class LinksListFragment extends Fragment
 			return super.onSingleTapConfirmed(e);
 		}
 
+		@Override
 		public void onLongPress(MotionEvent e) {
 			View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
 			int position = mRecyclerView.getChildPosition(view);

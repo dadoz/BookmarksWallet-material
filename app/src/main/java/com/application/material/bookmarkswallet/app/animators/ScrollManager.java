@@ -38,6 +38,7 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
     private int totalDy;
     private int initialOffset;
     private HashMap<View, Direction> viewsToHide = new HashMap<View, Direction>();
+    private HashMap<View, Direction> viewsNotToShow = new HashMap<View, Direction>();
     private View parentView;
     private View viewToBeMeasured;
 
@@ -53,6 +54,10 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
 
     public void addView(View view, Direction direction) {
         viewsToHide.put(view, direction);
+    }
+
+    public void addViewNoDown(View view, Direction direction) {
+        viewsNotToShow.put(view, direction);
     }
 
     public void setInitialOffset(int initialOffset) {
@@ -84,6 +89,10 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
             hidden = true;
             for (View view : viewsToHide.keySet()) {
                 hideView(view, viewsToHide.get(view));
+            }
+
+            for (View view : viewsNotToShow.keySet()) {
+                hideView(view, viewsNotToShow.get(view));
             }
         }
     }
@@ -139,13 +148,16 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if ((translateY != 0 && infoView.getVisibility() == View.GONE) ||
-                        (translateY == 0 && infoView.getVisibility() == View.VISIBLE)) {
+                boolean hideView = translateY != 0;
+
+                if ((hideView && infoView.getVisibility() == View.GONE) ||
+                        (! hideView && infoView.getVisibility() == View.VISIBLE)) {
                     return;
                 }
 
                 Log.e("TAG", "animation");
-                infoView.setVisibility(translateY != 0 ? View.GONE : View.VISIBLE);
+                infoView.setVisibility(View.GONE);
+                infoView.setTop(infoView.getHeight());
             }
 
             @Override

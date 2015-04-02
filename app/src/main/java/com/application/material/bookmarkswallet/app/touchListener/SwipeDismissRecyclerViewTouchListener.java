@@ -202,7 +202,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                 }
 
                 if (mDownView != null) {
-                    mDownView.findViewById(R.id.linkLayoutId).setPressed(true);
                     mDownX = motionEvent.getRawX();
                     mDownY = motionEvent.getRawY();
                     mDownPosition = mRecyclerView.getChildPosition(mDownView);
@@ -217,7 +216,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             }
 
             case MotionEvent.ACTION_CANCEL: {
-//                mDownView.findViewById(R.id.linkLayoutId).setPressed(false);
                 if (mVelocityTracker == null) {
                     break;
                 }
@@ -242,7 +240,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
 
             case MotionEvent.ACTION_UP: {
                 mDownView.findViewById(R.id.linkLayoutId).setPressed(false);
-
                 if (mVelocityTracker == null) {
                     break;
                 }
@@ -298,7 +295,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             }
 
             case MotionEvent.ACTION_MOVE: {
-                mDownView.findViewById(R.id.linkLayoutId).setPressed(false);
                 if (mVelocityTracker == null || mPaused) {
                     break;
                 }

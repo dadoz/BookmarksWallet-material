@@ -85,16 +85,18 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     }
 
     private android.support.v7.app.ActionBar setActionBar(final RecyclerView recyclerView, final FloatingActionButton fab) {
-        scrollManager = new ScrollManager(actionbarInfoActionView);
+        final View infoInnerView = actionbarInfoActionView.findViewById(R.id.actionbarInfoInnerLayoutId);
         final Toolbar toolbar = (Toolbar) mActivtyRef.findViewById(R.id.toolbarId);
+        scrollManager = new ScrollManager(infoInnerView);
+
         toolbar.post(new Runnable() {
             @Override public void run() {
                 scrollManager.attach(recyclerView);
                 if(actionbarInfoActionView != null) {
-                    scrollManager.addView(actionbarInfoActionView, ScrollManager.Direction.UP);
+                    scrollManager.addViewNoDown(infoInnerView, ScrollManager.Direction.UP);
                 }
                 scrollManager.addView(fab, ScrollManager.Direction.DOWN);
-                scrollManager.setInitialOffset(toolbar.getHeight());
+                scrollManager.setInitialOffset(toolbar.getHeight() + infoInnerView.getHeight());
             }
         });
 
