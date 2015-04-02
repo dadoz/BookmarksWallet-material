@@ -6,7 +6,6 @@
 
     <RelativeLayout
             android:background="?android:selectableItemBackground"
-            android:clickable="true"
             android:id="@+id/linkLayoutId"
             android:baselineAligned="false"
             android:layout_width="match_parent"
