@@ -279,10 +279,24 @@ public class LinksListFragment extends Fragment
 	}
 
 	private class RecyclerViewOnGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+		@Override
+		public boolean onDown(MotionEvent event) {
+//			View view = mRecyclerView.findChildViewUnder(event.getX(), event.getY());
+//			view.findViewById(R.id.linkLayoutId).setPressed(true);
+			return false;
+		}
+
 		@Override
 		public void onShowPress(MotionEvent event) {
 			View view = mRecyclerView.findChildViewUnder(event.getX(), event.getY());
 			view.findViewById(R.id.linkLayoutId).setPressed(true);
+		}
+		@Override
+		public boolean onSingleTapUp(MotionEvent event) {
+			View view = mRecyclerView.findChildViewUnder(event.getX(), event.getY());
+			view.findViewById(R.id.linkLayoutId).setPressed(true);
+			return false;
 		}
 
 		@Override

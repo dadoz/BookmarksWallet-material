@@ -60,6 +60,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
 
         //BUG - big huge whtever u want
         boolean isSelectedItem = mSelectedItemPosition == position;
+        holder.itemView.setPressed(false);
         holder.itemView.setBackgroundColor(isSelectedItem ?
                 mActivityRef.getResources().getColor(R.color.material_grey_200) :
                 mActivityRef.getResources().getColor(R.color.white));

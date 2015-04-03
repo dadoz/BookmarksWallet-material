@@ -92,9 +92,13 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
             }
 
             for (View view : viewsNotToShow.keySet()) {
-                hideView(view, viewsNotToShow.get(view));
+                hideViewWithoutAnimation(view);
             }
         }
+    }
+
+    private void hideViewWithoutAnimation(View view) {
+        view.setVisibility(View.GONE);
     }
 
     private void showViews() {
