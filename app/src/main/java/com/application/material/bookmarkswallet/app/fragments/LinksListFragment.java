@@ -115,7 +115,8 @@ public class LinksListFragment extends Fragment
 		dismissButton.setOnClickListener(this);
 
 		initRecyclerView();
-		rvActionsSingleton = RecyclerViewActionsSingleton.getInstance(mRecyclerView, mainActivityRef, this, dbConnector);
+		rvActionsSingleton = RecyclerViewActionsSingleton.
+				getInstance(mRecyclerView, mainActivityRef, this, dbConnector, touchListener);
 	}
 
 	private void initRecyclerView() {
@@ -317,6 +318,7 @@ public class LinksListFragment extends Fragment
 
 		@Override
 		public void onLongPress(MotionEvent e) {
+			mRecyclerView.setOnTouchListener(null);
 			View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
 			int position = mRecyclerView.getChildPosition(view);
 			LinkRecyclerViewAdapter.ViewHolder holder =

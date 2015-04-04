@@ -28,7 +28,7 @@ public class LinkAdapter extends ArrayAdapter<Link> {
 
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE));
-        View view = inflater.inflate(R.layout.bookmark_item, null);
+        View view = inflater.inflate(R.layout.link_row, null);
 
         TextView linkTitle = (TextView) view.findViewById(R.id.linkTitleId);
         linkTitle.setText(getItem(position).getLinkName());

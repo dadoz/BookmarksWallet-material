@@ -239,7 +239,9 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             }
 
             case MotionEvent.ACTION_UP: {
-                mDownView.findViewById(R.id.linkLayoutId).setPressed(false);
+                if(mDownView != null) {
+                    mDownView.findViewById(R.id.linkLayoutId).setPressed(false);
+                }
                 if (mVelocityTracker == null) {
                     break;
                 }

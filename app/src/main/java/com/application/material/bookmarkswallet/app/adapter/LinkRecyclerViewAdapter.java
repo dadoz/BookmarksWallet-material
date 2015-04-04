@@ -3,14 +3,18 @@ package com.application.material.bookmarkswallet.app.adapter;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.Link;
+import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 
 import java.util.ArrayList;
 
@@ -44,27 +48,49 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     public LinkRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.bookmark_item, parent, false);
+                .inflate(R.layout.link_row, parent, false);
         ViewHolder vh = new ViewHolder(v, this);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mLabelView.setText(mDataset.get(position).getLinkName().trim().equals("") ?
-                "Not set" : mDataset.get(position).getLinkName().trim());
-        holder.mEditLabelView.setText(mDataset.get(position).getLinkName());
-        holder.mUrlView.setText(mDataset.get(position).getLinkUrl());
-        holder.mEditUrlLabelView.setTag(mDataset.get(position).getLinkUrl());
+        String linkName = mDataset.get(position).getLinkName().trim().equals("") ?
+                "Bookmark (no title)" : mDataset.get(position).getLinkName().trim();
+        String urlName = mDataset.get(position).getLinkUrl();
+        holder.mLabelView.setText(linkName);
+        holder.mUrlView.setText(urlName);
+
         holder.mEditUrlLabelView.setOnClickListener((View.OnClickListener) mListenerRef);
 
         //BUG - big huge whtever u want
         boolean isSelectedItem = mSelectedItemPosition == position;
+        if(isSelectedItem) {
+            holder.mEditLabelView.setText(linkName);
+            holder.mEditUrlLabelView.setTag(urlName);
+        }
+
         holder.itemView.setPressed(false);
         holder.itemView.setBackgroundColor(isSelectedItem ?
                 mActivityRef.getResources().getColor(R.color.material_grey_200) :
                 mActivityRef.getResources().getColor(R.color.white));
         holder.mEditLinkView.setVisibility(isSelectedItem ? View.VISIBLE : View.GONE);
+
+        //NOT WORKING
+        holder.mEditLabelView.setImeOptions(EditorInfo.IME_ACTION_SEND);
+        holder.mEditLabelView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Log.e(TAG, "HEY" + actionId);
+
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    Log.e(TAG, "HEY");
+                    return true;
+                }
+                return false;
+            }
+        });
+        holder.mMainView.setVisibility(isSelectedItem ? View.GONE: View.VISIBLE);
     }
 
     @Override
@@ -123,12 +149,13 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         private final EditText mEditLabelView;
         private final View mEditLinkView;
 //        private final TextView mEditUrlView;
-        public ImageView mIconView;
-        public TextView mLabelView;
-        public TextView mUrlView;
-        public View mMainView;
+        private ImageView mIconView;
+        private TextView mLabelView;
+        private TextView mUrlView;
+        private View mMainView;
         private String editNameTemp;
         private String editUrlTemp;
+        private String TAG = "Holder";
 
         public ViewHolder(View v, LinkRecyclerViewAdapter adapterRef) {
             super(v);
@@ -147,6 +174,10 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         }
         public String getEditUrlName() {
             return editUrlTemp;
+        }
+
+        public EditText getEditLinkView() {
+            return mEditLabelView;
         }
 
         public void setEditUrlName(String value) {

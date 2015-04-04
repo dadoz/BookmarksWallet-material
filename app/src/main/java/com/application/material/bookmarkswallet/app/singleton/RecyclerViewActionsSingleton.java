@@ -3,6 +3,7 @@ package com.application.material.bookmarkswallet.app.singleton;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
@@ -19,6 +21,7 @@ import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdap
 import com.application.material.bookmarkswallet.app.dbAdapter.DbConnector;
 import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
 import com.application.material.bookmarkswallet.app.models.Link;
+import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 
 import java.util.ArrayList;
 
@@ -36,6 +39,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     private static Fragment mFragmentRef;
     private static View mEditUrlView;
     private static LinkRecyclerViewAdapter mAdapter;
+    private static SwipeDismissRecyclerViewTouchListener mTouchListener;
     private AlertDialog mEditDialog;
 
     public RecyclerViewActionsSingleton() {
@@ -44,8 +48,9 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     public static RecyclerViewActionsSingleton getInstance(RecyclerView recyclerView,
                                                            Activity activityRef,
                                                            Fragment listenerRef,
-                                                           DbConnector dbConnector) {
-        initReferences(recyclerView, activityRef, listenerRef, dbConnector);
+                                                           DbConnector dbConnector,
+                                                           SwipeDismissRecyclerViewTouchListener touchListener) {
+        initReferences(recyclerView, activityRef, listenerRef, dbConnector, touchListener);
         if(mInstance == null) {
             mInstance = new RecyclerViewActionsSingleton();
         }
@@ -53,13 +58,15 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     }
 
     public static void initReferences(RecyclerView recyclerView,
-                               Activity activityRef, Fragment listenerRef,
-                               DbConnector dbConnector) {
+                                      Activity activityRef, Fragment listenerRef,
+                                      DbConnector dbConnector,
+                                      SwipeDismissRecyclerViewTouchListener touchListener) {
         mRecyclerView = recyclerView;
         mActivityRef = activityRef;
         mListenerRef = listenerRef;
         mFragmentRef = listenerRef;
         mDbConnector = dbConnector;
+        mTouchListener = touchListener;
         mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
         mEditUrlView = mActivityRef.getLayoutInflater().
                 inflate(R.layout.dialog_edit_url_layout, null);
@@ -69,11 +76,13 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     }
 
     public void saveEditLink() {
+        mRecyclerView.setOnTouchListener(mTouchListener);
         int position = mAdapter.getSelectedItemPosition();
         LinkRecyclerViewAdapter.ViewHolder holder =
                 (LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
                         findViewHolderForPosition(position);
         mAdapter.update(position, holder.getEditLinkName(), holder.getEditUrlName());
+        hideSoftKeyboard(holder.getEditLinkView());
         Toast.makeText(mActivityRef, "save", Toast.LENGTH_SHORT).show();
 
         mAdapter.deselectedItemPosition();
@@ -88,6 +97,13 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
 
     public void undoEditLink() {
+        mRecyclerView.setOnTouchListener(mTouchListener);
+        int position = mAdapter.getSelectedItemPosition();
+        LinkRecyclerViewAdapter.ViewHolder holder =
+                (LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
+                        findViewHolderForPosition(position);
+        hideSoftKeyboard(holder.getEditLinkView());
+
         Toast.makeText(mActivityRef, "undo edit", Toast.LENGTH_SHORT).show();
         ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).deselectedItemPosition();
         (mRecyclerView.getAdapter()).notifyDataSetChanged();
@@ -223,6 +239,11 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         return bookmarkList;
     }
 
+    private void hideSoftKeyboard(EditText editText) {
+        InputMethodManager imm = (InputMethodManager) mActivityRef.
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+    }
 
     public ArrayList<Link> getLinkListMockup() {
         ArrayList<Link> linksDataList = new ArrayList<Link>();

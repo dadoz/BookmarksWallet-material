@@ -30,7 +30,9 @@
                 android:layout_marginRight="@dimen/large_padding"
                 android:textColor="@color/material_stone_black"
                 android:minWidth="@dimen/abc_search_view_preferred_width"
-                android:hint="type bookmark url..."/>
+                android:hint="type bookmark url...">
+            <requestFocus/>
+                </EditText>
         <TextView
                 android:id="@+id/addBookmarkDescriptionTextId"
                 android:layout_below="@id/urlEditText"
