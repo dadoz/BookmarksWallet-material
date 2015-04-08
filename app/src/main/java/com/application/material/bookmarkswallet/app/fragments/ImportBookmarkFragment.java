@@ -77,7 +77,10 @@ public class ImportBookmarkFragment extends Fragment implements
     }
 
     private void onInitView() {
+        mActionBarHandlerSingleton.initActionBar();
         mActionBarHandlerSingleton.setTitle(TITLE);
+        mActionBarHandlerSingleton.setDisplayHomeEnabled(true);
+
         cardviewList = new ArrayList<BookmarkCardview>();
         RecyclerView.LayoutManager lm = new LinearLayoutManager(mMainActivityRef);
         mRecyclerView.setLayoutManager(lm);
@@ -124,7 +127,7 @@ public class ImportBookmarkFragment extends Fragment implements
             case  R.id.action_settings:
                 mMainActivityRef.changeFragment(
                         new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
-                mActionBarHandlerSingleton.toggleActionBar(SettingsFragment.TITLE, false, false);
+                mActionBarHandlerSingleton.toggleActionBar(true, false, false);
                 return true;
 
         }

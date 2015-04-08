@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import com.application.material.bookmarkswallet.app.fragments.ImportBookmarkFragment;
 import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
+import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 
@@ -32,8 +33,8 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(this);
-
-        onInitView();
+        mActionBarHandlerSingleton.initActionBar();
+        onInitFragment();
     }
 
     @Override
@@ -47,12 +48,30 @@ public class MainActivity extends ActionBarActivity
         super.onPause();
     }
 
-    public void onInitView() {
-        LinksListFragment linksListFragment = new LinksListFragment();
+    public void onInitFragment() {
+        Fragment frag;
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainerFrameLayoutId,
-                        linksListFragment, LinksListFragment.FRAG_TAG).commit();
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            int fragCount = getSupportFragmentManager().getBackStackEntryCount();
+            String fragTag = getSupportFragmentManager().getBackStackEntryAt(fragCount - 1).getName();
+            frag = getSupportFragmentManager().findFragmentByTag(fragTag);
+            transaction.replace(R.id.fragmentContainerFrameLayoutId,
+                    frag, fragTag).commit();
+            return;
+        }
+
+        if(getSupportFragmentManager().getBackStackEntryCount() == 0 &&
+                (frag = getSupportFragmentManager().
+                        findFragmentByTag(LinksListFragment.FRAG_TAG)) != null) {
+            transaction.replace(R.id.fragmentContainerFrameLayoutId,
+                    frag, LinksListFragment.FRAG_TAG).commit();
+            return;
+        }
+
+        //no fragment
+        transaction.add(R.id.fragmentContainerFrameLayoutId,
+                new LinksListFragment(), LinksListFragment.FRAG_TAG).commit();
     }
 
     @Override
@@ -84,7 +103,7 @@ public class MainActivity extends ActionBarActivity
 
         transaction.replace(R.id.fragmentContainerFrameLayoutId, fragment, tag);
         if(! tag.equals(LinksListFragment.FRAG_TAG)) {
-            transaction.addToBackStack(null);
+            transaction.addToBackStack(tag);
         }
         transaction.commit();
     }
@@ -114,7 +133,7 @@ public class MainActivity extends ActionBarActivity
             intent.putExtra(EXTRA_DATA, bundle);
         }
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
-            ActivityCompat.startActivityForResult(this, intent, requestCode, options.toBundle());
+        ActivityCompat.startActivityForResult(this, intent, requestCode, options.toBundle());
     }
 
     @Override
@@ -145,7 +164,9 @@ public class MainActivity extends ActionBarActivity
         Log.d(TAG, "OnBackPressed - ");
         boolean isBackOverridden = mActionBarHandlerSingleton.getOverrideBackPressed();
         boolean isEditMode = mActionBarHandlerSingleton.isEditMode();
-        mActionBarHandlerSingleton.toggleActionBar(null,
+
+        boolean isHomeUpEnabled = getSupportFragmentManager().getBackStackEntryCount() >= 2;
+        mActionBarHandlerSingleton.toggleActionBar(isHomeUpEnabled,
                 isBackOverridden, false); // u always must change color back to yellow
 
         if(isBackOverridden) {
@@ -155,7 +176,8 @@ public class MainActivity extends ActionBarActivity
             if(fragment != null &&
                     isEditMode) {
                 mActionBarHandlerSingleton.setEditMode(false);
-                mActionBarHandlerSingleton.toggleLayoutByActionMenu(R.id.infoButtonLayoutId);
+                mActionBarHandlerSingleton.setTitle(null);
+                mActionBarHandlerSingleton.toggleLayoutByActionMenu(R.id.infoOuterButtonId);
 
                 ((LinksListFragment) fragment).undoEditLinkRecyclerViewWrapper();
             }

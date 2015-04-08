@@ -88,7 +88,8 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         mAdapter.deselectedItemPosition();
         mAdapter.notifyDataSetChanged();
 
-        mActionBarHandlerSingleton.toggleActionBar(null, false, false, R.id.infoButtonLayoutId);
+        mActionBarHandlerSingleton.setTitle(null);
+        mActionBarHandlerSingleton.toggleActionBar(false, false, false, R.id.infoOuterButtonId);
 
         mActivityRef.invalidateOptionsMenu();
         mRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
@@ -116,7 +117,8 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         Toast.makeText(mActivityRef, "edit" + position, Toast.LENGTH_SHORT).show();
 
         mActionBarHandlerSingleton.setEditMode(true);
-        mActionBarHandlerSingleton.toggleActionBar("Edit link", true, true, R.id.infoButtonLayoutId);
+        mActionBarHandlerSingleton.setTitle("Edit link");
+        mActionBarHandlerSingleton.toggleActionBar(true, true, true, R.id.infoOuterButtonId);
 
         ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).setSelectedItemPosition(position);
         mRecyclerView.getAdapter().notifyDataSetChanged();

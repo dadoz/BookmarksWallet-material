@@ -153,9 +153,6 @@ public class AddBookmarkActivity extends ActionBarActivity
         }
     }
 
-    public void toggleActionBar(String title, boolean b, boolean c) {
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.e(TAG, "on result");

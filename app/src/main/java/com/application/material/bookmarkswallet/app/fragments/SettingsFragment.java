@@ -35,7 +35,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 	private View settingsView;
 	private DbConnector dbConnector;
 	private ListView mSettingsList;
-	private ActionBarHandlerSingleton mActionBarHandlerRef;
+	private ActionBarHandlerSingleton mActionBarHandlerSingleton;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -50,16 +50,17 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 //		}
 		mActivityRef = activity;
 		dbConnector = DbConnector.getInstance(mActivityRef);
-		mActionBarHandlerRef = ActionBarHandlerSingleton.getInstance(mActivityRef);
+		mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState) {
 		settingsView = inflater.inflate(R.layout.settings_layout, null);
-//		Toolbar toolbar = (Toolbar) settingsView .findViewById(R.id.toolbarId);
-//		mActionBarHandlerRef.initActionBar(toolbar, "Settings");
-		return settingsView;
+        mActionBarHandlerSingleton.setTitle(TITLE);
+        mActionBarHandlerSingleton.setDisplayHomeEnabled(true);
+
+        return settingsView;
 	}
 
 	@Override

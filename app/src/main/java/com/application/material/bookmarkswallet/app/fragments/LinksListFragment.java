@@ -103,12 +103,13 @@ public class LinksListFragment extends Fragment
 	}
 
 	private void onInitView() {
-		View actionbarInfoView = mLinkListView.findViewById(R.id.infoButtonLayoutId);
-		mActionBarHandlerSingleton.setViewOnActionMenu(actionbarInfoView, R.id.infoButtonLayoutId, this);
-		mActionBarHandlerSingleton.initActionBar(mRecyclerView, addLinkButton);
+		View actionbarInfoView = mLinkListView.findViewById(R.id.actionbarInfoLayoutId);
+		mActionBarHandlerSingleton.setViewOnActionMenu(actionbarInfoView, R.id.actionbarInfoLayoutId, this);
+		mActionBarHandlerSingleton.setToolbarScrollManager(mRecyclerView, addLinkButton);
+        mActionBarHandlerSingleton.setTitle(null);
+        mActionBarHandlerSingleton.setDisplayHomeEnabled(false);
 
 		mItems = dbConnector.getLinkList();
-		mLinkListView.findViewById(R.id.infoButtonLayoutId).setOnClickListener(this);
 
 		addLinkButton.setOnClickListener(this);
 		undoButton.setOnClickListener(this);
@@ -160,15 +161,15 @@ public class LinksListFragment extends Fragment
 				rvActionsSingleton.saveEditLink();
 				break;
 			case  R.id.action_settings:
+				mActionBarHandlerSingleton.toggleActionBar(true, false, false);
                 mainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
-				mActionBarHandlerSingleton.toggleActionBar(SettingsFragment.TITLE, false, false);
                 return true;
 			case  R.id.action_export:
 				exportBookmarksSingleton.exportAction();
 				return true;
 			case  R.id.action_import:
 //				Toast.makeText(mainActivityRef, "Import cardview", Toast.LENGTH_SHORT).show();
-				mActionBarHandlerSingleton.toggleActionBar(ImportBookmarkFragment.TITLE, false, false);
+				mActionBarHandlerSingleton.toggleActionBar(true, false, false);
 				mainActivityRef.changeFragment(new ImportBookmarkFragment(), null, ImportBookmarkFragment.FRAG_TAG);
 				return true;
 
@@ -225,9 +226,9 @@ public class LinksListFragment extends Fragment
 				mainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
 						AddBookmarkActivity.ADD_REQUEST, null);
 				break;
-			case R.id.infoButtonLayoutId:
-				mActionBarHandlerSingleton.toggleInnerLayoutByActionMenu(v.getId());
-				break;
+//			case R.id.actionbarInfoLayoutId:
+//				mActionBarHandlerSingleton.toggleInnerLayoutByActionMenu(v.getId());
+//				break;
 		}
 	}
 

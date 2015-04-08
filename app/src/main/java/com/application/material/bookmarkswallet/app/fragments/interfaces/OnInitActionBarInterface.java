@@ -14,9 +14,9 @@ public interface OnInitActionBarInterface {
     public void setActivtyRef(Activity activtyRef);
     public boolean setTitle(String title);
 
-    public void toggleActionBar(String title);
-    public void toggleActionBar(String title,boolean isFragment, boolean isColor);
-    public void toggleActionBar(String title, boolean isFragment, boolean isColor, int layoutId);
+    public void toggleActionBar(boolean isHomeUpEnabled);
+    public void toggleActionBar(boolean isHomeUpEnabled, boolean isFragment, boolean isColor);
+    public void toggleActionBar(boolean isHomeUpEnabled, boolean isFragment, boolean isColor, int layoutId);
 
     public boolean getOverrideBackPressed();
     public void setOverrideBackPressed(boolean value);
