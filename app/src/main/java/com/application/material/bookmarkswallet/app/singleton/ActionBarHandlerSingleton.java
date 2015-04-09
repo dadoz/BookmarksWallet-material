@@ -37,6 +37,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     private View infoView;
     private boolean editMode;
     private Toolbar toolbar;
+    private int mEditItemPos;
 
     private ActionBarHandlerSingleton() {
     }
@@ -280,5 +281,13 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         int iconColor = mActivtyRef.getResources().getColor(R.color.material_red);
         d.setColorFilter(iconColor, PorterDuff.Mode.SRC_ATOP);
         imgStatus.setImageDrawable(d);
+    }
+
+    public int getEditItemPos() {
+        return mEditItemPos;
+    }
+
+    public void setEditItemPos(int editItemPos) {
+        this.mEditItemPos = editItemPos;
     }
 }

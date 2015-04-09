@@ -118,6 +118,9 @@ public class LinksListFragment extends Fragment
 		initRecyclerView();
 		rvActionsSingleton = RecyclerViewActionsSingleton.
 				getInstance(mRecyclerView, mainActivityRef, this, dbConnector, touchListener);
+        if(mActionBarHandlerSingleton.isEditMode()) {
+            rvActionsSingleton.editLink(mActionBarHandlerSingleton.getEditItemPos());
+        }
 	}
 
 	private void initRecyclerView() {
@@ -325,7 +328,7 @@ public class LinksListFragment extends Fragment
 			LinkRecyclerViewAdapter.ViewHolder holder =
 					(LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
 							findViewHolderForPosition(position);
-
+            mActionBarHandlerSingleton.setEditItemPos(position);
 			holder.itemView.setSelected(true);
 
 			// handle long press

@@ -125,7 +125,6 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         mActivityRef.invalidateOptionsMenu();
         mRecyclerView.removeOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
         animateButton(true);
-
     }
     
 

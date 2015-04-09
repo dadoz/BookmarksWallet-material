@@ -1,36 +1,30 @@
 package com.application.material.bookmarkswallet.app;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.support.v4.app.*;
-import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.transition.Transition;
-import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import com.application.material.bookmarkswallet.app.fragments.ImportBookmarkFragment;
 import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
-import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
+import icepick.Icepick;
+import icepick.Icicle;
 
 
 public class MainActivity extends ActionBarActivity
         implements OnChangeFragmentWrapperInterface {
-
     private String TAG = "MainActivity";
     private String EXTRA_DATA = "EXTRA_DATA";
     private ActionBarHandlerSingleton mActionBarHandlerSingleton;
+//    @Icicle String edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
         setContentView(R.layout.activity_main);
         mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(this);
         mActionBarHandlerSingleton.initActionBar();
@@ -69,7 +63,7 @@ public class MainActivity extends ActionBarActivity
             return;
         }
 
-        //no fragment
+        //no fragment already adedd
         transaction.add(R.id.fragmentContainerFrameLayoutId,
                 new LinksListFragment(), LinksListFragment.FRAG_TAG).commit();
     }
@@ -185,5 +179,11 @@ public class MainActivity extends ActionBarActivity
         }
         super.onBackPressed();
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
     }
 }
