@@ -9,20 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.Link;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by davide on 17/01/15.
  */
 public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerViewAdapter.ViewHolder> {
     private final Fragment mListenerRef;
+    private final boolean mIsSearchResult;
     private String TAG = "LinkRecyclerViewAdapter";
     private ArrayList<Link> mDataset;
     private static Context mActivityRef;
@@ -30,10 +30,11 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     private static int deletedItemPosition = -1;
     private int mSelectedItemPosition = -1;
 
-    public LinkRecyclerViewAdapter(Fragment fragmentRef, ArrayList<Link> myDataset) {
+    public LinkRecyclerViewAdapter(Fragment fragmentRef, ArrayList<Link> myDataset, boolean isSearchResult) {
         mDataset = myDataset;
         mActivityRef = fragmentRef.getActivity();
         mListenerRef = fragmentRef;
+        mIsSearchResult = isSearchResult;
     }
 
     public Link getDeletedItem() {
@@ -98,7 +99,6 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         return mDataset.size();
     }
 
-
     public void add(Link item) {
         mDataset.add(item);
         notifyItemInserted(mDataset.size());
@@ -141,6 +141,10 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
 
     public int getSelectedItemPosition() {
         return mSelectedItemPosition;
+    }
+
+    public boolean isSearchResult() {
+        return mIsSearchResult;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -192,5 +196,6 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     public void deselectedItemPosition() {
         this.mSelectedItemPosition = -1;
     }
+
 
 }

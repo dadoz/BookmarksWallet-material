@@ -1,18 +1,14 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.graphics.Color;
-import android.os.Build;
-import android.provider.Browser;
+import android.app.SearchManager;
+import android.content.Context;
 import android.support.v4.app.Fragment;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.*;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.*;
 import android.view.animation.DecelerateInterpolator;
@@ -40,7 +36,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 public class LinksListFragment extends Fragment
 		implements View.OnClickListener,
 			SwipeDismissRecyclerViewTouchListener.DismissCallbacks,
-			RecyclerView.OnItemTouchListener {
+			RecyclerView.OnItemTouchListener, Filterable{
 	private static final String TAG = "LinksListFragment_TAG";
 	public static final String FRAG_TAG = "LinksListFragment";
 	public DbAdapter db;
@@ -67,8 +63,10 @@ public class LinksListFragment extends Fragment
 	private ActionBarHandlerSingleton mActionBarHandlerSingleton;
 	private RecyclerViewActionsSingleton rvActionsSingleton;
 	private ExportBookmarkSingleton exportBookmarksSingleton;
+    private LinkRecyclerViewAdapter mLinkRecyclerViewAdapter;
+    private View mEmptySearchResultView;
 
-	@Override
+    @Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		if (!(activity instanceof OnChangeFragmentWrapperInterface)) {
@@ -97,6 +95,7 @@ public class LinksListFragment extends Fragment
 		ButterKnife.inject(this, mLinkListView);
 
 		emptyLinkListView = mLinkListView.findViewById(R.id.emptyLinkListViewId);
+        mEmptySearchResultView = mLinkListView.findViewById(R.id.emptySearchResultLayoutId);
 		setHasOptionsMenu(true);
 		onInitView();
 		return mLinkListView;
@@ -124,8 +123,8 @@ public class LinksListFragment extends Fragment
 	}
 
 	private void initRecyclerView() {
-		LinkRecyclerViewAdapter linkRecyclerViewAdapter =
-				new LinkRecyclerViewAdapter(this, mItems);
+		mLinkRecyclerViewAdapter =
+				new LinkRecyclerViewAdapter(this, mItems, false);
 
 		detector = new GestureDetectorCompat(mainActivityRef, new RecyclerViewOnGestureListener()); //ONCLICK - ONLONGCLICK
 		touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this); //LISTENER TO SWIPE
@@ -133,13 +132,14 @@ public class LinksListFragment extends Fragment
 		linearLayoutManager = new LinearLayoutManager(mainActivityRef);
 		emptyLinkListView.findViewById(R.id.importLocalBookmarksButtonId).setOnClickListener(this);
 
-
 		//set empty view
 		mRecyclerView.setEmptyView(emptyLinkListView);
+		mRecyclerView.setEmptySearchResultView(mEmptySearchResultView);
+
 		mRecyclerView.setHasFixedSize(true);
 		//set layout manager
 		mRecyclerView.setLayoutManager(linearLayoutManager);
-		mRecyclerView.setAdapter(linkRecyclerViewAdapter);
+		mRecyclerView.setAdapter(mLinkRecyclerViewAdapter);
 		mRecyclerView.setItemAnimator(null);
 		//set SWIPE
 		mRecyclerView.setOnTouchListener(touchListener);
@@ -154,7 +154,54 @@ public class LinksListFragment extends Fragment
 		boolean isItemSelected = ((LinkRecyclerViewAdapter) mRecyclerView.
 				getAdapter()).isItemSelected();
 		inflater.inflate(isItemSelected ? R.menu.save_edit_link_menu :
-				R.menu.menu_main, menu);
+                R.menu.menu_main, menu);
+
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        MenuItemCompat.setOnActionExpandListener( menu.findItem(R.id.action_search),
+                new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                mRecyclerView.setAdapter(mLinkRecyclerViewAdapter);
+                return true;
+            }
+        });
+        SearchManager searchManager = (SearchManager) mainActivityRef.getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView searchView = null;
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+        }
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(mainActivityRef.getComponentName()));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+            {
+                public boolean onQueryTextChange(String newText)
+                {
+                    if(newText.trim().toLowerCase().equals("")) {
+                        return true;
+                    }
+
+                    getFilter().filter(newText);
+                    return true;
+                }
+
+                public boolean onQueryTextSubmit(String query)
+                {
+//                    ((SearchView) searchItem.getActionView()).setIconified(true);
+//                    (searchItem.getActionView()).clearFocus();
+//                    Toast.makeText(mainActivityRef, query, Toast.LENGTH_LONG).show();
+////                    ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).getFilter().filter(query);
+//                    getFilter().filter(query);
+                    return false;
+                }
+            });
+        }
+        super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	@Override
@@ -261,7 +308,7 @@ public class LinksListFragment extends Fragment
 	}
 
 	public void addLinkOnRecyclerViewWrapper(String url) {
-		rvActionsSingleton.addLink(url);
+        rvActionsSingleton.addLink(url);
 	}
 
 	//TODO rename it
@@ -283,7 +330,66 @@ public class LinksListFragment extends Fragment
 				start();
 	}
 
-	private class RecyclerViewOnGestureListener extends GestureDetector.SimpleOnGestureListener {
+    @Override
+    public Filter getFilter() {
+        return new LinkFilter(mItems, this);
+    }
+
+    private class LinkFilter extends Filter {
+        private final Fragment mFragmentRef;
+        private ArrayList<Link> mDataset;
+
+        public LinkFilter(ArrayList data, Fragment fragmentRef) {
+            mDataset = data;
+            mFragmentRef = fragmentRef;
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults filterResults = new FilterResults();
+            ArrayList<Link> filteredList = new ArrayList<Link>();
+            filterResults.values = new ArrayList<Link>();
+            filterResults.count = 0;
+
+            if(constraint != null &&
+                    constraint.length() != 0 &&
+                    mDataset != null &&
+                    mDataset.size() != 0) {
+
+                for(Link link : mDataset) {
+                    if(link.getLinkName().toLowerCase().trim().contains(constraint.toString().toLowerCase())) {
+                        filteredList.add(link);
+                    }
+                }
+
+                if(filteredList.size() != 0) {
+                    filterResults.values = filteredList;
+                    filterResults.count = filteredList.size();
+                }
+            }
+
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            ArrayList<Link> temp = (ArrayList<Link>) results.values;
+            if(results.values == 0) {
+                mRecyclerView.setEmptySearchResultQuery(constraint);
+            }
+//            ArrayList<Link> temp = new ArrayList<Link>();
+//            temp.add(mDataset.get(0));
+
+
+            LinkRecyclerViewAdapter linkRecyclerViewAdapter =
+                    new LinkRecyclerViewAdapter(mFragmentRef, temp, true);
+            mRecyclerView.setAdapter(linkRecyclerViewAdapter);
+        }
+    }
+
+
+
+    private class RecyclerViewOnGestureListener extends GestureDetector.SimpleOnGestureListener {
 
 		@Override
 		public boolean onDown(MotionEvent event) {
@@ -318,9 +424,9 @@ public class LinksListFragment extends Fragment
 			rvActionsSingleton.openLinkOnBrowser(url);
 
 			return super.onSingleTapConfirmed(e);
-		}
+        }
 
-		@Override
+        @Override
 		public void onLongPress(MotionEvent e) {
 			mRecyclerView.setOnTouchListener(null);
 			View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());

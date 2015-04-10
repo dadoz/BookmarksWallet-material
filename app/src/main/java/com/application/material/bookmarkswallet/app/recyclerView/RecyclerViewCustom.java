@@ -1,15 +1,21 @@
 package com.application.material.bookmarkswallet.app.recyclerView;
 
+import android.app.MediaRouteButton;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.TextView;
+import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
 
 /**
  * Created by davide on 12/03/15.
  */
 public class RecyclerViewCustom extends RecyclerView {
     private View emptyView = null;
+    private View mEmptySearchResultView;
+
     final AdapterDataObserver observer = new AdapterDataObserver() {
         @Override
         public void onChanged() {
@@ -34,7 +40,10 @@ public class RecyclerViewCustom extends RecyclerView {
         }
 
         boolean isEmpty = getAdapter().getItemCount() == 0;
-        emptyView.setVisibility(isEmpty ? VISIBLE : GONE);
+        boolean isSearchResult = ((LinkRecyclerViewAdapter) getAdapter()).isSearchResult();
+
+        emptyView.setVisibility(isEmpty && ! isSearchResult ? VISIBLE : GONE);
+        mEmptySearchResultView.setVisibility(isEmpty && isSearchResult ? VISIBLE : GONE);
         setVisibility(isEmpty ? GONE : VISIBLE);
     }
 
@@ -65,5 +74,15 @@ public class RecyclerViewCustom extends RecyclerView {
 
     public void setEmptyView(View view) {
         emptyView = view;
+    }
+
+    public void setEmptySearchResultView(View view) {
+        mEmptySearchResultView = view;
+    }
+
+    public void setEmptySearchResultQuery(CharSequence emptySearchResultQuery) {
+        ((TextView) mEmptySearchResultView.
+                findViewById(R.id.searchResultQueryTextId)).
+                setText(emptySearchResultQuery);
     }
 }

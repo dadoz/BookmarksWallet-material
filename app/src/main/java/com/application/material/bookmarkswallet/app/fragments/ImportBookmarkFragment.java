@@ -28,6 +28,7 @@ import com.application.material.bookmarkswallet.app.models.BookmarkCardview;
 import com.application.material.bookmarkswallet.app.models.BookmarkCardview.CardviewTypeEnum;
 import com.application.material.bookmarkswallet.app.models.Info;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
+import com.flurry.android.FlurryAgent;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -70,6 +71,7 @@ public class ImportBookmarkFragment extends Fragment implements
                              Bundle savedInstanceState) {
         addBookmarkView = inflater.inflate(R.layout.import_bookmark_fragment, null);
         ButterKnife.inject(this, addBookmarkView);
+        FlurryAgent.logEvent("IMPORT_BOOKMARK_EVENT");
 
         setHasOptionsMenu(true);
         onInitView();

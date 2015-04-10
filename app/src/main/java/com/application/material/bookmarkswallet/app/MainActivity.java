@@ -1,5 +1,6 @@
 package com.application.material.bookmarkswallet.app;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.support.v4.app.*;
 import android.support.v7.app.ActionBarActivity;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
+import com.flurry.android.FlurryAgent;
 import icepick.Icepick;
 import icepick.Icicle;
 
@@ -28,7 +30,25 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
         mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(this);
         mActionBarHandlerSingleton.initActionBar();
+        handleIntent(getIntent());
+
+        FlurryAgent.setLogEnabled(true);
+        FlurryAgent.init(this, getResources().getString(R.string.FLURRY_API_KEY));
         onInitFragment();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            //do smthing with query
+        }
+
     }
 
     @Override
