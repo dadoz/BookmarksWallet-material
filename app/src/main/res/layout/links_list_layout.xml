@@ -9,7 +9,7 @@
 
     <include layout="@layout/actionbar_info_action_layout"/>
     <RelativeLayout
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="@dimen/actionbar_infoaction_height"
             android:id="@+id/mainContainerViewId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -19,6 +19,7 @@
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"/>
         <include layout="@layout/empty_link_list_layout"/>
+        <include layout="@layout/empty_search_result_layout"/>
     </RelativeLayout>
 
     <!--BOTTOM bar-->

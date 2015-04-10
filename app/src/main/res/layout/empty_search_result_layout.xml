@@ -6,7 +6,7 @@
               android:padding="@dimen/medium_padding"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:gravity="center"
+              android:gravity="top"
               android:orientation="horizontal">
 
     <TextView

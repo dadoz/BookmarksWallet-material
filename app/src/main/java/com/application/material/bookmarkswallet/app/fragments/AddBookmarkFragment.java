@@ -73,8 +73,8 @@ public class AddBookmarkFragment extends Fragment implements
     }
 
     private void onInitView() {
-        mActionBarHandlerSingleton.setViewOnActionMenu(mAddBookmarkView.
-                findViewById(R.id.addBookmarkLayoutId), R.id.addBookmarkLayoutId);
+//        mActionBarHandlerSingleton.setViewOnActionMenu(mAddBookmarkView.
+//                findViewById(R.id.addBookmarkLayoutId), R.id.addBookmarkLayoutId);
         ((EditText) mAddBookmarkView.findViewById(R.id.urlEditText)).addTextChangedListener(this);
         mActionBarHandlerSingleton.setTitle("New Bookmark");
         pasteFromClipboardButton.setOnClickListener(this);

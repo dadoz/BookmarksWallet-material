@@ -75,6 +75,9 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
     }
 
+    public void setAdapterRef(LinkRecyclerViewAdapter adapterRef) {
+        mAdapter = adapterRef;
+    }
     public void saveEditLink() {
         mRecyclerView.setOnTouchListener(mTouchListener);
         int position = mAdapter.getSelectedItemPosition();

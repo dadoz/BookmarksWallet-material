@@ -4,6 +4,7 @@
         android:id="@+id/actionbarInfoLayoutId"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/actionbar_infoaction_height"
         android:background="@color/white"
         android:elevation="10dp"
         android:orientation="vertical">
@@ -12,6 +13,8 @@
                 android:id="@+id/infoOuterLayoutId"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:minHeight="@dimen/actionbar_infoaction_height"
                 android:background="@color/material_mustard_yellow">
                 <TextView
                         android:id="@+id/infoOuterButtonId"
@@ -22,75 +25,66 @@
                         android:textSize="@dimen/text_size_20"
                         android:textColor="@color/material_stone_black"
                         android:layout_marginLeft="@dimen/medium_padding"
-                        android:layout_gravity="left"
+                        android:layout_gravity="left|center_vertical"
                         android:text="INFO"/>
+
+                <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/refreshInfoIconId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical"
+                        android:layout_marginLeft="@dimen/small_padding"
+                        android:src="@drawable/ic_refresh_black_24dp"/>
 
         </LinearLayout>
 
         <!--INNER -->
-        <RelativeLayout android:id="@+id/infoInnerLayoutId"
-                        android:visibility="gone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/large_padding"
-                        android:paddingRight="@dimen/large_padding"
-                        android:paddingBottom="@dimen/large_padding"
-                        android:background="@color/white"
-                        android:orientation="vertical">
-                <LinearLayout
-                        android:layout_centerVertical="true"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/material_stone_black"
-                                android:text="total bookmarks"/>
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="@dimen/text_size_24"
-                                android:textColor="@color/material_red"
-                                android:text="145"/>
-                        <TextView
-                                android:layout_marginTop="@dimen/medium_padding"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/material_stone_black"
-                                android:text="new added:"/>
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="@dimen/text_size_24"
-                                android:textColor="@color/material_red"
-                                android:text="7"/>
-
-                        <TextView
-                                android:layout_marginTop="@dimen/medium_padding"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/material_stone_black"
-                                android:text="last update:"/>
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="@dimen/text_size_24"
-                                android:textColor="@color/material_red"
-                                android:text="05-april "/>
-                </LinearLayout>
-
-
-                <ImageView
-                        android:id="@+id/refreshInfoIconId"
-                        android:layout_alignParentRight="true"
+        <LinearLayout
+                android:id="@+id/infoInnerLayoutId"
+                android:visibility="gone"
+                android:layout_centerVertical="true"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:paddingLeft="@dimen/large_padding"
+                android:paddingRight="@dimen/large_padding"
+                android:paddingBottom="@dimen/large_padding"
+                android:orientation="vertical">
+                <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/small_padding"
-                        android:src="@drawable/ic_refresh_black_24dp"/>
+                        android:textColor="@color/material_stone_black"
+                        android:text="total bookmarks"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_24"
+                        android:textColor="@color/material_red"
+                        android:text="145"/>
+                <TextView
+                        android:layout_marginTop="@dimen/medium_padding"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/material_stone_black"
+                        android:text="new added:"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_24"
+                        android:textColor="@color/material_red"
+                        android:text="7"/>
 
-        </RelativeLayout>
-
-
-
+                <TextView
+                        android:layout_marginTop="@dimen/medium_padding"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/material_stone_black"
+                        android:text="last update:"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_24"
+                        android:textColor="@color/material_red"
+                        android:text="05-april "/>
+        </LinearLayout>
 </LinearLayout>

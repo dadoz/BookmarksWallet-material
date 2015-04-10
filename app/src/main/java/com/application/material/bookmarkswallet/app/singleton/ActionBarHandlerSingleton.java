@@ -38,6 +38,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     private boolean editMode;
     private Toolbar toolbar;
     private int mEditItemPos;
+    private View mainContainerView;
 
     private ActionBarHandlerSingleton() {
     }
@@ -159,17 +160,20 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     }
 
     @Override
-    public void setViewOnActionMenu(View view, int layoutId) {
+    public void setViewOnActionMenu(View mainView, View view, int layoutId) {
         switch (layoutId) {
             case R.id.actionbarInfoLayoutId:
+                mainContainerView = mainView;
                 actionbarInfoActionView = view;
                 break;
         }
     }
+
     @Override
-    public void setViewOnActionMenu(View view, int layoutId, View.OnClickListener listener) {
+    public void setViewOnActionMenu(View mainView, View view, int layoutId, View.OnClickListener listener) {
         switch (layoutId) {
             case R.id.actionbarInfoLayoutId:
+                mainContainerView = mainView;
                 actionbarInfoActionView = view;
                 actionbarInfoActionView.
                         findViewById(R.id.infoOuterButtonId).
@@ -181,10 +185,15 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     @Override
     public void toggleLayoutByActionMenu(int layoutId) {
         switch (layoutId) {
-            case R.id.actionbarInfoLayoutId:
+            case R.id.infoOuterButtonId:
                 int visibility = actionbarInfoActionView.getVisibility();
                 actionbarInfoActionView.setVisibility(visibility == View.VISIBLE ?
                         View.GONE : View.VISIBLE);
+
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mainContainerView.getLayoutParams();
+                float height = mActivtyRef.getResources().getDimension(R.dimen.actionbar_infoaction_height);
+                params.setMargins(0,
+                        visibility == View.VISIBLE ? 0 : (int) height, 0 ,0);
                 break;
         }
 
@@ -223,6 +232,9 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
                 innerView.setVisibility(innerView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 int mustardYellow = mActivtyRef.getResources().getColor(R.color.material_mustard_yellow);
                 outerView.setBackgroundColor(innerView.getVisibility() == View.VISIBLE ? Color.WHITE : mustardYellow);
+                actionbarInfoActionView.findViewById(R.id.refreshInfoIconId).
+                        setVisibility(innerView.getVisibility() == View.VISIBLE ?
+                                View.VISIBLE : View.GONE);
                 break;
         }
 

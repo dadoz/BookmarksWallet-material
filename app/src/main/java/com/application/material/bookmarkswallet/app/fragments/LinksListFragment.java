@@ -58,8 +58,6 @@ public class LinksListFragment extends Fragment
 	private GestureDetectorCompat detector;
 	private DbConnector dbConnector;
 	private View mLinkListView;
-//	private View mExportBookmarksRevealView;
-//	private AlertDialog exportDialog;
 	private ActionBarHandlerSingleton mActionBarHandlerSingleton;
 	private RecyclerViewActionsSingleton rvActionsSingleton;
 	private ExportBookmarkSingleton exportBookmarksSingleton;
@@ -103,7 +101,8 @@ public class LinksListFragment extends Fragment
 
 	private void onInitView() {
 		View actionbarInfoView = mLinkListView.findViewById(R.id.actionbarInfoLayoutId);
-		mActionBarHandlerSingleton.setViewOnActionMenu(actionbarInfoView, R.id.actionbarInfoLayoutId, this);
+		View mainContainerView = mLinkListView.findViewById(R.id.mainContainerViewId);
+		mActionBarHandlerSingleton.setViewOnActionMenu(mainContainerView, actionbarInfoView, R.id.actionbarInfoLayoutId, this);
 		mActionBarHandlerSingleton.setToolbarScrollManager(mRecyclerView, addLinkButton);
         mActionBarHandlerSingleton.setTitle(null);
         mActionBarHandlerSingleton.setDisplayHomeEnabled(false);
@@ -157,25 +156,26 @@ public class LinksListFragment extends Fragment
                 R.menu.menu_main, menu);
 
         final MenuItem searchItem = menu.findItem(R.id.action_search);
-        MenuItemCompat.setOnActionExpandListener( menu.findItem(R.id.action_search),
-                new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                mRecyclerView.setAdapter(mLinkRecyclerViewAdapter);
-                return true;
-            }
-        });
         SearchManager searchManager = (SearchManager) mainActivityRef.getSystemService(Context.SEARCH_SERVICE);
 
         SearchView searchView = null;
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
+            MenuItemCompat.setOnActionExpandListener( menu.findItem(R.id.action_search),
+                    new MenuItemCompat.OnActionExpandListener() {
+                        @Override
+                        public boolean onMenuItemActionExpand(MenuItem item) {
+                            return true;
+                        }
+
+                        @Override
+                        public boolean onMenuItemActionCollapse(MenuItem item) {
+                            setInitialAdapter();
+                            return true;
+                        }
+                    });
         }
+
         if (searchView != null) {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(mainActivityRef.getComponentName()));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
@@ -194,9 +194,6 @@ public class LinksListFragment extends Fragment
                 {
 //                    ((SearchView) searchItem.getActionView()).setIconified(true);
 //                    (searchItem.getActionView()).clearFocus();
-//                    Toast.makeText(mainActivityRef, query, Toast.LENGTH_LONG).show();
-////                    ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).getFilter().filter(query);
-//                    getFilter().filter(query);
                     return false;
                 }
             });
@@ -204,11 +201,18 @@ public class LinksListFragment extends Fragment
         super.onCreateOptionsMenu(menu, inflater);
 	}
 
-	@Override
+    private void setInitialAdapter() {
+        if(mRecyclerView.getAdapter() != mLinkRecyclerViewAdapter) {
+            mRecyclerView.setAdapter(mLinkRecyclerViewAdapter);
+            rvActionsSingleton.setAdapterRef(mLinkRecyclerViewAdapter);
+        }
+    }
+
+    @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_save_edit_link:
-				rvActionsSingleton.saveEditLink();
+                saveEditLinkRecyclerViewWrapper();
 				break;
 			case  R.id.action_settings:
 				mActionBarHandlerSingleton.toggleActionBar(true, false, false);
@@ -235,8 +239,8 @@ public class LinksListFragment extends Fragment
 				exportBookmarksSingleton.dismissExportDialog();
 				break;
 			case R.id.saveEditUrlDialogId:
-				rvActionsSingleton.saveEditLinkDialog();
-				break;
+                rvActionsSingleton.saveEditLinkDialog();
+                break;
 			case R.id.exportConfirmButtonDialogId:
 				exportBookmarksSingleton.exportBookmarks(mItems);
 				break;
@@ -319,7 +323,13 @@ public class LinksListFragment extends Fragment
 
 	public void undoEditLinkRecyclerViewWrapper() {
 		rvActionsSingleton.undoEditLink();
-	}
+        setInitialAdapter();
+    }
+
+	public void saveEditLinkRecyclerViewWrapper() {
+        rvActionsSingleton.saveEditLink();
+        setInitialAdapter();
+    }
 
 	public void toggleAddLinkButton(boolean isVisible) {
 		//hide fab button
@@ -374,16 +384,19 @@ public class LinksListFragment extends Fragment
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             ArrayList<Link> temp = (ArrayList<Link>) results.values;
-            if(results.values == 0) {
+            if(results.count == 0) {
                 mRecyclerView.setEmptySearchResultQuery(constraint);
             }
 //            ArrayList<Link> temp = new ArrayList<Link>();
 //            temp.add(mDataset.get(0));
 
 
-            LinkRecyclerViewAdapter linkRecyclerViewAdapter =
+            LinkRecyclerViewAdapter searchResultRecyclerViewAdapter =
                     new LinkRecyclerViewAdapter(mFragmentRef, temp, true);
-            mRecyclerView.setAdapter(linkRecyclerViewAdapter);
+            int oldPosition = ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).getSelectedItemPosition();
+            searchResultRecyclerViewAdapter.setSelectedItemPosition(oldPosition);
+            rvActionsSingleton.setAdapterRef(searchResultRecyclerViewAdapter);
+            mRecyclerView.setAdapter(searchResultRecyclerViewAdapter);
         }
     }
 

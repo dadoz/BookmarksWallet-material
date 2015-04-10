@@ -41,8 +41,7 @@
                 android:padding="@dimen/medium_padding"
                 android:gravity="bottom"
                 android:imeOptions="actionSearch"
-                android:maxLines="2"
-                android:minLines="2">
+                android:singleLine="true">
                 <requestFocus/>
         </EditText>
         <TextView
