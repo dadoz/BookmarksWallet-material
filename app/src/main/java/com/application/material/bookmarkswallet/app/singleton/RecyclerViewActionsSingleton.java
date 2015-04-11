@@ -7,8 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.Browser;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.util.Log;
@@ -22,7 +24,11 @@ import com.application.material.bookmarkswallet.app.dbAdapter.DbConnector;
 import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
 import com.application.material.bookmarkswallet.app.models.Link;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -40,27 +46,29 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     private static View mEditUrlView;
     private static LinkRecyclerViewAdapter mAdapter;
     private static SwipeDismissRecyclerViewTouchListener mTouchListener;
+    private static SwipeRefreshLayout mSwipeRefreshLayout;
     private AlertDialog mEditDialog;
 
     public RecyclerViewActionsSingleton() {
     }
 
-    public static RecyclerViewActionsSingleton getInstance(RecyclerView recyclerView,
+    public static RecyclerViewActionsSingleton getInstance(SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView,
                                                            Activity activityRef,
                                                            Fragment listenerRef,
                                                            DbConnector dbConnector,
                                                            SwipeDismissRecyclerViewTouchListener touchListener) {
-        initReferences(recyclerView, activityRef, listenerRef, dbConnector, touchListener);
+        initReferences(swipeRefreshLayout, recyclerView, activityRef, listenerRef, dbConnector, touchListener);
         if(mInstance == null) {
             mInstance = new RecyclerViewActionsSingleton();
         }
         return mInstance;
     }
 
-    public static void initReferences(RecyclerView recyclerView,
+    public static void initReferences(SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView,
                                       Activity activityRef, Fragment listenerRef,
                                       DbConnector dbConnector,
                                       SwipeDismissRecyclerViewTouchListener touchListener) {
+        mSwipeRefreshLayout = swipeRefreshLayout;
         mRecyclerView = recyclerView;
         mActivityRef = activityRef;
         mListenerRef = listenerRef;
@@ -78,15 +86,19 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     public void setAdapterRef(LinkRecyclerViewAdapter adapterRef) {
         mAdapter = adapterRef;
     }
-    public void saveEditLink() {
-        mRecyclerView.setOnTouchListener(mTouchListener);
+    public boolean saveEditLink() {
+        boolean isSaved = false;
         int position = mAdapter.getSelectedItemPosition();
+
+        mRecyclerView.setOnTouchListener(mTouchListener);
         LinkRecyclerViewAdapter.ViewHolder holder =
                 (LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
                         findViewHolderForPosition(position);
-        mAdapter.update(position, holder.getEditLinkName(), holder.getEditUrlName());
-        hideSoftKeyboard(holder.getEditLinkView());
-        Toast.makeText(mActivityRef, "save", Toast.LENGTH_SHORT).show();
+        if(holder != null) {
+            mAdapter.update(position, holder.getEditLinkName(), holder.getEditUrlName());
+            hideSoftKeyboard(holder.getEditLinkView());
+            isSaved = true;
+        }
 
         mAdapter.deselectedItemPosition();
         mAdapter.notifyDataSetChanged();
@@ -97,16 +109,22 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         mActivityRef.invalidateOptionsMenu();
         mRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
         animateButton(false);
+
+        Toast.makeText(mActivityRef, isSaved ? "save" : "Error on saving bookmarks...", Toast.LENGTH_SHORT).show();
+        return isSaved;
     }
 
 
     public void undoEditLink() {
-        mRecyclerView.setOnTouchListener(mTouchListener);
         int position = mAdapter.getSelectedItemPosition();
+
+        mRecyclerView.setOnTouchListener(mTouchListener);
         LinkRecyclerViewAdapter.ViewHolder holder =
                 (LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
                         findViewHolderForPosition(position);
-        hideSoftKeyboard(holder.getEditLinkView());
+        if(holder != null) {
+            hideSoftKeyboard(holder.getEditLinkView());
+        }
 
         Toast.makeText(mActivityRef, "undo edit", Toast.LENGTH_SHORT).show();
         ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).deselectedItemPosition();
@@ -162,8 +180,22 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     }
 
 
-    public void addLink(String url) {
-        Link link = new Link(-1, null, "NEW FAKE", url, -1);
+    public void addLinkRetrivingUrlInfo(String url) throws MalformedURLException {
+        mSwipeRefreshLayout.setRefreshing(true);
+        if(! url.contains("http://") &&
+                ! url.contains("https://")) {
+            //trying with http
+            url = "http://" + url;
+        }
+
+        new LinkUrlInfoAsyncTask().execute(new URL(url));
+    }
+
+    public void addLink(String url, String title) {
+        //TODO fix title == null
+        title = title == null ? "" : title;
+
+        Link link = new Link(-1, null, title, url, -1);
         ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(link);
         mDbConnector.insertLink(link);
     }
@@ -275,5 +307,33 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         return linksDataList;
     }
 
+    private class LinkUrlInfoAsyncTask extends AsyncTask<URL, Integer, String> {
+        private String linkUrl = null;
+        @Override
+        protected String doInBackground(URL... linkUrlArray) {
+            try {
+                linkUrl = linkUrlArray[0].toString();
+                Document doc = Jsoup.connect(linkUrl).get();
+                return doc.title();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+
+        }
+
+        @Override
+        protected void onPostExecute(String linkUrlTitle) {
+            mSwipeRefreshLayout.setRefreshing(false);
+
+            //CHECK out what u need
+            addLink(linkUrl, linkUrlTitle);
+        }
+
+    }
 
 }

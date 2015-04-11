@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.*;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -36,7 +37,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 public class LinksListFragment extends Fragment
 		implements View.OnClickListener,
 			SwipeDismissRecyclerViewTouchListener.DismissCallbacks,
-			RecyclerView.OnItemTouchListener, Filterable{
+			RecyclerView.OnItemTouchListener, Filterable, SwipeRefreshLayout.OnRefreshListener {
 	private static final String TAG = "LinksListFragment_TAG";
 	public static final String FRAG_TAG = "LinksListFragment";
 	public DbAdapter db;
@@ -63,6 +64,7 @@ public class LinksListFragment extends Fragment
 	private ExportBookmarkSingleton exportBookmarksSingleton;
     private LinkRecyclerViewAdapter mLinkRecyclerViewAdapter;
     private View mEmptySearchResultView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
 	public void onAttach(Activity activity) {
@@ -101,8 +103,12 @@ public class LinksListFragment extends Fragment
 
 	private void onInitView() {
 		View actionbarInfoView = mLinkListView.findViewById(R.id.actionbarInfoLayoutId);
-		View mainContainerView = mLinkListView.findViewById(R.id.mainContainerViewId);
-		mActionBarHandlerSingleton.setViewOnActionMenu(mainContainerView, actionbarInfoView, R.id.actionbarInfoLayoutId, this);
+		swipeRefreshLayout = (SwipeRefreshLayout) mLinkListView.findViewById(R.id.mainContainerViewId);
+        swipeRefreshLayout.setOnRefreshListener(this);
+//        swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
+//                android.R.color.holo_green_light, android.R.color.holo_red_light,
+//                android.R.color.holo_orange_light);
+		mActionBarHandlerSingleton.setViewOnActionMenu(swipeRefreshLayout, actionbarInfoView, R.id.actionbarInfoLayoutId, this);
 		mActionBarHandlerSingleton.setToolbarScrollManager(mRecyclerView, addLinkButton);
         mActionBarHandlerSingleton.setTitle(null);
         mActionBarHandlerSingleton.setDisplayHomeEnabled(false);
@@ -115,7 +121,7 @@ public class LinksListFragment extends Fragment
 
 		initRecyclerView();
 		rvActionsSingleton = RecyclerViewActionsSingleton.
-				getInstance(mRecyclerView, mainActivityRef, this, dbConnector, touchListener);
+				getInstance(swipeRefreshLayout, mRecyclerView, mainActivityRef, this, dbConnector, touchListener);
         if(mActionBarHandlerSingleton.isEditMode()) {
             rvActionsSingleton.editLink(mActionBarHandlerSingleton.getEditItemPos());
         }
@@ -185,7 +191,6 @@ public class LinksListFragment extends Fragment
                     if(newText.trim().toLowerCase().equals("")) {
                         return true;
                     }
-
                     getFilter().filter(newText);
                     return true;
                 }
@@ -312,7 +317,11 @@ public class LinksListFragment extends Fragment
 	}
 
 	public void addLinkOnRecyclerViewWrapper(String url) {
-        rvActionsSingleton.addLink(url);
+        try {
+            rvActionsSingleton.addLinkRetrivingUrlInfo(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 
 	//TODO rename it
@@ -343,6 +352,12 @@ public class LinksListFragment extends Fragment
     @Override
     public Filter getFilter() {
         return new LinkFilter(mItems, this);
+    }
+
+    @Override
+    public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(false);
+        //NEED TO BE IMPLEMENTED
     }
 
     private class LinkFilter extends Filter {

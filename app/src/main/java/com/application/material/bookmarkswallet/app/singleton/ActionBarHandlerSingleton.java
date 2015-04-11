@@ -38,7 +38,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     private boolean editMode;
     private Toolbar toolbar;
     private int mEditItemPos;
-    private View mainContainerView;
+    private View         swipeRefreshLayout;
 
     private ActionBarHandlerSingleton() {
     }
@@ -163,7 +163,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     public void setViewOnActionMenu(View mainView, View view, int layoutId) {
         switch (layoutId) {
             case R.id.actionbarInfoLayoutId:
-                mainContainerView = mainView;
+                        swipeRefreshLayout = mainView;
                 actionbarInfoActionView = view;
                 break;
         }
@@ -173,7 +173,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     public void setViewOnActionMenu(View mainView, View view, int layoutId, View.OnClickListener listener) {
         switch (layoutId) {
             case R.id.actionbarInfoLayoutId:
-                mainContainerView = mainView;
+                swipeRefreshLayout = mainView;
                 actionbarInfoActionView = view;
                 actionbarInfoActionView.
                         findViewById(R.id.infoOuterButtonId).
@@ -190,7 +190,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
                 actionbarInfoActionView.setVisibility(visibility == View.VISIBLE ?
                         View.GONE : View.VISIBLE);
 
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mainContainerView.getLayoutParams();
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)         swipeRefreshLayout.getLayoutParams();
                 float height = mActivtyRef.getResources().getDimension(R.dimen.actionbar_infoaction_height);
                 params.setMargins(0,
                         visibility == View.VISIBLE ? 0 : (int) height, 0 ,0);

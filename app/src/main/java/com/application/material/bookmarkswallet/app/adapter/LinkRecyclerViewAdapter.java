@@ -76,27 +76,12 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
                 mActivityRef.getResources().getColor(R.color.material_grey_200) :
                 mActivityRef.getResources().getColor(R.color.white));
         holder.mEditLinkView.setVisibility(isSelectedItem ? View.VISIBLE : View.GONE);
-
-        //NOT WORKING
-        holder.mEditLabelView.setImeOptions(EditorInfo.IME_ACTION_SEND);
-        holder.mEditLabelView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                Log.e(TAG, "HEY" + actionId);
-
-                if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    Log.e(TAG, "HEY");
-                    return true;
-                }
-                return false;
-            }
-        });
         holder.mMainView.setVisibility(isSelectedItem ? View.GONE: View.VISIBLE);
     }
 
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return mDataset == null ? 0 : mDataset.size();
     }
 
     public void add(Link item) {

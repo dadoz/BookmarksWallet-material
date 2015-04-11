@@ -8,7 +8,7 @@
         android:orientation="vertical">
 
     <include layout="@layout/actionbar_info_action_layout"/>
-    <RelativeLayout
+    <android.support.v4.widget.SwipeRefreshLayout
             android:layout_marginTop="@dimen/actionbar_infoaction_height"
             android:id="@+id/mainContainerViewId"
             android:layout_width="wrap_content"
@@ -20,7 +20,7 @@
                 android:scrollbars="vertical"/>
         <include layout="@layout/empty_link_list_layout"/>
         <include layout="@layout/empty_search_result_layout"/>
-    </RelativeLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <!--BOTTOM bar-->
     <include layout="@layout/bottom_bar_undo_redo_layout"/>
