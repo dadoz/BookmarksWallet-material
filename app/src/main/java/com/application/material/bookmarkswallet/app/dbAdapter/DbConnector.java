@@ -7,6 +7,8 @@ import com.application.material.bookmarkswallet.app.dbAdapter.sample.Utils;
 import com.application.material.bookmarkswallet.app.models.Link;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by davide on 14/01/15.
@@ -65,7 +67,7 @@ public class DbConnector implements BookmarksDataInterface {
         return linkId;
     }
 
-    public static boolean getBooleanByInt(int value) {
+/*    public static boolean getBooleanByInt(int value) {
         try {
             if (value == 1)
                 return true;
@@ -73,7 +75,7 @@ public class DbConnector implements BookmarksDataInterface {
             return false;
         }
         return false;
-    }
+    }*/
 
     @Override
     public boolean insertLink(Link linkObj) {
@@ -83,7 +85,22 @@ public class DbConnector implements BookmarksDataInterface {
 
         dbAdapter.open();
         long result = dbAdapter.insertLink(linkObj.getLinkName(), linkObj.getLinkUrl(), linkObj.getIconPath(),
-                Integer.toString(linkObj.getUserId()));
+                Integer.toString(linkObj.getUserId()), linkObj.getTimestamp());
+        dbAdapter.close();
+        return result != -1;
+    }
+
+    public boolean insertLinkList(ArrayList<Link> linkList) {
+        if (linkList == null) {
+            return false;
+        }
+
+        dbAdapter.open();
+        long result = -1;
+        for(Link linkObj : linkList) {
+            result = dbAdapter.insertLink(linkObj.getLinkName(), linkObj.getLinkUrl(), linkObj.getIconPath(),
+                    Integer.toString(linkObj.getUserId()), linkObj.getTimestamp());
+        }
         dbAdapter.close();
         return result != -1;
     }
@@ -99,13 +116,24 @@ public class DbConnector implements BookmarksDataInterface {
         Cursor c = dbAdapter.getLinks();
         if (c.moveToFirst()) {
             do {
-                linkList.add(new Link(c.getInt(0), c.getString(3), c.getString(2), c.getString(4), c.getInt(5)));
+                linkList.add(new Link(c.getInt(0), c.getString(3), c.getString(2), c.getString(4), c.getInt(5), c.getLong(6)));
             } while (c.moveToNext());
         }
 
         dbAdapter.close();
+        sortByTimestamp(linkList);
         return linkList;
 //        return linkList.size() == 0 ? linkList : linkList;
+    }
+
+    private void sortByTimestamp(ArrayList<Link> linkList) {
+        Collections.sort(linkList, new Comparator<Link>() {
+            @Override
+            public int compare(Link lhs, Link rhs) {
+                long res = rhs.getTimestamp() - lhs.getTimestamp();
+                return (int) res;
+            }
+        });
     }
 
     /**
@@ -126,7 +154,7 @@ public class DbConnector implements BookmarksDataInterface {
 //        		public Link(int linkId,String linkIconPath,String linkName,String linkUrl,int userId,String delIcon,boolean linkDeleted){
 
                 linkList.add(new Link(c.getInt(0), c.getString(3), c.getString(2), c.getString(4),
-                        c.getInt(5)));
+                        c.getInt(5), c.getLong(6)));
             } while (c.moveToNext());
         }
 
@@ -147,8 +175,9 @@ public class DbConnector implements BookmarksDataInterface {
         Cursor c = dbAdapter.getLinkById(linkId);
         if (c.moveToFirst()) {
             linkObj = new Link(c.getInt(0), c.getString(2),
-                    c.getString(3), c.getString(4), c.getInt(5));
+                    c.getString(3), c.getString(4), c.getInt(5), c.getLong(6));
         }
+
 
         dbAdapter.close();
         return linkObj;
@@ -196,7 +225,8 @@ public class DbConnector implements BookmarksDataInterface {
         //TODO not sure if linkId is the same as rowId
         long rowId = linkObj.getLinkId();
         dbAdapter.updateLink(rowId, null, linkObj.getLinkName(),
-                linkObj.getIconPath(), linkObj.getLinkUrl(), Integer.toString(linkObj.getUserId()), false);
+                linkObj.getIconPath(), linkObj.getLinkUrl(),
+                Integer.toString(linkObj.getUserId()), linkObj.getTimestamp());
         dbAdapter.close();
     }
 }

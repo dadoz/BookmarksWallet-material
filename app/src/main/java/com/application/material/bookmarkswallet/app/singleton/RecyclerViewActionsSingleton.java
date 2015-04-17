@@ -195,9 +195,10 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         //TODO fix title == null
         title = title == null ? "" : title;
 
-        Link link = new Link(-1, null, title, url, -1);
+        Link link = new Link(-1, null, title, url, -1, Link.getTodayTimestamp());
         ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(link);
         mDbConnector.insertLink(link);
+        mRecyclerView.scrollToPosition(0);
     }
 
 
@@ -264,7 +265,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
                 do {
                     Log.e(TAG, "hey " + cursor.getString(urlId));
 //					Bitmap favicon = BitmapFactory.decodeByteArray(cursor.getBlob(faviconId), 0, 0, null);
-                    bookmarkList.add(new Link(-1, null, cursor.getString(titleId), cursor.getString(urlId), -1));
+                    bookmarkList.add(new Link(-1, null, cursor.getString(titleId), cursor.getString(urlId), -1, Link.getTodayTimestamp()));
                 } while(cursor.moveToNext());
 
             }
@@ -302,7 +303,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         String linkUrl = "http://www.google.it";
         int userId = 0;
         for(int i = 0; i < linksUrlArray.size(); i ++) {
-            linksDataList.add(new Link(i, "ic_launcher", linksUrlArray.get(i), linkUrl, userId));
+            linksDataList.add(new Link(i, "ic_launcher", linksUrlArray.get(i), linkUrl, userId, 0));
         }
         return linksDataList;
     }

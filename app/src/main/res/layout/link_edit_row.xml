@@ -3,6 +3,7 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/editLinkLayoutId"
+        android:visibility="gone"
         android:baselineAligned="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +43,6 @@
                 android:gravity="bottom"
                 android:imeOptions="actionSearch"
                 android:singleLine="true">
-                <requestFocus/>
         </EditText>
         <TextView
                 android:clickable="true"

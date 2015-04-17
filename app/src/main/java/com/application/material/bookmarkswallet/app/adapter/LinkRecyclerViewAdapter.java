@@ -3,19 +3,15 @@ package com.application.material.bookmarkswallet.app.adapter;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.Link;
-import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 /**
  * Created by davide on 17/01/15.
@@ -56,22 +52,27 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String linkName = mDataset.get(position).getLinkName().trim().equals("") ?
-                "Bookmark (no title)" : mDataset.get(position).getLinkName().trim();
-        String urlName = mDataset.get(position).getLinkUrl();
+        Link link = mDataset.get(position);
+        String linkName = link.getLinkName().trim().equals("") ?
+                "Bookmark (no title)" : link.getLinkName().trim();
+        String urlName = link.getLinkUrl();
         holder.mLabelView.setText(linkName);
         holder.mUrlView.setText(urlName);
+        holder.mTimestampView.setText(link.getParsedTimestamp());
 
         holder.mEditUrlLabelView.setOnClickListener((View.OnClickListener) mListenerRef);
 
         //BUG - big huge whtever u want
         boolean isSelectedItem = mSelectedItemPosition == position;
-        if(isSelectedItem) {
+        if (isSelectedItem) {
             holder.mEditLabelView.setText(linkName);
             holder.mEditUrlLabelView.setTag(urlName);
         }
 
         holder.itemView.setPressed(false);
+        if(isSelectedItem) {
+            holder.mEditLabelView.requestFocus();
+        }
         holder.itemView.setBackgroundColor(isSelectedItem ?
                 mActivityRef.getResources().getColor(R.color.material_grey_200) :
                 mActivityRef.getResources().getColor(R.color.white));
@@ -85,8 +86,8 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     }
 
     public void add(Link item) {
-        mDataset.add(item);
-        notifyItemInserted(mDataset.size());
+        mDataset.add(0, item);
+        notifyItemInserted(0);
     }
 
     public void addOnPosition(Link item, int position) {
@@ -140,6 +141,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
 //        private final TextView mEditUrlView;
         private ImageView mIconView;
         private TextView mLabelView;
+        private TextView mTimestampView;
         private TextView mUrlView;
         private View mMainView;
         private String editNameTemp;
@@ -153,6 +155,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
             mIconView = (ImageView) v.findViewById(R.id.linkIconId);
             mLabelView = (TextView) v.findViewById(R.id.linkTitleId);
             mUrlView = (TextView) v.findViewById(R.id.linkUrlId);
+            mTimestampView = (TextView) v.findViewById(R.id.linkTimestampId);
 //            mEditUrlView = (TextView) v.findViewById(R.id.editLinkUrlId);
             mEditUrlLabelView = (TextView) v.findViewById(R.id.editUrlLabelId);
             mEditLabelView = (EditText) v.findViewById(R.id.editLinkTitleId);

@@ -20,7 +20,7 @@ public class DbAdapter {
     public static final String ICON_PATH_KEY = "icon_path";
     public static final String LINK_URL_KEY = "url";
     public static final String LINK_USER_ID_KEY = "user_id";
-    public static final String LINK_DELETED_STATUS_KEY = "deleted_status";
+    public static final String LINK_TIMESTAMP_KEY = "timestamp";
 
     public static final String DATABASE_CREATE =
             "create table " + LINKS_TABLE_NAME + "(" +
@@ -30,7 +30,7 @@ public class DbAdapter {
                     ICON_PATH_KEY + " text," +
                     LINK_URL_KEY + " text not null," +
                     LINK_USER_ID_KEY + " text," +
-                    LINK_DELETED_STATUS_KEY + " text" +
+                    LINK_TIMESTAMP_KEY + " integer" +
                     ");";
     private static SQLiteDatabase db;
     private DatabaseHelper dbHelper;
@@ -59,7 +59,7 @@ public class DbAdapter {
     }
 
     public long insertLink(String linkName, String linkUrl,
-                           String iconPath, String linksUserId) {
+                           String iconPath, String linksUserId, long timestamp) {
         ContentValues initialValues = new ContentValues();
 //        initialValues.put(ROWID_KEY, linkId);
         initialValues.put(LINK_NAME_KEY, linkName);
@@ -69,7 +69,7 @@ public class DbAdapter {
 
         //deprecated
         initialValues.put(LINK_ORDER_IN_LIST_KEY, -1);
-        initialValues.put(LINK_DELETED_STATUS_KEY, false);
+        initialValues.put(LINK_TIMESTAMP_KEY, timestamp);
         return db.insert(LINKS_TABLE_NAME, null, initialValues);
     }
 
@@ -87,7 +87,7 @@ public class DbAdapter {
                 ROWID_KEY, LINK_ORDER_IN_LIST_KEY,
                 LINK_NAME_KEY, ICON_PATH_KEY,
                 LINK_URL_KEY, LINK_USER_ID_KEY,
-                LINK_DELETED_STATUS_KEY
+                LINK_TIMESTAMP_KEY
         }, null, null, null, null, null);
     }
 
@@ -96,7 +96,7 @@ public class DbAdapter {
                 db.query(true, LINKS_TABLE_NAME, new String[]{
                                 LINK_ORDER_IN_LIST_KEY, LINK_NAME_KEY,
                                 ICON_PATH_KEY, LINK_URL_KEY,
-                                LINK_USER_ID_KEY, LINK_DELETED_STATUS_KEY
+                                LINK_USER_ID_KEY, LINK_TIMESTAMP_KEY
                         }, ROWID_KEY + " = " + rowId,
                         null, null, null, null, null);
 
@@ -108,14 +108,14 @@ public class DbAdapter {
 
     public boolean updateLink(long rowId, String linkOrderInList,
                               String linkName, String iconPath, String linkUrl,
-                              String linksUserId, boolean linkDeletedStatus) {
+                              String linksUserId, long linkTimestamp) {
         ContentValues values = new ContentValues();
         values.put(LINK_ORDER_IN_LIST_KEY, linkOrderInList);
         values.put(LINK_NAME_KEY, linkName);
         values.put(ICON_PATH_KEY, iconPath);
         values.put(LINK_URL_KEY, linkUrl);
         values.put(LINK_USER_ID_KEY, linksUserId);
-        values.put(LINK_DELETED_STATUS_KEY, linkDeletedStatus);
+        values.put(LINK_TIMESTAMP_KEY, linkTimestamp);
 
         return db.update(LINKS_TABLE_NAME, values,
                 ROWID_KEY + " = " + rowId, null) > 0;
