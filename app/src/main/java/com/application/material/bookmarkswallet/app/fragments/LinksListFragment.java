@@ -110,7 +110,7 @@ public class LinksListFragment extends Fragment
 //                android.R.color.holo_green_light, android.R.color.holo_red_light,
 //                android.R.color.holo_orange_light);
 		mActionBarHandlerSingleton.setViewOnActionMenu(mSwipeRefreshLayout, actionbarInfoView, R.id.actionbarInfoLayoutId, this);
-		mActionBarHandlerSingleton.setToolbarScrollManager(mRecyclerView, addLinkButton);
+		mActionBarHandlerSingleton.setToolbarScrollManager(mRecyclerView, (View) addLinkButton.getParent());
         mActionBarHandlerSingleton.setTitle(null);
         mActionBarHandlerSingleton.setDisplayHomeEnabled(false);
 

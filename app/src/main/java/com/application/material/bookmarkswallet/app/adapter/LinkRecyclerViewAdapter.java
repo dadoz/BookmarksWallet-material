@@ -59,7 +59,9 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         holder.mLabelView.setText(linkName);
         holder.mUrlView.setText(urlName);
         holder.mTimestampView.setText(link.getParsedTimestamp());
-
+        if(link.getIconBitmap() != null) {
+            holder.mIconView.setImageBitmap(link.getIconBitmap());
+        }
         holder.mEditUrlLabelView.setOnClickListener((View.OnClickListener) mListenerRef);
 
         //BUG - big huge whtever u want

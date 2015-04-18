@@ -6,6 +6,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.Browser;
@@ -195,7 +197,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         //TODO fix title == null
         title = title == null ? "" : title;
 
-        Link link = new Link(-1, null, title, url, -1, Link.getTodayTimestamp());
+        Link link = new Link(-1, null, null, title, url, -1, Link.getTodayTimestamp());
         ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(link);
         mDbConnector.insertLink(link);
         mRecyclerView.scrollToPosition(0);
@@ -252,6 +254,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         try {
             ContentResolver cr = mActivityRef.getContentResolver();
             String[] projection = {
+                    Browser.BookmarkColumns.CREATED,
                     Browser.BookmarkColumns.FAVICON,
                     Browser.BookmarkColumns.TITLE,
                     Browser.BookmarkColumns.URL
@@ -260,12 +263,17 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
             int urlId = cursor.getColumnIndex(Browser.BookmarkColumns.URL);
             int titleId = cursor.getColumnIndex(Browser.BookmarkColumns.TITLE);
             int faviconId = cursor.getColumnIndex(Browser.BookmarkColumns.FAVICON);
+            long timestamp = cursor.getColumnIndex(Browser.BookmarkColumns.CREATED);
 
             if(cursor.moveToFirst()) {
                 do {
                     Log.e(TAG, "hey " + cursor.getString(urlId));
-//					Bitmap favicon = BitmapFactory.decodeByteArray(cursor.getBlob(faviconId), 0, 0, null);
-                    bookmarkList.add(new Link(-1, null, cursor.getString(titleId), cursor.getString(urlId), -1, Link.getTodayTimestamp()));
+                    byte[] blobIcon = cursor.getBlob(faviconId);
+                    Bitmap favicon = null;
+                    if(blobIcon != null) {
+                        favicon = BitmapFactory.decodeByteArray(blobIcon, 0, blobIcon.length);
+                    }
+                    bookmarkList.add(new Link(-1, null, favicon, cursor.getString(titleId), cursor.getString(urlId), -1, Link.getTodayTimestamp()));
                 } while(cursor.moveToNext());
 
             }
@@ -303,7 +311,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         String linkUrl = "http://www.google.it";
         int userId = 0;
         for(int i = 0; i < linksUrlArray.size(); i ++) {
-            linksDataList.add(new Link(i, "ic_launcher", linksUrlArray.get(i), linkUrl, userId, 0));
+            linksDataList.add(new Link(i, "ic_launcher", null, linksUrlArray.get(i), linkUrl, userId, 0));
         }
         return linksDataList;
     }

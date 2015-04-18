@@ -84,7 +84,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     }
 
 
-    public void setToolbarScrollManager(final RecyclerView recyclerView, final FloatingActionButton fab) {
+    public void setToolbarScrollManager(final RecyclerView recyclerView, final View fab) {
         final View infoInnerView = actionbarInfoActionView.findViewById(R.id.infoInnerLayoutId);
         scrollManager = new ScrollManager(infoInnerView);
         try {

@@ -25,14 +25,27 @@
     <!--BOTTOM bar-->
     <include layout="@layout/bottom_bar_undo_redo_layout"/>
 
-    <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addLinkButtonId"
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_icon="@drawable/ic_add_white_48dp"
-            fab:fab_colorNormal="@color/material_blue_grey"
-            fab:fab_colorPressed="@color/material_blue_grey"
+            fab:fab_icon="@drawable/ic_done_black_48dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            fab:fab_addButtonColorNormal="@color/material_blue_grey"
+            fab:fab_addButtonColorPressed="@color/material_blue_grey">
+        <com.getbase.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_icon="@drawable/ic_content_paste_white_24dp"
+                fab:fab_colorNormal="@color/material_red"
+                fab:fab_colorPressed="@color/material_red"/>
+        <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/addLinkButtonId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_icon="@drawable/ic_add_white_24dp"
+                fab:fab_colorNormal="@color/material_red"
+                fab:fab_colorPressed="@color/material_red"/>
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </RelativeLayout>

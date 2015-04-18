@@ -116,7 +116,7 @@ public class DbConnector implements BookmarksDataInterface {
         Cursor c = dbAdapter.getLinks();
         if (c.moveToFirst()) {
             do {
-                linkList.add(new Link(c.getInt(0), c.getString(3), c.getString(2), c.getString(4), c.getInt(5), c.getLong(6)));
+                linkList.add(new Link(c.getInt(0), c.getString(3), null, c.getString(2), c.getString(4), c.getInt(5), c.getLong(6)));
             } while (c.moveToNext());
         }
 
@@ -153,7 +153,7 @@ public class DbConnector implements BookmarksDataInterface {
                 //TODO to be fixed inconPath pos 3 in dbAdapter but must be in pos 2
 //        		public Link(int linkId,String linkIconPath,String linkName,String linkUrl,int userId,String delIcon,boolean linkDeleted){
 
-                linkList.add(new Link(c.getInt(0), c.getString(3), c.getString(2), c.getString(4),
+                linkList.add(new Link(c.getInt(0), c.getString(3), null, c.getString(2), c.getString(4),
                         c.getInt(5), c.getLong(6)));
             } while (c.moveToNext());
         }
@@ -174,8 +174,8 @@ public class DbConnector implements BookmarksDataInterface {
 
         Cursor c = dbAdapter.getLinkById(linkId);
         if (c.moveToFirst()) {
-            linkObj = new Link(c.getInt(0), c.getString(2),
-                    c.getString(3), c.getString(4), c.getInt(5), c.getLong(6));
+            linkObj = new Link(c.getInt(0), c.getString(3), null,
+                    c.getString(2), c.getString(4), c.getInt(5), c.getLong(6));
         }
 
 

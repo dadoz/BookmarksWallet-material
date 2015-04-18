@@ -68,6 +68,7 @@ public class HTTPDbConnector {
                 JSONObject json_data = jArray.getJSONObject(i);
                 Link linkObj=new Link(json_data.getInt("link_id"),
                         json_data.getString("iconPath"),
+                        null,
                         json_data.getString("linkName"),
                         json_data.getString("linkUrl"),
                         json_data.getInt("links_user_id"),
