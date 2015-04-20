@@ -3,28 +3,22 @@ package com.application.material.bookmarkswallet.app.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
-import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.dbAdapter.DbConnector;
+import com.application.material.bookmarkswallet.app.dbAdapter_old.DbConnector;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
+import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
+import io.realm.Realm;
 
 import java.util.ArrayList;
 
@@ -36,8 +30,10 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 	private DbConnector dbConnector;
 	private ListView mSettingsList;
 	private ActionBarHandlerSingleton mActionBarHandlerSingleton;
+    private Realm mRealm;
+    private RecyclerViewActionsSingleton mRvActionsSingleton;
 
-	@Override
+    @Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		if (! (activity instanceof OnChangeFragmentWrapperInterface)) {
@@ -51,7 +47,10 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 		mActivityRef = activity;
 		dbConnector = DbConnector.getInstance(mActivityRef);
 		mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
-	}
+		mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
+        mRvActionsSingleton = RecyclerViewActionsSingleton.getInstance(mActivityRef);
+
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
@@ -59,6 +58,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 		settingsView = inflater.inflate(R.layout.settings_layout, null);
         mActionBarHandlerSingleton.setTitle(TITLE);
         mActionBarHandlerSingleton.setDisplayHomeEnabled(true);
+        mRealm = Realm.getInstance(mActivityRef);
 
         return settingsView;
 	}
@@ -107,9 +107,8 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 	}
 
 	public boolean deleteAllLinks() {
-//		with dialog
-//		((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).removeAll();
-		return dbConnector.deleteAllLinks();
+        mRvActionsSingleton.deleteBookmarksList();
+        return true;
 	}
 
 	@Override

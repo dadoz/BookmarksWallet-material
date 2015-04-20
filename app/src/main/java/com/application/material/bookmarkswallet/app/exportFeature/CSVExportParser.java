@@ -1,7 +1,8 @@
 package com.application.material.bookmarkswallet.app.exportFeature;
 
 import android.os.Environment;
-import com.application.material.bookmarkswallet.app.models.Link;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
+import io.realm.RealmResults;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -17,7 +18,7 @@ public class CSVExportParser {
     public CSVExportParser() {
     }
 
-    public static boolean writeFile(ArrayList<Link> data) {
+    public static boolean writeFile(RealmResults<Bookmark> data) {
         try {
 //            String dir = PrivateApplicationDirSingleton.getDir(ctx).getPath();
             String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();

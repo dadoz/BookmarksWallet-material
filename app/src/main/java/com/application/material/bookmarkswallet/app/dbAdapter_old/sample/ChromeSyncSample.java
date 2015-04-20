@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.dbAdapter.sample;
+package com.application.material.bookmarkswallet.app.dbAdapter_old.sample;
 //import com.example.chromebookmarkssync.weibo.Parameters;
 //import com.example.chromebookmarkssync.weibo.Token;
 //import com.example.chromebookmarkssync.weibo.Utility;

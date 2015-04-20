@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,10 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.models.Link;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Created by davide on 17/01/15.
@@ -19,21 +21,23 @@ import java.util.Collections;
 public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerViewAdapter.ViewHolder> {
     private final Fragment mListenerRef;
     private final boolean mIsSearchResult;
+    private final Realm mRealm;
     private String TAG = "LinkRecyclerViewAdapter";
-    private ArrayList<Link> mDataset;
+    private RealmResults<Bookmark> mDataset;
     private static Context mActivityRef;
-    private static Link deletedItem = null;
+    private static Bookmark deletedItem = null;
     private static int deletedItemPosition = -1;
     private int mSelectedItemPosition = -1;
 
-    public LinkRecyclerViewAdapter(Fragment fragmentRef, ArrayList<Link> myDataset, boolean isSearchResult) {
+    public LinkRecyclerViewAdapter(Fragment fragmentRef, RealmResults<Bookmark> myDataset, boolean isSearchResult) {
         mDataset = myDataset;
         mActivityRef = fragmentRef.getActivity();
         mListenerRef = fragmentRef;
         mIsSearchResult = isSearchResult;
+        mRealm = Realm.getInstance(mActivityRef);
     }
 
-    public Link getDeletedItem() {
+    public Bookmark getDeletedItem() {
         return deletedItem;
     }
 
@@ -52,15 +56,23 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Link link = mDataset.get(position);
-        String linkName = link.getLinkName().trim().equals("") ?
-                "Bookmark (no title)" : link.getLinkName().trim();
-        String urlName = link.getLinkUrl();
+        if(mDataset == null) {
+            return;
+        }
+        Bookmark bookmark = mDataset.get(position);
+        String linkName = bookmark.getName().trim().equals("") ?
+                "(no title)" : bookmark.getName().trim();
+        String urlName = bookmark.getUrl();
         holder.mLabelView.setText(linkName);
         holder.mUrlView.setText(urlName);
-        holder.mTimestampView.setText(link.getParsedTimestamp());
-        if(link.getIconBitmap() != null) {
-            holder.mIconView.setImageBitmap(link.getIconBitmap());
+        holder.mTimestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark.getTimestamp()));
+        Bitmap btmp = Bookmark.Utils.getIconBitmap(bookmark.getBlobIcon());
+        if(Bookmark.Utils.getIconBitmap(bookmark.getBlobIcon()) != null) {
+            holder.mIconView.setImageBitmap(btmp);
+        } else {
+            holder.mIconView
+                    .setImageDrawable(mActivityRef.getResources()
+                        .getDrawable(R.drawable.ic_bookmark_outline_black_48dp));
         }
         holder.mEditUrlLabelView.setOnClickListener((View.OnClickListener) mListenerRef);
 
@@ -87,13 +99,19 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         return mDataset == null ? 0 : mDataset.size();
     }
 
-    public void add(Link item) {
-        mDataset.add(0, item);
-        notifyItemInserted(0);
+    public void updateDataset() {
+        mDataset = mRealm.where(Bookmark.class).findAll();
+        notifyDataSetChanged();
     }
 
-    public void addOnPosition(Link item, int position) {
-        mDataset.add(position, item);
+//    public void add(Bookmark item) {
+//        mDataset.add(0, item);
+//        notifyItemInserted(0);
+//    }
+
+
+    public void addOnPosition(Bookmark item, int position) {
+//        mDataset.add(position, item);
         notifyItemInserted(position);
     }
 
@@ -101,23 +119,30 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     public void remove(int position) {
         deletedItemPosition = position;
         deletedItem = mDataset.get(position);
-
-        mDataset.remove(position);
+        mRealm.beginTransaction();
+        deletedItem.removeFromRealm();
+        mRealm.commitTransaction();
+//        mDataset.remove(position);
         notifyItemRemoved(position);
     }
 
-    public void removeAll() {
-        mDataset.removeAll(mDataset);
-        notifyItemRemoved(0);
-    }
+//    public void removeAll() {
+////        mDataset.removeAll(mDataset);
+//        if(mDataset == null) {
+//            return;
+//        }
+//        int size = mDataset.size();
+//        mDataset.clear();
+//        notifyItemRangeRemoved(0, size);
+//    }
 
     public void update(int position, String linkName, String linkUrl) {
-        Link linkToBeUpdated = mDataset.get(position);
+        Bookmark bookmarkToBeUpdated = mDataset.get(position);
         if(linkName != null) {
-            linkToBeUpdated.setLinkName(linkName);
+            bookmarkToBeUpdated.setName(linkName);
         }
         if(linkUrl != null) {
-            linkToBeUpdated.setLinkUrl(linkUrl);
+            bookmarkToBeUpdated.setUrl(linkUrl);
         }
 
         notifyDataSetChanged();
@@ -133,6 +158,10 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
 
     public boolean isSearchResult() {
         return mIsSearchResult;
+    }
+
+    public RealmResults<Bookmark> getDatasetRef() {
+        return mDataset;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

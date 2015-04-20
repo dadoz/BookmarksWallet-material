@@ -12,16 +12,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.models.Link;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
 
 import java.util.ArrayList;
 
 /**CUSTOM LAYOUT CLASS**/
-public class LinkAdapter extends ArrayAdapter<Link> {
+public class LinkAdapter extends ArrayAdapter<Bookmark> {
     private final Fragment fragmentRef;
 
     public LinkAdapter(Fragment fragmentRef, int linkViewResourceId,
-                             ArrayList<Link> items) {
+                             ArrayList<Bookmark> items) {
         super(fragmentRef.getActivity(), linkViewResourceId, items);
         this.fragmentRef = fragmentRef;
     }
@@ -31,7 +31,7 @@ public class LinkAdapter extends ArrayAdapter<Link> {
         View view = inflater.inflate(R.layout.link_row, null);
 
         TextView linkTitle = (TextView) view.findViewById(R.id.linkTitleId);
-        linkTitle.setText(getItem(position).getLinkName());
+        linkTitle.setText(getItem(position).getName());
 
         return view;
     }

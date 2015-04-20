@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.dbAdapter.sample;
+package com.application.material.bookmarkswallet.app.dbAdapter_old.sample;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import com.application.material.bookmarkswallet.app.models.Link;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
 //import org.jsoup.Jsoup;
 //import org.jsoup.nodes.Document;
 //import org.jsoup.select.Elements;
@@ -61,30 +61,30 @@ public class Utils {
 	public static final String EDIT_LABEL = "EDIT";
 	public static final String DELETE_LABEL = "DELETE";
 
-	public static ArrayList<Link> linksListStatic=null;
+	public static ArrayList<Bookmark> linksListStatic=null;
 
 	public static int LINK_NOT_IN_LIST=-1;
 	static int linkPosition=LINK_NOT_IN_LIST;
 
 	/**LINKS*/
-	public static void setLinksList(ArrayList<Link> linksListTmp){
-    	for(Link link:linksListTmp)
-    		Log.d(TAG, link.getLinkName());
+	public static void setLinksList(ArrayList<Bookmark> linksListTmp){
+    	for(Bookmark bookmark :linksListTmp)
+    		Log.d(TAG, bookmark.getName());
 		if(linksListStatic==null){
-			linksListStatic=new ArrayList<Link>();
+			linksListStatic=new ArrayList<Bookmark>();
 			linksListStatic.addAll(linksListTmp);
 		}
 	}
 
-	public static ArrayList<Link> getLinksListStatic(){
+	public static ArrayList<Bookmark> getLinksListStatic(){
 		return linksListStatic;
 	}
 	
-	public static Link getLinkById(int noteId){
+	public static Bookmark getLinkById(int noteId){
 		if(linksListStatic!=null)
-			for(Link link:linksListStatic)
-				if(link.getLinkId()==noteId)
-					return link;
+			for(Bookmark bookmark :linksListStatic)
+				if(bookmark.getId()==noteId)
+					return bookmark;
 		return null;
 	}
 	
@@ -102,8 +102,8 @@ public class Utils {
 		return null;
 	}
 
-	public static boolean removeLink(Link link) {
-		if(linksListStatic.remove((Link)link))
+	public static boolean removeLink(Bookmark bookmark) {
+		if(linksListStatic.remove((Bookmark) bookmark))
 			return true;
 		return false;
 	}

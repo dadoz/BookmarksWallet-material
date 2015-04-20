@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.dbAdapter;
+package com.application.material.bookmarkswallet.app.dbAdapter_old;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -21,6 +21,7 @@ public class DbAdapter {
     public static final String LINK_URL_KEY = "url";
     public static final String LINK_USER_ID_KEY = "user_id";
     public static final String LINK_TIMESTAMP_KEY = "timestamp";
+    public static final String LINK_BLOB_ICON_KEY = "blob_icon";
 
     public static final String DATABASE_CREATE =
             "create table " + LINKS_TABLE_NAME + "(" +
@@ -30,7 +31,8 @@ public class DbAdapter {
                     ICON_PATH_KEY + " text," +
                     LINK_URL_KEY + " text not null," +
                     LINK_USER_ID_KEY + " text," +
-                    LINK_TIMESTAMP_KEY + " integer" +
+                    LINK_TIMESTAMP_KEY + " integer," +
+                    LINK_BLOB_ICON_KEY + " blob" +
                     ");";
     private static SQLiteDatabase db;
     private DatabaseHelper dbHelper;
@@ -59,17 +61,19 @@ public class DbAdapter {
     }
 
     public long insertLink(String linkName, String linkUrl,
-                           String iconPath, String linksUserId, long timestamp) {
+                           String iconPath, byte[] blobIcon,
+                           String linksUserId, long timestamp) {
         ContentValues initialValues = new ContentValues();
 //        initialValues.put(ROWID_KEY, linkId);
         initialValues.put(LINK_NAME_KEY, linkName);
         initialValues.put(ICON_PATH_KEY, iconPath);
+        initialValues.put(LINK_BLOB_ICON_KEY, blobIcon);
         initialValues.put(LINK_URL_KEY, linkUrl);
         initialValues.put(LINK_USER_ID_KEY, linksUserId);
+        initialValues.put(LINK_TIMESTAMP_KEY, timestamp);
 
         //deprecated
         initialValues.put(LINK_ORDER_IN_LIST_KEY, -1);
-        initialValues.put(LINK_TIMESTAMP_KEY, timestamp);
         return db.insert(LINKS_TABLE_NAME, null, initialValues);
     }
 
@@ -77,26 +81,34 @@ public class DbAdapter {
         db.delete(LINKS_TABLE_NAME, null, null);
     }
 
-    public void deleteLinkById(int dbRowId) {
+    public void deleteLinkById(long dbRowId) {
         //TODO check if dbRowId is int
         db.delete(LINKS_TABLE_NAME, ROWID_KEY + " = " + dbRowId, null);
     }
 
     public Cursor getLinks() {
         return db.query(LINKS_TABLE_NAME, new String[]{
-                ROWID_KEY, LINK_ORDER_IN_LIST_KEY,
-                LINK_NAME_KEY, ICON_PATH_KEY,
-                LINK_URL_KEY, LINK_USER_ID_KEY,
-                LINK_TIMESTAMP_KEY
+                ROWID_KEY,
+                LINK_ORDER_IN_LIST_KEY,
+                LINK_NAME_KEY,
+                ICON_PATH_KEY,
+                LINK_URL_KEY,
+                LINK_USER_ID_KEY,
+                LINK_TIMESTAMP_KEY,
+                LINK_BLOB_ICON_KEY
         }, null, null, null, null, null);
     }
 
     public Cursor getLinkById(long rowId) throws SQLException {
         Cursor mCursor =
                 db.query(true, LINKS_TABLE_NAME, new String[]{
-                                LINK_ORDER_IN_LIST_KEY, LINK_NAME_KEY,
-                                ICON_PATH_KEY, LINK_URL_KEY,
-                                LINK_USER_ID_KEY, LINK_TIMESTAMP_KEY
+                                LINK_ORDER_IN_LIST_KEY,
+                                LINK_NAME_KEY,
+                                ICON_PATH_KEY,
+                                LINK_URL_KEY,
+                                LINK_USER_ID_KEY,
+                                LINK_TIMESTAMP_KEY,
+                                LINK_BLOB_ICON_KEY
                         }, ROWID_KEY + " = " + rowId,
                         null, null, null, null, null);
 
@@ -107,12 +119,13 @@ public class DbAdapter {
     }
 
     public boolean updateLink(long rowId, String linkOrderInList,
-                              String linkName, String iconPath, String linkUrl,
+                              String linkName, String iconPath, byte[] blobIcon, String linkUrl,
                               String linksUserId, long linkTimestamp) {
         ContentValues values = new ContentValues();
         values.put(LINK_ORDER_IN_LIST_KEY, linkOrderInList);
         values.put(LINK_NAME_KEY, linkName);
         values.put(ICON_PATH_KEY, iconPath);
+        values.put(LINK_BLOB_ICON_KEY, blobIcon);
         values.put(LINK_URL_KEY, linkUrl);
         values.put(LINK_USER_ID_KEY, linksUserId);
         values.put(LINK_TIMESTAMP_KEY, linkTimestamp);

@@ -1,7 +1,7 @@
 package com.application.material.bookmarkswallet.app.importFeatures;
 
 import android.os.Environment;
-import com.application.material.bookmarkswallet.app.models.Link;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -20,7 +20,7 @@ public class CSVImportParser {
     public CSVImportParser() {
     }
 
-    private static boolean readFile(ArrayList<Link> data) {
+    private static boolean readFile(ArrayList<Bookmark> data) {
         try {
 //            String dir = PrivateApplicationDirSingleton.getDir(ctx).getPath();
             String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
@@ -42,7 +42,7 @@ public class CSVImportParser {
         return false;
     }
 
-    private ArrayList<Link> parseData(String data) {
+    private ArrayList<Bookmark> parseData(String data) {
         return null;
     }
 }

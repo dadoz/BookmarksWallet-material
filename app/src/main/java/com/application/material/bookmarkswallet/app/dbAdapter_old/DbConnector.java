@@ -1,10 +1,9 @@
-package com.application.material.bookmarkswallet.app.dbAdapter;
+package com.application.material.bookmarkswallet.app.dbAdapter_old;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import com.application.material.bookmarkswallet.app.dbAdapter.sample.Utils;
-import com.application.material.bookmarkswallet.app.models.Link;
+import com.application.material.bookmarkswallet.app.dbAdapter_old.sample.Utils;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,28 +77,28 @@ public class DbConnector implements BookmarksDataInterface {
     }*/
 
     @Override
-    public boolean insertLink(Link linkObj) {
-        if (linkObj == null) {
+    public boolean insertLink(Bookmark bookmarkObj) {
+        if (bookmarkObj == null) {
             return false;
         }
 
         dbAdapter.open();
-        long result = dbAdapter.insertLink(linkObj.getLinkName(), linkObj.getLinkUrl(), linkObj.getIconPath(),
-                Integer.toString(linkObj.getUserId()), linkObj.getTimestamp());
+        long result = dbAdapter.insertLink(bookmarkObj.getName(), bookmarkObj.getUrl(), bookmarkObj.getIconPath(),
+                bookmarkObj.getBlobIcon(), Integer.toString(bookmarkObj.getUserId()), bookmarkObj.getTimestamp());
         dbAdapter.close();
         return result != -1;
     }
 
-    public boolean insertLinkList(ArrayList<Link> linkList) {
-        if (linkList == null) {
+    public boolean insertLinkList(ArrayList<Bookmark> bookmarkList) {
+        if (bookmarkList == null) {
             return false;
         }
 
         dbAdapter.open();
         long result = -1;
-        for(Link linkObj : linkList) {
-            result = dbAdapter.insertLink(linkObj.getLinkName(), linkObj.getLinkUrl(), linkObj.getIconPath(),
-                    Integer.toString(linkObj.getUserId()), linkObj.getTimestamp());
+        for(Bookmark bookmarkObj : bookmarkList) {
+            result = dbAdapter.insertLink(bookmarkObj.getName(), bookmarkObj.getUrl(), bookmarkObj.getIconPath(),
+                    bookmarkObj.getBlobIcon(), Integer.toString(bookmarkObj.getUserId()), bookmarkObj.getTimestamp());
         }
         dbAdapter.close();
         return result != -1;
@@ -109,27 +108,27 @@ public class DbConnector implements BookmarksDataInterface {
      * GET ALL ROWS from dbAdapter*
      */
     @Override
-    public ArrayList<Link> getLinkList() {
-        ArrayList<Link> linkList = new ArrayList<Link>();
+    public ArrayList<Bookmark> getLinkList() {
+        ArrayList<Bookmark> bookmarkList = new ArrayList<Bookmark>();
         dbAdapter.open();
 
         Cursor c = dbAdapter.getLinks();
         if (c.moveToFirst()) {
             do {
-                linkList.add(new Link(c.getInt(0), c.getString(3), null, c.getString(2), c.getString(4), c.getInt(5), c.getLong(6)));
+//                bookmarkList.add(new Bookmark(c.getInt(0), c.getString(3), c.getBlob(7), c.getString(2), c.getString(4), c.getInt(5), c.getLong(6)));
             } while (c.moveToNext());
         }
 
         dbAdapter.close();
-        sortByTimestamp(linkList);
-        return linkList;
+        sortByTimestamp(bookmarkList);
+        return bookmarkList;
 //        return linkList.size() == 0 ? linkList : linkList;
     }
 
-    private void sortByTimestamp(ArrayList<Link> linkList) {
-        Collections.sort(linkList, new Comparator<Link>() {
+    private void sortByTimestamp(ArrayList<Bookmark> bookmarkList) {
+        Collections.sort(bookmarkList, new Comparator<Bookmark>() {
             @Override
-            public int compare(Link lhs, Link rhs) {
+            public int compare(Bookmark lhs, Bookmark rhs) {
                 long res = rhs.getTimestamp() - lhs.getTimestamp();
                 return (int) res;
             }
@@ -140,9 +139,9 @@ public class DbConnector implements BookmarksDataInterface {
      * GET ALL ROWS from dbAdapter*
      */
     @Override
-    public ArrayList<Link> getLinkListTest() {
+    public ArrayList<Bookmark> getLinkListTest() {
         boolean emptyDb = true;
-        ArrayList<Link> linkList = new ArrayList<Link>();
+        ArrayList<Bookmark> bookmarkList = new ArrayList<Bookmark>();
         dbAdapter.open();
 
         Cursor c = dbAdapter.getLinks();
@@ -153,34 +152,34 @@ public class DbConnector implements BookmarksDataInterface {
                 //TODO to be fixed inconPath pos 3 in dbAdapter but must be in pos 2
 //        		public Link(int linkId,String linkIconPath,String linkName,String linkUrl,int userId,String delIcon,boolean linkDeleted){
 
-                linkList.add(new Link(c.getInt(0), c.getString(3), null, c.getString(2), c.getString(4),
-                        c.getInt(5), c.getLong(6)));
+//                bookmarkList.add(new Bookmark(c.getInt(0), c.getString(3), c.getBlob(7), c.getString(2), c.getString(4),
+//                        c.getInt(5), c.getLong(6)));
             } while (c.moveToNext());
         }
 
         dbAdapter.close();
         if (emptyDb)
             return null;
-        return linkList;
+        return bookmarkList;
     }
 
     /**
      * GET ONE ROW from dbAdapter*
      */
     @Override
-    public Link getLinkById(int linkId) {
-        Link linkObj = null;
+    public Bookmark getLinkById(int linkId) {
+        Bookmark bookmarkObj = null;
         dbAdapter.open();
 
         Cursor c = dbAdapter.getLinkById(linkId);
         if (c.moveToFirst()) {
-            linkObj = new Link(c.getInt(0), c.getString(3), null,
-                    c.getString(2), c.getString(4), c.getInt(5), c.getLong(6));
+//            bookmarkObj = new Bookmark(c.getInt(0), c.getString(3), c.getBlob(7),
+//                    c.getString(2), c.getString(4), c.getInt(5), c.getLong(6));
         }
 
 
         dbAdapter.close();
-        return linkObj;
+        return bookmarkObj;
     }
 
     /**
@@ -212,7 +211,7 @@ public class DbConnector implements BookmarksDataInterface {
      * GET ONE ROW from dbAdapter*
      */
     @Override
-    public boolean deleteLinkByObject(Link linkObj) {
+    public boolean deleteLinkByObject(Bookmark bookmarkObj) {
         dbAdapter.open();
         //add delete function
         dbAdapter.close();
@@ -220,13 +219,13 @@ public class DbConnector implements BookmarksDataInterface {
     }
 
     @Override
-    public void updateLinkByObject(Link linkObj) {
+    public void updateLinkByObject(Bookmark bookmarkObj) {
         dbAdapter.open();
         //TODO not sure if linkId is the same as rowId
-        long rowId = linkObj.getLinkId();
-        dbAdapter.updateLink(rowId, null, linkObj.getLinkName(),
-                linkObj.getIconPath(), linkObj.getLinkUrl(),
-                Integer.toString(linkObj.getUserId()), linkObj.getTimestamp());
+        long rowId = bookmarkObj.getId();
+        dbAdapter.updateLink(rowId, null, bookmarkObj.getName(),
+                bookmarkObj.getIconPath(), bookmarkObj.getBlobIcon(), bookmarkObj.getUrl(),
+                Integer.toString(bookmarkObj.getUserId()), bookmarkObj.getTimestamp());
         dbAdapter.close();
     }
 }

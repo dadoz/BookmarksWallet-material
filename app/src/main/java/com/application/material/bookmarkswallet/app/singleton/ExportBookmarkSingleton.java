@@ -10,7 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.exportFeature.CSVExportParser;
-import com.application.material.bookmarkswallet.app.models.Link;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
+import io.realm.RealmResults;
 
 import java.util.ArrayList;
 
@@ -54,7 +55,7 @@ public class ExportBookmarkSingleton {
         mExportDialog.show();
     }
 
-    public void exportBookmarks(ArrayList<Link> items) {
+    public void exportBookmarks(RealmResults<Bookmark> items) {
         View view = mExportBookmarksRevealView.findViewById(R.id.exportFrameLayoutId);
         view.setBackgroundColor(mActivityRef.getResources().getColor(R.color.material_green));
         if (Build.VERSION.SDK_INT >= 21) {

@@ -5,19 +5,14 @@ import android.graphics.Point;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.BookmarkCardview;
 import com.application.material.bookmarkswallet.app.models.BookmarkCardview.CardviewTypeEnum;
 import com.application.material.bookmarkswallet.app.models.Info;
-import com.application.material.bookmarkswallet.app.models.Link;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Created by davide on 17/01/15.

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.*;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -23,10 +22,10 @@ import butterknife.InjectView;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.dbAdapter.DbAdapter;
-import com.application.material.bookmarkswallet.app.dbAdapter.DbConnector;
+import com.application.material.bookmarkswallet.app.dbAdapter_old.DbAdapter;
+import com.application.material.bookmarkswallet.app.dbAdapter_old.DbConnector;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.bookmarkswallet.app.models.Link;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
@@ -34,6 +33,7 @@ import com.application.material.bookmarkswallet.app.singleton.ExportBookmarkSing
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import io.realm.RealmResults;
 
 public class LinksListFragment extends Fragment
 		implements View.OnClickListener,
@@ -55,7 +55,7 @@ public class LinksListFragment extends Fragment
 	View dismissButton;
 	private View emptyLinkListView;
 	private LinearLayoutManager linearLayoutManager;
-	private ArrayList<Link> mItems;
+	private RealmResults<Bookmark> mItems;
 	private SwipeDismissRecyclerViewTouchListener touchListener;
 	private GestureDetectorCompat detector;
 	private DbConnector dbConnector;
@@ -113,16 +113,16 @@ public class LinksListFragment extends Fragment
 		mActionBarHandlerSingleton.setToolbarScrollManager(mRecyclerView, (View) addLinkButton.getParent());
         mActionBarHandlerSingleton.setTitle(null);
         mActionBarHandlerSingleton.setDisplayHomeEnabled(false);
+        rvActionsSingleton = RecyclerViewActionsSingleton.
+                getInstance(mSwipeRefreshLayout, mRecyclerView, mainActivityRef, this, dbConnector, touchListener);
 
-		mItems = dbConnector.getLinkList();
+        mItems = rvActionsSingleton.getBookmarksList();
 
 		addLinkButton.setOnClickListener(this);
 		undoButton.setOnClickListener(this);
 		dismissButton.setOnClickListener(this);
 
 		initRecyclerView();
-		rvActionsSingleton = RecyclerViewActionsSingleton.
-				getInstance(mSwipeRefreshLayout, mRecyclerView, mainActivityRef, this, dbConnector, touchListener);
         if(mActionBarHandlerSingleton.isEditMode()) {
             rvActionsSingleton.editLink(mActionBarHandlerSingleton.getEditItemPos());
         }
@@ -256,19 +256,17 @@ public class LinksListFragment extends Fragment
 				rvActionsSingleton.editLinkDialog(url);
 				break;
 			case R.id.importLocalBookmarksButtonId:
-                mSwipeRefreshLayout.setRefreshing(true);
-				ArrayList<Link> items = rvActionsSingleton.getBookmarksByProvider();
-                dbConnector.insertLinkList(items);
+				rvActionsSingleton.setBookmarksByProvider();
+//                dbConnector.insertLinkList(items);
 
-				for(Link obj : items) {
-					((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(obj);
+//				for(Bookmark obj : items) {
+//					((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(obj);
 //					dbConnector.insertLink(obj);
-				}
-                mSwipeRefreshLayout.setRefreshing(false);
+//				}
 				break;
 			case R.id.undoButtonId:
 				Toast.makeText(mainActivityRef, "undo", Toast.LENGTH_SHORT).show();
-				Link deletedItem = adapter.getDeletedItem();
+				Bookmark deletedItem = adapter.getDeletedItem();
 				int deletedItemPosition = adapter.getDeletedItemPosition();
 				adapter.addOnPosition(deletedItem, deletedItemPosition);
 				setUndoDeletedLinkLayout(false);
@@ -276,7 +274,7 @@ public class LinksListFragment extends Fragment
 			case R.id.dismissButtonId:
 				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
 				deletedItem = adapter.getDeletedItem();
-				dbConnector.deleteLinkById(deletedItem.getLinkId());
+				dbConnector.deleteLinkById((int) deletedItem.getId());
 				setUndoDeletedLinkLayout(false);
 				break;
 			case R.id.actionbarInfoActionIconId:
@@ -324,7 +322,7 @@ public class LinksListFragment extends Fragment
 
 	public void addLinkOnRecyclerViewWrapper(String url) {
         try {
-            rvActionsSingleton.addLinkRetrivingUrlInfo(url);
+            rvActionsSingleton.addBookmarkWithInfo(url);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -363,14 +361,16 @@ public class LinksListFragment extends Fragment
     @Override
     public void onRefresh() {
         mSwipeRefreshLayout.setRefreshing(false);
+        ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
+
         //NEED TO BE IMPLEMENTED
     }
 
     private class LinkFilter extends Filter {
         private final Fragment mFragmentRef;
-        private ArrayList<Link> mDataset;
+        private RealmResults<Bookmark> mDataset;
 
-        public LinkFilter(ArrayList data, Fragment fragmentRef) {
+        public LinkFilter(RealmResults data, Fragment fragmentRef) {
             mDataset = data;
             mFragmentRef = fragmentRef;
         }
@@ -378,8 +378,8 @@ public class LinksListFragment extends Fragment
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults filterResults = new FilterResults();
-            ArrayList<Link> filteredList = new ArrayList<Link>();
-            filterResults.values = new ArrayList<Link>();
+            ArrayList<Bookmark> filteredList = new ArrayList<Bookmark>();
+            filterResults.values = new ArrayList<Bookmark>();
             filterResults.count = 0;
 
             if(constraint != null &&
@@ -387,9 +387,9 @@ public class LinksListFragment extends Fragment
                     mDataset != null &&
                     mDataset.size() != 0) {
 
-                for(Link link : mDataset) {
-                    if(link.getLinkName().toLowerCase().trim().contains(constraint.toString().toLowerCase())) {
-                        filteredList.add(link);
+                for(Bookmark bookmark : mDataset) {
+                    if(bookmark.getName().toLowerCase().trim().contains(constraint.toString().toLowerCase())) {
+                        filteredList.add(bookmark);
                     }
                 }
 
@@ -404,7 +404,7 @@ public class LinksListFragment extends Fragment
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            ArrayList<Link> temp = (ArrayList<Link>) results.values;
+            RealmResults<Bookmark> temp = (RealmResults<Bookmark>) results.values;
             if(results.count == 0) {
                 mRecyclerView.setEmptySearchResultQuery(constraint);
             }
@@ -454,7 +454,7 @@ public class LinksListFragment extends Fragment
 							findViewHolderForPosition(position);
 			holder.itemView.setSelected(true);
 			// handle single tap
-			String url = (mItems.get(position)).getLinkUrl();
+			String url = (mItems.get(position)).getUrl();
 			rvActionsSingleton.openLinkOnBrowser(url);
 
 			return super.onSingleTapConfirmed(e);

@@ -1,7 +1,7 @@
-package com.application.material.bookmarkswallet.app.dbAdapter.sample;
+package com.application.material.bookmarkswallet.app.dbAdapter_old.sample;
 
 import android.util.Log;
-import com.application.material.bookmarkswallet.app.models.Link;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -51,14 +51,14 @@ public class HTTPDbConnector {
     }
 
     /**GET LINKS LIST**/
-    public static ArrayList<Link> getLinksListFromJSONData(){
+    public static ArrayList<Bookmark> getLinksListFromJSONData(){
         //TODO set this fx visible only if user is logged in
         //TODO TEST values cahnge or rm
         boolean isDeletedLink=false;
         String delIconPathDb="";
 
         try{
-            ArrayList<Link> linksObjList=new ArrayList<Link>();
+            ArrayList<Bookmark> linksObjList=new ArrayList<Bookmark>();
             String JSONdata = fetchDataFromDb(Utils.LINKS_DB);
             if(JSONdata==null)
                 return null;
@@ -66,14 +66,14 @@ public class HTTPDbConnector {
             for(int i=0;i<jArray.length();i++){
                 //get links data
                 JSONObject json_data = jArray.getJSONObject(i);
-                Link linkObj=new Link(json_data.getInt("link_id"),
-                        json_data.getString("iconPath"),
-                        null,
-                        json_data.getString("linkName"),
-                        json_data.getString("linkUrl"),
-                        json_data.getInt("links_user_id"),
-                        json_data.getInt("links_user_id"));
-                linksObjList.add(linkObj);
+//                Bookmark bookmarkObj =new Bookmark(json_data.getInt("link_id"),
+//                        json_data.getString("iconPath"),
+//                        null,
+//                        json_data.getString("linkName"),
+//                        json_data.getString("linkUrl"),
+//                        json_data.getInt("links_user_id"),
+//                        json_data.getInt("links_user_id"));
+//                linksObjList.add(bookmarkObj);
                 //get LINK icon from URL
 //	            try{
 //	            	URL linkURLObj=new URL(linkUrlDb);
@@ -172,7 +172,7 @@ public class HTTPDbConnector {
 
     /**DELETE ENTRY FROM DB**/
     //TODO change this to JSON fetch data
-    public static boolean updateLinkOnDb(int choicedDB,Link linkObj){
+    public static boolean updateLinkOnDb(int choicedDB,Bookmark bookmarkObj){
         if(Utils.isUserLoggedIn()){
             try{
                 Log.e(TAG, "Update - still to be implemented on server side");

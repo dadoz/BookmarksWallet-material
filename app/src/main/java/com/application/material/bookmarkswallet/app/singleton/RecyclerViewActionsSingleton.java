@@ -6,15 +6,12 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.Browser;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,16 +19,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.dbAdapter.DbConnector;
+import com.application.material.bookmarkswallet.app.dbAdapter_old.DbConnector;
 import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
-import com.application.material.bookmarkswallet.app.models.Link;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by davide on 31/03/15.
@@ -50,6 +49,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     private static SwipeDismissRecyclerViewTouchListener mTouchListener;
     private static SwipeRefreshLayout mSwipeRefreshLayout;
     private AlertDialog mEditDialog;
+    private static Realm mRealm;
 
     public RecyclerViewActionsSingleton() {
     }
@@ -60,6 +60,14 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
                                                            DbConnector dbConnector,
                                                            SwipeDismissRecyclerViewTouchListener touchListener) {
         initReferences(swipeRefreshLayout, recyclerView, activityRef, listenerRef, dbConnector, touchListener);
+        if(mInstance == null) {
+            mInstance = new RecyclerViewActionsSingleton();
+        }
+        return mInstance;
+    }
+
+    public static RecyclerViewActionsSingleton getInstance(Activity activityRef) {
+        mActivityRef = activityRef;
         if(mInstance == null) {
             mInstance = new RecyclerViewActionsSingleton();
         }
@@ -82,7 +90,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
                 inflate(R.layout.dialog_edit_url_layout, null);
         mAdapter = (LinkRecyclerViewAdapter)
                 mRecyclerView.getAdapter();
-
+        mRealm = Realm.getInstance(mActivityRef);
     }
 
     public void setAdapterRef(LinkRecyclerViewAdapter adapterRef) {
@@ -182,7 +190,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     }
 
 
-    public void addLinkRetrivingUrlInfo(String url) throws MalformedURLException {
+    public void addBookmarkWithInfo(String url) throws MalformedURLException {
         mSwipeRefreshLayout.setRefreshing(true);
         if(! url.contains("http://") &&
                 ! url.contains("https://")) {
@@ -190,19 +198,122 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
             url = "http://" + url;
         }
 
-        new LinkUrlInfoAsyncTask().execute(new URL(url));
+        new AsyncTask<URL, Integer, String>() {
+            private String linkUrl = null;
+            @Override
+            protected String doInBackground(URL... linkUrlArray) {
+                try {
+                    linkUrl = linkUrlArray[0].toString();
+                    Document doc = Jsoup.connect(linkUrl).get();
+                    org.jsoup.nodes.Element elem = doc.head().select("link[href~=.*\\.ico|png]").first();
+                    String iconUrl = elem.attr("href");
+                    Log.d(TAG, " - " + iconUrl);
+                    return doc.title();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+
+            }
+
+            @Override
+            protected void onPostExecute(String linkUrlTitle) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                //CHECK out what u need
+                addBookmark(linkUrl, linkUrlTitle);
+            }
+
+        }.execute(new URL(url));
     }
 
-    public void addLink(String url, String title) {
-        //TODO fix title == null
+    public void addBookmark(String url, String title) {
+//        title = title == null ? "" : title;
+//        Link link = new Link(-1, null, null, title, url, -1, Link.getTodayTimestamp());
+//        mDbConnector.insertLink(link);
+
+//        ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(link);
         title = title == null ? "" : title;
-
-        Link link = new Link(-1, null, null, title, url, -1, Link.getTodayTimestamp());
-        ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(link);
-        mDbConnector.insertLink(link);
+        addOrmObject(mRealm, title, null, title);
         mRecyclerView.scrollToPosition(0);
+        ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
+
     }
 
+    public void deleteBookmarksList() {
+        mRealm.beginTransaction();
+        mRealm.where(Bookmark.class).findAll().clear();
+        mRealm.commitTransaction();
+    }
+
+    public RealmResults<Bookmark> getBookmarksList() {
+        Realm realm = Realm.getInstance(mActivityRef);
+        return realm.where(Bookmark.class).findAll();
+    }
+
+    public void setBookmarksByProvider() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        new AsyncTask<URL, String, Boolean>() {
+
+            @Override
+            protected Boolean doInBackground(URL... params) {
+                try {
+                    ContentResolver cr = mActivityRef.getContentResolver();
+                    Realm realm = Realm.getInstance(mActivityRef);
+                    String[] projection = {
+                            Browser.BookmarkColumns.CREATED,
+                            Browser.BookmarkColumns.FAVICON,
+                            Browser.BookmarkColumns.TITLE,
+                            Browser.BookmarkColumns.URL
+                    };
+                    Cursor cursor = cr.query(Browser.BOOKMARKS_URI, projection, null, null, null);
+                    int urlId = cursor.getColumnIndex(Browser.BookmarkColumns.URL);
+                    int titleId = cursor.getColumnIndex(Browser.BookmarkColumns.TITLE);
+                    int faviconId = cursor.getColumnIndex(Browser.BookmarkColumns.FAVICON);
+//                    long timestamp = cursor.getColumnIndex(Browser.BookmarkColumns.CREATED);
+
+                    if(cursor.moveToFirst()) {
+                        do {
+                            Log.e(TAG, "hey " + cursor.getString(urlId));
+                            byte[] blobIcon = cursor.getBlob(faviconId);
+
+                            addOrmObject(realm, cursor.getString(titleId), blobIcon, cursor.getString(urlId));
+                        } while(cursor.moveToNext());
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
+            }
+        }.execute();
+    }
+
+
+    public void addOrmObject(Realm realm, String title, byte[] blobIcon, String url) {
+        realm.beginTransaction();
+        Bookmark bookmark = realm.createObject(Bookmark.class);
+        bookmark.setId(UUID.randomUUID().getLeastSignificantBits());
+        bookmark.setName(title);
+        if(blobIcon != null) {
+            bookmark.setBlobIcon(blobIcon);
+        }
+        bookmark.setUrl(url);
+        bookmark.setTimestamp(Bookmark.Utils.getTodayTimestamp());
+//      bookmarkList.add(new Bookmark(-1, null, blobIcon, cursor.getString(titleId), cursor.getString(urlId), -1, Bookmark.getTodayTimestamp()));
+        realm.commitTransaction();
+    }
 
     public void openLinkOnBrowser(String linkUrl) {
         try {
@@ -248,41 +359,6 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
     }
 
-    public ArrayList<Link> getBookmarksByProvider() {
-        //TODO asyncTask
-        ArrayList<Link> bookmarkList = new ArrayList<Link>();
-        try {
-            ContentResolver cr = mActivityRef.getContentResolver();
-            String[] projection = {
-                    Browser.BookmarkColumns.CREATED,
-                    Browser.BookmarkColumns.FAVICON,
-                    Browser.BookmarkColumns.TITLE,
-                    Browser.BookmarkColumns.URL
-            };
-            Cursor cursor = cr.query(Browser.BOOKMARKS_URI, projection, null, null, null);
-            int urlId = cursor.getColumnIndex(Browser.BookmarkColumns.URL);
-            int titleId = cursor.getColumnIndex(Browser.BookmarkColumns.TITLE);
-            int faviconId = cursor.getColumnIndex(Browser.BookmarkColumns.FAVICON);
-            long timestamp = cursor.getColumnIndex(Browser.BookmarkColumns.CREATED);
-
-            if(cursor.moveToFirst()) {
-                do {
-                    Log.e(TAG, "hey " + cursor.getString(urlId));
-                    byte[] blobIcon = cursor.getBlob(faviconId);
-                    Bitmap favicon = null;
-                    if(blobIcon != null) {
-                        favicon = BitmapFactory.decodeByteArray(blobIcon, 0, blobIcon.length);
-                    }
-                    bookmarkList.add(new Link(-1, null, favicon, cursor.getString(titleId), cursor.getString(urlId), -1, Link.getTodayTimestamp()));
-                } while(cursor.moveToNext());
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return bookmarkList;
-    }
 
     private void hideSoftKeyboard(EditText editText) {
         InputMethodManager imm = (InputMethodManager) mActivityRef.
@@ -290,59 +366,5 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
-    public ArrayList<Link> getLinkListMockup() {
-        ArrayList<Link> linksDataList = new ArrayList<Link>();
-        ArrayList<String> linksUrlArray = new ArrayList<String>();
-        boolean deletedLinkFlag = false;
-
-        linksUrlArray.add("heavy metal1");
-        linksUrlArray.add("pop1");
-        linksUrlArray.add("underground");
-        linksUrlArray.add("heavy metal");
-        linksUrlArray.add("underground");
-        linksUrlArray.add("underground");
-        linksUrlArray.add("heavy metal");
-        linksUrlArray.add("underground");
-        linksUrlArray.add("hey_ure_fkin_my_shitty_dog_are_u_sure_u_want_to_cose_ure_crazy");
-        linksUrlArray.add("bla1");
-        linksUrlArray.add("link2");
-        linksUrlArray.add("bla1");
-        linksUrlArray.add("link2");
-        String linkUrl = "http://www.google.it";
-        int userId = 0;
-        for(int i = 0; i < linksUrlArray.size(); i ++) {
-            linksDataList.add(new Link(i, "ic_launcher", null, linksUrlArray.get(i), linkUrl, userId, 0));
-        }
-        return linksDataList;
-    }
-
-    private class LinkUrlInfoAsyncTask extends AsyncTask<URL, Integer, String> {
-        private String linkUrl = null;
-        @Override
-        protected String doInBackground(URL... linkUrlArray) {
-            try {
-                linkUrl = linkUrlArray[0].toString();
-                Document doc = Jsoup.connect(linkUrl).get();
-                return doc.title();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-
-        }
-
-        @Override
-        protected void onPostExecute(String linkUrlTitle) {
-            mSwipeRefreshLayout.setRefreshing(false);
-
-            //CHECK out what u need
-            addLink(linkUrl, linkUrlTitle);
-        }
-
-    }
 
 }
