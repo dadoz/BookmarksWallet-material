@@ -22,8 +22,7 @@ import butterknife.InjectView;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.dbAdapter_old.DbAdapter;
-import com.application.material.bookmarkswallet.app.dbAdapter_old.DbConnector;
+import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.R;
@@ -41,7 +40,6 @@ public class LinksListFragment extends Fragment
 			RecyclerView.OnItemTouchListener, Filterable, SwipeRefreshLayout.OnRefreshListener {
 	private static final String TAG = "LinksListFragment_TAG";
 	public static final String FRAG_TAG = "LinksListFragment";
-	public DbAdapter db;
 	private MainActivity mainActivityRef;
 	@InjectView(R.id.linksListId)
 	RecyclerViewCustom mRecyclerView;
@@ -58,12 +56,11 @@ public class LinksListFragment extends Fragment
 	private RealmResults<Bookmark> mItems;
 	private SwipeDismissRecyclerViewTouchListener touchListener;
 	private GestureDetectorCompat detector;
-	private DbConnector dbConnector;
 	private View mLinkListView;
 	private ActionBarHandlerSingleton mActionBarHandlerSingleton;
 	private RecyclerViewActionsSingleton rvActionsSingleton;
 	private ExportBookmarkSingleton exportBookmarksSingleton;
-    private LinkRecyclerViewAdapter mLinkRecyclerViewAdapter;
+    private BookmarkRecyclerViewAdapter mLinkRecyclerViewAdapter;
     private View mEmptySearchResultView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -75,8 +72,6 @@ public class LinksListFragment extends Fragment
 					+ " must implement OnLoadViewHandlerInterface");
 		}
 		mainActivityRef =  (MainActivity) activity;
-		db = new DbAdapter(getActivity());
-		dbConnector = DbConnector.getInstance(mainActivityRef);
 		mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mainActivityRef);
 		exportBookmarksSingleton = ExportBookmarkSingleton.getInstance(this, mainActivityRef);
 
@@ -114,7 +109,7 @@ public class LinksListFragment extends Fragment
         mActionBarHandlerSingleton.setTitle(null);
         mActionBarHandlerSingleton.setDisplayHomeEnabled(false);
         rvActionsSingleton = RecyclerViewActionsSingleton.
-                getInstance(mSwipeRefreshLayout, mRecyclerView, mainActivityRef, this, dbConnector, touchListener);
+                getInstance(mSwipeRefreshLayout, mRecyclerView, mainActivityRef, this, touchListener);
 
         mItems = rvActionsSingleton.getBookmarksList();
 
@@ -123,6 +118,7 @@ public class LinksListFragment extends Fragment
 		dismissButton.setOnClickListener(this);
 
 		initRecyclerView();
+        rvActionsSingleton.update();
         if(mActionBarHandlerSingleton.isEditMode()) {
             rvActionsSingleton.editLink(mActionBarHandlerSingleton.getEditItemPos());
         }
@@ -130,7 +126,7 @@ public class LinksListFragment extends Fragment
 
 	private void initRecyclerView() {
 		mLinkRecyclerViewAdapter =
-				new LinkRecyclerViewAdapter(this, mItems, false);
+				new BookmarkRecyclerViewAdapter(mainActivityRef);
 
 		detector = new GestureDetectorCompat(mainActivityRef, new RecyclerViewOnGestureListener()); //ONCLICK - ONLONGCLICK
 		touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this); //LISTENER TO SWIPE
@@ -157,8 +153,9 @@ public class LinksListFragment extends Fragment
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		boolean isItemSelected = ((LinkRecyclerViewAdapter) mRecyclerView.
-				getAdapter()).isItemSelected();
+//		boolean isItemSelected = ((BookmarkRecyclerViewAdapter) mRecyclerView.
+//				getAdapter()).isItemSelected();
+        boolean isItemSelected = false;
 		inflater.inflate(isItemSelected ? R.menu.save_edit_link_menu :
                 R.menu.menu_main, menu);
 
@@ -240,7 +237,7 @@ public class LinksListFragment extends Fragment
 
 	@Override
 	public void onClick(View v) {
-		LinkRecyclerViewAdapter adapter = (LinkRecyclerViewAdapter) mRecyclerView.getAdapter();
+		BookmarkRecyclerViewAdapter adapter = (BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter();
 		switch (v.getId()) {
 			case R.id.dismissExportButtonDialogId:
 				exportBookmarksSingleton.dismissExportDialog();
@@ -264,19 +261,22 @@ public class LinksListFragment extends Fragment
 //					dbConnector.insertLink(obj);
 //				}
 				break;
-			case R.id.undoButtonId:
-				Toast.makeText(mainActivityRef, "undo", Toast.LENGTH_SHORT).show();
-				Bookmark deletedItem = adapter.getDeletedItem();
-				int deletedItemPosition = adapter.getDeletedItemPosition();
-				adapter.addOnPosition(deletedItem, deletedItemPosition);
-				setUndoDeletedLinkLayout(false);
-				break;
-			case R.id.dismissButtonId:
-				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
-				deletedItem = adapter.getDeletedItem();
-				dbConnector.deleteLinkById((int) deletedItem.getId());
-				setUndoDeletedLinkLayout(false);
-				break;
+//			case R.id.undoButtonId:
+//				Toast.makeText(mainActivityRef, "undo", Toast.LENGTH_SHORT).show();
+////				Bookmark deletedItem = adapter.getDeletedItem();
+//				int deletedItemPosition = adapter.getDeletedItemPosition();
+//                adapter.notifyItemInserted(deletedItemPosition);
+//                rvActionsSingleton.setDeletedItemPosition(-1);
+////				adapter.addOnPosition(deletedItem, deletedItemPosition);
+//				setUndoDeletedLinkLayout(false);
+//				break;
+//			case R.id.dismissButtonId:
+//				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
+////				deletedItem = adapter.getDeletedItem();
+////				dbConnector.deleteLinkById((int) deletedItem.getId());
+//                rvActionsSingleton.deleteBookmark(adapter.getDeletedItemPosition());
+//				setUndoDeletedLinkLayout(false);
+//				break;
 			case R.id.actionbarInfoActionIconId:
 				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
 //				mActionBarHandlerSingleton.initToggleSettings(false, false);
@@ -303,10 +303,9 @@ public class LinksListFragment extends Fragment
 
 	@Override
 	public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
-		Log.e(TAG, reverseSortedPositions.toString() + "removing action");
-		int position = reverseSortedPositions[0];
-		((LinkRecyclerViewAdapter) recyclerView.getAdapter()).remove(position);
-		setUndoDeletedLinkLayout(true);
+		Log.e(TAG, reverseSortedPositions + "removing action");
+        rvActionsSingleton.onSwipeAction(reverseSortedPositions);
+//		setUndoDeletedLinkLayout(true);
 	}
 
 	//onclick listener
@@ -361,7 +360,8 @@ public class LinksListFragment extends Fragment
     @Override
     public void onRefresh() {
         mSwipeRefreshLayout.setRefreshing(false);
-        ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
+        rvActionsSingleton.update();
+//        ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
 
         //NEED TO BE IMPLEMENTED
     }
@@ -387,16 +387,17 @@ public class LinksListFragment extends Fragment
                     mDataset != null &&
                     mDataset.size() != 0) {
 
-                for(Bookmark bookmark : mDataset) {
-                    if(bookmark.getName().toLowerCase().trim().contains(constraint.toString().toLowerCase())) {
-                        filteredList.add(bookmark);
-                    }
-                }
-
+//                for(Bookmark bookmark : mDataset) {
+//                    if(bookmark.getName().toLowerCase().trim().contains(constraint.toString().toLowerCase())) {
+//                        filteredList.add(bookmark);
+//                    }
+//                }
                 if(filteredList.size() != 0) {
                     filterResults.values = filteredList;
                     filterResults.count = filteredList.size();
                 }
+
+//                mDataset.where(Bookmark.class).findAll()
             }
 
             return filterResults;
@@ -412,12 +413,15 @@ public class LinksListFragment extends Fragment
 //            temp.add(mDataset.get(0));
 
 
-            LinkRecyclerViewAdapter searchResultRecyclerViewAdapter =
-                    new LinkRecyclerViewAdapter(mFragmentRef, temp, true);
-            int oldPosition = ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).getSelectedItemPosition();
-            searchResultRecyclerViewAdapter.setSelectedItemPosition(oldPosition);
-            rvActionsSingleton.setAdapterRef(searchResultRecyclerViewAdapter);
-            mRecyclerView.setAdapter(searchResultRecyclerViewAdapter);
+//            ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
+
+
+//            LinkRecyclerViewAdapter searchResultRecyclerViewAdapter =
+//                    new LinkRecyclerViewAdapter(mFragmentRef, temp, true);
+//            int oldPosition = ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).getSelectedItemPosition();
+//            searchResultRecyclerViewAdapter.setSelectedItemPosition(oldPosition);
+//            rvActionsSingleton.setAdapterRef(searchResultRecyclerViewAdapter);
+//            mRecyclerView.setAdapter(searchResultRecyclerViewAdapter);
         }
     }
 

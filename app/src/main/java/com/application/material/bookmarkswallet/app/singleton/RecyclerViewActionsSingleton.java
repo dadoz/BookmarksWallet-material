@@ -19,7 +19,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.dbAdapter_old.DbConnector;
+import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
@@ -42,10 +43,9 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     private static Activity mActivityRef;
     private static Fragment mListenerRef;
     private static ActionBarHandlerSingleton mActionBarHandlerSingleton;
-    private static DbConnector mDbConnector;
     private static Fragment mFragmentRef;
     private static View mEditUrlView;
-    private static LinkRecyclerViewAdapter mAdapter;
+    private static BookmarkRecyclerViewAdapter mAdapter;
     private static SwipeDismissRecyclerViewTouchListener mTouchListener;
     private static SwipeRefreshLayout mSwipeRefreshLayout;
     private AlertDialog mEditDialog;
@@ -57,9 +57,8 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     public static RecyclerViewActionsSingleton getInstance(SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView,
                                                            Activity activityRef,
                                                            Fragment listenerRef,
-                                                           DbConnector dbConnector,
                                                            SwipeDismissRecyclerViewTouchListener touchListener) {
-        initReferences(swipeRefreshLayout, recyclerView, activityRef, listenerRef, dbConnector, touchListener);
+        initReferences(swipeRefreshLayout, recyclerView, activityRef, listenerRef, touchListener);
         if(mInstance == null) {
             mInstance = new RecyclerViewActionsSingleton();
         }
@@ -76,43 +75,53 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
     public static void initReferences(SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView,
                                       Activity activityRef, Fragment listenerRef,
-                                      DbConnector dbConnector,
                                       SwipeDismissRecyclerViewTouchListener touchListener) {
         mSwipeRefreshLayout = swipeRefreshLayout;
         mRecyclerView = recyclerView;
         mActivityRef = activityRef;
         mListenerRef = listenerRef;
         mFragmentRef = listenerRef;
-        mDbConnector = dbConnector;
         mTouchListener = touchListener;
         mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
         mEditUrlView = mActivityRef.getLayoutInflater().
                 inflate(R.layout.dialog_edit_url_layout, null);
-        mAdapter = (LinkRecyclerViewAdapter)
-                mRecyclerView.getAdapter();
+        setAdapter();
         mRealm = Realm.getInstance(mActivityRef);
     }
 
-    public void setAdapterRef(LinkRecyclerViewAdapter adapterRef) {
+    private static BookmarkRecyclerViewAdapter setAdapter() {
+        return mAdapter = (BookmarkRecyclerViewAdapter)
+                mRecyclerView.getAdapter();
+    }
+
+    public void setAdapterRef(BookmarkRecyclerViewAdapter adapterRef) {
         mAdapter = adapterRef;
     }
+
     public boolean saveEditLink() {
         boolean isSaved = false;
-        int position = mAdapter.getSelectedItemPosition();
+        try {
+            setAdapter();
+/*            int position = mAdapter.getSelectedItemPosition();
 
-        mRecyclerView.setOnTouchListener(mTouchListener);
-        LinkRecyclerViewAdapter.ViewHolder holder =
-                (LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
-                        findViewHolderForPosition(position);
-        if(holder != null) {
-            mAdapter.update(position, holder.getEditLinkName(), holder.getEditUrlName());
-            hideSoftKeyboard(holder.getEditLinkView());
-            isSaved = true;
+            mRecyclerView.setOnTouchListener(mTouchListener);
+            LinkRecyclerViewAdapter.ViewHolder holder =
+                    (LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
+                            findViewHolderForPosition(position);
+            if(holder != null) {
+                mAdapter.update(position, holder.getEditLinkName(), holder.getEditUrlName());
+                hideSoftKeyboard(holder.getEditLinkView());
+                isSaved = true;
+            }
+
+            mAdapter.deselectedItemPosition();
+            mAdapter.notifyDataSetChanged();*/
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        mAdapter.deselectedItemPosition();
-        mAdapter.notifyDataSetChanged();
-
         mActionBarHandlerSingleton.setTitle(null);
         mActionBarHandlerSingleton.toggleActionBar(false, false, false, R.id.infoOuterButtonId);
 
@@ -126,36 +135,42 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
 
     public void undoEditLink() {
-        int position = mAdapter.getSelectedItemPosition();
+        try {
+            setAdapter();
+/*            int position = mAdapter.getSelectedItemPosition();
 
-        mRecyclerView.setOnTouchListener(mTouchListener);
-        LinkRecyclerViewAdapter.ViewHolder holder =
-                (LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
-                        findViewHolderForPosition(position);
-        if(holder != null) {
-            hideSoftKeyboard(holder.getEditLinkView());
+            mRecyclerView.setOnTouchListener(mTouchListener);
+            LinkRecyclerViewAdapter.ViewHolder holder =
+                    (LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
+                            findViewHolderForPosition(position);
+            if(holder != null) {
+                hideSoftKeyboard(holder.getEditLinkView());
+            }
+
+            Toast.makeText(mActivityRef, "undo edit", Toast.LENGTH_SHORT).show();
+            mAdapter.deselectedItemPosition();
+            mAdapter.notifyDataSetChanged();
+*/
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        Toast.makeText(mActivityRef, "undo edit", Toast.LENGTH_SHORT).show();
-        ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).deselectedItemPosition();
-        (mRecyclerView.getAdapter()).notifyDataSetChanged();
         mActivityRef.invalidateOptionsMenu();
         mRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
         animateButton(false);
     }
 
     public void editLink(int position) {
-        Toast.makeText(mActivityRef, "edit" + position, Toast.LENGTH_SHORT).show();
+/*        Toast.makeText(mActivityRef, "edit" + position, Toast.LENGTH_SHORT).show();
 
         mActionBarHandlerSingleton.setEditMode(true);
         mActionBarHandlerSingleton.setTitle("Edit link");
         mActionBarHandlerSingleton.toggleActionBar(true, true, true, R.id.infoOuterButtonId);
 
-        ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).setSelectedItemPosition(position);
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        (mAdapter).setSelectedItemPosition(position);
+        mAdapter.notifyDataSetChanged();
         mActivityRef.invalidateOptionsMenu();
         mRecyclerView.removeOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
-        animateButton(true);
+        animateButton(true);*/
     }
     
 
@@ -177,7 +192,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     }
 
     public void saveEditLinkDialog() {
-        mEditDialog.dismiss();
+/*        mEditDialog.dismiss();
         String modifiedUrl = ((EditText) mEditUrlView.findViewById(R.id.editLinkUrDialoglId)).
                 getText().toString();
 
@@ -186,7 +201,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
                 (LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
                         findViewHolderForPosition(position);
 
-        holder.setEditUrlName(modifiedUrl);
+        holder.setEditUrlName(modifiedUrl);*/
     }
 
 
@@ -200,13 +215,14 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
         new AsyncTask<URL, Integer, String>() {
             private String linkUrl = null;
+            private String iconUrl = null;
             @Override
             protected String doInBackground(URL... linkUrlArray) {
                 try {
                     linkUrl = linkUrlArray[0].toString();
                     Document doc = Jsoup.connect(linkUrl).get();
                     org.jsoup.nodes.Element elem = doc.head().select("link[href~=.*\\.ico|png]").first();
-                    String iconUrl = elem.attr("href");
+                    iconUrl = elem.attr("href");
                     Log.d(TAG, " - " + iconUrl);
                     return doc.title();
                 } catch (Exception e) {
@@ -224,23 +240,25 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
             protected void onPostExecute(String linkUrlTitle) {
                 mSwipeRefreshLayout.setRefreshing(false);
                 //CHECK out what u need
-                addBookmark(linkUrl, linkUrlTitle);
+                addBookmark(linkUrl, iconUrl, null, linkUrlTitle);
             }
 
         }.execute(new URL(url));
     }
 
-    public void addBookmark(String url, String title) {
+    public void addBookmark(String url, String iconPath, byte[] iconBlob, String title) {
 //        title = title == null ? "" : title;
 //        Link link = new Link(-1, null, null, title, url, -1, Link.getTodayTimestamp());
 //        mDbConnector.insertLink(link);
 
 //        ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(link);
         title = title == null ? "" : title;
-        addOrmObject(mRealm, title, null, title);
+        addOrmObject(mRealm, title, iconPath, iconBlob, url);
         mRecyclerView.scrollToPosition(0);
         ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
-
+        //UPDATE DATASET REF
+        mRecyclerView.getAdapter().notifyItemInserted(0);
+        setAdapter();
     }
 
     public void deleteBookmarksList() {
@@ -280,7 +298,8 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
                             Log.e(TAG, "hey " + cursor.getString(urlId));
                             byte[] blobIcon = cursor.getBlob(faviconId);
 
-                            addOrmObject(realm, cursor.getString(titleId), blobIcon, cursor.getString(urlId));
+                            //add item on realm
+                            addOrmObject(realm, cursor.getString(titleId), null, blobIcon, cursor.getString(urlId));
                         } while(cursor.moveToNext());
 
                     }
@@ -295,25 +314,64 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
             @Override
             protected void onPostExecute(Boolean result) {
                 mSwipeRefreshLayout.setRefreshing(false);
-                ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
+//                mRecyclerView.getAdapter().notifyItemInserted(0);
+                setAdapter();
+                update();
             }
         }.execute();
     }
 
-
-    public void addOrmObject(Realm realm, String title, byte[] blobIcon, String url) {
+    public void addOrmObject(Realm realm, String title, String iconPath, byte[] blobIcon, String url) {
         realm.beginTransaction();
         Bookmark bookmark = realm.createObject(Bookmark.class);
         bookmark.setId(UUID.randomUUID().getLeastSignificantBits());
         bookmark.setName(title);
+        if(iconPath != null) {
+            bookmark.setIconPath(iconPath);
+        }
         if(blobIcon != null) {
             bookmark.setBlobIcon(blobIcon);
         }
         bookmark.setUrl(url);
         bookmark.setTimestamp(Bookmark.Utils.getTodayTimestamp());
-//      bookmarkList.add(new Bookmark(-1, null, blobIcon, cursor.getString(titleId), cursor.getString(urlId), -1, Bookmark.getTodayTimestamp()));
         realm.commitTransaction();
     }
+
+    public void deleteBookmark(int position) {
+        BookmarkRecyclerViewAdapter adapter = setAdapter();
+        mRealm.beginTransaction();
+        adapter.getItem(position).removeFromRealm();
+        mRealm.commitTransaction();
+        adapter.notifyItemRemoved(position);
+//        mAdapter.remove(position);
+    }
+
+    public void setDeletedItemPosition(int deletedItemPosition) {
+        setAdapter();
+//        mAdapter.setSelectedItemPosition(deletedItemPosition);
+    }
+
+    public void onSwipeAction(int[] reverseSortedPositions) {
+        int position = reverseSortedPositions[0];
+        setDeletedItemPosition(position);
+        deleteBookmark(position);
+
+    }
+
+    public void update() {
+        try {
+            RealmResults realmResults = mRealm.where(Bookmark.class).findAll();
+            realmResults.sort("timestamp");
+
+            RealmModelAdapter realmModelAdapter = new RealmModelAdapter(mActivityRef, realmResults, true);
+            ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
+                    .setRealmBaseAdapter(realmModelAdapter);
+            mRecyclerView.getAdapter().notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void openLinkOnBrowser(String linkUrl) {
         try {
@@ -358,7 +416,6 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         }
 
     }
-
 
     private void hideSoftKeyboard(EditText editText) {
         InputMethodManager imm = (InputMethodManager) mActivityRef.

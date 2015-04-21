@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.dbAdapter_old.DbConnector;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
@@ -27,7 +26,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 	public static String TITLE = "Settings";
 	private Activity mActivityRef;
 	private View settingsView;
-	private DbConnector dbConnector;
 	private ListView mSettingsList;
 	private ActionBarHandlerSingleton mActionBarHandlerSingleton;
     private Realm mRealm;
@@ -45,7 +43,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 //					+ " must implement OnInitActionBarInterface");
 //		}
 		mActivityRef = activity;
-		dbConnector = DbConnector.getInstance(mActivityRef);
 		mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
 		mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
         mRvActionsSingleton = RecyclerViewActionsSingleton.getInstance(mActivityRef);

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
 
 /**
  * Created by davide on 12/03/15.
@@ -40,7 +41,9 @@ public class RecyclerViewCustom extends RecyclerView {
         }
 
         boolean isEmpty = getAdapter().getItemCount() == 0;
-        boolean isSearchResult = ((LinkRecyclerViewAdapter) getAdapter()).isSearchResult();
+//        boolean isSearchResult = ((BookmarkRecyclerViewAdapter) getAdapter()).isSearchResult();
+        boolean isSearchResult = false;
+
 
         emptyView.setVisibility(isEmpty && ! isSearchResult ? VISIBLE : GONE);
         mEmptySearchResultView.setVisibility(isEmpty && isSearchResult ? VISIBLE : GONE);

@@ -94,7 +94,7 @@ public class Bookmark extends RealmObject {
         public static String getParsedTimestamp(long timestamp) {
             DateTime dt = new DateTime(timestamp);
             if(dt.getDayOfMonth() == DateTime.now().getDayOfMonth()) {
-                DateTimeFormatter fmt = DateTimeFormat.forPattern("hh:mm");
+                DateTimeFormatter fmt = DateTimeFormat.forPattern("HH:mm");
                 return fmt.print(dt);
             }
 

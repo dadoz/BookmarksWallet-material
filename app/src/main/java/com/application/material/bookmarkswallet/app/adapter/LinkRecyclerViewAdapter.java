@@ -4,16 +4,16 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.squareup.picasso.Picasso;
 import io.realm.Realm;
 import io.realm.RealmResults;
-
-import java.util.ArrayList;
 
 /**
  * Created by davide on 17/01/15.
@@ -49,7 +49,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     public LinkRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.link_row, parent, false);
+                .inflate(R.layout.bookmark_item, parent, false);
         ViewHolder vh = new ViewHolder(v, this);
         return vh;
     }
@@ -66,14 +66,23 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         holder.mLabelView.setText(linkName);
         holder.mUrlView.setText(urlName);
         holder.mTimestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark.getTimestamp()));
+
+//        Bitmap defaultIcon = BitmapFactory.decodeResource(mActivityRef.getResources(), R.drawable.ic_bookmark_outline_black_48dp);
         Bitmap btmp = Bookmark.Utils.getIconBitmap(bookmark.getBlobIcon());
-        if(Bookmark.Utils.getIconBitmap(bookmark.getBlobIcon()) != null) {
+
+        if (btmp == null &&
+                bookmark.getIconPath() != null &&
+                bookmark.getIconPath().trim().length() != 0) {
+            Picasso.with(mActivityRef)
+                    .load(bookmark.getIconPath())
+                    .error(R.drawable.ic_bookmark_outline_black_48dp)
+                    .into(holder.mIconView);
+        } else if (btmp != null) {
             holder.mIconView.setImageBitmap(btmp);
         } else {
-            holder.mIconView
-                    .setImageDrawable(mActivityRef.getResources()
-                        .getDrawable(R.drawable.ic_bookmark_outline_black_48dp));
+            holder.mIconView.setImageDrawable(mActivityRef.getResources().getDrawable(R.drawable.ic_bookmark_outline_black_48dp));
         }
+
         holder.mEditUrlLabelView.setOnClickListener((View.OnClickListener) mListenerRef);
 
         //BUG - big huge whtever u want
@@ -84,7 +93,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         }
 
         holder.itemView.setPressed(false);
-        if(isSelectedItem) {
+        if (isSelectedItem) {
             holder.mEditLabelView.requestFocus();
         }
         holder.itemView.setBackgroundColor(isSelectedItem ?
@@ -101,6 +110,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
 
     public void updateDataset() {
         mDataset = mRealm.where(Bookmark.class).findAll();
+        mDataset.sort("timestamp", false);
         notifyDataSetChanged();
     }
 
@@ -116,14 +126,24 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
     }
 
 
-    public void remove(int position) {
+    public void setDeletedItemPosition(int position) {
         deletedItemPosition = position;
-        deletedItem = mDataset.get(position);
+
+    }
+
+    public void remove(int position) {
+        if(position == -1) {
+            Log.e(TAG, "deletedItemPos not valid");
+            return;
+        }
+//        deletedItemPosition = position;
+//        deletedItem = mDataset.get(position);
         mRealm.beginTransaction();
-        deletedItem.removeFromRealm();
+        mDataset.get(position).removeFromRealm();
+//        deletedItem.removeFromRealm();
         mRealm.commitTransaction();
-//        mDataset.remove(position);
         notifyItemRemoved(position);
+        setDeletedItemPosition(-1);
     }
 
 //    public void removeAll() {
@@ -138,13 +158,14 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
 
     public void update(int position, String linkName, String linkUrl) {
         Bookmark bookmarkToBeUpdated = mDataset.get(position);
+        mRealm.beginTransaction();
         if(linkName != null) {
             bookmarkToBeUpdated.setName(linkName);
         }
         if(linkUrl != null) {
             bookmarkToBeUpdated.setUrl(linkUrl);
         }
-
+        mRealm.commitTransaction();
         notifyDataSetChanged();
     }
 
