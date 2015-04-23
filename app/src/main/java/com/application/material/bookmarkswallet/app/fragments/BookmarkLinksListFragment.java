@@ -34,7 +34,7 @@ import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRe
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import io.realm.RealmResults;
 
-public class LinksListFragment extends Fragment
+public class BookmarkLinksListFragment extends Fragment
 		implements View.OnClickListener,
 			SwipeDismissRecyclerViewTouchListener.DismissCallbacks,
 			RecyclerView.OnItemTouchListener, Filterable, SwipeRefreshLayout.OnRefreshListener {
@@ -45,6 +45,10 @@ public class LinksListFragment extends Fragment
 	RecyclerViewCustom mRecyclerView;
 	@InjectView(R.id.addLinkButtonId)
 	FloatingActionButton addLinkButton;
+	@InjectView(R.id.importFloatingButtonId)
+	FloatingActionButton importFloatingButton;
+	@InjectView(R.id.clipboardFloatingButtonId)
+	FloatingActionButton clipboardFloatingButton;
 	@InjectView(R.id.undoLinkDeletedLayoutId)
 	View undoLinkDeletedLayout;
 	@InjectView(R.id.undoButtonId)
@@ -114,6 +118,8 @@ public class LinksListFragment extends Fragment
         mItems = rvActionsSingleton.getBookmarksList();
 
 		addLinkButton.setOnClickListener(this);
+        importFloatingButton.setOnClickListener(this);
+        clipboardFloatingButton.setOnClickListener(this);
 		undoButton.setOnClickListener(this);
 		dismissButton.setOnClickListener(this);
 
@@ -218,18 +224,21 @@ public class LinksListFragment extends Fragment
 			case R.id.action_save_edit_link:
                 saveEditLinkRecyclerViewWrapper();
 				break;
-			case  R.id.action_settings:
+			case R.id.action_settings:
 				mActionBarHandlerSingleton.toggleActionBar(true, false, false);
                 mainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
                 return true;
-			case  R.id.action_export:
+			case R.id.action_export:
 				exportBookmarksSingleton.exportAction();
 				return true;
-			case  R.id.action_import:
-//				Toast.makeText(mainActivityRef, "Import cardview", Toast.LENGTH_SHORT).show();
-				mActionBarHandlerSingleton.toggleActionBar(true, false, false);
-				mainActivityRef.changeFragment(new ImportBookmarkFragment(), null, ImportBookmarkFragment.FRAG_TAG);
+			case R.id.action_info:
+                Toast.makeText(mainActivityRef,"hgu",  Toast.LENGTH_SHORT).show();
+                mActionBarHandlerSingleton.toggleInnerLayoutByActionMenu(item.getItemId());
 				return true;
+//			case  R.id.action_import:
+//				mActionBarHandlerSingleton.toggleActionBar(true, false, false);
+//				mainActivityRef.changeFragment(new ImportBookmarkFragment(), null, ImportBookmarkFragment.FRAG_TAG);
+//				return true;
 
 		}
 		return true;
@@ -261,6 +270,14 @@ public class LinksListFragment extends Fragment
 //					dbConnector.insertLink(obj);
 //				}
 				break;
+            case R.id.clipboardFloatingButtonId:
+				Toast.makeText(mainActivityRef, "clipboard", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.importFloatingButtonId:
+                mActionBarHandlerSingleton.toggleActionBar(true, false, false);
+                mainActivityRef.changeFragment(new ImportBookmarkFragment(),
+                        null, ImportBookmarkFragment.FRAG_TAG);
+                break;
 //			case R.id.undoButtonId:
 //				Toast.makeText(mainActivityRef, "undo", Toast.LENGTH_SHORT).show();
 ////				Bookmark deletedItem = adapter.getDeletedItem();

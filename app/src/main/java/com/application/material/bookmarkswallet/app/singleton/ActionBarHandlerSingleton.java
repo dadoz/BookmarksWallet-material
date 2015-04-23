@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animators.ScrollManager;
+import com.application.material.bookmarkswallet.app.fragments.BookmarkLinksListFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeActionbarLayoutAction;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -25,7 +27,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
  * Created by davide on 18/03/15.
  */
 public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
-        OnChangeActionbarLayoutAction, View.OnClickListener {
+        OnChangeActionbarLayoutAction {
 
     private static final String TAG = "ActionBarHandlerSingleton";
     private static Activity mActivtyRef;
@@ -54,9 +56,9 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         mActivtyRef = activtyRef;
     }
 
-    @Override
-    public void initActionBarWithCustomView(Toolbar toolbar) {
-    }
+//    @Override
+//    public void initActionBarWithCustomView(Toolbar toolbar) {
+//    }
 
     public void initActionBar() {
         setActionBar();
@@ -159,28 +161,6 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         getActionBar().setDisplayShowHomeEnabled(isHomeUpEnabled);
     }
 
-    @Override
-    public void setViewOnActionMenu(View mainView, View view, int layoutId) {
-        switch (layoutId) {
-            case R.id.actionbarInfoLayoutId:
-                        swipeRefreshLayout = mainView;
-                actionbarInfoActionView = view;
-                break;
-        }
-    }
-
-    @Override
-    public void setViewOnActionMenu(View mainView, View view, int layoutId, View.OnClickListener listener) {
-        switch (layoutId) {
-            case R.id.actionbarInfoLayoutId:
-                swipeRefreshLayout = mainView;
-                actionbarInfoActionView = view;
-                actionbarInfoActionView.
-                        findViewById(R.id.infoOuterButtonId).
-                        setOnClickListener(this);
-                break;
-        }
-    }
 
     @Override
     public void toggleLayoutByActionMenu(int layoutId) {
@@ -190,7 +170,8 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
                 actionbarInfoActionView.setVisibility(visibility == View.VISIBLE ?
                         View.GONE : View.VISIBLE);
 
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)         swipeRefreshLayout.getLayoutParams();
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)
+                        swipeRefreshLayout.getLayoutParams();
                 float height = mActivtyRef.getResources().getDimension(R.dimen.actionbar_infoaction_height);
                 params.setMargins(0,
                         visibility == View.VISIBLE ? 0 : (int) height, 0 ,0);
@@ -198,7 +179,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         }
 
     }
-
+/*
     @Override
     public void showLayoutByActionMenu(int layoutId) {
         switch (layoutId) {
@@ -218,20 +199,20 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
                 actionbarInfoActionView.setVisibility(View.GONE);
                 break;
         }
-    }
+    }*/
 
     @Override
     public void toggleInnerLayoutByActionMenu(int layoutId) {
         switch (layoutId) {
-            case R.id.infoOuterButtonId:
+            case R.id.action_info:
                 View innerView = actionbarInfoActionView.findViewById(R.id.infoInnerLayoutId);
                 View outerView = actionbarInfoActionView.findViewById(R.id.infoOuterLayoutId);
                 colorizeIcon((ImageView) actionbarInfoActionView.findViewById(R.id.refreshInfoIconId));
 
                 //animation
                 innerView.setVisibility(innerView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-                int mustardYellow = mActivtyRef.getResources().getColor(R.color.material_mustard_yellow);
-                outerView.setBackgroundColor(innerView.getVisibility() == View.VISIBLE ? Color.WHITE : mustardYellow);
+//                outerView.setBackgroundColor(innerView.getVisibility() == View.VISIBLE ? Color.WHITE : mustardYellow);
+                outerView.setBackgroundColor(Color.WHITE);
                 actionbarInfoActionView.findViewById(R.id.refreshInfoIconId).
                         setVisibility(innerView.getVisibility() == View.VISIBLE ?
                                 View.VISIBLE : View.GONE);
@@ -276,15 +257,15 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         this.editMode = editMode;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.infoOuterButtonId:
-                toggleInnerLayoutByActionMenu(v.getId());
-                break;
-        }
-
-    }
+//    @Override
+//    public void onClick(View v) {
+//        switch (v.getId()) {
+//            case R.id.infoOuterButtonId:
+//                toggleInnerLayoutByActionMenu(v.getId());
+//                break;
+//        }
+//
+//    }
 
     private void colorizeIcon(ImageView imgStatus) {
         // Get the Image container object
@@ -301,5 +282,9 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
 
     public void setEditItemPos(int editItemPos) {
         this.mEditItemPos = editItemPos;
+    }
+
+    public void setViewOnActionMenu(SwipeRefreshLayout mSwipeRefreshLayout, View actionbarInfoView, int actionbarInfoLayoutId, BookmarkLinksListFragment bookmarkLinksListFragment) {
+        actionbarInfoActionView = actionbarInfoView;
     }
 }

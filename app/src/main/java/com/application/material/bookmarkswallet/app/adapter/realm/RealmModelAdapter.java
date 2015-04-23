@@ -13,10 +13,12 @@ import io.realm.RealmResults;
 public class RealmModelAdapter<T extends RealmObject> extends RealmBaseAdapter<T> {
     public RealmModelAdapter(Context context, RealmResults realmResults, boolean automaticsUpdate) {
         super(context, realmResults, automaticsUpdate);
+        realmResults.sort("timestamp", RealmResults.SORT_ORDER_DESCENDING);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         return null;
     }
+
 }

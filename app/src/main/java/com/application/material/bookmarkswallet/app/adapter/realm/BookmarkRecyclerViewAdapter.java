@@ -64,8 +64,12 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends RealmRec
     public void onBindViewHolder(RecyclerView.ViewHolder rvh, int position) {
         ViewHolder holder = (ViewHolder) rvh;
         Bookmark bookmark = (Bookmark) getItem(position);
-        holder.mLabelView.setText(bookmark.getName());
+
+        String linkName = bookmark.getName().trim().equals("") ?
+                "(no title)" : bookmark.getName().trim();
+        holder.mLabelView.setText(linkName);
         holder.mUrlView.setText(bookmark.getUrl());
+        holder.mTimestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark.getTimestamp()));
 
         setIcon(holder.mIconView, bookmark);
         boolean isSelectedItem = false;

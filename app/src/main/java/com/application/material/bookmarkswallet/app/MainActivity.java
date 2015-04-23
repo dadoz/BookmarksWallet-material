@@ -8,12 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
+import com.application.material.bookmarkswallet.app.fragments.BookmarkLinksListFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 import com.flurry.android.FlurryAgent;
 import icepick.Icepick;
-import icepick.Icicle;
 
 
 public class MainActivity extends ActionBarActivity
@@ -77,15 +76,15 @@ public class MainActivity extends ActionBarActivity
 
         if(getSupportFragmentManager().getBackStackEntryCount() == 0 &&
                 (frag = getSupportFragmentManager().
-                        findFragmentByTag(LinksListFragment.FRAG_TAG)) != null) {
+                        findFragmentByTag(BookmarkLinksListFragment.FRAG_TAG)) != null) {
             transaction.replace(R.id.fragmentContainerFrameLayoutId,
-                    frag, LinksListFragment.FRAG_TAG).commit();
+                    frag, BookmarkLinksListFragment.FRAG_TAG).commit();
             return;
         }
 
         //no fragment already adedd
         transaction.add(R.id.fragmentContainerFrameLayoutId,
-                new LinksListFragment(), LinksListFragment.FRAG_TAG).commit();
+                new BookmarkLinksListFragment(), BookmarkLinksListFragment.FRAG_TAG).commit();
     }
 
     @Override
@@ -116,7 +115,7 @@ public class MainActivity extends ActionBarActivity
                 beginTransaction();
 
         transaction.replace(R.id.fragmentContainerFrameLayoutId, fragment, tag);
-        if(! tag.equals(LinksListFragment.FRAG_TAG)) {
+        if(! tag.equals(BookmarkLinksListFragment.FRAG_TAG)) {
             transaction.addToBackStack(tag);
         }
         transaction.commit();
@@ -158,8 +157,8 @@ public class MainActivity extends ActionBarActivity
             switch (requestCode) {
                 case AddBookmarkActivity.ADD_REQUEST:
                     try {
-                        LinksListFragment fragment = (LinksListFragment)
-                                getSupportFragmentManager().findFragmentByTag(LinksListFragment.FRAG_TAG);
+                        BookmarkLinksListFragment fragment = (BookmarkLinksListFragment)
+                                getSupportFragmentManager().findFragmentByTag(BookmarkLinksListFragment.FRAG_TAG);
                         String url = data.getExtras().getString(AddBookmarkActivity.LINK_URL_EXTRA);
                         fragment.addLinkOnRecyclerViewWrapper(url);
 
@@ -186,14 +185,14 @@ public class MainActivity extends ActionBarActivity
         if(isBackOverridden) {
             mActionBarHandlerSingleton.setOverrideBackPressed(false);
             Fragment fragment  = getSupportFragmentManager()
-                    .findFragmentByTag(LinksListFragment.FRAG_TAG);
+                    .findFragmentByTag(BookmarkLinksListFragment.FRAG_TAG);
             if(fragment != null &&
                     isEditMode) {
                 mActionBarHandlerSingleton.setEditMode(false);
                 mActionBarHandlerSingleton.setTitle(null);
                 mActionBarHandlerSingleton.toggleLayoutByActionMenu(R.id.infoOuterButtonId);
 
-                ((LinksListFragment) fragment).undoEditLinkRecyclerViewWrapper();
+                ((BookmarkLinksListFragment) fragment).undoEditLinkRecyclerViewWrapper();
             }
             return;
         }

@@ -51,7 +51,7 @@
                     android:paddingRight="@dimen/medium_padding"
                     android:paddingBottom="@dimen/small_padding"
                     android:textSize="@dimen/text_size_14"
-                    android:text="Apr 09"
+                    android:text=" - "
                     android:textColor="@color/material_red"/>
 
             <TextView

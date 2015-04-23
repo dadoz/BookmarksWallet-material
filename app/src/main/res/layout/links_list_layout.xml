@@ -9,7 +9,6 @@
 
     <include layout="@layout/actionbar_info_action_layout"/>
     <android.support.v4.widget.SwipeRefreshLayout
-            android:layout_marginTop="@dimen/actionbar_infoaction_height"
             android:id="@+id/mainContainerViewId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -35,16 +34,24 @@
             fab:fab_addButtonColorNormal="@color/material_blue_grey"
             fab:fab_addButtonColorPressed="@color/material_blue_grey">
         <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/importFloatingButtonId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_icon="@drawable/ic_content_paste_white_24dp"
+                fab:fab_icon="@drawable/ic_insert_drive_file_black_24dp"
+                fab:fab_colorNormal="@color/material_red"
+                fab:fab_colorPressed="@color/material_red"/>
+        <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/clipboardFloatingButtonId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_icon="@drawable/ic_content_paste_black_24dp"
                 fab:fab_colorNormal="@color/material_red"
                 fab:fab_colorPressed="@color/material_red"/>
         <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/addLinkButtonId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_icon="@drawable/ic_add_white_24dp"
+                fab:fab_icon="@drawable/ic_edit_black_24dp"
                 fab:fab_colorNormal="@color/material_red"
                 fab:fab_colorPressed="@color/material_red"/>
     </com.getbase.floatingactionbutton.FloatingActionsMenu>

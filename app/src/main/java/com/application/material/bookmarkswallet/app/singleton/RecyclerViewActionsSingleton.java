@@ -21,7 +21,7 @@ import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
-import com.application.material.bookmarkswallet.app.fragments.LinksListFragment;
+import com.application.material.bookmarkswallet.app.fragments.BookmarkLinksListFragment;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import io.realm.Realm;
@@ -252,11 +252,12 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 //        mDbConnector.insertLink(link);
 
 //        ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(link);
+//        ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
+        //UPDATE DATASET REF
+        mRecyclerView.scrollToPosition(0);
         title = title == null ? "" : title;
         addOrmObject(mRealm, title, iconPath, iconBlob, url);
-        mRecyclerView.scrollToPosition(0);
-        ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
-        //UPDATE DATASET REF
+        update();
         mRecyclerView.getAdapter().notifyItemInserted(0);
         setAdapter();
     }
@@ -397,7 +398,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
     private void animateButton(boolean animate) {
         try {
-            ((LinksListFragment) mFragmentRef).toggleAddLinkButton(animate);
+            ((BookmarkLinksListFragment) mFragmentRef).toggleAddLinkButton(animate);
         } catch (Exception e) {
             e.printStackTrace();
         }
