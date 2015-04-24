@@ -18,10 +18,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
-import com.application.material.bookmarkswallet.app.fragments.BookmarkLinksListFragment;
+import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import io.realm.Realm;
@@ -32,6 +31,8 @@ import org.jsoup.nodes.Document;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
+
+import static com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton.NOT_SELECTED_ITEM_POSITION;
 
 /**
  * Created by davide on 31/03/15.
@@ -137,6 +138,10 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     public void undoEditLink() {
         try {
             setAdapter();
+            int position = mActionBarHandlerSingleton.getEditItemPos();
+            mAdapter.notifyItemChanged(position);
+            mActionBarHandlerSingleton.setEditItemPos(NOT_SELECTED_ITEM_POSITION);
+            mActionBarHandlerSingleton.setTitle(null);
 /*            int position = mAdapter.getSelectedItemPosition();
 
             mRecyclerView.setOnTouchListener(mTouchListener);
@@ -159,18 +164,23 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         animateButton(false);
     }
 
-    public void editLink(int position) {
-/*        Toast.makeText(mActivityRef, "edit" + position, Toast.LENGTH_SHORT).show();
+    public void selectBookmarkEditMenu(int position) {
+        mAdapter = getAdapter();
+        Toast.makeText(mActivityRef, "edit" + position, Toast.LENGTH_SHORT).show();
 
-        mActionBarHandlerSingleton.setEditMode(true);
+        mActionBarHandlerSingleton.setEditItemPos(position);
         mActionBarHandlerSingleton.setTitle("Edit link");
         mActionBarHandlerSingleton.toggleActionBar(true, true, true, R.id.infoOuterButtonId);
 
-        (mAdapter).setSelectedItemPosition(position);
-        mAdapter.notifyDataSetChanged();
+//        ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter()).setSelectedItemPosition(position);
+        BookmarkRecyclerViewAdapter.ViewHolder holder =
+                (BookmarkRecyclerViewAdapter.ViewHolder) mRecyclerView.
+                        findViewHolderForPosition(position);
+        holder.itemView.setPressed(false);
+        mAdapter.notifyItemChanged(position); //to change background color on view
         mActivityRef.invalidateOptionsMenu();
         mRecyclerView.removeOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
-        animateButton(true);*/
+        animateButton(true);
     }
     
 
@@ -398,7 +408,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
     private void animateButton(boolean animate) {
         try {
-            ((BookmarkLinksListFragment) mFragmentRef).toggleAddLinkButton(animate);
+            ((BookmarkListFragment) mFragmentRef).toggleAddLinkButton(animate);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -425,4 +435,12 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     }
 
 
+    public Intent getIntentForEditBookmark() {
+
+        return null;
+    }
+
+    public BookmarkRecyclerViewAdapter getAdapter() {
+        return ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter());
+    }
 }

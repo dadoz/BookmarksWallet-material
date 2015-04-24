@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.fragments.ImportBookmarksCardviewFragment;
-import com.application.material.bookmarkswallet.app.fragments.BookmarkLinksListFragment;
+import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 
 /**
  * Created by davide on 15/01/15.
@@ -34,7 +34,7 @@ public class BaseFragmentPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new BookmarkLinksListFragment();
+                return new BookmarkListFragment();
             case 1:
                 return new ImportBookmarksCardviewFragment();
         }

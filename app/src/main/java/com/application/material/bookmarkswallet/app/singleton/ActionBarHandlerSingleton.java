@@ -1,46 +1,36 @@
 package com.application.material.bookmarkswallet.app.singleton;
 
-import android.animation.LayoutTransition;
 import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animators.ScrollManager;
-import com.application.material.bookmarkswallet.app.fragments.BookmarkLinksListFragment;
-import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeActionbarLayoutAction;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 
 /**
  * Created by davide on 18/03/15.
  */
-public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
-        OnChangeActionbarLayoutAction {
+public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
 
     private static final String TAG = "ActionBarHandlerSingleton";
     private static Activity mActivtyRef;
     private static ActionBarHandlerSingleton mSingletonRef;
     private static ScrollManager scrollManager;
-    private View actionbarInfoActionView;
+//    private View actionbarInfoActionView;
     private boolean isChangeColor;
     private boolean isBackOverridden;
     private View infoView;
-    private boolean editMode;
     private Toolbar toolbar;
-    private int mEditItemPos;
-    private View         swipeRefreshLayout;
+    private View swipeRefreshLayout;
+
+    public static int NOT_SELECTED_ITEM_POSITION = -1;
+    private boolean editMode;
+    private int mEditItemPos = NOT_SELECTED_ITEM_POSITION;
 
     private ActionBarHandlerSingleton() {
     }
@@ -87,17 +77,17 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
 
 
     public void setToolbarScrollManager(final RecyclerView recyclerView, final View fab) {
-        final View infoInnerView = actionbarInfoActionView.findViewById(R.id.infoInnerLayoutId);
-        scrollManager = new ScrollManager(infoInnerView);
+//        final View infoInnerView = actionbarInfoActionView.findViewById(R.id.infoInnerLayoutId);
+        scrollManager = new ScrollManager();
         try {
             toolbar.post(new Runnable() {
                 @Override public void run() {
                     scrollManager.attach(recyclerView);
-                    if(actionbarInfoActionView != null) {
-                        scrollManager.addViewNoDown(infoInnerView, ScrollManager.Direction.UP);
-                    }
+//                    if(actionbarInfoActionView != null) {
+//                        scrollManager.addViewNoDown(infoInnerView, ScrollManager.Direction.UP);
+//                    }
+//                    scrollManager.setInitialOffset(toolbar.getHeight() + infoInnerView.getHeight());
                     scrollManager.addView(fab, ScrollManager.Direction.DOWN);
-                    scrollManager.setInitialOffset(toolbar.getHeight() + infoInnerView.getHeight());
                 }
             });
 
@@ -130,7 +120,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         isBackOverridden = isBack;
         isChangeColor = isColor;
         toggleActionBar(isHomeUpEnabled);
-        toggleLayoutByActionMenu(layoutId);
+//        toggleLayoutByActionMenu(layoutId);
     }
 
     @Override
@@ -162,7 +152,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     }
 
 
-    @Override
+/*    @Override
     public void toggleLayoutByActionMenu(int layoutId) {
         switch (layoutId) {
             case R.id.infoOuterButtonId:
@@ -178,7 +168,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
                 break;
         }
 
-    }
+    }*/
 /*
     @Override
     public void showLayoutByActionMenu(int layoutId) {
@@ -201,25 +191,25 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         }
     }*/
 
-    @Override
-    public void toggleInnerLayoutByActionMenu(int layoutId) {
-        switch (layoutId) {
-            case R.id.action_info:
-                View innerView = actionbarInfoActionView.findViewById(R.id.infoInnerLayoutId);
-                View outerView = actionbarInfoActionView.findViewById(R.id.infoOuterLayoutId);
-                colorizeIcon((ImageView) actionbarInfoActionView.findViewById(R.id.refreshInfoIconId));
-
-                //animation
-                innerView.setVisibility(innerView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+//    @Override
+//    public void toggleInnerLayoutByActionMenu(int layoutId) {
+//        switch (layoutId) {
+//            case R.id.action_info:
+//                View innerView = actionbarInfoActionView.findViewById(R.id.infoInnerLayoutId);
+//                View outerView = actionbarInfoActionView.findViewById(R.id.infoOuterLayoutId);
+//                colorizeIcon((ImageView) actionbarInfoActionView.findViewById(R.id.refreshInfoIconId));
+//
+//                animation
+//                innerView.setVisibility(innerView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
 //                outerView.setBackgroundColor(innerView.getVisibility() == View.VISIBLE ? Color.WHITE : mustardYellow);
-                outerView.setBackgroundColor(Color.WHITE);
-                actionbarInfoActionView.findViewById(R.id.refreshInfoIconId).
-                        setVisibility(innerView.getVisibility() == View.VISIBLE ?
-                                View.VISIBLE : View.GONE);
-                break;
-        }
-
-    }
+//                outerView.setBackgroundColor(Color.WHITE);
+//                actionbarInfoActionView.findViewById(R.id.refreshInfoIconId).
+//                        setVisibility(innerView.getVisibility() == View.VISIBLE ?
+//                                View.VISIBLE : View.GONE);
+//                break;
+//        }
+//
+//    }
 
     @Override
     public boolean getOverrideBackPressed() {
@@ -250,12 +240,18 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
     }
 
     public boolean isEditMode() {
-        return editMode;
+        return mEditItemPos != NOT_SELECTED_ITEM_POSITION;
+//        return editMode;
     }
 
-    public void setEditMode(boolean editMode) {
-        this.editMode = editMode;
+    public int getEditItemPos() {
+        return mEditItemPos;
     }
+
+    public void setEditItemPos(int editItemPos) {
+        this.mEditItemPos = editItemPos;
+    }
+
 
 //    @Override
 //    public void onClick(View v) {
@@ -276,15 +272,8 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface,
         imgStatus.setImageDrawable(d);
     }
 
-    public int getEditItemPos() {
-        return mEditItemPos;
-    }
 
-    public void setEditItemPos(int editItemPos) {
-        this.mEditItemPos = editItemPos;
-    }
-
-    public void setViewOnActionMenu(SwipeRefreshLayout mSwipeRefreshLayout, View actionbarInfoView, int actionbarInfoLayoutId, BookmarkLinksListFragment bookmarkLinksListFragment) {
-        actionbarInfoActionView = actionbarInfoView;
-    }
+//    public void setViewOnActionMenu(SwipeRefreshLayout mSwipeRefreshLayout, View actionbarInfoView, int actionbarInfoLayoutId, BookmarkListFragment bookmarkListFragment) {
+//        actionbarInfoActionView = actionbarInfoView;
+//    }
 }

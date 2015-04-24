@@ -26,13 +26,15 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.RelativeLayout;
+import com.application.material.bookmarkswallet.app.R;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.HashMap;
 
 public class ScrollManager extends RecyclerView.OnScrollListener {
 
     private static final int MIN_SCROLL_TO_HIDE = 10;
-    private final View infoView;
+//    private final View infoView;
     private boolean hidden;
     private int accummulatedDy;
     private int totalDy;
@@ -44,8 +46,8 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
 
     public static enum Direction {UP, DOWN}
 
-    public ScrollManager(View view) {
-        infoView = view;
+    public ScrollManager() {
+//        infoView = view;
     }
 
     public void attach(RecyclerView recyclerView) {
@@ -89,6 +91,9 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
             hidden = true;
             for (View view : viewsToHide.keySet()) {
                 hideView(view, viewsToHide.get(view));
+                if(view.getId() == R.id.floatingMenuButtonId) {
+                    ((FloatingActionsMenu) view).collapse();
+                }
             }
 
             for (View view : viewsNotToShow.keySet()) {
@@ -140,7 +145,7 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
         slideInAnimation.setDuration(view.getContext().getResources().getInteger(android.R.integer.config_mediumAnimTime));
         slideInAnimation.setInterpolator(interpolator);
         slideInAnimation.start();
-        final int[] ended = new int[1];
+/*        final int[] ended = new int[1];
         ended[0] = 1;
 
         slideInAnimation.addListener(new Animator.AnimatorListener() {
@@ -173,7 +178,7 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
             public void onAnimationRepeat(Animator animation) {
 
             }
-        });
+        });*/
     }
 
 

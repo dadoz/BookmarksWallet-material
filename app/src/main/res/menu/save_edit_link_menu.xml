@@ -2,6 +2,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity" >
+    <item android:id="@+id/action_share"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        android:icon="@drawable/abc_ic_menu_share_mtrl_alpha"
+        app:showAsAction="always"
+        android:actionProviderClass="android.widget.ShareActionProvider"/>
+
+    <item android:id="@+id/action_edit"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_edit_black_48dp"
+        app:showAsAction="always" />
     <item android:id="@+id/action_save_edit_link"
         android:title="@string/action_settings"
         android:orderInCategory="100"

@@ -3,6 +3,7 @@ package com.application.material.bookmarkswallet.app.fragments;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
@@ -17,6 +18,7 @@ import android.widget.*;
 
 import java.util.ArrayList;
 
+import android.widget.ShareActionProvider;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
@@ -32,9 +34,10 @@ import com.application.material.bookmarkswallet.app.singleton.ExportBookmarkSing
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import io.realm.RealmResults;
 
-public class BookmarkLinksListFragment extends Fragment
+public class BookmarkListFragment extends Fragment
 		implements View.OnClickListener,
 			SwipeDismissRecyclerViewTouchListener.DismissCallbacks,
 			RecyclerView.OnItemTouchListener, Filterable, SwipeRefreshLayout.OnRefreshListener {
@@ -44,11 +47,13 @@ public class BookmarkLinksListFragment extends Fragment
 	@InjectView(R.id.linksListId)
 	RecyclerViewCustom mRecyclerView;
 	@InjectView(R.id.addLinkButtonId)
-	FloatingActionButton addLinkButton;
+    FloatingActionButton addLinkButton;
 	@InjectView(R.id.importFloatingButtonId)
 	FloatingActionButton importFloatingButton;
 	@InjectView(R.id.clipboardFloatingButtonId)
 	FloatingActionButton clipboardFloatingButton;
+	@InjectView(R.id.floatingMenuButtonId)
+    FloatingActionsMenu floatingMenuButton;
 	@InjectView(R.id.undoLinkDeletedLayoutId)
 	View undoLinkDeletedLayout;
 	@InjectView(R.id.undoButtonId)
@@ -67,6 +72,7 @@ public class BookmarkLinksListFragment extends Fragment
     private BookmarkRecyclerViewAdapter mLinkRecyclerViewAdapter;
     private View mEmptySearchResultView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private android.support.v7.widget.ShareActionProvider mShareActionProvider;
 
     @Override
 	public void onAttach(Activity activity) {
@@ -102,13 +108,13 @@ public class BookmarkLinksListFragment extends Fragment
 	}
 
 	private void onInitView() {
-		View actionbarInfoView = mLinkListView.findViewById(R.id.actionbarInfoLayoutId);
+//		View actionbarInfoView = mLinkListView.findViewById(R.id.actionbarInfoLayoutId);
 		mSwipeRefreshLayout = (SwipeRefreshLayout) mLinkListView.findViewById(R.id.mainContainerViewId);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 //        mSwipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
 //                android.R.color.holo_green_light, android.R.color.holo_red_light,
 //                android.R.color.holo_orange_light);
-		mActionBarHandlerSingleton.setViewOnActionMenu(mSwipeRefreshLayout, actionbarInfoView, R.id.actionbarInfoLayoutId, this);
+//		mActionBarHandlerSingleton.setViewOnActionMenu(mSwipeRefreshLayout, actionbarInfoView, R.id.actionbarInfoLayoutId, this);
 		mActionBarHandlerSingleton.setToolbarScrollManager(mRecyclerView, (View) addLinkButton.getParent());
         mActionBarHandlerSingleton.setTitle(null);
         mActionBarHandlerSingleton.setDisplayHomeEnabled(false);
@@ -126,7 +132,7 @@ public class BookmarkLinksListFragment extends Fragment
 		initRecyclerView();
         rvActionsSingleton.update();
         if(mActionBarHandlerSingleton.isEditMode()) {
-            rvActionsSingleton.editLink(mActionBarHandlerSingleton.getEditItemPos());
+            rvActionsSingleton.selectBookmarkEditMenu(mActionBarHandlerSingleton.getEditItemPos());
         }
 	}
 
@@ -161,10 +167,19 @@ public class BookmarkLinksListFragment extends Fragment
 		// Inflate the menu; this adds items to the action bar if it is present.
 //		boolean isItemSelected = ((BookmarkRecyclerViewAdapter) mRecyclerView.
 //				getAdapter()).isItemSelected();
-        boolean isItemSelected = false;
+        boolean isItemSelected = mActionBarHandlerSingleton.isEditMode();
+
 		inflater.inflate(isItemSelected ? R.menu.save_edit_link_menu :
                 R.menu.menu_main, menu);
 
+        //SHARE PROVIDER
+        final MenuItem shareItem = menu.findItem(R.id.action_share);
+        if(shareItem != null) {
+            mShareActionProvider = ((android.support.v7.widget.ShareActionProvider) MenuItemCompat
+                    .getActionProvider(shareItem));
+        }
+
+        //SEARCH ITEM
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) mainActivityRef.getSystemService(Context.SEARCH_SERVICE);
 
@@ -211,6 +226,12 @@ public class BookmarkLinksListFragment extends Fragment
         super.onCreateOptionsMenu(menu, inflater);
 	}
 
+    private void setShareIntent(Intent shareIntent) {
+        if(mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
+    }
+
     private void setInitialAdapter() {
         if(mRecyclerView.getAdapter() != mLinkRecyclerViewAdapter) {
             mRecyclerView.setAdapter(mLinkRecyclerViewAdapter);
@@ -221,9 +242,17 @@ public class BookmarkLinksListFragment extends Fragment
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.action_save_edit_link:
-                saveEditLinkRecyclerViewWrapper();
+			case R.id.action_edit:
+                Toast.makeText(mainActivityRef, "edit action",  Toast.LENGTH_SHORT).show();
 				break;
+			case R.id.action_share:
+                Toast.makeText(mainActivityRef, "share action",  Toast.LENGTH_SHORT).show();
+                Intent intent = rvActionsSingleton.getIntentForEditBookmark();
+                setShareIntent(intent);
+				break;
+//			case R.id.action_save_edit_link:
+//                saveEditLinkRecyclerViewWrapper();
+//				break;
 			case R.id.action_settings:
 				mActionBarHandlerSingleton.toggleActionBar(true, false, false);
                 mainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
@@ -231,9 +260,11 @@ public class BookmarkLinksListFragment extends Fragment
 			case R.id.action_export:
 				exportBookmarksSingleton.exportAction();
 				return true;
-			case R.id.action_info:
+			case R.id.action_grid:
                 Toast.makeText(mainActivityRef,"hgu",  Toast.LENGTH_SHORT).show();
-                mActionBarHandlerSingleton.toggleInnerLayoutByActionMenu(item.getItemId());
+                mRecyclerView.setLayoutManager(new GridLayoutManager(mainActivityRef, 2));
+                mRecyclerView.getAdapter().notifyDataSetChanged();
+//                mActionBarHandlerSingleton.toggleInnerLayoutByActionMenu(item.getItemId());
 				return true;
 //			case  R.id.action_import:
 //				mActionBarHandlerSingleton.toggleActionBar(true, false, false);
@@ -352,7 +383,7 @@ public class BookmarkLinksListFragment extends Fragment
 
 	public void undoEditLinkRecyclerViewWrapper() {
 		rvActionsSingleton.undoEditLink();
-        setInitialAdapter();
+//        setInitialAdapter();
     }
 
 	public void saveEditLinkRecyclerViewWrapper() {
@@ -362,8 +393,9 @@ public class BookmarkLinksListFragment extends Fragment
 
 	public void toggleAddLinkButton(boolean isVisible) {
 		//hide fab button
-		addLinkButton.animate().
-				translationY(isVisible ? 170 : 0).
+        floatingMenuButton.collapse();
+        floatingMenuButton.animate().
+				translationY(isVisible ? 300 : 0).
 				setInterpolator(new DecelerateInterpolator(3.f)).
 				setStartDelay(200).
 				start();
@@ -470,8 +502,8 @@ public class BookmarkLinksListFragment extends Fragment
 			View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
 			int position = mRecyclerView.getChildPosition(view);
 
-			LinkRecyclerViewAdapter.ViewHolder holder =
-					(LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
+            BookmarkRecyclerViewAdapter.ViewHolder holder =
+					(BookmarkRecyclerViewAdapter.ViewHolder) mRecyclerView.
 							findViewHolderForPosition(position);
 			holder.itemView.setSelected(true);
 			// handle single tap
@@ -486,15 +518,15 @@ public class BookmarkLinksListFragment extends Fragment
 			mRecyclerView.setOnTouchListener(null);
 			View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
 			int position = mRecyclerView.getChildPosition(view);
-			LinkRecyclerViewAdapter.ViewHolder holder =
-					(LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
+            BookmarkRecyclerViewAdapter.ViewHolder holder =
+					(BookmarkRecyclerViewAdapter.ViewHolder) mRecyclerView.
 							findViewHolderForPosition(position);
             mActionBarHandlerSingleton.setEditItemPos(position);
 			holder.itemView.setSelected(true);
 
 			// handle long press
 			Log.e(TAG, "Hey long touch ");
-			rvActionsSingleton.editLink(position);
+			rvActionsSingleton.selectBookmarkEditMenu(position);
 			super.onLongPress(e);
 		}
 	}

@@ -25,9 +25,9 @@
     <include layout="@layout/bottom_bar_undo_redo_layout"/>
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/floatingMenuButtonId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_icon="@drawable/ic_done_black_48dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_centerHorizontal="true"
