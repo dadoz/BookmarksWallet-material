@@ -435,9 +435,10 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     }
 
 
-    public Intent getIntentForEditBookmark() {
-
-        return null;
+    public Intent getIntentForEditBookmark(Bookmark bookmark) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra("BOOKMARK_EXTRA", Bookmark.Utils.stringify(bookmark));
+        return shareIntent;
     }
 
     public BookmarkRecyclerViewAdapter getAdapter() {

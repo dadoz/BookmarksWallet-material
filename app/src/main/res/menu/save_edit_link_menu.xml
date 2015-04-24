@@ -14,9 +14,9 @@
         android:orderInCategory="100"
         android:icon="@drawable/ic_edit_black_48dp"
         app:showAsAction="always" />
-    <item android:id="@+id/action_save_edit_link"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_done_black_48dp"
-        app:showAsAction="always" />
+    <!--<item android:id="@+id/action_save_edit_link"-->
+        <!--android:title="@string/action_settings"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:icon="@drawable/ic_done_black_48dp"-->
+        <!--app:showAsAction="always" />-->
 </menu>

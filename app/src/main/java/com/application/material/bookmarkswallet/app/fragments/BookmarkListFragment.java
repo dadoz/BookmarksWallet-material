@@ -247,7 +247,9 @@ public class BookmarkListFragment extends Fragment
 				break;
 			case R.id.action_share:
                 Toast.makeText(mainActivityRef, "share action",  Toast.LENGTH_SHORT).show();
-                Intent intent = rvActionsSingleton.getIntentForEditBookmark();
+                Bookmark bookmark = ((Bookmark)((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
+                        .getItem(mActionBarHandlerSingleton.getEditItemPos()));
+                Intent intent = rvActionsSingleton.getIntentForEditBookmark(bookmark);
                 setShareIntent(intent);
 				break;
 //			case R.id.action_save_edit_link:
@@ -427,10 +429,11 @@ public class BookmarkListFragment extends Fragment
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults filterResults = new FilterResults();
-            ArrayList<Bookmark> filteredList = new ArrayList<Bookmark>();
-            filterResults.values = new ArrayList<Bookmark>();
+            RealmResults<Bookmark> filteredList = mDataset;
+            filterResults.values = filteredList;
             filterResults.count = 0;
 
+/*
             if(constraint != null &&
                     constraint.length() != 0 &&
                     mDataset != null &&
@@ -448,13 +451,13 @@ public class BookmarkListFragment extends Fragment
 
 //                mDataset.where(Bookmark.class).findAll()
             }
-
+*/
             return filterResults;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            RealmResults<Bookmark> temp = (RealmResults<Bookmark>) results.values;
+//            RealmResults<Bookmark> temp = (RealmResults<Bookmark>) results.values;
             if(results.count == 0) {
                 mRecyclerView.setEmptySearchResultQuery(constraint);
             }

@@ -123,6 +123,11 @@ public class Bookmark extends RealmObject {
             return DateTime.now().getMillis();
         }
 
-
+        public static String stringify(Bookmark bookmark) {
+            if(bookmark != null) {
+                return "BOOKMARK " + bookmark.getTimestamp() + "\n " + bookmark.getName() + " - " + bookmark.getUrl();
+            }
+            return null;
+        }
     }
 }
