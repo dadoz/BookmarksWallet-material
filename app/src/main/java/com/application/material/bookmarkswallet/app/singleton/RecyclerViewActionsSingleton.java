@@ -185,13 +185,15 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     
 
     //todo refactor in editUrlDialog
-    public void editLinkDialog(String url) {
-        ((EditText) mEditUrlView.findViewById(R.id.editLinkUrDialoglId)).
-                setText(url);
+    public void editLinkDialog(Bookmark bookmark) {
+        ((EditText) mEditUrlView.findViewById(R.id.editBookmarkUrlDialoglId)).
+                setText(bookmark.getUrl());
+        ((EditText) mEditUrlView.findViewById(R.id.editBookamrkTitleDialoglId)).
+                setText(Bookmark.Utils.getBookmarkNameWrapper(bookmark.getName()));
         if(mEditDialog == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef);
             mEditDialog = builder.
-                    setTitle("Edit Url").
+                    setTitle("Edit").
                     setView(mEditUrlView).
                     create();
         }
@@ -202,16 +204,28 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     }
 
     public void saveEditLinkDialog() {
-/*        mEditDialog.dismiss();
-        String modifiedUrl = ((EditText) mEditUrlView.findViewById(R.id.editLinkUrDialoglId)).
+        String modifiedUrl = ((EditText) mEditUrlView.findViewById(R.id.editBookmarkUrlDialoglId)).
                 getText().toString();
+        String modifiedTitle = ((EditText) mEditUrlView.findViewById(R.id.editBookamrkTitleDialoglId)).
+                getText().toString();
+        mEditDialog.dismiss();
 
-        int position = mAdapter.getSelectedItemPosition();
-        LinkRecyclerViewAdapter.ViewHolder holder =
-                (LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
-                        findViewHolderForPosition(position);
+        Bookmark bookmark = getSelectedItemFromAdapter();
 
-        holder.setEditUrlName(modifiedUrl);*/
+        mRealm.beginTransaction();
+
+        if(! modifiedTitle.trim().equals("")) {
+            bookmark.setName(modifiedTitle);
+        }
+
+        if(! modifiedUrl.trim().equals("")) {
+            bookmark.setUrl(modifiedUrl);
+        }
+        mRealm.commitTransaction();
+
+        mRecyclerView.getAdapter()
+                .notifyItemChanged(mActionBarHandlerSingleton.getEditItemPos());
+        mActivityRef.onBackPressed();
     }
 
 
@@ -420,10 +434,10 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
             case R.id.saveEditUrlDialogId:
                 saveEditLinkDialog();
                 break;
-            case R.id.editUrlLabelId:
-                String url = (String) v.getTag();
-                editLinkDialog(url);
-                break;
+//            case R.id.editUrlLabelId:
+//                String url = (String) v.getTag();
+//                editLinkDialog(url);
+//                break;
         }
 
     }
@@ -437,11 +451,18 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
     public Intent getIntentForEditBookmark(Bookmark bookmark) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.putExtra("BOOKMARK_EXTRA", Bookmark.Utils.stringify(bookmark));
+        shareIntent.putExtra(Intent.EXTRA_TEXT, Bookmark.Utils.stringify(bookmark));
+        shareIntent.setType("text/plain");
         return shareIntent;
     }
 
     public BookmarkRecyclerViewAdapter getAdapter() {
         return ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter());
     }
+
+    public Bookmark getSelectedItemFromAdapter() {
+        return ((Bookmark) ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
+                .getItem(mActionBarHandlerSingleton.getEditItemPos()));
+    }
+
 }

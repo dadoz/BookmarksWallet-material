@@ -69,8 +69,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends RealmRec
         ViewHolder holder = (ViewHolder) rvh;
         Bookmark bookmark = (Bookmark) getItem(position);
 
-        String linkName = bookmark.getName().trim().equals("") ?
-                "(no title)" : bookmark.getName().trim();
+        String linkName = Bookmark.Utils.getBookmarkNameWrapper(bookmark.getName());
         holder.mLabelView.setText(linkName);
         holder.mLabelView.setTextColor(mActivityRef
                 .getResources().getColor(R.color.material_blue_grey));

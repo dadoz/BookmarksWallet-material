@@ -175,8 +175,7 @@ public class BookmarkListFragment extends Fragment
         //SHARE PROVIDER
         final MenuItem shareItem = menu.findItem(R.id.action_share);
         if(shareItem != null) {
-            mShareActionProvider = ((android.support.v7.widget.ShareActionProvider) MenuItemCompat
-                    .getActionProvider(shareItem));
+            mShareActionProvider = new android.support.v7.widget.ShareActionProvider(mainActivityRef);
         }
 
         //SEARCH ITEM
@@ -186,7 +185,7 @@ public class BookmarkListFragment extends Fragment
         SearchView searchView = null;
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
-            MenuItemCompat.setOnActionExpandListener( menu.findItem(R.id.action_search),
+            MenuItemCompat.setOnActionExpandListener(searchItem,
                     new MenuItemCompat.OnActionExpandListener() {
                         @Override
                         public boolean onMenuItemActionExpand(MenuItem item) {
@@ -241,16 +240,20 @@ public class BookmarkListFragment extends Fragment
 
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+        Bookmark bookmark;
+
 		switch (item.getItemId()) {
 			case R.id.action_edit:
                 Toast.makeText(mainActivityRef, "edit action",  Toast.LENGTH_SHORT).show();
+                bookmark = rvActionsSingleton.getSelectedItemFromAdapter();
+                rvActionsSingleton.editLinkDialog(bookmark);
 				break;
 			case R.id.action_share:
                 Toast.makeText(mainActivityRef, "share action",  Toast.LENGTH_SHORT).show();
-                Bookmark bookmark = ((Bookmark)((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
-                        .getItem(mActionBarHandlerSingleton.getEditItemPos()));
+                bookmark = rvActionsSingleton.getSelectedItemFromAdapter();
                 Intent intent = rvActionsSingleton.getIntentForEditBookmark(bookmark);
-                setShareIntent(intent);
+                mainActivityRef.startActivity(Intent.createChooser(intent, "share bookmark to..."));
+//                setShareIntent(intent);
 				break;
 //			case R.id.action_save_edit_link:
 //                saveEditLinkRecyclerViewWrapper();
@@ -290,10 +293,10 @@ public class BookmarkListFragment extends Fragment
 			case R.id.exportConfirmButtonDialogId:
 				exportBookmarksSingleton.exportBookmarks(mItems);
 				break;
-			case R.id.editUrlLabelId:
-				String url = (String) v.getTag();
-				rvActionsSingleton.editLinkDialog(url);
-				break;
+//			case R.id.editUrlLabelId:
+//				String url = (String) v.getTag();
+//				rvActionsSingleton.editLinkDialog(url);
+//				break;
 			case R.id.importLocalBookmarksButtonId:
 				rvActionsSingleton.setBookmarksByProvider();
 //                dbConnector.insertLinkList(items);
@@ -510,8 +513,9 @@ public class BookmarkListFragment extends Fragment
 							findViewHolderForPosition(position);
 			holder.itemView.setSelected(true);
 			// handle single tap
-			String url = (mItems.get(position)).getUrl();
-			rvActionsSingleton.openLinkOnBrowser(url);
+
+            Bookmark bookmark = (Bookmark) ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter()).getItem(position);
+			rvActionsSingleton.openLinkOnBrowser(bookmark.getUrl());
 
 			return super.onSingleTapConfirmed(e);
         }

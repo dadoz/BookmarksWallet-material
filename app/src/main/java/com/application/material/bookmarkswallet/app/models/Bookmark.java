@@ -2,6 +2,7 @@ package com.application.material.bookmarkswallet.app.models;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -21,6 +22,8 @@ public class Bookmark extends RealmObject {
     private int userId;
     private String name;
     private byte[] blobIcon;
+    @Ignore
+    private static final String NO_TITLE_STRING = "(no title)";
 
 //    public Bookmark(int id, String iconPath, byte[] blobIcon, String name,
 //                    String url, int userId, long timestamp) {
@@ -50,7 +53,7 @@ public class Bookmark extends RealmObject {
         this.url = value;
     }
 
-    public String getName() {return this.name;}
+    public String getName() { return this.name; }
 
     public void setName(String value) {
         this.name = value;
@@ -128,6 +131,11 @@ public class Bookmark extends RealmObject {
                 return "BOOKMARK " + bookmark.getTimestamp() + "\n " + bookmark.getName() + " - " + bookmark.getUrl();
             }
             return null;
+        }
+
+        public static String getBookmarkNameWrapper(String name) {
+            return name == null || name.trim().equals("") ?
+                    "(no title)" : name;
         }
     }
 }

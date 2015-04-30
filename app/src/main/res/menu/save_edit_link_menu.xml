@@ -6,8 +6,7 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         android:icon="@drawable/abc_ic_menu_share_mtrl_alpha"
-        app:showAsAction="always"
-        android:actionProviderClass="android.widget.ShareActionProvider"/>
+        app:showAsAction="always"/>
 
     <item android:id="@+id/action_edit"
         android:title="@string/action_settings"
