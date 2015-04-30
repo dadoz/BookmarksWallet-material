@@ -32,6 +32,10 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
     private boolean editMode;
     private int mEditItemPos = NOT_SELECTED_ITEM_POSITION;
 
+    //LAYOUT MANAGER TYPE
+    public enum LayoutManagerTypeEnum { GRID, LIST };
+    private LayoutManagerTypeEnum layoutManagerType = LayoutManagerTypeEnum.LIST;
+
     private ActionBarHandlerSingleton() {
     }
 
@@ -272,6 +276,17 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
         imgStatus.setImageDrawable(d);
     }
 
+    public void setLayoutManagerType(LayoutManagerTypeEnum type) {
+        layoutManagerType = type;
+    }
+
+    public boolean isLayoutManagerGrid() {
+        return layoutManagerType == LayoutManagerTypeEnum.GRID;
+    }
+
+    public boolean isLayoutManagerList() {
+        return layoutManagerType == LayoutManagerTypeEnum.LIST;
+    }
 
 //    public void setViewOnActionMenu(SwipeRefreshLayout mSwipeRefreshLayout, View actionbarInfoView, int actionbarInfoLayoutId, BookmarkListFragment bookmarkListFragment) {
 //        actionbarInfoActionView = actionbarInfoView;

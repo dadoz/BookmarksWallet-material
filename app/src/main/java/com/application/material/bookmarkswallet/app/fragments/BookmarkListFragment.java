@@ -30,6 +30,7 @@ import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
+import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton.LayoutManagerTypeEnum;
 import com.application.material.bookmarkswallet.app.singleton.ExportBookmarkSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
@@ -172,11 +173,13 @@ public class BookmarkListFragment extends Fragment
 		inflater.inflate(isItemSelected ? R.menu.save_edit_link_menu :
                 R.menu.menu_main, menu);
 
-        //SHARE PROVIDER
-        final MenuItem shareItem = menu.findItem(R.id.action_share);
-        if(shareItem != null) {
-            mShareActionProvider = new android.support.v7.widget.ShareActionProvider(mainActivityRef);
-        }
+        //LAYOUT MANAGER
+        menu.findItem(R.id.action_grid)
+                .setVisible(mActionBarHandlerSingleton
+                        .isLayoutManagerList());
+        menu.findItem(R.id.action_list)
+                .setVisible(mActionBarHandlerSingleton
+                        .isLayoutManagerGrid());
 
         //SEARCH ITEM
         final MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -253,11 +256,7 @@ public class BookmarkListFragment extends Fragment
                 bookmark = rvActionsSingleton.getSelectedItemFromAdapter();
                 Intent intent = rvActionsSingleton.getIntentForEditBookmark(bookmark);
                 mainActivityRef.startActivity(Intent.createChooser(intent, "share bookmark to..."));
-//                setShareIntent(intent);
 				break;
-//			case R.id.action_save_edit_link:
-//                saveEditLinkRecyclerViewWrapper();
-//				break;
 			case R.id.action_settings:
 				mActionBarHandlerSingleton.toggleActionBar(true, false, false);
                 mainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
@@ -266,11 +265,20 @@ public class BookmarkListFragment extends Fragment
 				exportBookmarksSingleton.exportAction();
 				return true;
 			case R.id.action_grid:
-                Toast.makeText(mainActivityRef,"hgu",  Toast.LENGTH_SHORT).show();
                 mRecyclerView.setLayoutManager(new GridLayoutManager(mainActivityRef, 2));
                 mRecyclerView.getAdapter().notifyDataSetChanged();
-//                mActionBarHandlerSingleton.toggleInnerLayoutByActionMenu(item.getItemId());
+                mActionBarHandlerSingleton.setLayoutManagerType(LayoutManagerTypeEnum.GRID);
+                mainActivityRef.invalidateOptionsMenu();
 				return true;
+			case R.id.action_list:
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(mainActivityRef));
+                mRecyclerView.getAdapter().notifyDataSetChanged();
+                mActionBarHandlerSingleton.setLayoutManagerType(LayoutManagerTypeEnum.LIST);
+                mainActivityRef.invalidateOptionsMenu();
+				return true;
+//			case R.id.action_save_edit_link:
+//                saveEditLinkRecyclerViewWrapper();
+//				break;
 //			case  R.id.action_import:
 //				mActionBarHandlerSingleton.toggleActionBar(true, false, false);
 //				mainActivityRef.changeFragment(new ImportBookmarkFragment(), null, ImportBookmarkFragment.FRAG_TAG);
