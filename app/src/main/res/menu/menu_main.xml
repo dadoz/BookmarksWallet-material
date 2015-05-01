@@ -17,7 +17,7 @@
           android:visible="false"
           android:title="import bookmarks"
           android:orderInCategory="100"
-          android:icon="@drawable/ic_list_black_24dp"
+          android:icon="@drawable/ic_filter_list_black_24dp"
           app:showAsAction="ifRoom" />
     <!--<item android:id="@+id/action_import"-->
           <!--android:title="import bookmarks"-->
