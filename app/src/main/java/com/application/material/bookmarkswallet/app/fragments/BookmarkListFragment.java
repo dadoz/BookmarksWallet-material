@@ -28,6 +28,7 @@ import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton.LayoutManagerTypeEnum;
+import com.application.material.bookmarkswallet.app.singleton.ClipboardSingleton;
 import com.application.material.bookmarkswallet.app.singleton.ExportBookmarkSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
@@ -45,7 +46,7 @@ public class BookmarkListFragment extends Fragment
 			RecyclerView.OnItemTouchListener, Filterable, SwipeRefreshLayout.OnRefreshListener {
 	private static final String TAG = "LinksListFragment_TAG";
 	public static final String FRAG_TAG = "LinksListFragment";
-	private MainActivity mainActivityRef;
+	private MainActivity mMainActivityRef;
 	@InjectView(R.id.linksListId)
 	RecyclerViewCustom mRecyclerView;
 	@InjectView(R.id.addLinkButtonId)
@@ -76,6 +77,7 @@ public class BookmarkListFragment extends Fragment
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private android.support.v7.widget.ShareActionProvider mShareActionProvider;
     private static Realm mRealm;
+    private ClipboardSingleton mClipboardSingleton;
 
 
     @Override
@@ -85,10 +87,11 @@ public class BookmarkListFragment extends Fragment
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnLoadViewHandlerInterface");
 		}
-		mainActivityRef =  (MainActivity) activity;
-		mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mainActivityRef);
-		exportBookmarksSingleton = ExportBookmarkSingleton.getInstance(this, mainActivityRef);
-        mRealm = Realm.getInstance(mainActivityRef);
+		mMainActivityRef =  (MainActivity) activity;
+		mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mMainActivityRef);
+		exportBookmarksSingleton = ExportBookmarkSingleton.getInstance(this, mMainActivityRef);
+        mClipboardSingleton = ClipboardSingleton.getInstance(mMainActivityRef);
+        mRealm = Realm.getInstance(mMainActivityRef);
 //		dataApplication = (DataApplication) addActivityRef.getApplication();
 	}
 
@@ -123,7 +126,7 @@ public class BookmarkListFragment extends Fragment
         mActionBarHandlerSingleton.setTitle(null);
         mActionBarHandlerSingleton.setDisplayHomeEnabled(false);
         rvActionsSingleton = RecyclerViewActionsSingleton.
-                getInstance(mSwipeRefreshLayout, mRecyclerView, mainActivityRef, this, touchListener);
+                getInstance(mSwipeRefreshLayout, mRecyclerView, mMainActivityRef, this, touchListener);
 
         mItems = rvActionsSingleton.getBookmarksList();
 
@@ -142,12 +145,12 @@ public class BookmarkListFragment extends Fragment
 
 	private void initRecyclerView() {
 		mLinkRecyclerViewAdapter =
-				new BookmarkRecyclerViewAdapter(mainActivityRef);
+				new BookmarkRecyclerViewAdapter(mMainActivityRef);
 
-		detector = new GestureDetectorCompat(mainActivityRef, new RecyclerViewOnGestureListener()); //ONCLICK - ONLONGCLICK
+		detector = new GestureDetectorCompat(mMainActivityRef, new RecyclerViewOnGestureListener()); //ONCLICK - ONLONGCLICK
 		touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this); //LISTENER TO SWIPE
 
-		linearLayoutManager = new LinearLayoutManager(mainActivityRef);
+		linearLayoutManager = new LinearLayoutManager(mMainActivityRef);
 		emptyLinkListView.findViewById(R.id.importLocalBookmarksButtonId).setOnClickListener(this);
 
 		//set empty view
@@ -195,7 +198,7 @@ public class BookmarkListFragment extends Fragment
     public void searchViewHandler(Menu menu) {
         //SEARCH ITEM
         final MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchManager searchManager = (SearchManager) mainActivityRef.getSystemService(Context.SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) mMainActivityRef.getSystemService(Context.SEARCH_SERVICE);
 
         SearchView searchView = null;
         if (searchItem != null) {
@@ -220,7 +223,7 @@ public class BookmarkListFragment extends Fragment
         }
 
         if (searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(mainActivityRef.getComponentName()));
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(mMainActivityRef.getComponentName()));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
             {
                 public boolean onQueryTextChange(String newText)
@@ -259,41 +262,41 @@ public class BookmarkListFragment extends Fragment
 
 		switch (item.getItemId()) {
 			case R.id.action_edit:
-                Toast.makeText(mainActivityRef, "edit action",  Toast.LENGTH_SHORT).show();
+                Toast.makeText(mMainActivityRef, "edit action",  Toast.LENGTH_SHORT).show();
                 bookmark = rvActionsSingleton.getSelectedItemFromAdapter();
                 rvActionsSingleton.editLinkDialog(bookmark);
 				break;
 			case R.id.action_share:
-                Toast.makeText(mainActivityRef, "share action",  Toast.LENGTH_SHORT).show();
+                Toast.makeText(mMainActivityRef, "share action",  Toast.LENGTH_SHORT).show();
                 bookmark = rvActionsSingleton.getSelectedItemFromAdapter();
                 Intent intent = rvActionsSingleton.getIntentForEditBookmark(bookmark);
-                mainActivityRef.startActivity(Intent.createChooser(intent, "share bookmark to..."));
+                mMainActivityRef.startActivity(Intent.createChooser(intent, "share bookmark to..."));
 				break;
 			case R.id.action_settings:
 				mActionBarHandlerSingleton.toggleActionBar(true, false, false);
-                mainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
+                mMainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
                 return true;
 			case R.id.action_export:
 				exportBookmarksSingleton.exportAction();
 				return true;
 			case R.id.action_grid:
-                mRecyclerView.setLayoutManager(new GridLayoutManager(mainActivityRef, 2));
+                mRecyclerView.setLayoutManager(new GridLayoutManager(mMainActivityRef, 2));
                 mRecyclerView.getAdapter().notifyDataSetChanged();
                 mActionBarHandlerSingleton.setLayoutManagerType(LayoutManagerTypeEnum.GRID);
-                mainActivityRef.invalidateOptionsMenu();
+                mMainActivityRef.invalidateOptionsMenu();
 				return true;
 			case R.id.action_list:
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(mainActivityRef));
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(mMainActivityRef));
                 mRecyclerView.getAdapter().notifyDataSetChanged();
                 mActionBarHandlerSingleton.setLayoutManagerType(LayoutManagerTypeEnum.LIST);
-                mainActivityRef.invalidateOptionsMenu();
+                mMainActivityRef.invalidateOptionsMenu();
 				return true;
 //			case R.id.action_save_edit_link:
 //                saveEditLinkRecyclerViewWrapper();
 //				break;
 //			case  R.id.action_import:
 //				mActionBarHandlerSingleton.toggleActionBar(true, false, false);
-//				mainActivityRef.changeFragment(new ImportBookmarkFragment(), null, ImportBookmarkFragment.FRAG_TAG);
+//				mMainActivityRef.changeFragment(new ImportBookmarkFragment(), null, ImportBookmarkFragment.FRAG_TAG);
 //				return true;
 
 		}
@@ -317,23 +320,32 @@ public class BookmarkListFragment extends Fragment
 				rvActionsSingleton.setBookmarksByProvider();
 				break;
             case R.id.clipboardFloatingButtonId:
-				Toast.makeText(mainActivityRef, "clipboard", Toast.LENGTH_SHORT).show();
+                if(! mClipboardSingleton.hasClipboardText()) {
+                    Toast.makeText(mMainActivityRef, "no text in clipboard", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
+                String bookmarkUrl = mClipboardSingleton.getTextFromClipboard();
+                if(bookmarkUrl == null) {
+                    break;
+                }
+                addLinkOnRecyclerViewWrapper(bookmarkUrl.trim());
                 break;
             case R.id.importFloatingButtonId:
                 mActionBarHandlerSingleton.toggleActionBar(true, false, false);
-                mainActivityRef.changeFragment(new ImportBookmarkFragment(),
+                mMainActivityRef.changeFragment(new ImportBookmarkFragment(),
                         null, ImportBookmarkFragment.FRAG_TAG);
                 break;
 			case R.id.actionbarInfoActionIconId:
-				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
 //				mActionBarHandlerSingleton.initToggleSettings(false, false);
 //				mActionBarHandlerSingleton.showLayoutByMenuAction(R.id.actionbarInfoActionIconId);
 				break;
 			case R.id.actionbarImportActionIconId:
-				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
 				break;
 			case R.id.addLinkButtonId:
-				mainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
+				mMainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
 						AddBookmarkActivity.ADD_REQUEST, null);
 				break;
 //			case R.id.editUrlLabelId:
@@ -342,7 +354,7 @@ public class BookmarkListFragment extends Fragment
 //				break;
 
 //			case R.id.undoButtonId:
-//				Toast.makeText(mainActivityRef, "undo", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(mMainActivityRef, "undo", Toast.LENGTH_SHORT).show();
 ////				Bookmark deletedItem = adapter.getDeletedItem();
 //				int deletedItemPosition = adapter.getDeletedItemPosition();
 //                adapter.notifyItemInserted(deletedItemPosition);
@@ -351,7 +363,7 @@ public class BookmarkListFragment extends Fragment
 //				setUndoDeletedLinkLayout(false);
 //				break;
 //			case R.id.dismissButtonId:
-//				Toast.makeText(mainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
 ////				deletedItem = adapter.getDeletedItem();
 ////				dbConnector.deleteLinkById((int) deletedItem.getId());
 //                rvActionsSingleton.deleteBookmark(adapter.getDeletedItemPosition());
@@ -392,6 +404,8 @@ public class BookmarkListFragment extends Fragment
         try {
             rvActionsSingleton.addBookmarkWithInfo(url);
         } catch (Exception e) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            Toast.makeText(mMainActivityRef, "error on add bookmark - url not valid!", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 	}
@@ -476,7 +490,7 @@ public class BookmarkListFragment extends Fragment
 
         @Override
         protected void publishResults(final CharSequence constraint, FilterResults results) {
-            mainActivityRef.runOnUiThread(new Runnable() {
+            mMainActivityRef.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     RealmQuery<Bookmark> query = mRealm.where(Bookmark.class);

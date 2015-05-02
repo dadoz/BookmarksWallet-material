@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
@@ -99,14 +98,14 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
                 mRecyclerView.getAdapter();
     }
 
-    public void setAdapterRef(BookmarkRecyclerViewAdapter adapterRef) {
-        mAdapter = adapterRef;
-    }
+//    public void setAdapterRef(BookmarkRecyclerViewAdapter adapterRef) {
+//        mAdapter = adapterRef;
+//    }
 
-    public boolean saveEditLink() {
-        boolean isSaved = false;
-        try {
-            updateAdapterRef();
+//    public boolean saveEditLink() {
+//        boolean isSaved = false;
+//        try {
+//            updateAdapterRef();
 /*            int position = mAdapter.getSelectedItemPosition();
 
             mRecyclerView.setOnTouchListener(mTouchListener);
@@ -121,22 +120,19 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
             mAdapter.deselectedItemPosition();
             mAdapter.notifyDataSetChanged();*/
-
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mActionBarHandlerSingleton.setTitle(null);
-        mActionBarHandlerSingleton.toggleActionBar(false, false, false, R.id.infoOuterButtonId);
-
-        mActivityRef.invalidateOptionsMenu();
-        mRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
-        animateButton(false);
-
-        Toast.makeText(mActivityRef, isSaved ? "save" : "Error on saving bookmarks...", Toast.LENGTH_SHORT).show();
-        return isSaved;
-    }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        mActionBarHandlerSingleton.setTitle(null);
+//        mActionBarHandlerSingleton.toggleActionBar(false, false, false, R.id.infoOuterButtonId);
+//
+//        mActivityRef.invalidateOptionsMenu();
+//        mRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
+//        animateButton(false);
+//
+//        Toast.makeText(mActivityRef, isSaved ? "save" : "Error on saving bookmarks...", Toast.LENGTH_SHORT).show();
+//        return isSaved;
+//    }
 
 
     public void undoEditLink() {
@@ -193,7 +189,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     public void editLinkDialog(Bookmark bookmark) {
         try {
             View editBookmarkView = mActivityRef.getLayoutInflater().
-                    inflate(R.layout.dialog_edit_url_layout, null);
+                    inflate(R.layout.dialog_edit_bookmark_layout, null);
             ((EditText) editBookmarkView.findViewById(R.id.editBookmarkUrlDialoglId)).
                     setText(bookmark.getUrl());
             ((EditText) editBookmarkView.findViewById(R.id.editBookamrkTitleDialoglId)).
@@ -474,11 +470,11 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
     }
 
-    private void hideSoftKeyboard(EditText editText) {
-        InputMethodManager imm = (InputMethodManager) mActivityRef.
-                getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-    }
+//    private void hideSoftKeyboard(EditText editText) {
+//        InputMethodManager imm = (InputMethodManager) mActivityRef.
+//                getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+//    }
 
 
     public Intent getIntentForEditBookmark(Bookmark bookmark) {
@@ -496,5 +492,6 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         return ((Bookmark) ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
                 .getItem(mActionBarHandlerSingleton.getEditItemPos()));
     }
+
 
 }

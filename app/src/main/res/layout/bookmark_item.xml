@@ -51,7 +51,7 @@
                     android:paddingRight="@dimen/medium_padding"
                     android:paddingBottom="@dimen/small_padding"
                     android:textSize="@dimen/text_size_14"
-                    android:text=" - "
+                    android:text=" date "
                     android:textColor="@color/material_red"/>
 
             <TextView
@@ -61,7 +61,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/medium_padding"
-                    android:text="bookmark name asdkjflasjdfk sdlfkj as"
+                    android:text="bookmark name"
                     android:textSize="@dimen/text_size_24"
                     android:ellipsize="end"
                     android:maxLines="2"
@@ -74,6 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/medium_padding"
+                    android:layout_marginRight="50dip"
                     android:text="http://www.google.it"
                     android:textSize="@dimen/text_size_14"
                     android:ellipsize="end"

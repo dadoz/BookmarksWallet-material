@@ -62,6 +62,7 @@
                                         android:layout_alignParentRight="true"
                                         android:id="@+id/csvFormatCheckboxId"
                                         android:layout_centerVertical="true"
+                                        android:buttonTint="@color/material_red"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"/>
 
@@ -87,6 +88,7 @@
                                 <CheckBox
                                         android:layout_alignParentRight="true"
                                         android:id="@+id/htmlFormatCheckboxId"
+                                        android:buttonTint="@color/material_red"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"/>
 
@@ -106,7 +108,7 @@
                                 android:padding="@dimen/medium_padding"
                                 android:layout_alignParentRight="true"
                                 android:textSize="@dimen/abc_text_size_title_material"
-                                android:textColor="@color/material_green"
+                                android:textColor="@color/material_red"
                                 android:text="IMPORT"/>
                 </RelativeLayout>
 

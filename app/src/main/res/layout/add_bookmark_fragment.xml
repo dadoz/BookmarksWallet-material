@@ -5,76 +5,76 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-    <LinearLayout
-            android:id="@+id/clipboardLayoutId"
-            android:layout_width="fill_parent"
-            android:layout_height="40dip"
-            android:background="@color/material_mustard_yellow"
-            android:orientation="horizontal"/>
-
-    <LinearLayout
-            android:layout_below="@id/clipboardLayoutId"
-            android:id="@+id/addBookmarkMainContainerLayoutId"
-            android:layout_width="wrap_content"
-            android:orientation="vertical"
-            android:layout_height="fill_parent">
-        <EditText
-                android:id="@+id/urlEditText"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:layout_below="@id/clipboardLayoutId"
-                android:layout_marginTop="40dip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/large_padding"
-                android:layout_marginRight="@dimen/large_padding"
-                android:textColor="@color/material_stone_black"
-                android:minWidth="@dimen/abc_search_view_preferred_width"
-                android:hint="type bookmark url...">
-            <requestFocus/>
-                </EditText>
-        <TextView
-                android:id="@+id/addBookmarkDescriptionTextId"
-                android:layout_below="@id/urlEditText"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/large_padding"
-                android:textColor="@color/material_stone_black"
-                android:text="Paste clipboard or type in new bookmark url in the field above"/>
-
-
         <LinearLayout
-                android:id="@+id/errorLayoutId"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/large_padding"
-                android:visibility="gone"
-                android:orientation="horizontal">
-            <ImageView
-                    android:layout_width="wrap_content"
+                android:id="@+id/addBookmarkMainContainerLayoutId"
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+            <LinearLayout
+                    android:id="@+id/errorLayoutId"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_error_white_48dp"/>
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/large_padding"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_error_white_48dp"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/large_padding"
+                        android:textColor="@color/white"
+                        android:text="Wrong bookmark url:\nplease check it out or add http "/>
+
+            </LinearLayout>
+
+
             <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/addBookmarkDescriptionTextId"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/large_padding"
-                    android:textColor="@color/white"
-                    android:text="Wrong bookmark url:\nplease check it out or add http "/>
+                    android:textColor="@color/material_stone_black"
+                    android:text="Type in new bookmark url in the field below"/>
 
+            <EditText
+                    android:id="@+id/urlEditText"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/large_padding"
+                    android:layout_marginRight="@dimen/large_padding"
+                    android:textColor="@color/material_stone_black"
+                    android:minWidth="@dimen/abc_search_view_preferred_width"
+                    android:hint="type bookmark url...">
+                <requestFocus/>
+            </EditText>
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="@dimen/large_padding"
+                    android:layout_marginRight="@dimen/large_padding">
+                <CheckBox
+                        android:id="@+id/httpFormatCheckboxId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/material_red"
+                        android:checked="true"
+                        android:text="http"/>
+                <CheckBox
+                        android:id="@+id/httpsFormatCheckboxId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/material_red"
+                        android:text="https"/>
+
+            </LinearLayout>
         </LinearLayout>
 
-
-
-    </LinearLayout>
-
-    <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/pasteFromClipboardButtonId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_icon="@drawable/ic_content_paste_white_48dp"
-            fab:fab_colorNormal="@color/material_blue_grey"
-            fab:fab_colorPressed="@color/material_blue_grey"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"/>
 </RelativeLayout>
