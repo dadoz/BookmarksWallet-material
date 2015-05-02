@@ -37,6 +37,8 @@ import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
+import java.util.ResourceBundle;
+
 public class BookmarkListFragment extends Fragment
 		implements View.OnClickListener,
 			SwipeDismissRecyclerViewTouchListener.DismissCallbacks,
@@ -202,11 +204,15 @@ public class BookmarkListFragment extends Fragment
                     new MenuItemCompat.OnActionExpandListener() {
                         @Override
                         public boolean onMenuItemActionExpand(MenuItem item) {
+                            ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
+                                    .setSearchResult(true);
                             return true;
                         }
 
                         @Override
                         public boolean onMenuItemActionCollapse(MenuItem item) {
+                            ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
+                                    .setSearchResult(false);
                             rvActionsSingleton.setAdapter();
                             return true;
                         }
@@ -417,13 +423,7 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public Filter getFilter() {
-
-        RealmQuery<Bookmark> query = mRealm.where(Bookmark.class);
-        RealmResults<Bookmark> filteredList = query
-                .contains("name", "bla").or()
-                .contains("url", "bla")
-                .findAll();
-        return new LinkFilter(filteredList);
+        return new LinkFilter();
     }
 
     @Override
@@ -437,21 +437,14 @@ public class BookmarkListFragment extends Fragment
     }
 
     private class LinkFilter extends Filter {
-//        private final Fragment mFragmentRef;
-//        private RealmResults<Bookmark> mDataset;
-        private RealmResults data = null;
-
-        public LinkFilter(RealmResults data) {
-//            mDataset = data;
-//            mFragmentRef = fragmentRef;
-            this.data = data;
+        public LinkFilter() {
         }
 
         @Override
         protected FilterResults performFiltering(final CharSequence constraint) {
             FilterResults filterResults = new FilterResults();
-            filterResults.values = data;
-            filterResults.count = data.size();
+            filterResults.values = null;
+            filterResults.count = 0;
 //            mRealmRef.beginTransaction();
 //            RealmQuery<Bookmark> query = mRealmRef.where(Bookmark.class);
 //            RealmResults<Bookmark> filteredList = query
@@ -483,28 +476,23 @@ public class BookmarkListFragment extends Fragment
 
         @Override
         protected void publishResults(final CharSequence constraint, FilterResults results) {
-//            RealmResults<Bookmark> temp = (RealmResults<Bookmark>) results.values;
             mainActivityRef.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     RealmQuery<Bookmark> query = mRealm.where(Bookmark.class);
                     RealmResults<Bookmark> filteredList;
-                    if(constraint != null &&
-                            ! constraint.equals("")) {
-                        filteredList = query
-                                .contains("name", (String) constraint).or()
-                                .contains("url", (String) constraint)
-                                .findAll();
+                    filteredList = query
+                            .contains("name", (String) constraint).or()
+                            .contains("url", (String) constraint)
+                            .findAll();
 
-                        if(filteredList.size() == 0) {
-                            mRecyclerView.setEmptySearchResultQuery(constraint);
-                            return;
-                        }
-                        rvActionsSingleton.setAdapterByDataItems(filteredList);
+                    Log.e(TAG, "hey" + filteredList.size());
+                    if (filteredList.size() == 0) {
+                        mRecyclerView.setEmptySearchResultQuery(constraint);
                     }
+                    rvActionsSingleton.setAdapterByDataItems(filteredList);
                 }
             });
-
 
 
 //            ArrayList<Link> temp = new ArrayList<Link>();

@@ -26,6 +26,7 @@ import io.realm.RealmResults;
 public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends RealmRecyclerViewAdapter<Bookmark> {
     private final Activity mActivityRef;
     private final ActionBarHandlerSingleton mActionBarHandlerSingleton;
+    private boolean mSearchResult;
 
     public BookmarkRecyclerViewAdapter(Activity activity) {
         mActivityRef = activity;
@@ -117,4 +118,13 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends RealmRec
     public int getItemCount() {
         return getRealmBaseAdapter() == null ? 0 : getRealmBaseAdapter().getCount();
     }
+
+    public boolean isSearchResult() {
+        return mSearchResult;
+    }
+
+    public void setSearchResult(boolean mSearchResult) {
+        this.mSearchResult = mSearchResult;
+    }
+
 }

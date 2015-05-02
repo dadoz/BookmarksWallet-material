@@ -41,8 +41,7 @@ public class RecyclerViewCustom extends RecyclerView {
         }
 
         boolean isEmpty = getAdapter().getItemCount() == 0;
-//        boolean isSearchResult = ((BookmarkRecyclerViewAdapter) getAdapter()).isSearchResult();
-        boolean isSearchResult = false;
+        boolean isSearchResult = ((BookmarkRecyclerViewAdapter) getAdapter()).isSearchResult();
 
 
         emptyView.setVisibility(isEmpty && ! isSearchResult ? VISIBLE : GONE);

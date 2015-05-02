@@ -146,7 +146,6 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
             mAdapter.notifyItemChanged(position);
             mActionBarHandlerSingleton.setEditItemPos(NOT_SELECTED_ITEM_POSITION);
             mActionBarHandlerSingleton.setTitle(null);
-            mRecyclerView.setOnTouchListener(mTouchListener);
 /*            int position = mAdapter.getSelectedItemPosition();
 
             mRecyclerView.setOnTouchListener(mTouchListener);
@@ -166,6 +165,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         }
         mActivityRef.invalidateOptionsMenu();
         mRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
+        mRecyclerView.setOnTouchListener(mTouchListener);
         animateButton(false);
     }
 
