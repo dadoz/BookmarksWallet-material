@@ -34,11 +34,11 @@ import com.application.material.bookmarkswallet.app.singleton.RecyclerViewAction
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.suredigit.inappfeedback.FeedbackDialog;
+import com.tjeannin.apprate.AppRate;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-
-import java.util.ResourceBundle;
 
 public class BookmarkListFragment extends Fragment
 		implements View.OnClickListener,
@@ -78,6 +78,7 @@ public class BookmarkListFragment extends Fragment
     private android.support.v7.widget.ShareActionProvider mShareActionProvider;
     private static Realm mRealm;
     private ClipboardSingleton mClipboardSingleton;
+    private FeedbackDialog mFeedBackDialog;
 
 
     @Override
@@ -111,6 +112,11 @@ public class BookmarkListFragment extends Fragment
         mEmptySearchResultView = mLinkListView.findViewById(R.id.emptySearchResultLayoutId);
 		setHasOptionsMenu(true);
 		onInitView();
+
+        new AppRate(mMainActivityRef)
+                .setMinDaysUntilPrompt(7)
+                .setMinLaunchesUntilPrompt(20)
+                .init();
 		return mLinkListView;
 	}
 

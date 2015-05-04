@@ -148,17 +148,14 @@ public class ImportBookmarkFragment extends Fragment implements
         switch (buttonView.getId()) {
             case R.id.csvFormatCheckboxId:
                 htmlFormatCheckbox.setChecked(false);
-                Toast.makeText(mMainActivityRef, "csvFormatCheckboxId", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.htmlFormatCheckboxId:
                 csvFormatCheckbox.setChecked(false);
-                Toast.makeText(mMainActivityRef, "htmlFormatCheckboxId", Toast.LENGTH_SHORT).show();
                 break;
         }
 
         csvFormatCheckbox.setOnCheckedChangeListener(this);
         htmlFormatCheckbox.setOnCheckedChangeListener(this);
-        Log.e(TAG, "is checked " + isChecked);
     }
 
 }
