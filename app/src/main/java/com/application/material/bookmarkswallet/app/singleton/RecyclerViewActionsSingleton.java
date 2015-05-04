@@ -135,40 +135,33 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 //    }
 
 
-    public void undoEditLink() {
+    /**
+     * TODO refactor name
+     */
+    public void undoEditBookmark() {
         try {
             updateAdapterRef();
             int position = mActionBarHandlerSingleton.getEditItemPos();
             mAdapter.notifyItemChanged(position);
             mActionBarHandlerSingleton.setEditItemPos(NOT_SELECTED_ITEM_POSITION);
             mActionBarHandlerSingleton.setTitle(null);
-/*            int position = mAdapter.getSelectedItemPosition();
-
-            mRecyclerView.setOnTouchListener(mTouchListener);
-            LinkRecyclerViewAdapter.ViewHolder holder =
-                    (LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
-                            findViewHolderForPosition(position);
-            if(holder != null) {
-                hideSoftKeyboard(holder.getEditLinkView());
-            }
-
-            Toast.makeText(mActivityRef, "undo edit", Toast.LENGTH_SHORT).show();
-            mAdapter.deselectedItemPosition();
-            mAdapter.notifyDataSetChanged();
-*/
         } catch (Exception e) {
             e.printStackTrace();
         }
         mActivityRef.invalidateOptionsMenu();
-        mRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
+
+        //set on item click - swipe listener
         mRecyclerView.setOnTouchListener(mTouchListener);
+        mRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
         animateButton(false);
     }
 
+    /**
+     * TODO refactor name
+     * @param position
+     */
     public void selectBookmarkEditMenu(int position) {
         mAdapter = getAdapter();
-        Toast.makeText(mActivityRef, "edit" + position, Toast.LENGTH_SHORT).show();
-
         mActionBarHandlerSingleton.setEditItemPos(position);
         mActionBarHandlerSingleton.setTitle("Edit link");
         mActionBarHandlerSingleton.toggleActionBar(true, true, true, R.id.infoOuterButtonId);
@@ -180,6 +173,8 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         holder.itemView.setPressed(false);
         mAdapter.notifyItemChanged(position); //to change background color on view
         mActivityRef.invalidateOptionsMenu();
+
+        mRecyclerView.setOnTouchListener(null);
         mRecyclerView.removeOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
         animateButton(true);
     }

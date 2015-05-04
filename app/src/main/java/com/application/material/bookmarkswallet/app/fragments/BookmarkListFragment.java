@@ -75,10 +75,10 @@ public class BookmarkListFragment extends Fragment
     private BookmarkRecyclerViewAdapter mLinkRecyclerViewAdapter;
     private View mEmptySearchResultView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private android.support.v7.widget.ShareActionProvider mShareActionProvider;
+//    private android.support.v7.widget.ShareActionProvider mShareActionProvider;
     private static Realm mRealm;
     private ClipboardSingleton mClipboardSingleton;
-    private FeedbackDialog mFeedBackDialog;
+//    private FeedbackDialog mFeedBackDialog;
 
 
     @Override
@@ -124,13 +124,15 @@ public class BookmarkListFragment extends Fragment
 //		View actionbarInfoView = mLinkListView.findViewById(R.id.actionbarInfoLayoutId);
 		mSwipeRefreshLayout = (SwipeRefreshLayout) mLinkListView.findViewById(R.id.mainContainerViewId);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-//        mSwipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
-//                android.R.color.holo_green_light, android.R.color.holo_red_light,
-//                android.R.color.holo_orange_light);
+        mSwipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light, android.R.color.holo_red_light,
+                android.R.color.holo_orange_light);
 //		mActionBarHandlerSingleton.setViewOnActionMenu(mSwipeRefreshLayout, actionbarInfoView, R.id.actionbarInfoLayoutId, this);
 		mActionBarHandlerSingleton.setToolbarScrollManager(mRecyclerView, (View) addLinkButton.getParent());
         mActionBarHandlerSingleton.setTitle(null);
         mActionBarHandlerSingleton.setDisplayHomeEnabled(false);
+
+        touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this); //LISTENER TO SWIPE
         rvActionsSingleton = RecyclerViewActionsSingleton.
                 getInstance(mSwipeRefreshLayout, mRecyclerView, mMainActivityRef, this, touchListener);
 
@@ -154,7 +156,6 @@ public class BookmarkListFragment extends Fragment
 				new BookmarkRecyclerViewAdapter(mMainActivityRef);
 
 		detector = new GestureDetectorCompat(mMainActivityRef, new RecyclerViewOnGestureListener()); //ONCLICK - ONLONGCLICK
-		touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this); //LISTENER TO SWIPE
 
 		linearLayoutManager = new LinearLayoutManager(mMainActivityRef);
 		emptyLinkListView.findViewById(R.id.importLocalBookmarksButtonId).setOnClickListener(this);
@@ -268,12 +269,12 @@ public class BookmarkListFragment extends Fragment
 
 		switch (item.getItemId()) {
 			case R.id.action_edit:
-                Toast.makeText(mMainActivityRef, "edit action",  Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mMainActivityRef, "edit action",  Toast.LENGTH_SHORT).show();
                 bookmark = rvActionsSingleton.getSelectedItemFromAdapter();
                 rvActionsSingleton.editLinkDialog(bookmark);
 				break;
 			case R.id.action_share:
-                Toast.makeText(mMainActivityRef, "share action",  Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mMainActivityRef, "share action",  Toast.LENGTH_SHORT).show();
                 bookmark = rvActionsSingleton.getSelectedItemFromAdapter();
                 Intent intent = rvActionsSingleton.getIntentForEditBookmark(bookmark);
                 mMainActivityRef.startActivity(Intent.createChooser(intent, "share bookmark to..."));
@@ -422,8 +423,8 @@ public class BookmarkListFragment extends Fragment
 //		addLinkButton.setVisibility(isDeleting ? View.GONE : View.VISIBLE);
 //	}
 
-	public void undoEditLinkRecyclerViewWrapper() {
-		rvActionsSingleton.undoEditLink();
+	public void undoEditBookmarkRecyclerViewWrapper() {
+		rvActionsSingleton.undoEditBookmark();
 //        setInitialAdapter();
     }
 
@@ -573,7 +574,6 @@ public class BookmarkListFragment extends Fragment
 
         @Override
 		public void onLongPress(MotionEvent e) {
-			mRecyclerView.setOnTouchListener(null);
 			View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
 			int position = mRecyclerView.getChildPosition(view);
             BookmarkRecyclerViewAdapter.ViewHolder holder =
@@ -583,7 +583,6 @@ public class BookmarkListFragment extends Fragment
 			holder.itemView.setSelected(true);
 
 			// handle long press
-			Log.e(TAG, "Hey long touch ");
 			rvActionsSingleton.selectBookmarkEditMenu(position);
 			super.onLongPress(e);
 		}

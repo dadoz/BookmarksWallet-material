@@ -193,7 +193,7 @@ public class MainActivity extends ActionBarActivity
                     isEditMode) {
 //                mActionBarHandlerSingleton.toggleLayoutByActionMenu(R.id.infoOuterButtonId);
 
-                ((BookmarkListFragment) fragment).undoEditLinkRecyclerViewWrapper();
+                ((BookmarkListFragment) fragment).undoEditBookmarkRecyclerViewWrapper();
             }
             return;
         }
