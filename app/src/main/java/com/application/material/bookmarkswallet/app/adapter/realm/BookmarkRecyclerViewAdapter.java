@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +77,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends RealmRec
         holder.mLabelView.setTextColor(mActivityRef
                 .getResources().getColor(R.color.material_blue_grey));
         holder.mUrlView.setText(bookmark.getUrl());
+        holder.mUrlView.setVisibility(View.VISIBLE);
         holder.mTimestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark.getTimestamp()));
 
         boolean isSelectedItem = mActionBarHandlerSingleton.isEditMode();

@@ -6,6 +6,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.Browser;
@@ -29,8 +31,10 @@ import io.realm.RealmResults;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.UUID;
 
 import static com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton.NOT_SELECTED_ITEM_POSITION;
@@ -97,43 +101,6 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         return mAdapter = (BookmarkRecyclerViewAdapter)
                 mRecyclerView.getAdapter();
     }
-
-//    public void setAdapterRef(BookmarkRecyclerViewAdapter adapterRef) {
-//        mAdapter = adapterRef;
-//    }
-
-//    public boolean saveEditLink() {
-//        boolean isSaved = false;
-//        try {
-//            updateAdapterRef();
-/*            int position = mAdapter.getSelectedItemPosition();
-
-            mRecyclerView.setOnTouchListener(mTouchListener);
-            LinkRecyclerViewAdapter.ViewHolder holder =
-                    (LinkRecyclerViewAdapter.ViewHolder) mRecyclerView.
-                            findViewHolderForPosition(position);
-            if(holder != null) {
-                mAdapter.update(position, holder.getEditLinkName(), holder.getEditUrlName());
-                hideSoftKeyboard(holder.getEditLinkView());
-                isSaved = true;
-            }
-
-            mAdapter.deselectedItemPosition();
-            mAdapter.notifyDataSetChanged();*/
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        mActionBarHandlerSingleton.setTitle(null);
-//        mActionBarHandlerSingleton.toggleActionBar(false, false, false, R.id.infoOuterButtonId);
-//
-//        mActivityRef.invalidateOptionsMenu();
-//        mRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
-//        animateButton(false);
-//
-//        Toast.makeText(mActivityRef, isSaved ? "save" : "Error on saving bookmarks...", Toast.LENGTH_SHORT).show();
-//        return isSaved;
-//    }
-
 
     /**
      * TODO refactor name
@@ -230,49 +197,91 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         mActivityRef.onBackPressed();
     }
 
-
+    //todo move to static class
     public void addBookmarkWithInfo(String url) throws MalformedURLException {
         mSwipeRefreshLayout.setRefreshing(true);
+        //TODO refactor it :)
         if(! url.contains("http://") &&
                 ! url.contains("https://")) {
             //trying with http
             url = "http://" + url;
         }
 
-        new AsyncTask<URL, Integer, String>() {
-            private String linkUrl = null;
+        new AsyncTask<URL, Integer, Boolean>() {
+            private String bookmarkUrl = null;
+            private String bookmarkTitle = null;
             private String iconUrl = null;
             @Override
-            protected String doInBackground(URL... linkUrlArray) {
+            protected Boolean doInBackground(URL... linkUrlArray) {
+                bookmarkUrl = linkUrlArray[0].toString();
+                Document doc;
                 try {
-                    linkUrl = linkUrlArray[0].toString();
-                    Document doc = Jsoup.connect(linkUrl).get();
-                    org.jsoup.nodes.Element elem = doc.head().select("link[href~=.*\\.ico|png]").first();
-                    iconUrl = elem.attr("href");
+                    doc = Jsoup.connect(bookmarkUrl).get();
+                    bookmarkTitle = doc.title();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+                //trying to get iconUrl
+                try {
+                    org.jsoup.nodes.Element elem = doc.head().select("link[href~=.*\\.ico]").first();
+                    iconUrl = elem.attr("abs:href");
                     Log.d(TAG, " - " + iconUrl);
-                    return doc.title();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return null;
+                return true;
             }
 
             @Override
             protected void onProgressUpdate(Integer... values) {
-
             }
 
             @Override
-            protected void onPostExecute(String linkUrlTitle) {
-                mSwipeRefreshLayout.setRefreshing(false);
-                //CHECK out what u need
-                addBookmark(linkUrl, iconUrl, null, linkUrlTitle);
+            protected void onPostExecute(Boolean isBookmarkInfoRetrieved) {
+                try {
+                    addBookmarkIconByUrl(iconUrl, bookmarkUrl, bookmarkTitle);
+                } catch (MalformedURLException e) {
+                    //CHECK out what u need
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    addBookmark(bookmarkUrl, null, bookmarkTitle);
+                    e.printStackTrace();
+                }
             }
 
         }.execute(new URL(url));
     }
 
-    public void addBookmark(String url, String iconPath, byte[] iconBlob, String title) {
+    public void addBookmarkIconByUrl(String iconUrl,
+                                     final String bookmarkUrl,
+                                     final String bookmarkTitle) throws MalformedURLException {
+        //                mSwipeRefreshLayout.setRefreshing(false);
+        if(iconUrl == null) {
+            //CHECK out what u need
+            mSwipeRefreshLayout.setRefreshing(false);
+            addBookmark(bookmarkUrl, null, bookmarkTitle);
+            return;
+        }
+
+        //TRYING GETTING IMAGE
+        new AsyncTask<URL, Integer, byte[]>() {
+            @Override
+            protected byte[] doInBackground(URL... linkUrlArray) {
+                return downloadBytesArrayByUrl(linkUrlArray[0]);
+            }
+
+            @Override
+            protected void onPostExecute(byte[] iconByteArray) {
+                mSwipeRefreshLayout.setRefreshing(false);
+
+                //CHECK out what u need
+                addBookmark(bookmarkUrl, iconByteArray, bookmarkTitle);
+            }
+        }.execute(new URL(iconUrl));
+    }
+
+    public void addBookmark(String url, byte[] iconBlob, String title) {
 //        title = title == null ? "" : title;
 //        Link link = new Link(-1, null, null, title, url, -1, Link.getTodayTimestamp());
 //        mDbConnector.insertLink(link);
@@ -282,7 +291,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         //UPDATE DATASET REF
         mRecyclerView.scrollToPosition(0);
         title = title == null ? "" : title;
-        addOrmObject(mRealm, title, iconPath, iconBlob, url);
+        addOrmObject(mRealm, title, null, iconBlob, url);
         setAdapter();
         mRecyclerView.getAdapter().notifyItemInserted(0);
         updateAdapterRef();
@@ -486,6 +495,30 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     public Bookmark getSelectedItemFromAdapter() {
         return ((Bookmark) ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
                 .getItem(mActionBarHandlerSingleton.getEditItemPos()));
+    }
+
+
+    private byte[] downloadBytesArrayByUrl(URL url) {
+        byte[] byteArray;
+        try {
+            URLConnection conn = url.openConnection();
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(is);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            int byteRead;
+            while((byteRead = bis.read()) != -1) {
+                baos.write(byteRead);
+            }
+            byteArray = baos.toByteArray();
+            baos.close();
+            bis.close();
+            is.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Error getting the image from server : " + e.getMessage().toString());
+            return null;
+        }
+        return byteArray;
     }
 
 

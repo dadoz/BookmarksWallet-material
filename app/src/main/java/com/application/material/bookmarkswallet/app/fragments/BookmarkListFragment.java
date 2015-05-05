@@ -124,9 +124,9 @@ public class BookmarkListFragment extends Fragment
 //		View actionbarInfoView = mLinkListView.findViewById(R.id.actionbarInfoLayoutId);
 		mSwipeRefreshLayout = (SwipeRefreshLayout) mLinkListView.findViewById(R.id.mainContainerViewId);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light, android.R.color.holo_red_light,
-                android.R.color.holo_orange_light);
+        mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_light,
+                android.R.color.holo_orange_light, android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light);
 //		mActionBarHandlerSingleton.setViewOnActionMenu(mSwipeRefreshLayout, actionbarInfoView, R.id.actionbarInfoLayoutId, this);
 		mActionBarHandlerSingleton.setToolbarScrollManager(mRecyclerView, (View) addLinkButton.getParent());
         mActionBarHandlerSingleton.setTitle(null);
@@ -178,23 +178,20 @@ public class BookmarkListFragment extends Fragment
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-//		boolean isItemSelected = ((BookmarkRecyclerViewAdapter) mRecyclerView.
-//				getAdapter()).isItemSelected();
         boolean isItemSelected = mActionBarHandlerSingleton.isEditMode();
 
 		inflater.inflate(isItemSelected ? R.menu.save_edit_link_menu :
                 R.menu.menu_main, menu);
 
         //LAYOUT MANAGER
-        if(! isItemSelected) {
-            menu.findItem(R.id.action_grid)
-                    .setVisible(mActionBarHandlerSingleton
-                            .isLayoutManagerList());
-            menu.findItem(R.id.action_list)
-                    .setVisible(mActionBarHandlerSingleton
-                            .isLayoutManagerGrid());
-        }
+//        if(! isItemSelected) {
+//            menu.findItem(R.id.action_grid)
+//                    .setVisible(mActionBarHandlerSingleton
+//                            .isLayoutManagerList());
+//            menu.findItem(R.id.action_list)
+//                    .setVisible(mActionBarHandlerSingleton
+//                            .isLayoutManagerGrid());
+//        }
 
         //SEARCH VIEW HANDLER
         searchViewHandler(menu);
@@ -286,26 +283,18 @@ public class BookmarkListFragment extends Fragment
 			case R.id.action_export:
 				exportBookmarksSingleton.exportAction();
 				return true;
-			case R.id.action_grid:
-                mRecyclerView.setLayoutManager(new GridLayoutManager(mMainActivityRef, 2));
-                mRecyclerView.getAdapter().notifyDataSetChanged();
-                mActionBarHandlerSingleton.setLayoutManagerType(LayoutManagerTypeEnum.GRID);
-                mMainActivityRef.invalidateOptionsMenu();
-				return true;
-			case R.id.action_list:
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(mMainActivityRef));
-                mRecyclerView.getAdapter().notifyDataSetChanged();
-                mActionBarHandlerSingleton.setLayoutManagerType(LayoutManagerTypeEnum.LIST);
-                mMainActivityRef.invalidateOptionsMenu();
-				return true;
-//			case R.id.action_save_edit_link:
-//                saveEditLinkRecyclerViewWrapper();
-//				break;
-//			case  R.id.action_import:
-//				mActionBarHandlerSingleton.toggleActionBar(true, false, false);
-//				mMainActivityRef.changeFragment(new ImportBookmarkFragment(), null, ImportBookmarkFragment.FRAG_TAG);
+//			case R.id.action_grid:
+//                mRecyclerView.setLayoutManager(new GridLayoutManager(mMainActivityRef, 2));
+//                mRecyclerView.getAdapter().notifyDataSetChanged();
+//                mActionBarHandlerSingleton.setLayoutManagerType(LayoutManagerTypeEnum.GRID);
+//                mMainActivityRef.invalidateOptionsMenu();
 //				return true;
-
+//			case R.id.action_list:
+//                mRecyclerView.setLayoutManager(new LinearLayoutManager(mMainActivityRef));
+//                mRecyclerView.getAdapter().notifyDataSetChanged();
+//                mActionBarHandlerSingleton.setLayoutManagerType(LayoutManagerTypeEnum.LIST);
+//                mMainActivityRef.invalidateOptionsMenu();
+//				return true;
 		}
 		return true;
 	}
