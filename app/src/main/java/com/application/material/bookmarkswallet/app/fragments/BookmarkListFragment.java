@@ -25,6 +25,7 @@ import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecycl
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.recyclerView.CustomSwipeRefreshLayout;
 import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton.LayoutManagerTypeEnum;
@@ -74,7 +75,7 @@ public class BookmarkListFragment extends Fragment
 	private ExportBookmarkSingleton exportBookmarksSingleton;
     private BookmarkRecyclerViewAdapter mLinkRecyclerViewAdapter;
     private View mEmptySearchResultView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 //    private android.support.v7.widget.ShareActionProvider mShareActionProvider;
     private static Realm mRealm;
     private ClipboardSingleton mClipboardSingleton;
@@ -122,8 +123,9 @@ public class BookmarkListFragment extends Fragment
 
 	private void onInitView() {
 //		View actionbarInfoView = mLinkListView.findViewById(R.id.actionbarInfoLayoutId);
-		mSwipeRefreshLayout = (SwipeRefreshLayout) mLinkListView.findViewById(R.id.mainContainerViewId);
+		mSwipeRefreshLayout = (CustomSwipeRefreshLayout) mLinkListView.findViewById(R.id.mainContainerViewId);
         mSwipeRefreshLayout.setOnRefreshListener(this);
+
         mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_light,
                 android.R.color.holo_orange_light, android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light);
@@ -151,7 +153,8 @@ public class BookmarkListFragment extends Fragment
         }
 	}
 
-	private void initRecyclerView() {
+
+    private void initRecyclerView() {
 		mLinkRecyclerViewAdapter =
 				new BookmarkRecyclerViewAdapter(mMainActivityRef);
 
@@ -525,36 +528,32 @@ public class BookmarkListFragment extends Fragment
 
 		@Override
 		public boolean onDown(MotionEvent event) {
-//			View view = mRecyclerView.findChildViewUnder(event.getX(), event.getY());
-//			view.findViewById(R.id.linkLayoutId).setPressed(true);
+			View view = mRecyclerView.findChildViewUnder(event.getX(), event.getY());
+			view.findViewById(R.id.linkLayoutId).setPressed(true);
+            mSwipeRefreshLayout.setDownView(view);
 			return false;
 		}
 
-		@Override
+/*		@Override
 		public void onShowPress(MotionEvent event) {
 			View view = mRecyclerView.findChildViewUnder(event.getX(), event.getY());
 			view.findViewById(R.id.linkLayoutId).setPressed(true);
 		}
+
 		@Override
 		public boolean onSingleTapUp(MotionEvent event) {
 			View view = mRecyclerView.findChildViewUnder(event.getX(), event.getY());
-			view.findViewById(R.id.linkLayoutId).setPressed(false);
+			view.findViewById(R.id.linkLayoutId).setPressed(true);
 			return false;
-		}
+		}*/
 
 		@Override
 		public boolean onSingleTapConfirmed(MotionEvent e) {
 			View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
 			int position = mRecyclerView.getChildPosition(view);
 
-            BookmarkRecyclerViewAdapter.ViewHolder holder =
-					(BookmarkRecyclerViewAdapter.ViewHolder) mRecyclerView.
-							findViewHolderForPosition(position);
-			holder.itemView.setSelected(true);
-			// handle single tap
-
             Bookmark bookmark = (Bookmark) ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter()).getItem(position);
-			rvActionsSingleton.openLinkOnBrowser(bookmark.getUrl());
+            rvActionsSingleton.openLinkOnBrowser(bookmark.getUrl());
 
 			return super.onSingleTapConfirmed(e);
         }
@@ -566,8 +565,8 @@ public class BookmarkListFragment extends Fragment
             BookmarkRecyclerViewAdapter.ViewHolder holder =
 					(BookmarkRecyclerViewAdapter.ViewHolder) mRecyclerView.
 							findViewHolderForPosition(position);
-            mActionBarHandlerSingleton.setEditItemPos(position);
 			holder.itemView.setSelected(true);
+            mActionBarHandlerSingleton.setEditItemPos(position);
 
 			// handle long press
 			rvActionsSingleton.selectBookmarkEditMenu(position);

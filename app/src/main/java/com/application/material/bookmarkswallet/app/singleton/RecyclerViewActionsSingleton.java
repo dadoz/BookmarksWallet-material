@@ -133,10 +133,10 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         mActionBarHandlerSingleton.setTitle("Edit link");
         mActionBarHandlerSingleton.toggleActionBar(true, true, true, R.id.infoOuterButtonId);
 
-//        ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter()).setSelectedItemPosition(position);
         BookmarkRecyclerViewAdapter.ViewHolder holder =
                 (BookmarkRecyclerViewAdapter.ViewHolder) mRecyclerView.
                         findViewHolderForPosition(position);
+        //position isnt stored //TODO
         holder.itemView.setPressed(false);
         mAdapter.notifyItemChanged(position); //to change background color on view
         mActivityRef.invalidateOptionsMenu();
@@ -357,7 +357,11 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         }.execute();
     }
 
-    public void addOrmObject(Realm realm, String title, String iconPath, byte[] blobIcon, String url) {
+    public boolean addOrmObject(Realm realm, String title, String iconPath, byte[] blobIcon, String url) {
+        if(url == null) {
+            return false;
+        }
+
         realm.beginTransaction();
         Bookmark bookmark = realm.createObject(Bookmark.class);
         bookmark.setId(UUID.randomUUID().getLeastSignificantBits());
@@ -371,6 +375,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         bookmark.setUrl(url);
         bookmark.setTimestamp(Bookmark.Utils.getTodayTimestamp());
         realm.commitTransaction();
+        return true;
     }
 
     public void deleteBookmark(int position) {

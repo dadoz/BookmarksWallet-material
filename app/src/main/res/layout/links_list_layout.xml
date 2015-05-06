@@ -8,7 +8,8 @@
         android:orientation="vertical">
 
     <include layout="@layout/actionbar_info_action_layout"/>
-    <android.support.v4.widget.SwipeRefreshLayout
+    <!--<android.support.v4.widget.SwipeRefreshLayout-->
+    <com.application.material.bookmarkswallet.app.recyclerView.CustomSwipeRefreshLayout
             android:id="@+id/mainContainerViewId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -17,7 +18,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.application.material.bookmarkswallet.app.recyclerView.CustomSwipeRefreshLayout>
     <include layout="@layout/empty_link_list_layout"/>
     <include layout="@layout/empty_search_result_layout"/>
 

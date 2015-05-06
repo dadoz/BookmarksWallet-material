@@ -3,7 +3,7 @@
 	android:id="@+id/settingsListId"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:background="@android:color/background_light"
+	android:background="@color/lightGrey"
 	android:paddingLeft="10dip"
 	android:paddingRight="10dip">
 
