@@ -262,12 +262,10 @@ public class BookmarkListFragment extends Fragment
 
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-        Bookmark bookmark;
-
 		switch (item.getItemId()) {
 			case R.id.action_edit:
 //                Toast.makeText(mMainActivityRef, "edit action",  Toast.LENGTH_SHORT).show();
-                bookmark = rvActionsSingleton.getSelectedItemFromAdapter();
+                Bookmark bookmark = rvActionsSingleton.getSelectedItemFromAdapter();
                 rvActionsSingleton.editLinkDialog(bookmark);
 				break;
 			case R.id.action_share:
@@ -540,7 +538,7 @@ public class BookmarkListFragment extends Fragment
 		@Override
 		public boolean onSingleTapUp(MotionEvent event) {
 			View view = mRecyclerView.findChildViewUnder(event.getX(), event.getY());
-			view.findViewById(R.id.linkLayoutId).setPressed(true);
+			view.findViewById(R.id.linkLayoutId).setPressed(false);
 			return false;
 		}
 
