@@ -108,8 +108,9 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     public void undoEditBookmark() {
         try {
             updateAdapterRef();
-            int position = mActionBarHandlerSingleton.getEditItemPos();
-            mAdapter.notifyItemChanged(position);
+            mAdapter.notifyDataSetChanged();
+//            int position = mActionBarHandlerSingleton.getEditItemPos();
+//            mAdapter.notifyItemChanged(position);
             mActionBarHandlerSingleton.setEditItemPos(NOT_SELECTED_ITEM_POSITION);
             mActionBarHandlerSingleton.setTitle(null);
         } catch (Exception e) {
