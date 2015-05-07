@@ -44,7 +44,7 @@ import io.realm.RealmResults;
 public class BookmarkListFragment extends Fragment
 		implements View.OnClickListener,
 			SwipeDismissRecyclerViewTouchListener.DismissCallbacks,
-			RecyclerView.OnItemTouchListener, Filterable, SwipeRefreshLayout.OnRefreshListener {
+        Filterable, SwipeRefreshLayout.OnRefreshListener {
 	private static final String TAG = "LinksListFragment_TAG";
 	public static final String FRAG_TAG = "LinksListFragment";
 	private MainActivity mMainActivityRef;
@@ -156,9 +156,9 @@ public class BookmarkListFragment extends Fragment
 
     private void initRecyclerView() {
 		mLinkRecyclerViewAdapter =
-				new BookmarkRecyclerViewAdapter(mMainActivityRef);
+				new BookmarkRecyclerViewAdapter(mMainActivityRef, touchListener, mRecyclerView);
 
-		detector = new GestureDetectorCompat(mMainActivityRef, new RecyclerViewOnGestureListener()); //ONCLICK - ONLONGCLICK
+//		detector = new GestureDetectorCompat(mMainActivityRef, new RecyclerViewOnGestureListener()); //ONCLICK - ONLONGCLICK
 
 		linearLayoutManager = new LinearLayoutManager(mMainActivityRef);
 		emptyLinkListView.findViewById(R.id.importLocalBookmarksButtonId).setOnClickListener(this);
@@ -176,7 +176,7 @@ public class BookmarkListFragment extends Fragment
 		mRecyclerView.setOnTouchListener(touchListener);
 		mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
 		//set on item click listener
-		mRecyclerView.addOnItemTouchListener(this);
+//		mRecyclerView.addOnItemTouchListener(this);
 	}
 
 	@Override
@@ -387,7 +387,7 @@ public class BookmarkListFragment extends Fragment
 	}
 
 	//onclick listener
-	@Override
+/*	@Override
 	public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
 		detector.onTouchEvent(motionEvent);
 		return false;
@@ -396,7 +396,7 @@ public class BookmarkListFragment extends Fragment
 	@Override
 	public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
 	}
-
+*/
 	public void addLinkOnRecyclerViewWrapper(String url) {
         try {
             rvActionsSingleton.addBookmarkWithInfo(url);
@@ -522,7 +522,7 @@ public class BookmarkListFragment extends Fragment
         }
     }
 
-
+/*
 
     private class RecyclerViewOnGestureListener extends GestureDetector.SimpleOnGestureListener {
 
@@ -546,7 +546,7 @@ public class BookmarkListFragment extends Fragment
 			view.findViewById(R.id.linkLayoutId).setPressed(true);
 			return false;
 		}*/
-
+/*
 		@Override
 		public boolean onSingleTapConfirmed(MotionEvent e) {
 			View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
@@ -573,5 +573,5 @@ public class BookmarkListFragment extends Fragment
 			super.onLongPress(e);
 		}
 	}
-
+*/
 }

@@ -13,9 +13,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
+import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
+import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
@@ -27,10 +31,18 @@ import io.realm.RealmResults;
 public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends RealmRecyclerViewAdapter<Bookmark> {
     private final Activity mActivityRef;
     private final ActionBarHandlerSingleton mActionBarHandlerSingleton;
+    private final RecyclerViewCustom mRecyclerView;
+    private final RecyclerViewActionsSingleton mRvActionsSingleton;
     private boolean mSearchResult;
+    private View.OnTouchListener mTouchListener;
 
-    public BookmarkRecyclerViewAdapter(Activity activity) {
+    public BookmarkRecyclerViewAdapter(Activity activity,
+                                       SwipeDismissRecyclerViewTouchListener touchListener,
+                                       RecyclerViewCustom recyclerView) {
         mActivityRef = activity;
+        mTouchListener = touchListener;
+        mRecyclerView = recyclerView;
+        mRvActionsSingleton = RecyclerViewActionsSingleton.getInstance(mActivityRef);
         mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
     }
 
@@ -69,7 +81,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends RealmRec
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder rvh, int position) {
-        ViewHolder holder = (ViewHolder) rvh;
+        final ViewHolder holder = (ViewHolder) rvh;
         Bookmark bookmark = (Bookmark) getItem(position);
 
         String linkName = Bookmark.Utils.getBookmarkNameWrapper(bookmark.getName());
@@ -86,6 +98,35 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends RealmRec
                 .getResources().getColor(R.color.white));
 
         setItemSelected(holder, bookmark, position, isSelectedItem);
+        holder.itemView.setOnClickListener(isSelectedItem ? null : new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = mRecyclerView.getChildPosition(v);
+
+                Bookmark bookmark = (Bookmark) ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter()).getItem(position);
+                mRvActionsSingleton.openLinkOnBrowser(bookmark.getUrl());
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(isSelectedItem ? null : new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                int position = mRecyclerView.getChildPosition(v);
+                BookmarkRecyclerViewAdapter.ViewHolder holder =
+                        (BookmarkRecyclerViewAdapter.ViewHolder) mRecyclerView.
+                                findViewHolderForPosition(position);
+                holder.itemView.setSelected(true);
+                mActionBarHandlerSingleton.setEditItemPos(position);
+
+                // handle long press
+                mRvActionsSingleton.selectBookmarkEditMenu(position);
+                return true;
+            }
+        });
+
+        holder.mMainView.setOnTouchListener(isSelectedItem ? null : mTouchListener);
+
     }
 
     private void setItemSelected(ViewHolder holder, Bookmark bookmark,

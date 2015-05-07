@@ -119,7 +119,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
         //set on item click - swipe listener
         mRecyclerView.setOnTouchListener(mTouchListener);
-        mRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
+//        mRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
         animateButton(false);
     }
 
@@ -133,16 +133,16 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         mActionBarHandlerSingleton.setTitle("Edit link");
         mActionBarHandlerSingleton.toggleActionBar(true, true, true, R.id.infoOuterButtonId);
 
-        BookmarkRecyclerViewAdapter.ViewHolder holder =
-                (BookmarkRecyclerViewAdapter.ViewHolder) mRecyclerView.
-                        findViewHolderForPosition(position);
+//        BookmarkRecyclerViewAdapter.ViewHolder holder =
+//                (BookmarkRecyclerViewAdapter.ViewHolder) mRecyclerView.
+//                        findViewHolderForPosition(position);
         //position isnt stored //TODO
-        holder.itemView.setPressed(false);
+//        holder.itemView.setPressed(false);
         mAdapter.notifyItemChanged(position); //to change background color on view
         mActivityRef.invalidateOptionsMenu();
 
         mRecyclerView.setOnTouchListener(null);
-        mRecyclerView.removeOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
+//        mRecyclerView.removeOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
         animateButton(true);
     }
     

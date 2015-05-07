@@ -15,6 +15,7 @@ import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChang
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 import com.flurry.android.FlurryAgent;
 import icepick.Icepick;
+import icepick.Icicle;
 
 import static com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton.NOT_SELECTED_ITEM_POSITION;
 
@@ -24,6 +25,8 @@ public class MainActivity extends ActionBarActivity
     private String TAG = "MainActivity";
     private String EXTRA_DATA = "EXTRA_DATA";
     private ActionBarHandlerSingleton mActionBarHandlerSingleton;
+    @Icicle
+    int mSelectedItemPosition;
 //    @Icicle String edit;
 
     @Override
@@ -33,6 +36,7 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
         mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(this);
         mActionBarHandlerSingleton.initActionBar();
+        mActionBarHandlerSingleton.setEditItemPos(mSelectedItemPosition);
         handleIntent(getIntent());
 
         FlurryAgent.setLogEnabled(true);
