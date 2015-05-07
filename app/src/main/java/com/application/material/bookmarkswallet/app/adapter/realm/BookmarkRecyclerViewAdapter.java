@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,10 @@ import io.realm.RealmResults;
 /**
  * Created by davide on 21/04/15.
  */
-public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends RealmRecyclerViewAdapter<Bookmark> {
+public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
+        RealmRecyclerViewAdapter<Bookmark> implements
+        View.OnClickListener, View.OnLongClickListener,
+        SwipeDismissRecyclerViewTouchListener.DismissCallbacks {
     private final Activity mActivityRef;
     private final ActionBarHandlerSingleton mActionBarHandlerSingleton;
     private final RecyclerViewCustom mRecyclerView;
@@ -37,14 +41,14 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends RealmRec
     private View.OnTouchListener mTouchListener;
 
     public BookmarkRecyclerViewAdapter(Activity activity,
-                                       SwipeDismissRecyclerViewTouchListener touchListener,
                                        RecyclerViewCustom recyclerView) {
         mActivityRef = activity;
-        mTouchListener = touchListener;
         mRecyclerView = recyclerView;
         mRvActionsSingleton = RecyclerViewActionsSingleton.getInstance(mActivityRef);
         mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
+        mTouchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this, this); //LISTENER TO SWIPE
     }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView mEditUrlLabelView;
@@ -67,7 +71,6 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends RealmRec
             mLabelView = (TextView) v.findViewById(R.id.linkTitleId);
             mUrlView = (TextView) v.findViewById(R.id.linkUrlId);
             mTimestampView = (TextView) v.findViewById(R.id.linkTimestampId);
-//            mEditUrlView = (TextView) v.findViewById(R.id.editLinkUrlId);
             mEditUrlLabelView = (TextView) v.findViewById(R.id.editUrlLabelId);
             mEditLabelView = (EditText) v.findViewById(R.id.editLinkTitleId);
         }
@@ -98,35 +101,51 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends RealmRec
                 .getResources().getColor(R.color.white));
 
         setItemSelected(holder, bookmark, position, isSelectedItem);
-        holder.itemView.setOnClickListener(isSelectedItem ? null : new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = mRecyclerView.getChildPosition(v);
+        holder.itemView.setOnClickListener(isSelectedItem ? null : this);
+        holder.itemView.setOnLongClickListener(isSelectedItem ? null : this);
+        holder.itemView.setOnTouchListener(isSelectedItem ? null : mTouchListener);
+    }
 
-                Bookmark bookmark = (Bookmark) ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter()).getItem(position);
-                mRvActionsSingleton.openLinkOnBrowser(bookmark.getUrl());
-            }
-        });
+    @Override
+    public int getItemCount() {
+        return getRealmBaseAdapter() == null ? 0 : getRealmBaseAdapter().getCount();
+    }
 
-        holder.itemView.setOnLongClickListener(isSelectedItem ? null : new View.OnLongClickListener() {
+    @Override
+    public void onClick(View v) {
+        Log.e("TAG", "click");
+        int position = mRecyclerView.getChildPosition(v);
 
-            @Override
-            public boolean onLongClick(View v) {
-                int position = mRecyclerView.getChildPosition(v);
-                BookmarkRecyclerViewAdapter.ViewHolder holder =
-                        (BookmarkRecyclerViewAdapter.ViewHolder) mRecyclerView.
-                                findViewHolderForPosition(position);
-                holder.itemView.setSelected(true);
-                mActionBarHandlerSingleton.setEditItemPos(position);
+        Bookmark bookmark = (Bookmark) ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter()).getItem(position);
+        mRvActionsSingleton.openLinkOnBrowser(bookmark.getUrl());
+    }
 
-                // handle long press
-                mRvActionsSingleton.selectBookmarkEditMenu(position);
-                return true;
-            }
-        });
+    @Override
+    public boolean onLongClick(View v) {
+        Log.e("TAG", "long click");
+        int position = mRecyclerView.getChildPosition(v);
+        BookmarkRecyclerViewAdapter.ViewHolder holder =
+                (BookmarkRecyclerViewAdapter.ViewHolder) mRecyclerView.
+                        findViewHolderForPosition(position);
+        holder.itemView.setSelected(true);
+        mActionBarHandlerSingleton.setEditItemPos(position);
 
-        holder.mMainView.setOnTouchListener(isSelectedItem ? null : mTouchListener);
+        // handle long press
+        mRvActionsSingleton.selectBookmarkEditMenu(position);
+        return true;
+    }
 
+    //SWIPE ACTION
+    @Override
+    public boolean canDismiss(int position) {
+        return true;
+    }
+
+    @Override
+    public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
+        Log.e("TAG", reverseSortedPositions + "removing action");
+        mRvActionsSingleton.onSwipeAction(reverseSortedPositions);
+//		setUndoDeletedLinkLayout(true);
     }
 
     private void setItemSelected(ViewHolder holder, Bookmark bookmark,
@@ -155,11 +174,6 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends RealmRec
                 ! isSelectedItem) {
             iconView.setImageBitmap(bitmapIcon);
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return getRealmBaseAdapter() == null ? 0 : getRealmBaseAdapter().getCount();
     }
 
     public boolean isSearchResult() {

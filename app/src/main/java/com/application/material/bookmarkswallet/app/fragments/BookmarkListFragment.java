@@ -43,7 +43,6 @@ import io.realm.RealmResults;
 
 public class BookmarkListFragment extends Fragment
 		implements View.OnClickListener,
-			SwipeDismissRecyclerViewTouchListener.DismissCallbacks,
         Filterable, SwipeRefreshLayout.OnRefreshListener {
 	private static final String TAG = "LinksListFragment_TAG";
 	public static final String FRAG_TAG = "LinksListFragment";
@@ -64,18 +63,22 @@ public class BookmarkListFragment extends Fragment
 	View undoButton;
 	@InjectView(R.id.dismissButtonId)
 	View dismissButton;
-	private View emptyLinkListView;
+    @InjectView(R.id.emptyLinkListViewId)
+	View emptyLinkListView;
+    @InjectView(R.id.emptySearchResultLayoutId)
+    View mEmptySearchResultView;
+    @InjectView(R.id.mainContainerViewId)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
 	private LinearLayoutManager linearLayoutManager;
 	private RealmResults<Bookmark> mItems;
-	private SwipeDismissRecyclerViewTouchListener touchListener;
+//	private SwipeDismissRecyclerViewTouchListener touchListener;
 	private GestureDetectorCompat detector;
 	private View mLinkListView;
 	private ActionBarHandlerSingleton mActionBarHandlerSingleton;
 	private RecyclerViewActionsSingleton rvActionsSingleton;
 	private ExportBookmarkSingleton exportBookmarksSingleton;
     private BookmarkRecyclerViewAdapter mLinkRecyclerViewAdapter;
-    private View mEmptySearchResultView;
-    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 //    private android.support.v7.widget.ShareActionProvider mShareActionProvider;
     private static Realm mRealm;
     private ClipboardSingleton mClipboardSingleton;
@@ -109,8 +112,6 @@ public class BookmarkListFragment extends Fragment
 				container, false);
 		ButterKnife.inject(this, mLinkListView);
 
-		emptyLinkListView = mLinkListView.findViewById(R.id.emptyLinkListViewId);
-        mEmptySearchResultView = mLinkListView.findViewById(R.id.emptySearchResultLayoutId);
 		setHasOptionsMenu(true);
 		onInitView();
 
@@ -122,8 +123,6 @@ public class BookmarkListFragment extends Fragment
 	}
 
 	private void onInitView() {
-//		View actionbarInfoView = mLinkListView.findViewById(R.id.actionbarInfoLayoutId);
-		mSwipeRefreshLayout = (CustomSwipeRefreshLayout) mLinkListView.findViewById(R.id.mainContainerViewId);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_light,
@@ -134,9 +133,10 @@ public class BookmarkListFragment extends Fragment
         mActionBarHandlerSingleton.setTitle(null);
         mActionBarHandlerSingleton.setDisplayHomeEnabled(false);
 
-        touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this); //LISTENER TO SWIPE
+        View.OnClickListener longClickListener = (View.OnClickListener) mRecyclerView.getAdapter();
+//        touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, longClickListener, this); //LISTENER TO SWIPE
         rvActionsSingleton = RecyclerViewActionsSingleton.
-                getInstance(mSwipeRefreshLayout, mRecyclerView, mMainActivityRef, this, touchListener);
+                getInstance(mSwipeRefreshLayout, mRecyclerView, mMainActivityRef, this);
 
         mItems = rvActionsSingleton.getBookmarksList();
 
@@ -156,7 +156,7 @@ public class BookmarkListFragment extends Fragment
 
     private void initRecyclerView() {
 		mLinkRecyclerViewAdapter =
-				new BookmarkRecyclerViewAdapter(mMainActivityRef, touchListener, mRecyclerView);
+				new BookmarkRecyclerViewAdapter(mMainActivityRef, mRecyclerView);
 
 //		detector = new GestureDetectorCompat(mMainActivityRef, new RecyclerViewOnGestureListener()); //ONCLICK - ONLONGCLICK
 
@@ -173,8 +173,8 @@ public class BookmarkListFragment extends Fragment
 		mRecyclerView.setAdapter(mLinkRecyclerViewAdapter);
 		mRecyclerView.setItemAnimator(null);
 		//set SWIPE
-		mRecyclerView.setOnTouchListener(touchListener);
-		mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
+//		mRecyclerView.setOnTouchListener(touchListener);
+//		mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
 		//set on item click listener
 //		mRecyclerView.addOnItemTouchListener(this);
 	}
@@ -373,18 +373,6 @@ public class BookmarkListFragment extends Fragment
 		}
 	}
 
-	//SWIPE ACTION
-	@Override
-	public boolean canDismiss(int position) {
-		return true;
-	}
-
-	@Override
-	public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
-		Log.e(TAG, reverseSortedPositions + "removing action");
-        rvActionsSingleton.onSwipeAction(reverseSortedPositions);
-//		setUndoDeletedLinkLayout(true);
-	}
 
 	//onclick listener
 /*	@Override

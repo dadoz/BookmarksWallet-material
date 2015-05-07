@@ -36,7 +36,7 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
         mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(this);
         mActionBarHandlerSingleton.initActionBar();
-        mActionBarHandlerSingleton.setEditItemPos(mSelectedItemPosition);
+//        mActionBarHandlerSingleton.setEditItemPos(mSelectedItemPosition);
         handleIntent(getIntent());
 
         FlurryAgent.setLogEnabled(true);

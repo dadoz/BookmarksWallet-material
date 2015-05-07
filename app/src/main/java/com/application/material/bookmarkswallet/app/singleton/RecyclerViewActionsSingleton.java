@@ -52,7 +52,6 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     private static Fragment mFragmentRef;
 //    private static View mEditUrlView;
     private static BookmarkRecyclerViewAdapter mAdapter;
-    private static SwipeDismissRecyclerViewTouchListener mTouchListener;
     private static SwipeRefreshLayout mSwipeRefreshLayout;
     private AlertDialog mEditDialog;
     private static Realm mRealm;
@@ -64,9 +63,8 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
     public static RecyclerViewActionsSingleton getInstance(SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView,
                                                            Activity activityRef,
-                                                           Fragment listenerRef,
-                                                           SwipeDismissRecyclerViewTouchListener touchListener) {
-        initReferences(swipeRefreshLayout, recyclerView, activityRef, listenerRef, touchListener);
+                                                           Fragment listenerRef) {
+        initReferences(swipeRefreshLayout, recyclerView, activityRef, listenerRef);
         if(mInstance == null) {
             mInstance = new RecyclerViewActionsSingleton();
         }
@@ -82,14 +80,13 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     }
 
     public static void initReferences(SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView,
-                                      Activity activityRef, Fragment listenerRef,
-                                      SwipeDismissRecyclerViewTouchListener touchListener) {
+                                      Activity activityRef, Fragment listenerRef) {
         mSwipeRefreshLayout = swipeRefreshLayout;
         mRecyclerView = recyclerView;
         mActivityRef = activityRef;
         mListenerRef = listenerRef;
         mFragmentRef = listenerRef;
-        mTouchListener = touchListener;
+//        mTouchListener = touchListener;
         mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
 //        mEditUrlView = mActivityRef.getLayoutInflater().
 //                inflate(R.layout.dialog_edit_url_layout, null);
@@ -119,7 +116,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         mActivityRef.invalidateOptionsMenu();
 
         //set on item click - swipe listener
-        mRecyclerView.setOnTouchListener(mTouchListener);
+//        mRecyclerView.setOnTouchListener(mTouchListener);
 //        mRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
         animateButton(false);
     }

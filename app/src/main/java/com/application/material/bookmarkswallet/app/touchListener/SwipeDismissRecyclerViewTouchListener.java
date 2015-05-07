@@ -78,6 +78,8 @@ import java.util.List;
  * @see
  */
 public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListener {
+    private final View.OnLongClickListener mLongClickListener;
+    private final View.OnClickListener mClickListener;
     // Cached ViewConfiguration and system-wide constant values
     private int mSlop;
     private int mMinFlingVelocity;
@@ -129,7 +131,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      * @param callbacks The callback to trigger when the user has indicated that she would like to
      *                  dismiss one or more list items.
      */
-    public SwipeDismissRecyclerViewTouchListener(RecyclerView recyclerView, DismissCallbacks callbacks) {
+    public SwipeDismissRecyclerViewTouchListener(RecyclerView recyclerView, View.OnClickListener listener, DismissCallbacks callbacks) {
         ViewConfiguration vc = ViewConfiguration.get(recyclerView.getContext());
         mSlop = vc.getScaledTouchSlop();
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * 16;
@@ -138,6 +140,8 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                 android.R.integer.config_shortAnimTime);
         mRecyclerView = recyclerView;
         mCallbacks = callbacks;
+        mLongClickListener = (View.OnLongClickListener) listener;
+        mClickListener = listener;
     }
 
     /**
@@ -176,6 +180,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
         if (mViewWidth < 2) {
             mViewWidth = mRecyclerView.getWidth();
         }
+        Log.e("TAG", "action onTouchListener " + motionEvent.getActionMasked());
 
         switch (motionEvent.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
@@ -213,6 +218,11 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                         mDownView = null;
                     }
                 }
+                if(mDownView != null) {
+                    mDownView.setOnLongClickListener(mLongClickListener);
+                    mDownView.setOnClickListener(mClickListener);
+                }
+
                 return false;
             }
 
@@ -240,9 +250,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             }
 
             case MotionEvent.ACTION_UP: {
-                if(mDownView != null) {
-                    mDownView.findViewById(R.id.linkLayoutId).setPressed(false);
-                }
                 if (mVelocityTracker == null) {
                     break;
                 }
@@ -307,6 +314,11 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                 float deltaY = motionEvent.getRawY() - mDownY;
                 if (Math.abs(deltaX) > mSlop && Math.abs(deltaY) < Math.abs(deltaX) / 2) {
                     mSwiping = true;
+                    if(mDownView != null) {
+                        mDownView.setOnLongClickListener(null);
+                        mDownView.setOnClickListener(null);
+                        Log.e("TAG", "rm long click listener");
+                    }
                     mSwipingSlop = (deltaX > 0 ? mSlop : -mSlop);
                     mRecyclerView.requestDisallowInterceptTouchEvent(true);
 
