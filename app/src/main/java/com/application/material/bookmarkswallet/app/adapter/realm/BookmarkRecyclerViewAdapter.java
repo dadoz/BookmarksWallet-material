@@ -101,9 +101,6 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
                 .getResources().getColor(R.color.white));
 
         setItemSelected(holder, bookmark, position, isSelectedItem);
-        holder.itemView.setOnClickListener(isSelectedItem ? null : this);
-        holder.itemView.setOnLongClickListener(isSelectedItem ? null : this);
-        holder.itemView.setOnTouchListener(isSelectedItem ? null : mTouchListener);
     }
 
     @Override
@@ -151,6 +148,12 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
     private void setItemSelected(ViewHolder holder, Bookmark bookmark,
                                  int position, boolean isSelectedItem) {
         Resources resources = mActivityRef.getResources();
+
+        holder.itemView.setEnabled(! isSelectedItem);
+        holder.itemView.setOnClickListener(isSelectedItem ? null : this);
+        holder.itemView.setOnLongClickListener(isSelectedItem ? null : this);
+        holder.itemView.setOnTouchListener(isSelectedItem ? null : mTouchListener);
+
         if(position == mActionBarHandlerSingleton.getEditItemPos() &&
                 isSelectedItem) {
             setIcon(holder.mIconView, bookmark, isSelectedItem);
@@ -159,7 +162,6 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
             holder.itemView.setBackgroundColor(resources
                     .getColor(R.color.material_blue_grey_900));
         }
-
     }
 
     private void setIcon(ImageView iconView, Bookmark bookmark, boolean isSelectedItem) {

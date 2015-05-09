@@ -141,10 +141,10 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
 //            setTitle(title);
 //            boolean isHomeUpEnabled = title != null;
             setDisplayHomeEnabled(isHomeUpEnabled);
-            getActionBar().setBackgroundDrawable(mActivtyRef.getResources().
-                    getDrawable(isChangeColor ?
-                            R.color.material_blue_grey :
-                            R.color.material_mustard_yellow));
+//            getActionBar().setBackgroundDrawable(mActivtyRef.getResources().
+//                    getDrawable(isChangeColor ?
+//                            R.color.material_blue_grey :
+//                            R.color.material_mustard_yellow));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -3,11 +3,8 @@ package com.application.material.bookmarkswallet.app.singleton;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.Browser;
@@ -16,7 +13,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
@@ -24,7 +20,6 @@ import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecycl
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -103,21 +98,11 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
      * TODO refactor name
      */
     public void undoEditBookmark() {
-        try {
-            updateAdapterRef();
-            mAdapter.notifyDataSetChanged();
-//            int position = mActionBarHandlerSingleton.getEditItemPos();
-//            mAdapter.notifyItemChanged(position);
-            mActionBarHandlerSingleton.setEditItemPos(NOT_SELECTED_ITEM_POSITION);
-            mActionBarHandlerSingleton.setTitle(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        updateAdapterRef();
+        mAdapter.notifyDataSetChanged();
+        mActionBarHandlerSingleton.setEditItemPos(NOT_SELECTED_ITEM_POSITION);
+        mActionBarHandlerSingleton.setTitle(null);
         mActivityRef.invalidateOptionsMenu();
-
-        //set on item click - swipe listener
-//        mRecyclerView.setOnTouchListener(mTouchListener);
-//        mRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
         animateButton(false);
     }
 
@@ -126,21 +111,13 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
      * @param position
      */
     public void selectBookmarkEditMenu(int position) {
-        mAdapter = getAdapter();
+        updateAdapterRef();
         mActionBarHandlerSingleton.setEditItemPos(position);
         mActionBarHandlerSingleton.setTitle("Edit link");
         mActionBarHandlerSingleton.toggleActionBar(true, true, true, R.id.infoOuterButtonId);
 
-//        BookmarkRecyclerViewAdapter.ViewHolder holder =
-//                (BookmarkRecyclerViewAdapter.ViewHolder) mRecyclerView.
-//                        findViewHolderForPosition(position);
-        //position isnt stored //TODO
-//        holder.itemView.setPressed(false);
-        mAdapter.notifyItemChanged(position); //to change background color on view
+        mAdapter.notifyDataSetChanged();
         mActivityRef.invalidateOptionsMenu();
-
-        mRecyclerView.setOnTouchListener(null);
-//        mRecyclerView.removeOnItemTouchListener((RecyclerView.OnItemTouchListener) mListenerRef);
         animateButton(true);
     }
     

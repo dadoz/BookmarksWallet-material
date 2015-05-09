@@ -180,7 +180,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
         if (mViewWidth < 2) {
             mViewWidth = mRecyclerView.getWidth();
         }
-        Log.e("TAG", "action onTouchListener " + motionEvent.getActionMasked());
 
         switch (motionEvent.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
