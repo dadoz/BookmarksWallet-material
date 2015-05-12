@@ -6,15 +6,14 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
@@ -51,28 +50,32 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView mEditUrlLabelView;
-        private final EditText mEditLabelView;
-        private final View mEditLinkView;
+        private final TextView mUrlOpenedView;
+        private ImageView mMoreInfoClosedIconView;
+        private final ViewFlipper mLinkIconFlipperView;
+        private final View mMoreInfoClosedView;
         private ImageView mIconView;
         private TextView mLabelView;
         private TextView mTimestampView;
         private TextView mUrlView;
-        private View mMainView;
-        private String editNameTemp;
-        private String editUrlTemp;
         private String TAG = "Holder";
+        public ImageView mIconOpenedView;
 
         public ViewHolder(View v) {
             super(v);
-            mMainView = v.findViewById(R.id.linkLayoutId);
-            mEditLinkView = v.findViewById(R.id.editLinkLayoutId);
+//            mMainView = v.findViewById(R.id.linkLayoutId);
+//            mEditLinkView = v.findViewById(R.id.editLinkLayoutId);
             mIconView = (ImageView) v.findViewById(R.id.linkIconId);
+            mIconOpenedView = (ImageView) v.findViewById(R.id.linkIconOpenedView);
+            mLinkIconFlipperView = (ViewFlipper) v.findViewById(R.id.linkIconFlipperIconId);
             mLabelView = (TextView) v.findViewById(R.id.linkTitleId);
             mUrlView = (TextView) v.findViewById(R.id.linkUrlId);
             mTimestampView = (TextView) v.findViewById(R.id.linkTimestampId);
-            mEditUrlLabelView = (TextView) v.findViewById(R.id.editUrlLabelId);
-            mEditLabelView = (EditText) v.findViewById(R.id.editLinkTitleId);
+//            mEditUrlLabelView = (TextView) v.findViewById(R.id.editUrlLabelId);
+//            mEditLabelView = (EditText) v.findViewById(R.id.editLinkTitleId);
+            mUrlOpenedView = (TextView) v.findViewById(R.id.linkUrlOpenedId);
+            mMoreInfoClosedView = v.findViewById(R.id.moreInfoClosedContainerId);
+            mMoreInfoClosedIconView = (ImageView) v.findViewById(R.id.moreInfoClosedIconId);
         }
     }
 
@@ -85,21 +88,38 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder rvh, int position) {
         final ViewHolder holder = (ViewHolder) rvh;
-        Bookmark bookmark = (Bookmark) getItem(position);
+        final Bookmark bookmark = (Bookmark) getItem(position);
 
         String linkName = Bookmark.Utils.getBookmarkNameWrapper(bookmark.getName());
         holder.mLabelView.setText(linkName);
-        holder.mLabelView.setTextColor(mActivityRef
-                .getResources().getColor(R.color.material_blue_grey));
+        holder.mLabelView.setTextColor(mActivityRef.getResources().getColor(R.color.material_blue_grey));
+//        holder.mLabelView.setTextColor(mActivityRef
+//                .getResources().getColor(R.color.material_blue_grey));
         holder.mUrlView.setText(bookmark.getUrl());
         holder.mUrlView.setVisibility(View.VISIBLE);
+        holder.mUrlOpenedView.setText(bookmark.getUrl());
+        holder.mUrlOpenedView.setVisibility(View.GONE);
         holder.mTimestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark.getTimestamp()));
 
         boolean isSelectedItem = mActionBarHandlerSingleton.isEditMode();
-        setIcon(holder.mIconView, bookmark, false);
+        setIcon(holder.mIconView, null, false);
+        setIcon(holder.mIconOpenedView, bookmark, false);
         holder.itemView.setBackgroundColor(mActivityRef
                 .getResources().getColor(R.color.white));
 
+        //CHANGE COLOR on more icon
+        Drawable drawable = holder.mMoreInfoClosedIconView.getDrawable();
+        drawable.setColorFilter(mActivityRef.getResources().getColor(R.color.material_blue_grey), PorterDuff.Mode.SRC_IN);
+        holder.mMoreInfoClosedIconView.setImageDrawable(drawable);
+
+        if(holder.mLinkIconFlipperView.getTag() != null) {
+            holder.mLinkIconFlipperView.showPrevious();
+            holder.mLinkIconFlipperView.setTag(null);
+        }
+
+        holder.mMoreInfoClosedView.setVisibility(View.VISIBLE);
+        holder.mMoreInfoClosedView.setOnClickListener(new MoreInfoFlipperClickListener(holder));
+        holder.mUrlOpenedView.setOnClickListener(null);
         setItemSelected(holder, bookmark, position, isSelectedItem);
     }
 
@@ -160,21 +180,43 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
             holder.mLabelView.setTextColor(resources.
                     getColor(R.color.white));
             holder.itemView.setBackgroundColor(resources
-                    .getColor(R.color.material_blue_grey_900));
+                    .getColor(R.color.material_blue_grey));
         }
     }
 
     private void setIcon(ImageView iconView, Bookmark bookmark, boolean isSelectedItem) {
+        Drawable res = mActivityRef
+                .getResources()
+                .getDrawable(isSelectedItem ?
+                        R.drawable.ic_bookmark_white_48dp :
+                        R.drawable.ic_bookmark_outline_black_48dp);
+        res.setColorFilter(mActivityRef.getResources().getColor(R.color.material_blue_grey), PorterDuff.Mode.SRC_IN);
+        iconView.setImageDrawable(res);
+
+        if(bookmark != null) {
+            Bitmap bitmapIcon = Bookmark.Utils.getIconBitmap(bookmark.getBlobIcon());
+
+            if(bitmapIcon != null &&
+                    ! isSelectedItem) {
+                iconView.setImageBitmap(bitmapIcon);
+            }
+        }
+    }
+
+    private void setIconAnimated(ImageView iconView, Bookmark bookmark, boolean isSelectedItem) {
         iconView.setImageDrawable(mActivityRef
                 .getResources()
                 .getDrawable(isSelectedItem ?
                         R.drawable.ic_bookmark_white_48dp :
                         R.drawable.ic_bookmark_outline_black_48dp));
-        Bitmap bitmapIcon = Bookmark.Utils.getIconBitmap(bookmark.getBlobIcon());
 
-        if(bitmapIcon != null &&
-                ! isSelectedItem) {
-            iconView.setImageBitmap(bitmapIcon);
+        if(bookmark != null) {
+            Bitmap bitmapIcon = Bookmark.Utils.getIconBitmap(bookmark.getBlobIcon());
+
+            if(bitmapIcon != null &&
+                    ! isSelectedItem) {
+                iconView.setImageBitmap(bitmapIcon);
+            }
         }
     }
 
@@ -186,4 +228,25 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         this.mSearchResult = mSearchResult;
     }
 
+    public static class MoreInfoFlipperClickListener implements View.OnClickListener {
+
+        private final ViewHolder mHolder;
+
+        public MoreInfoFlipperClickListener(ViewHolder hld) {
+            mHolder = hld;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Log.e("TAG", "hey click more info");
+            mHolder.mLinkIconFlipperView.setFlipInterval(500);
+            mHolder.mLinkIconFlipperView.showNext();
+            mHolder.mLinkIconFlipperView.setTag("FLIPPED");
+
+            mHolder.mUrlOpenedView.setVisibility(View.VISIBLE);
+            mHolder.mMoreInfoClosedView.setVisibility(View.GONE);
+            mHolder.mUrlView.setVisibility(View.INVISIBLE);
+
+        }
+    }
 }
