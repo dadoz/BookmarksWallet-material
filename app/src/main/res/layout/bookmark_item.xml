@@ -28,8 +28,8 @@
                         android:id="@+id/linkIconId"
                         android:layout_gravity="center"
                         android:contentDescription="link_icon_id"
-                        android:layout_width="@dimen/icon_size"
-                        android:layout_height="@dimen/icon_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/medium_padding"
@@ -117,13 +117,13 @@
                 android:layout_height="wrap_content"
                 android:minHeight="60dip"
                 android:gravity="center_vertical"
-                android:background="@color/material_blue_grey"
+                android:background="@color/material_mustard_yellow"
                 android:layout_alignParentLeft="true"
                 android:text="http://www.google.it"
                 android:textSize="@dimen/text_size_14"
                 android:ellipsize="end"
                 android:maxLines="10"
-                android:textColor="@color/material_mustard_yellow"/>
+                android:textColor="@color/material_blue_grey"/>
 
 
     </LinearLayout>

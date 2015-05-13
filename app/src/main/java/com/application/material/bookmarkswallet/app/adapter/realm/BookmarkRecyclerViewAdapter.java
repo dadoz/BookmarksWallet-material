@@ -5,9 +5,11 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +26,6 @@ import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-
 /**
  * Created by davide on 21/04/15.
  */
@@ -112,10 +113,10 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         drawable.setColorFilter(mActivityRef.getResources().getColor(R.color.material_blue_grey), PorterDuff.Mode.SRC_IN);
         holder.mMoreInfoClosedIconView.setImageDrawable(drawable);
 
-        if(holder.mLinkIconFlipperView.getTag() != null) {
-            holder.mLinkIconFlipperView.showPrevious();
-            holder.mLinkIconFlipperView.setTag(null);
-        }
+
+        holder.mLinkIconFlipperView.setInAnimation(mActivityRef, R.anim.card_flip_left_in);
+        holder.mLinkIconFlipperView.setOutAnimation(mActivityRef, R.anim.card_flip_left_out);
+        holder.mLinkIconFlipperView.setDisplayedChild(0);
 
         holder.mMoreInfoClosedView.setVisibility(View.VISIBLE);
         holder.mMoreInfoClosedView.setOnClickListener(new MoreInfoFlipperClickListener(holder));
@@ -190,7 +191,12 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
                 .getDrawable(isSelectedItem ?
                         R.drawable.ic_bookmark_white_48dp :
                         R.drawable.ic_bookmark_outline_black_48dp);
-        res.setColorFilter(mActivityRef.getResources().getColor(R.color.material_blue_grey), PorterDuff.Mode.SRC_IN);
+        if(! isSelectedItem) {
+            res.setColorFilter(mActivityRef.getResources().getColor(R.color.material_blue_grey), PorterDuff.Mode.SRC_IN);
+        }
+
+        int iconSize = (int) mActivityRef.getResources().getDimension(R.dimen.icon_size);
+        res.setBounds(0, 0, iconSize, iconSize);
         iconView.setImageDrawable(res);
 
         if(bookmark != null) {
@@ -198,7 +204,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 
             if(bitmapIcon != null &&
                     ! isSelectedItem) {
-                iconView.setImageBitmap(bitmapIcon);
+                iconView.setImageBitmap(Bitmap.createScaledBitmap(bitmapIcon, 20, 20, false));
             }
         }
     }
@@ -238,15 +244,27 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 
         @Override
         public void onClick(View v) {
-            Log.e("TAG", "hey click more info");
             mHolder.mLinkIconFlipperView.setFlipInterval(500);
-            mHolder.mLinkIconFlipperView.showNext();
-            mHolder.mLinkIconFlipperView.setTag("FLIPPED");
+            toggleView(true);
 
-            mHolder.mUrlOpenedView.setVisibility(View.VISIBLE);
-            mHolder.mMoreInfoClosedView.setVisibility(View.GONE);
-            mHolder.mUrlView.setVisibility(View.INVISIBLE);
+            Handler flipOutHandler = new Handler();
+            flipOutHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toggleView(false);
+                }
+            }, 3000);
+        }
 
+        public void toggleView(boolean isToggling) {
+            if(isToggling) {
+                mHolder.mLinkIconFlipperView.showNext();
+                mHolder.mUrlOpenedView.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            mHolder.mLinkIconFlipperView.setDisplayedChild(0);
+            mHolder.mUrlOpenedView.setVisibility(View.GONE);
         }
     }
 }
