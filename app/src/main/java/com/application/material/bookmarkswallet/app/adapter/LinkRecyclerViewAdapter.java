@@ -108,11 +108,11 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         return mDataset == null ? 0 : mDataset.size();
     }
 
-    public void updateDataset() {
-        mDataset = mRealm.where(Bookmark.class).findAll();
-        mDataset.sort("timestamp", false);
-        notifyDataSetChanged();
-    }
+//    public void updateDataset() {
+//        mDataset = mRealm.where(Bookmark.class).findAll();
+//        mDataset.sort("timestamp", false);
+//        notifyDataSetChanged();
+//    }
 
 //    public void add(Bookmark item) {
 //        mDataset.add(0, item);

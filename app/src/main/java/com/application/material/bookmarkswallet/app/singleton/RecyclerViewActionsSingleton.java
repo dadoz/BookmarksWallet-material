@@ -113,7 +113,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     public void selectBookmarkEditMenu(int position) {
         updateAdapterRef();
         mActionBarHandlerSingleton.setEditItemPos(position);
-        mActionBarHandlerSingleton.setTitle("Edit link");
+        mActionBarHandlerSingleton.setTitle("1");
         mActionBarHandlerSingleton.toggleActionBar(true, true, true, R.id.infoOuterButtonId);
 
         mAdapter.notifyDataSetChanged();

@@ -22,5 +22,5 @@
     <dimen name="export_bookmarks_framelayout_height">180dip</dimen>
     <dimen name="text_size_18">18sp</dimen>
     <dimen name="actionbar_infoaction_height">50dp</dimen>
-    <dimen name="fab_size_micro">25dip</dimen>
+    <dimen name="text_size_16">16sp</dimen>
 </resources>

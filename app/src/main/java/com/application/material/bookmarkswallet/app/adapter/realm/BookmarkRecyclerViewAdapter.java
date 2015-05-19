@@ -10,7 +10,8 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.*;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
     private final RecyclerViewActionsSingleton mRvActionsSingleton;
     private boolean mSearchResult;
     private View.OnTouchListener mTouchListener;
+    private Drawable colorFilter;
 
     public BookmarkRecyclerViewAdapter(Activity activity,
                                        RecyclerViewCustom recyclerView) {
@@ -47,6 +49,14 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         mRvActionsSingleton = RecyclerViewActionsSingleton.getInstance(mActivityRef);
         mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
         mTouchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this, this); //LISTENER TO SWIPE
+    }
+
+    private void setColorFilter(Drawable drawable, int color) {
+        drawable.setColorFilter(mActivityRef.getResources().getColor(R.color.material_violet_500), PorterDuff.Mode.SRC_IN);
+    }
+
+    public Drawable getColorFilter() {
+        return colorFilter;
     }
 
 
@@ -67,7 +77,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 //            mMainView = v.findViewById(R.id.linkLayoutId);
 //            mEditLinkView = v.findViewById(R.id.editLinkLayoutId);
             mIconView = (ImageView) v.findViewById(R.id.linkIconId);
-            mIconOpenedView = (ImageView) v.findViewById(R.id.linkIconOpenedView);
+            mIconOpenedView = (ImageView) v.findViewById(R.id.linkIconOpenedIconId);
             mLinkIconFlipperView = (ViewFlipper) v.findViewById(R.id.linkIconFlipperIconId);
             mLabelView = (TextView) v.findViewById(R.id.linkTitleId);
             mUrlView = (TextView) v.findViewById(R.id.linkUrlId);
@@ -93,9 +103,9 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 
         String linkName = Bookmark.Utils.getBookmarkNameWrapper(bookmark.getName());
         holder.mLabelView.setText(linkName);
-        holder.mLabelView.setTextColor(mActivityRef.getResources().getColor(R.color.material_blue_grey));
+        holder.mLabelView.setTextColor(mActivityRef.getResources().getColor(R.color.material_violet_500));
 //        holder.mLabelView.setTextColor(mActivityRef
-//                .getResources().getColor(R.color.material_blue_grey));
+//                .getResources().getColor(R.color.material_violet_500));
         holder.mUrlView.setText(bookmark.getUrl());
         holder.mUrlView.setVisibility(View.VISIBLE);
         holder.mUrlOpenedView.setText(bookmark.getUrl());
@@ -110,17 +120,17 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 
         //CHANGE COLOR on more icon
         Drawable drawable = holder.mMoreInfoClosedIconView.getDrawable();
-        drawable.setColorFilter(mActivityRef.getResources().getColor(R.color.material_blue_grey), PorterDuff.Mode.SRC_IN);
+        setColorFilter(drawable, R.color.material_violet_500);
         holder.mMoreInfoClosedIconView.setImageDrawable(drawable);
 
-
-        holder.mLinkIconFlipperView.setInAnimation(mActivityRef, R.anim.card_flip_left_in);
-        holder.mLinkIconFlipperView.setOutAnimation(mActivityRef, R.anim.card_flip_left_out);
+//        holder.mLinkIconFlipperView.setInAnimation(mActivityRef, R.anim.card_flip_left_in);
+//        holder.mLinkIconFlipperView.setOutAnimation(mActivityRef, R.anim.card_flip_left_out);
+        holder.mLinkIconFlipperView.setAnimateFirstView(false);
         holder.mLinkIconFlipperView.setDisplayedChild(0);
 
         holder.mMoreInfoClosedView.setVisibility(View.VISIBLE);
-        holder.mMoreInfoClosedView.setOnClickListener(new MoreInfoFlipperClickListener(holder));
-        holder.mUrlOpenedView.setOnClickListener(null);
+        holder.mMoreInfoClosedView.setOnClickListener(new MoreInfoFlipperClickListener(holder, this, position));
+//        holder.mUrlOpenedView.setOnClickListener(null);
         setItemSelected(holder, bookmark, position, isSelectedItem);
     }
 
@@ -178,10 +188,11 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         if(position == mActionBarHandlerSingleton.getEditItemPos() &&
                 isSelectedItem) {
             setIcon(holder.mIconView, bookmark, isSelectedItem);
-            holder.mLabelView.setTextColor(resources.
-                    getColor(R.color.white));
+//            holder.mLabelView.setTextColor(resources.
+//                    getColor(R.color.white));
             holder.itemView.setBackgroundColor(resources
-                    .getColor(R.color.material_blue_grey));
+                    .getColor(R.color.material_violet_50));
+            holder.mMoreInfoClosedView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -189,38 +200,21 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         Drawable res = mActivityRef
                 .getResources()
                 .getDrawable(isSelectedItem ?
-                        R.drawable.ic_bookmark_white_48dp :
+                        R.drawable.ic_bookmark_black_48dp :
                         R.drawable.ic_bookmark_outline_black_48dp);
-        if(! isSelectedItem) {
-            res.setColorFilter(mActivityRef.getResources().getColor(R.color.material_blue_grey), PorterDuff.Mode.SRC_IN);
-        }
-
-        int iconSize = (int) mActivityRef.getResources().getDimension(R.dimen.icon_size);
-        res.setBounds(0, 0, iconSize, iconSize);
+        res.setColorFilter(mActivityRef.getResources().getColor(R.color.material_violet_500), PorterDuff.Mode.SRC_IN);
         iconView.setImageDrawable(res);
 
         if(bookmark != null) {
             Bitmap bitmapIcon = Bookmark.Utils.getIconBitmap(bookmark.getBlobIcon());
-
             if(bitmapIcon != null &&
                     ! isSelectedItem) {
-                iconView.setImageBitmap(Bitmap.createScaledBitmap(bitmapIcon, 20, 20, false));
-            }
-        }
-    }
-
-    private void setIconAnimated(ImageView iconView, Bookmark bookmark, boolean isSelectedItem) {
-        iconView.setImageDrawable(mActivityRef
-                .getResources()
-                .getDrawable(isSelectedItem ?
-                        R.drawable.ic_bookmark_white_48dp :
-                        R.drawable.ic_bookmark_outline_black_48dp));
-
-        if(bookmark != null) {
-            Bitmap bitmapIcon = Bookmark.Utils.getIconBitmap(bookmark.getBlobIcon());
-
-            if(bitmapIcon != null &&
-                    ! isSelectedItem) {
+//                RelativeLayout.LayoutParams lp = new RelativeLayout
+//                        .LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+//                            LinearLayout.LayoutParams.WRAP_CONTENT);
+//                int padding = (int) mActivityRef.getResources().getDimension(R.dimen.medium_padding);
+//                lp.setMargins(padding, padding, padding, padding);
+//                iconView.setLayoutParams(lp);
                 iconView.setImageBitmap(bitmapIcon);
             }
         }
@@ -237,8 +231,12 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
     public static class MoreInfoFlipperClickListener implements View.OnClickListener {
 
         private final ViewHolder mHolder;
+        private final BookmarkRecyclerViewAdapter mAdapter;
+        private final int mPosition;
 
-        public MoreInfoFlipperClickListener(ViewHolder hld) {
+        public MoreInfoFlipperClickListener(ViewHolder hld, BookmarkRecyclerViewAdapter adapter, int position) {
+            mPosition = position;
+            mAdapter = adapter;
             mHolder = hld;
         }
 
@@ -257,14 +255,27 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         }
 
         public void toggleView(boolean isToggling) {
-            if(isToggling) {
-                mHolder.mLinkIconFlipperView.showNext();
+            if (isToggling) {
                 mHolder.mUrlOpenedView.setVisibility(View.VISIBLE);
+                mHolder.mLinkIconFlipperView.showNext();
                 return;
             }
-
-            mHolder.mLinkIconFlipperView.setDisplayedChild(0);
             mHolder.mUrlOpenedView.setVisibility(View.GONE);
+            mHolder.mLinkIconFlipperView.setDisplayedChild(0);
+
+//            if(isToggling) {
+//                mHolder.mLinkIconFlipperView.showNext();
+//                mHolder.mUrlOpenedView.setVisibility(View.VISIBLE);
+//                mHolder.mUrlView.setVisibility(View.INVISIBLE);
+//                mHolder.mMoreInfoClosedView.setVisibility(View.GONE);
+//                return;
+//            }
+//
+//            mHolder.mLinkIconFlipperView.setDisplayedChild(0);
+//            mHolder.mUrlOpenedView.setVisibility(View.GONE);
+//            mHolder.mMoreInfoClosedView.setVisibility(View.VISIBLE);
+//            mHolder.mUrlView.setVisibility(View.VISIBLE);
+
         }
     }
 }

@@ -26,18 +26,25 @@
 	<color name="material_grey_200">#eeeeee</color>
 	<!--<color name="material_mustard_yellow">#eae44e</color>-->
 	<!--<color name="material_mustard_yellow">#fe4365</color>-->
-	<color name="material_mustard_yellow">#D4EE5E</color>
+	<!--<color name="material_mustard_yellow">#CDDC39</color>-->
 	<!--<color name="material_mustard_yellow_600">#a8a212</color>-->
 	<!--<color name="material_mustard_yellow_600">#9e4365</color>-->
-	<color name="material_mustard_yellow_600">#94AF1B</color>
+    <color name="material_mustard_yellow">#D4EE5E</color>
+	<color name="material_mustard_yellow_900">#808320</color>
+	<color name="material_mustard_yellow_700">#B8D43A</color>
+	<color name="material_mustard_yellow_300">#F1FC8B</color>
+	<color name="material_mustard_yellow_50">#F0F4C3</color>
 	<!--<color name="material_mustard_yellow">#ff5722</color>-->
-	<color name="material_indigo">#48468f</color>
-	<color name="material_blue">#5677fc</color>
-	<!--<color name="material_blue_grey">#607d8b</color>-->
-	<color name="material_blue_grey">#3C3251</color>
+    <!--<color name="material_blue_grey_old">#607d8b</color>-->
+	<!--<color name="material_indigo">#48468f</color>-->
+	<!--<color name="material_blue">#5677fc</color>-->
+	<color name="material_violet_500">#3C3251</color>
+	<color name="material_violet_300">#564A70</color>
+	<color name="material_violet_100">#74698B</color>
+	<color name="material_violet_50">#E5E4E8</color>
+	<color name="material_violet_700">#2C1F45</color>
 
     <!--<color name="highlight_color">#f9cdad</color>-->
     <!--<color name="highlight_color">#ECD078</color>-->
     <color name="highlight_color">#F0F0F0</color>
-    <color name="highlight_color_2">#74698B</color>
 </resources>

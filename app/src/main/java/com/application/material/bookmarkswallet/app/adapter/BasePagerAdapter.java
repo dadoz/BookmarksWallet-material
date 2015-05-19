@@ -1,14 +1,10 @@
 package com.application.material.bookmarkswallet.app.adapter;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
 
 /**
@@ -69,7 +65,7 @@ public class BasePagerAdapter extends PagerAdapter {
         switch (position) {
             case 0:
 
-                view = mainActivityRef.getLayoutInflater().inflate(R.layout.links_list_layout,
+                view = mainActivityRef.getLayoutInflater().inflate(R.layout.bookmark_list_layout,
                         container, false);
                 break;
             case 1:

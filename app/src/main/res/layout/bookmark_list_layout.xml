@@ -32,32 +32,32 @@
             android:layout_alignParentRight="true"
             android:layout_centerHorizontal="true"
             fab:fab_expandDirection="up"
-            fab:fab_addButtonPlusIconColor="@color/material_blue_grey"
-            fab:fab_addButtonColorNormal="@color/material_red"
-            fab:fab_addButtonColorPressed="@color/material_red">
+            fab:fab_addButtonPlusIconColor="@color/material_violet_500"
+            fab:fab_addButtonColorNormal="@color/material_mustard_yellow"
+            fab:fab_addButtonColorPressed="@color/material_mustard_yellow">
         <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/importFloatingButtonId"
-                android:layout_width="@dimen/fab_size_micro"
-                android:layout_height="@dimen/fab_size_micro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 fab:fab_size="mini"
-                fab:fab_icon="@drawable/ic_insert_drive_file_black_24dp"
-                fab:fab_colorNormal="@color/material_red"
-                fab:fab_colorPressed="@color/material_red"/>
+                fab:fab_icon="@drawable/ic_insert_drive_file_white_24dp"
+                fab:fab_colorNormal="@color/material_violet_500"
+                fab:fab_colorPressed="@color/material_violet_500"/>
         <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/clipboardFloatingButtonId"
                 android:layout_width="@dimen/fab_size_micro"
                 android:layout_height="wrap_content"
                 fab:fab_size="mini"
-                fab:fab_icon="@drawable/ic_content_paste_black_24dp"
-                fab:fab_colorNormal="@color/material_red"
-                fab:fab_colorPressed="@color/material_red"/>
+                fab:fab_icon="@drawable/ic_content_paste_white_24dp"
+                fab:fab_colorNormal="@color/material_violet_500"
+                fab:fab_colorPressed="@color/material_violet_500"/>
         <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/addLinkButtonId"
                 android:layout_width="@dimen/fab_size_micro"
                 android:layout_height="@dimen/fab_size_micro"
                 fab:fab_size="mini"
-                fab:fab_icon="@drawable/ic_edit_black_24dp"
-                fab:fab_colorNormal="@color/material_red"
-                fab:fab_colorPressed="@color/material_red"/>
+                fab:fab_icon="@drawable/ic_edit_white_24dp"
+                fab:fab_colorNormal="@color/material_violet_500"
+                fab:fab_colorPressed="@color/material_violet_500"/>
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </RelativeLayout>

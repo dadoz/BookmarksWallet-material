@@ -7,6 +7,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animators.ScrollManager;
@@ -82,7 +84,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
 
     public void setToolbarScrollManager(final RecyclerView recyclerView, final View fab) {
 //        final View infoInnerView = actionbarInfoActionView.findViewById(R.id.infoInnerLayoutId);
-        scrollManager = new ScrollManager();
+        scrollManager = new ScrollManager(mActivtyRef);
         try {
             toolbar.post(new Runnable() {
                 @Override public void run() {
@@ -141,13 +143,22 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
 //            setTitle(title);
 //            boolean isHomeUpEnabled = title != null;
             setDisplayHomeEnabled(isHomeUpEnabled);
-//            getActionBar().setBackgroundDrawable(mActivtyRef.getResources().
-//                    getDrawable(isChangeColor ?
-//                            R.color.material_blue_grey :
-//                            R.color.material_mustard_yellow));
+            getActionBar().setBackgroundDrawable(mActivtyRef.getResources().
+                    getDrawable(isChangeColor ?
+                            R.color.material_mustard_yellow_300 :
+                            R.color.material_mustard_yellow));
+            setStatusBarColor(isChangeColor);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void setStatusBarColor(boolean isChangeColor) {
+        Window window = mActivtyRef.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(mActivtyRef.getResources().getColor(
+                isChangeColor ? R.color.material_mustard_yellow : R.color.material_mustard_yellow_700));
     }
 
     public void setDisplayHomeEnabled(boolean isHomeUpEnabled) {

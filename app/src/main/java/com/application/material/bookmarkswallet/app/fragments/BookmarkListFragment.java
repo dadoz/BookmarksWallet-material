@@ -4,7 +4,8 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
@@ -25,17 +26,13 @@ import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecycl
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.recyclerView.CustomSwipeRefreshLayout;
 import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
-import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton.LayoutManagerTypeEnum;
 import com.application.material.bookmarkswallet.app.singleton.ClipboardSingleton;
 import com.application.material.bookmarkswallet.app.singleton.ExportBookmarkSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
-import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.suredigit.inappfeedback.FeedbackDialog;
 import com.tjeannin.apprate.AppRate;
 import io.realm.Realm;
 import io.realm.RealmQuery;
@@ -108,7 +105,7 @@ public class BookmarkListFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstance) {
-		mLinkListView = inflater.inflate(R.layout.links_list_layout,
+		mLinkListView = inflater.inflate(R.layout.bookmark_list_layout,
 				container, false);
 		ButterKnife.inject(this, mLinkListView);
 
@@ -186,6 +183,18 @@ public class BookmarkListFragment extends Fragment
 		inflater.inflate(isItemSelected ? R.menu.save_edit_link_menu :
                 R.menu.menu_main, menu);
 
+        if(! isItemSelected) {
+            Drawable icon = menu.findItem(R.id.action_search).getIcon();
+            icon.setColorFilter(mMainActivityRef.getResources().getColor(R.color.material_violet_500),
+                    PorterDuff.Mode.SRC_IN);
+            menu.findItem(R.id.action_search).setIcon(icon);
+        } else {
+            Drawable icon = menu.findItem(R.id.action_edit).getIcon();
+            icon.setColorFilter(mMainActivityRef.getResources().getColor(R.color.material_violet_500),
+                    PorterDuff.Mode.SRC_IN);
+            menu.findItem(R.id.action_edit).setIcon(icon);
+
+        }
         //LAYOUT MANAGER
 //        if(! isItemSelected) {
 //            menu.findItem(R.id.action_grid)

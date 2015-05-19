@@ -18,6 +18,7 @@ package com.application.material.bookmarkswallet.app.animators;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.RelativeLayout;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.HashMap;
@@ -34,7 +36,9 @@ import java.util.HashMap;
 public class ScrollManager extends RecyclerView.OnScrollListener {
 
     private static final int MIN_SCROLL_TO_HIDE = 10;
-//    private final View infoView;
+    private final Activity mActivityRef;
+    private final ActionBarHandlerSingleton mActionBarHandlerSingleton;
+    //    private final View infoView;
     private boolean hidden;
     private int accummulatedDy;
     private int totalDy;
@@ -46,7 +50,10 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
 
     public static enum Direction {UP, DOWN}
 
-    public ScrollManager() {
+    public ScrollManager(Activity activityRef) {
+        mActivityRef = activityRef;
+        mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
+
 //        infoView = view;
     }
 
@@ -110,6 +117,11 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
         if (hidden) {
             hidden = false;
             for (View view : viewsToHide.keySet()) {
+                if(view.getId() == R.id.floatingMenuButtonId &&
+                        mActionBarHandlerSingleton.isEditMode()) {
+                    Log.e("TAG", "hey u're tring to show floating button");
+                    return;
+                }
                 showView(view);
             }
         }
