@@ -33,6 +33,15 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
     public static int NOT_SELECTED_ITEM_POSITION = -1;
     private boolean editMode;
     private int mEditItemPos = NOT_SELECTED_ITEM_POSITION;
+    private boolean mSearchMode;
+
+    public void setSearchMode(boolean searchMode) {
+        this.mSearchMode = searchMode;
+    }
+
+    public boolean isSearchMode() {
+        return mSearchMode;
+    }
 
     //LAYOUT MANAGER TYPE
     public enum LayoutManagerTypeEnum { GRID, LIST };
@@ -83,7 +92,6 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
 
 
     public void setToolbarScrollManager(final RecyclerView recyclerView, final View fab) {
-//        final View infoInnerView = actionbarInfoActionView.findViewById(R.id.infoInnerLayoutId);
         scrollManager = new ScrollManager(mActivtyRef);
         try {
             toolbar.post(new Runnable() {

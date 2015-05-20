@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.adapter;
+package com.application.material.bookmarkswallet.app.adapter.old;
 
 /**
  * Created by davide on 14/01/15.

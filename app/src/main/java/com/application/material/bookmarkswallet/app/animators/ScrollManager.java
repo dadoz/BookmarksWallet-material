@@ -53,7 +53,6 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
     public ScrollManager(Activity activityRef) {
         mActivityRef = activityRef;
         mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
-
 //        infoView = view;
     }
 
@@ -117,8 +116,9 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
         if (hidden) {
             hidden = false;
             for (View view : viewsToHide.keySet()) {
-                if(view.getId() == R.id.floatingMenuButtonId &&
-                        mActionBarHandlerSingleton.isEditMode()) {
+                if(view.getId() == R.id.floatingMenuButtonId && (
+                        mActionBarHandlerSingleton.isEditMode() ||
+                        mActionBarHandlerSingleton.isSearchMode())) {
                     Log.e("TAG", "hey u're tring to show floating button");
                     return;
                 }

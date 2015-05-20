@@ -17,6 +17,7 @@ public class Bookmark extends RealmObject {
     @PrimaryKey
     private long id;
     private long timestamp;
+    private long lastUpdate;
     private String iconPath;
     private String url;
     private int userId;
@@ -67,6 +68,10 @@ public class Bookmark extends RealmObject {
         return timestamp;
     }
 
+    public long getLastUpdate() {
+        return this.lastUpdate;
+    }
+
 
 
     public void setBlobIcon(byte[] blobIcon) {
@@ -91,6 +96,10 @@ public class Bookmark extends RealmObject {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public void setLastUpdate(long lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public static class Utils {

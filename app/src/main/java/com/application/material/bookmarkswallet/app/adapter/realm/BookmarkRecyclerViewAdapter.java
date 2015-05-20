@@ -38,7 +38,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
     private final ActionBarHandlerSingleton mActionBarHandlerSingleton;
     private final RecyclerViewCustom mRecyclerView;
     private final RecyclerViewActionsSingleton mRvActionsSingleton;
-    private boolean mSearchResult;
+    private boolean mSearchMode;
     private View.OnTouchListener mTouchListener;
     private Drawable colorFilter;
 
@@ -69,22 +69,20 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         private TextView mLabelView;
         private TextView mTimestampView;
         private TextView mUrlView;
+        private TextView mLastUpdateView;
         private String TAG = "Holder";
         public ImageView mIconOpenedView;
 
         public ViewHolder(View v) {
             super(v);
-//            mMainView = v.findViewById(R.id.linkLayoutId);
-//            mEditLinkView = v.findViewById(R.id.editLinkLayoutId);
             mIconView = (ImageView) v.findViewById(R.id.linkIconId);
             mIconOpenedView = (ImageView) v.findViewById(R.id.linkIconOpenedIconId);
             mLinkIconFlipperView = (ViewFlipper) v.findViewById(R.id.linkIconFlipperIconId);
             mLabelView = (TextView) v.findViewById(R.id.linkTitleId);
             mUrlView = (TextView) v.findViewById(R.id.linkUrlId);
             mTimestampView = (TextView) v.findViewById(R.id.linkTimestampId);
-//            mEditUrlLabelView = (TextView) v.findViewById(R.id.editUrlLabelId);
-//            mEditLabelView = (EditText) v.findViewById(R.id.editLinkTitleId);
             mUrlOpenedView = (TextView) v.findViewById(R.id.linkUrlOpenedId);
+            mLastUpdateView = (TextView) v.findViewById(R.id.lastUpdateTextId);
             mMoreInfoClosedView = v.findViewById(R.id.moreInfoClosedContainerId);
             mMoreInfoClosedIconView = (ImageView) v.findViewById(R.id.moreInfoClosedIconId);
         }
@@ -110,7 +108,9 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         holder.mUrlView.setVisibility(View.VISIBLE);
         holder.mUrlOpenedView.setText(bookmark.getUrl());
         holder.mUrlOpenedView.setVisibility(View.GONE);
+        holder.mLastUpdateView.setVisibility(View.GONE);
         holder.mTimestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark.getTimestamp()));
+        holder.mLastUpdateView.setText("Last update at: " + Bookmark.Utils.getParsedTimestamp(bookmark.getLastUpdate()));
 
         boolean isSelectedItem = mActionBarHandlerSingleton.isEditMode();
         setIcon(holder.mIconView, null, false);
@@ -220,12 +220,12 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         }
     }
 
-    public boolean isSearchResult() {
-        return mSearchResult;
+    public boolean isSearchMode() {
+        return mActionBarHandlerSingleton.isSearchMode();
     }
 
-    public void setSearchResult(boolean mSearchResult) {
-        this.mSearchResult = mSearchResult;
+    public void setSearchMode(boolean value) {
+        mActionBarHandlerSingleton.setSearchMode(value);
     }
 
     public static class MoreInfoFlipperClickListener implements View.OnClickListener {
@@ -257,10 +257,13 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         public void toggleView(boolean isToggling) {
             if (isToggling) {
                 mHolder.mUrlOpenedView.setVisibility(View.VISIBLE);
+                mHolder.mLastUpdateView.setVisibility(View.VISIBLE);
+
                 mHolder.mLinkIconFlipperView.showNext();
                 return;
             }
             mHolder.mUrlOpenedView.setVisibility(View.GONE);
+            mHolder.mLastUpdateView.setVisibility(View.GONE);
             mHolder.mLinkIconFlipperView.setDisplayedChild(0);
 
 //            if(isToggling) {

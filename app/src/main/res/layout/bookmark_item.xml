@@ -101,62 +101,119 @@
                 android:id="@+id/linkOpenedLayoutId"
                 android:baselineAligned="false"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="@dimen/medium_padding"
-                android:background="@color/material_mustard_yellow_300"
-                android:minHeight="@dimen/link_row_height">
-            <ImageView
-                    android:id="@+id/linkIconOpenedIconId"
-                    android:contentDescription="link_icon_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="@dimen/fab_size_mini"
-                    android:minHeight="@dimen/fab_size_mini"
-                    android:src="@drawable/ic_bookmark_outline_black_48dp"/>
+                android:layout_height="wrap_content"
+        android:minHeight="@dimen/link_row_height"
+        android:paddingTop="@dimen/small_padding"
+        android:background="@color/material_mustard_yellow_300"
+        android:paddingBottom="@dimen/small_padding">
 
-            <TextView
-                    android:id="@+id/linkTitle2Id"
-                    android:paddingLeft="@dimen/large_padding"
-                    android:layout_toRightOf="@id/linkIconOpenedIconId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Link:"
-                    android:textSize="@dimen/text_size_24"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="@color/material_violet_500"/>
+<ImageView
+        android:id="@+id/linkIconOpenedIconId"
+        android:contentDescription="link_icon_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/fab_size_mini"
+        android:minHeight="@dimen/fab_size_mini"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/medium_padding"
+        android:src="@drawable/ic_bookmark_outline_black_48dp"/>
 
-            <TextView
-                    android:id="@+id/linkUrlOpenedId"
-                    android:paddingLeft="@dimen/large_padding"
-                    android:layout_toRightOf="@id/linkIconOpenedIconId"
-                    android:layout_below="@id/linkTitle2Id"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="http://www.google.it"
-                    android:textSize="@dimen/text_size_16"
-                    android:ellipsize="end"
-                    android:maxLines="10"
-                    android:textColor="@color/material_violet_100"/>
 
-            <TextView
-                    android:id="@+id/lastUpdateTextId"
-                    android:paddingLeft="@dimen/large_padding"
-                    android:paddingTop="@dimen/medium_padding"
-                    android:layout_toRightOf="@id/linkIconOpenedIconId"
-                    android:layout_below="@id/linkUrlOpenedId"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text=" - "
-                    android:textSize="@dimen/text_size_14"
-                    android:ellipsize="end"
-                    android:maxLines="10"
-                    android:textColor="@color/material_violet_500"/>
+<LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/linkIconOpenedIconId"
+        android:layout_marginRight="@dimen/row_timestamp_width"
+        android:orientation="vertical">
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Link:"
+            android:textSize="@dimen/text_size_24"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/material_violet_500"/>
+    <TextView
+            android:id="@+id/linkUrlOpenedId"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="http://www.google.it"
+            android:textSize="@dimen/text_size_16"
+            android:ellipsize="end"
+            android:maxLines="10"
+            android:textColor="@color/material_violet_100"/>
+    <TextView
+            android:id="@+id/lastUpdateTextId"
+            android:paddingTop="@dimen/medium_padding"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text=" - "
+            android:textSize="@dimen/text_size_14"
+            android:ellipsize="end"
+            android:maxLines="10"
+            android:textColor="@color/material_violet_500"/>
 
-        </RelativeLayout>
+</LinearLayout>
+</RelativeLayout>
+
+<!--<RelativeLayout-->
+                <!--android:baselineAligned="false"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:orientation="vertical"-->
+                <!--android:background="@color/material_mustard_yellow_300"-->
+                <!--android:minHeight="@dimen/link_row_height">-->
+            <!--<ImageView-->
+                    <!--android:layout_margin="@dimen/medium_padding"-->
+                    <!--android:contentDescription="link_icon_id"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:minWidth="@dimen/fab_size_mini"-->
+                    <!--android:minHeight="@dimen/fab_size_mini"-->
+                    <!--android:src="@drawable/ic_bookmark_outline_black_48dp"/>-->
+
+            <!--<TextView-->
+                    <!--android:id="@+id/linkTitle2Id"-->
+                    <!--android:paddingLeft="@dimen/large_padding"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Link:"-->
+                    <!--android:textSize="@dimen/text_size_24"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:textColor="@color/material_violet_500"/>-->
+
+            <!--<TextView-->
+                    <!--android:paddingLeft="@dimen/large_padding"-->
+                    <!--android:layout_below="@id/linkTitle2Id"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:text="http://www.google.it"-->
+                    <!--android:textSize="@dimen/text_size_16"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:maxLines="10"-->
+                    <!--android:textColor="@color/material_violet_100"/>-->
+
+            <!--<TextView-->
+                    <!--android:paddingLeft="@dimen/large_padding"-->
+                    <!--android:paddingTop="@dimen/medium_padding"-->
+                    <!--android:layout_toRightOf="@id/linkIconOpenedIconId"-->
+                    <!--android:layout_below="@id/linkUrlOpenedId"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:text=" - "-->
+                    <!--android:textSize="@dimen/text_size_14"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:maxLines="10"-->
+                    <!--android:textColor="@color/material_violet_500"/>-->
+
+        <!--</RelativeLayout>-->
     </ViewFlipper>
 
 </FrameLayout>

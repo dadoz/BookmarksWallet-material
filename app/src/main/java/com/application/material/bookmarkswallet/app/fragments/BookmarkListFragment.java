@@ -53,7 +53,7 @@ public class BookmarkListFragment extends Fragment
 	@InjectView(R.id.clipboardFloatingButtonId)
 	FloatingActionButton clipboardFloatingButton;
 	@InjectView(R.id.floatingMenuButtonId)
-    FloatingActionsMenu floatingMenuButton;
+    FloatingActionsMenu mFloatingMenuButton;
 	@InjectView(R.id.undoLinkDeletedLayoutId)
 	View undoLinkDeletedLayout;
 	@InjectView(R.id.undoButtonId)
@@ -130,7 +130,7 @@ public class BookmarkListFragment extends Fragment
         mActionBarHandlerSingleton.setTitle(null);
         mActionBarHandlerSingleton.setDisplayHomeEnabled(false);
 
-        View.OnClickListener longClickListener = (View.OnClickListener) mRecyclerView.getAdapter();
+//        View.OnClickListener longClickListener = (View.OnClickListener) mRecyclerView.getAdapter();
 //        touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, longClickListener, this); //LISTENER TO SWIPE
         rvActionsSingleton = RecyclerViewActionsSingleton.
                 getInstance(mSwipeRefreshLayout, mRecyclerView, mMainActivityRef, this);
@@ -224,15 +224,18 @@ public class BookmarkListFragment extends Fragment
                         @Override
                         public boolean onMenuItemActionExpand(MenuItem item) {
                             ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
-                                    .setSearchResult(true);
+                                    .setSearchMode(true);
+                            int startDelay = 600;
+                            toggleAddLinkButton(true, startDelay);
                             return true;
                         }
 
                         @Override
                         public boolean onMenuItemActionCollapse(MenuItem item) {
                             ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
-                                    .setSearchResult(false);
+                                    .setSearchMode(false);
                             rvActionsSingleton.setAdapter();
+                            toggleAddLinkButton(false, -1);
                             return true;
                         }
                     });
@@ -419,13 +422,13 @@ public class BookmarkListFragment extends Fragment
 //        rvActionsSingleton.saveEditLink();
 //    }
 
-	public void toggleAddLinkButton(boolean isVisible) {
+	public void toggleAddLinkButton(boolean isVisible, int startDelay) {
 		//hide fab button
-        floatingMenuButton.collapse();
-        floatingMenuButton.animate().
+        mFloatingMenuButton.collapse();
+        mFloatingMenuButton.animate().
 				translationY(isVisible ? 300 : 0).
 				setInterpolator(new DecelerateInterpolator(3.f)).
-				setStartDelay(200).
+				setStartDelay(startDelay == -1 ? 200 : 600).
 				start();
 	}
 

@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.adapter;
+package com.application.material.bookmarkswallet.app.adapter.old;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;

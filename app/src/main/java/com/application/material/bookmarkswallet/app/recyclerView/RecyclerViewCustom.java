@@ -1,13 +1,11 @@
 package com.application.material.bookmarkswallet.app.recyclerView;
 
-import android.app.MediaRouteButton;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.LinkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
 
 /**
@@ -41,11 +39,11 @@ public class RecyclerViewCustom extends RecyclerView {
         }
 
         boolean isEmpty = getAdapter().getItemCount() == 0;
-        boolean isSearchResult = ((BookmarkRecyclerViewAdapter) getAdapter()).isSearchResult();
+        boolean isSearchMode = ((BookmarkRecyclerViewAdapter) getAdapter()).isSearchMode();
 
 
-        emptyView.setVisibility(isEmpty && ! isSearchResult ? VISIBLE : GONE);
-        mEmptySearchResultView.setVisibility(isEmpty && isSearchResult ? VISIBLE : GONE);
+        emptyView.setVisibility(isEmpty && ! isSearchMode ? VISIBLE : GONE);
+        mEmptySearchResultView.setVisibility(isEmpty && isSearchMode ? VISIBLE : GONE);
         setVisibility(isEmpty ? GONE : VISIBLE);
     }
 

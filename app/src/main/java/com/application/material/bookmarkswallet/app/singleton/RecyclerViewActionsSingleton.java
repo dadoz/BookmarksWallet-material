@@ -75,12 +75,12 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
     }
 
     public static void initReferences(SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView,
-                                      Activity activityRef, Fragment listenerRef) {
+                                      Activity activityRef, Fragment fragmentRef) {
         mSwipeRefreshLayout = swipeRefreshLayout;
         mRecyclerView = recyclerView;
         mActivityRef = activityRef;
-        mListenerRef = listenerRef;
-        mFragmentRef = listenerRef;
+        mListenerRef = fragmentRef;
+        mFragmentRef = fragmentRef;
 //        mTouchListener = touchListener;
         mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
 //        mEditUrlView = mActivityRef.getLayoutInflater().
@@ -165,6 +165,8 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         if(! modifiedUrl.trim().equals("")) {
             bookmark.setUrl(modifiedUrl);
         }
+        bookmark.setLastUpdate(Bookmark.Utils.getTodayTimestamp());
+
         mRealm.commitTransaction();
 
         mRecyclerView.getAdapter()
@@ -265,7 +267,6 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 //        ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
         //UPDATE DATASET REF
         mRecyclerView.scrollToPosition(0);
-        title = title == null ? "" : title;
         addOrmObject(mRealm, title, null, iconBlob, url);
         setAdapter();
         mRecyclerView.getAdapter().notifyItemInserted(0);
@@ -340,7 +341,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         realm.beginTransaction();
         Bookmark bookmark = realm.createObject(Bookmark.class);
         bookmark.setId(UUID.randomUUID().getLeastSignificantBits());
-        bookmark.setName(title);
+        bookmark.setName(title == null ? "" : title);
         if(iconPath != null) {
             bookmark.setIconPath(iconPath);
         }
@@ -349,6 +350,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         }
         bookmark.setUrl(url);
         bookmark.setTimestamp(Bookmark.Utils.getTodayTimestamp());
+        bookmark.setLastUpdate(Bookmark.Utils.getTodayTimestamp());
         realm.commitTransaction();
         return true;
     }
@@ -434,7 +436,7 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
     private void animateButton(boolean animate) {
         try {
-            ((BookmarkListFragment) mFragmentRef).toggleAddLinkButton(animate);
+            ((BookmarkListFragment) mFragmentRef).toggleAddLinkButton(animate, -1);
         } catch (Exception e) {
             e.printStackTrace();
         }

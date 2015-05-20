@@ -2,34 +2,24 @@ package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
 import android.content.*;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.AddBookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.adapter.old.AddBookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 import com.application.material.bookmarkswallet.app.models.BookmarkCardview;
 import com.application.material.bookmarkswallet.app.models.BookmarkCardview.CardviewTypeEnum;
-import com.application.material.bookmarkswallet.app.models.Info;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 import com.flurry.android.FlurryAgent;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
