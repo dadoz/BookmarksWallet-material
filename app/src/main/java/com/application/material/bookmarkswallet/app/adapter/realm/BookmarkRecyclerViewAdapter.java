@@ -62,6 +62,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView mUrlOpenedView;
+        private final View mBackgroundLayoutView;
         private ImageView mMoreInfoClosedIconView;
         private final ViewFlipper mLinkIconFlipperView;
         private final View mMoreInfoClosedView;
@@ -85,6 +86,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
             mLastUpdateView = (TextView) v.findViewById(R.id.lastUpdateTextId);
             mMoreInfoClosedView = v.findViewById(R.id.moreInfoClosedContainerId);
             mMoreInfoClosedIconView = (ImageView) v.findViewById(R.id.moreInfoClosedIconId);
+            mBackgroundLayoutView = v.findViewById(R.id.backgroundLayoutId);
         }
     }
 
@@ -130,6 +132,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 
         holder.mMoreInfoClosedView.setVisibility(View.VISIBLE);
         holder.mMoreInfoClosedView.setOnClickListener(new MoreInfoFlipperClickListener(holder, this, position));
+        holder.mBackgroundLayoutView.setBackgroundColor(Color.TRANSPARENT);
 //        holder.mUrlOpenedView.setOnClickListener(null);
         setItemSelected(holder, bookmark, position, isSelectedItem);
     }
@@ -192,7 +195,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 //                    getColor(R.color.white));
             holder.itemView.setBackgroundColor(resources
                     .getColor(R.color.material_violet_50));
-            holder.mMoreInfoClosedView.setVisibility(View.INVISIBLE);
+//            holder.mMoreInfoClosedView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -228,7 +231,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         mActionBarHandlerSingleton.setSearchMode(value);
     }
 
-    public static class MoreInfoFlipperClickListener implements View.OnClickListener {
+    public class MoreInfoFlipperClickListener implements View.OnClickListener {
 
         private final ViewHolder mHolder;
         private final BookmarkRecyclerViewAdapter mAdapter;
@@ -243,25 +246,28 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         @Override
         public void onClick(View v) {
             mHolder.mLinkIconFlipperView.setFlipInterval(500);
-            toggleView(true);
+            toggleView(! (mHolder.mUrlOpenedView.getVisibility() == View.VISIBLE));
 
-            Handler flipOutHandler = new Handler();
-            flipOutHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    toggleView(false);
-                }
-            }, 3000);
+//            Handler flipOutHandler = new Handler();
+//            flipOutHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    toggleView(false);
+//                }
+//            }, 3000);
         }
 
         public void toggleView(boolean isToggling) {
             if (isToggling) {
                 mHolder.mUrlOpenedView.setVisibility(View.VISIBLE);
                 mHolder.mLastUpdateView.setVisibility(View.VISIBLE);
-
+                mHolder.mBackgroundLayoutView.setBackgroundColor(mActivityRef.getResources().
+                        getColor(R.color.material_mustard_yellow_300));
                 mHolder.mLinkIconFlipperView.showNext();
                 return;
             }
+
+            mHolder.mBackgroundLayoutView.setBackgroundColor(Color.TRANSPARENT);
             mHolder.mUrlOpenedView.setVisibility(View.GONE);
             mHolder.mLastUpdateView.setVisibility(View.GONE);
             mHolder.mLinkIconFlipperView.setDisplayedChild(0);
