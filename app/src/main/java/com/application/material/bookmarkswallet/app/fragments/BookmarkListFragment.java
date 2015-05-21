@@ -40,7 +40,7 @@ import io.realm.RealmResults;
 
 public class BookmarkListFragment extends Fragment
 		implements View.OnClickListener,
-        Filterable, SwipeRefreshLayout.OnRefreshListener {
+        Filterable, SwipeRefreshLayout.OnRefreshListener, FloatingActionsMenu.OnFloatingActionsMenuUpdateListener {
 	private static final String TAG = "LinksListFragment_TAG";
 	public static final String FRAG_TAG = "LinksListFragment";
 	private MainActivity mMainActivityRef;
@@ -143,6 +143,7 @@ public class BookmarkListFragment extends Fragment
 		undoButton.setOnClickListener(this);
 		dismissButton.setOnClickListener(this);
 
+        mFloatingMenuButton.setOnFloatingActionsMenuUpdateListener(this);
 		initRecyclerView();
         rvActionsSingleton.setAdapter();
         if(mActionBarHandlerSingleton.isEditMode()) {
@@ -422,6 +423,10 @@ public class BookmarkListFragment extends Fragment
 //        rvActionsSingleton.saveEditLink();
 //    }
 
+	public void collapseAddLinkButton() {
+        mFloatingMenuButton.collapse();
+    }
+
 	public void toggleAddLinkButton(boolean isVisible, int startDelay) {
 		//hide fab button
         mFloatingMenuButton.collapse();
@@ -445,6 +450,16 @@ public class BookmarkListFragment extends Fragment
 //        ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
 
         //NEED TO BE IMPLEMENTED
+    }
+
+    @Override
+    public void onMenuExpanded() {
+        mActionBarHandlerSingleton.setOverrideBackPressed(true);
+    }
+
+    @Override
+    public void onMenuCollapsed() {
+        mActionBarHandlerSingleton.setOverrideBackPressed(false);
     }
 
     private class LinkFilter extends Filter {

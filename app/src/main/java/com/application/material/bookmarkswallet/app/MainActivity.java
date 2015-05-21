@@ -190,15 +190,15 @@ public class MainActivity extends ActionBarActivity
         mActionBarHandlerSingleton.toggleActionBar(isHomeUpEnabled,
                 isBackOverridden, false); // u always must change color back to yellow
 
-        if(isBackOverridden) {
+        if (isBackOverridden) {
             mActionBarHandlerSingleton.setOverrideBackPressed(false);
             Fragment fragment  = getSupportFragmentManager()
                     .findFragmentByTag(BookmarkListFragment.FRAG_TAG);
-            if(fragment != null &&
-                    isEditMode) {
-//                mActionBarHandlerSingleton.toggleLayoutByActionMenu(R.id.infoOuterButtonId);
-
-                ((BookmarkListFragment) fragment).undoEditBookmarkRecyclerViewWrapper();
+            if (fragment != null) {
+                ((BookmarkListFragment) fragment).collapseAddLinkButton();
+                if (isEditMode) {
+                    ((BookmarkListFragment) fragment).undoEditBookmarkRecyclerViewWrapper();
+                }
             }
             return;
         }

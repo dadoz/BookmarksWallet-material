@@ -25,7 +25,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
     private static ScrollManager scrollManager;
 //    private View actionbarInfoActionView;
     private boolean isChangeColor;
-    private boolean isBackOverridden;
+    private boolean mOverrideBack;
     private View infoView;
     private Toolbar toolbar;
     private View swipeRefreshLayout;
@@ -131,7 +131,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
 
     @Override
     public void toggleActionBar(boolean isHomeUpEnabled, boolean isBack, boolean isColor, int layoutId) {
-        isBackOverridden = isBack;
+        mOverrideBack = isBack;
         isChangeColor = isColor;
         toggleActionBar(isHomeUpEnabled);
 //        toggleLayoutByActionMenu(layoutId);
@@ -139,7 +139,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
 
     @Override
     public void toggleActionBar(boolean isHomeUpEnabled, boolean isBack, boolean isColor) {
-        isBackOverridden = isBack;
+        mOverrideBack = isBack;
         isChangeColor = isColor;
         toggleActionBar(isHomeUpEnabled);
     }
@@ -236,12 +236,12 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
 
     @Override
     public boolean getOverrideBackPressed() {
-        return isBackOverridden;
+        return mOverrideBack;
     }
 
     @Override
     public void setOverrideBackPressed(boolean value) {
-        isBackOverridden = value;
+        mOverrideBack = value;
     }
 
     @Override
