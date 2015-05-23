@@ -107,17 +107,21 @@
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/fab_size_mini"
                     android:minHeight="@dimen/fab_size_mini"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="@dimen/medium_padding"
+                    android:maxWidth="@dimen/fab_size_normal"
+                    android:maxHeight="@dimen/fab_size_normal"
+                    android:layout_marginLeft="@dimen/medium_padding"
+                    android:layout_marginRight="@dimen/medium_padding"
+                    android:layout_marginBottom="@dimen/medium_padding"
+                    android:layout_marginTop="@dimen/medium_padding_custom"
                     android:src="@drawable/ic_bookmark_outline_black_48dp"/>
 
 
             <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/linkIconOpenedIconId"
-                    android:layout_marginRight="@dimen/row_timestamp_width"
+                    android:layout_marginRight="@dimen/medium_padding"
                     android:orientation="vertical">
                 <TextView
                         android:layout_width="wrap_content"
@@ -138,17 +142,27 @@
                         android:ellipsize="end"
                         android:maxLines="10"
                         android:textColor="@color/material_violet_100"/>
-                <TextView
-                        android:id="@+id/lastUpdateTextId"
-                        android:paddingTop="@dimen/medium_padding"
+
+                <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/medium_padding"
                         android:gravity="center_vertical"
-                        android:text=" - "
-                        android:textSize="@dimen/text_size_14"
-                        android:ellipsize="end"
-                        android:maxLines="10"
-                        android:textColor="@color/material_violet_500"/>
+                        android:orientation="horizontal">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Last update: "
+                            android:textSize="@dimen/text_size_14"
+                            android:textColor="@color/material_violet_500"/>
+                    <TextView
+                            android:id="@+id/lastUpdateTextId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" - "
+                            android:textSize="@dimen/text_size_14"
+                            android:textColor="@color/material_violet_100"/>
+                </LinearLayout>
 
             </LinearLayout>
         </RelativeLayout>

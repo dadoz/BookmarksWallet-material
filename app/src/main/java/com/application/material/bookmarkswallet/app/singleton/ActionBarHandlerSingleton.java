@@ -307,6 +307,12 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
         return layoutManagerType == LayoutManagerTypeEnum.LIST;
     }
 
+    public void setColorFilter(Drawable drawable, int color) {
+        drawable.setColorFilter(mActivtyRef.getResources()
+                        .getColor(color),
+                PorterDuff.Mode.SRC_IN);
+    }
+
 //    public void setViewOnActionMenu(SwipeRefreshLayout mSwipeRefreshLayout, View actionbarInfoView, int actionbarInfoLayoutId, BookmarkListFragment bookmarkListFragment) {
 //        actionbarInfoActionView = actionbarInfoView;
 //    }

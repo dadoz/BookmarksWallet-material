@@ -11,6 +11,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +80,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 		ArrayList<String> settingsNameList = new ArrayList<String>();
 //		settingsNameList.add("Remove ads");
 		settingsNameList.add("Rate it!");
+		settingsNameList.add("Url search filter enabled");
 		settingsNameList.add("Delete all bookmarks!");
 		settingsNameList.add("Send a feedback");
 
@@ -131,9 +133,12 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
                 }
                 break;
 			case 1:
-                openDeleteAllDialog();
+                Log.e("Settings", "toggle checkbox");
 				break;
             case 2:
+                openDeleteAllDialog();
+                break;
+            case 3:
                 mFeedBackDialog.show();
                 break;
 		}

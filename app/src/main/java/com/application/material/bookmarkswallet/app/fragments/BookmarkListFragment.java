@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
@@ -69,17 +70,14 @@ public class BookmarkListFragment extends Fragment
 
 	private LinearLayoutManager linearLayoutManager;
 	private RealmResults<Bookmark> mItems;
-//	private SwipeDismissRecyclerViewTouchListener touchListener;
 	private GestureDetectorCompat detector;
 	private View mLinkListView;
 	private ActionBarHandlerSingleton mActionBarHandlerSingleton;
 	private RecyclerViewActionsSingleton rvActionsSingleton;
 	private ExportBookmarkSingleton exportBookmarksSingleton;
     private BookmarkRecyclerViewAdapter mLinkRecyclerViewAdapter;
-//    private android.support.v7.widget.ShareActionProvider mShareActionProvider;
     private static Realm mRealm;
     private ClipboardSingleton mClipboardSingleton;
-//    private FeedbackDialog mFeedBackDialog;
 
 
     @Override
@@ -137,6 +135,7 @@ public class BookmarkListFragment extends Fragment
 
         mItems = rvActionsSingleton.getBookmarksList();
 
+        setIconOnFLoatingButton();
 		addLinkButton.setOnClickListener(this);
         importFloatingButton.setOnClickListener(this);
         clipboardFloatingButton.setOnClickListener(this);
@@ -150,6 +149,22 @@ public class BookmarkListFragment extends Fragment
             rvActionsSingleton.selectBookmarkEditMenu(mActionBarHandlerSingleton.getEditItemPos());
         }
 	}
+
+    private void setIconOnFLoatingButton() {
+        Resources res = mMainActivityRef.getResources();
+        Drawable icon = res.getDrawable(R.drawable.ic_insert_drive_file_white_24dp);
+        mActionBarHandlerSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
+        importFloatingButton.setIconDrawable(icon);
+
+        icon = res.getDrawable(R.drawable.ic_content_paste_white_24dp);
+        mActionBarHandlerSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
+        clipboardFloatingButton.setIconDrawable(icon);
+
+        icon = res.getDrawable(R.drawable.ic_edit_white_24dp);
+        mActionBarHandlerSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
+        addLinkButton.setIconDrawable(icon);
+
+    }
 
 
     private void initRecyclerView() {
@@ -226,6 +241,7 @@ public class BookmarkListFragment extends Fragment
                         public boolean onMenuItemActionExpand(MenuItem item) {
                             ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
                                     .setSearchMode(true);
+                            mRecyclerView.getAdapter().notifyDataSetChanged();
                             int startDelay = 600;
                             toggleAddLinkButton(true, startDelay);
                             return true;
@@ -243,11 +259,10 @@ public class BookmarkListFragment extends Fragment
         }
 
         if (searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(mMainActivityRef.getComponentName()));
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
-            {
-                public boolean onQueryTextChange(String newText)
-                {
+            searchView.setSearchableInfo(searchManager
+                    .getSearchableInfo(mMainActivityRef.getComponentName()));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                public boolean onQueryTextChange(String newText) {
                     if(newText.trim().toLowerCase().equals("")) {
                         rvActionsSingleton.setAdapter();
                         return true;
@@ -257,8 +272,7 @@ public class BookmarkListFragment extends Fragment
                     return true;
                 }
 
-                public boolean onQueryTextSubmit(String query)
-                {
+                public boolean onQueryTextSubmit(String query) {
 //                    ((SearchView) searchItem.getActionView()).setIconified(true);
 //                    (searchItem.getActionView()).clearFocus();
                     return false;
@@ -471,32 +485,6 @@ public class BookmarkListFragment extends Fragment
             FilterResults filterResults = new FilterResults();
             filterResults.values = null;
             filterResults.count = 0;
-//            mRealmRef.beginTransaction();
-//            RealmQuery<Bookmark> query = mRealmRef.where(Bookmark.class);
-//            RealmResults<Bookmark> filteredList = query
-//                    .contains("name", (String) constraint).or()
-//                    .contains("url", (String) constraint)
-//                    .findAll();
-//            mRealm.commitTransaction();
-/*
-            if(constraint != null &&
-                    constraint.length() != 0 &&
-                    mDataset != null &&
-                    mDataset.size() != 0) {
-
-//                for(Bookmark bookmark : mDataset) {
-//                    if(bookmark.getName().toLowerCase().trim().contains(constraint.toString().toLowerCase())) {
-//                        filteredList.add(bookmark);
-//                    }
-//                }
-                if(filteredList.size() != 0) {
-                    filterResults.values = filteredList;
-                    filterResults.count = filteredList.size();
-                }
-
-//                mDataset.where(Bookmark.class).findAll()
-            }
-*/
             return filterResults;
         }
 
@@ -507,9 +495,10 @@ public class BookmarkListFragment extends Fragment
                 public void run() {
                     RealmQuery<Bookmark> query = mRealm.where(Bookmark.class);
                     RealmResults<Bookmark> filteredList;
+                    String searchValue = ((String) constraint).toLowerCase();
+                    boolean caseSensitive = false;
                     filteredList = query
-                            .contains("name", (String) constraint).or()
-                            .contains("url", (String) constraint)
+                            .contains("name", searchValue, caseSensitive)
                             .findAll();
 
                     Log.e(TAG, "hey" + filteredList.size());
@@ -519,21 +508,6 @@ public class BookmarkListFragment extends Fragment
                     rvActionsSingleton.setAdapterByDataItems(filteredList);
                 }
             });
-
-
-//            ArrayList<Link> temp = new ArrayList<Link>();
-//            temp.add(mDataset.get(0));
-
-
-//            ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
-
-
-//            LinkRecyclerViewAdapter searchResultRecyclerViewAdapter =
-//                    new LinkRecyclerViewAdapter(mFragmentRef, temp, true);
-//            int oldPosition = ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).getSelectedItemPosition();
-//            searchResultRecyclerViewAdapter.setSelectedItemPosition(oldPosition);
-//            rvActionsSingleton.setAdapterRef(searchResultRecyclerViewAdapter);
-//            mRecyclerView.setAdapter(searchResultRecyclerViewAdapter);
         }
     }
 
