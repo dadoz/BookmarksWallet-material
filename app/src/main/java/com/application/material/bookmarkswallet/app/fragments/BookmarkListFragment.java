@@ -331,12 +331,12 @@ public class BookmarkListFragment extends Fragment
 	public void onClick(View v) {
 //		BookmarkRecyclerViewAdapter adapter = (BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter();
 		switch (v.getId()) {
-			case R.id.dismissExportButtonDialogId:
-				exportBookmarksSingleton.dismissExportDialog();
-				break;
-			case R.id.saveEditUrlDialogId:
-                rvActionsSingleton.saveEditLinkDialog();
-                break;
+//			case R.id.dismissExportButtonDialogId:
+//				exportBookmarksSingleton.dismissExportDialog();
+//				break;
+//			case R.id.saveEditUrlDialogId:
+//                rvActionsSingleton.saveEditLinkDialog();
+//                break;
 			case R.id.exportConfirmButtonDialogId:
 				exportBookmarksSingleton.exportBookmarks(mItems);
 				break;
@@ -354,11 +354,13 @@ public class BookmarkListFragment extends Fragment
                     break;
                 }
                 addLinkOnRecyclerViewWrapper(bookmarkUrl.trim());
+                mFloatingMenuButton.collapse();
                 break;
             case R.id.importFloatingButtonId:
                 mActionBarHandlerSingleton.toggleActionBar(true, false, false);
                 mMainActivityRef.changeFragment(new ImportBookmarkFragment(),
                         null, ImportBookmarkFragment.FRAG_TAG);
+                mFloatingMenuButton.collapse();
                 break;
 			case R.id.actionbarInfoActionIconId:
 				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
@@ -371,7 +373,8 @@ public class BookmarkListFragment extends Fragment
 			case R.id.addLinkButtonId:
 				mMainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
 						AddBookmarkActivity.ADD_REQUEST, null);
-				break;
+                mFloatingMenuButton.collapse();
+                break;
 //			case R.id.editUrlLabelId:
 //				String url = (String) v.getTag();
 //				rvActionsSingleton.editLinkDialog(url);

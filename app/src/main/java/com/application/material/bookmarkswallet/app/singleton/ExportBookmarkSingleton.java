@@ -2,6 +2,7 @@ package com.application.material.bookmarkswallet.app.singleton;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -42,14 +43,20 @@ public class ExportBookmarkSingleton {
     public void exportAction() {
         mExportBookmarksRevealView.findViewById(R.id.exportConfirmButtonDialogId).
                 setOnClickListener((View.OnClickListener) mListenerRef);
-        mExportBookmarksRevealView.findViewById(R.id.dismissExportButtonDialogId).
-                setOnClickListener((View.OnClickListener) mListenerRef);
+//        mExportBookmarksRevealView.findViewById(R.id.dismissExportButtonDialogId).
+//                setOnClickListener((View.OnClickListener) mListenerRef);
 
         if(mExportDialog == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef);
             mExportDialog = builder.
                     setTitle("Bookmarks export!").
                     setView(mExportBookmarksRevealView).
+                    setNegativeButton("DISMISS", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).
                     create();
         }
         mExportDialog.show();
@@ -70,10 +77,13 @@ public class ExportBookmarkSingleton {
             ((TextView) view.findViewById(R.id.exportSuccessTextId)).
                     append(CSVExportParser.EXPORT_FILE_NAME);
 
-            ((TextView) view.findViewById(R.id.dismissExportButtonDialogId)).
-                    setTextColor(mActivityRef.getResources().getColor(R.color.white));
+//            ((TextView) view.findViewById(R.id.dismissExportButtonDialogId)).
+//                    setTextColor(mActivityRef.getResources().getColor(R.color.white));
 
             (view.findViewById(R.id.exportConfirmButtonDialogId)).setOnClickListener(null);
+//            ActionBarHandlerSingleton.setColorFilter(((ImageView) view
+//                    .findViewById(R.id.exportConfirmButtonDialogId)).getDrawable(),
+//                    R.color.material_violet_500, mActivityRef);
             ((ImageView) view.findViewById(R.id.exportConfirmButtonDialogId)).setImageDrawable(
                     mActivityRef.getResources().getDrawable(R.drawable.ic_check_circle_white_48dp));
         }

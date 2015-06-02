@@ -5,24 +5,21 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:padding="@dimen/small_padding">
-    <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:paddingLeft="@dimen/small_padding"-->
-            <!--android:text="change bookmark's url and save it back!"/>-->
 
     <EditText
             android:id="@+id/editBookamrkTitleDialoglId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="@dimen/abc_search_view_preferred_width"
-            android:layout_margin="@dimen/medium_padding"
+            android:layout_marginTop="@dimen/medium_padding"
+            android:layout_marginLeft="@dimen/medium_padding"
+            android:layout_marginRight="@dimen/medium_padding"
             android:hint="title..."
             android:ellipsize="end"
             android:minLines="1"
             android:maxLines="8"
-            android:textSize="@dimen/text_size_24"
-            android:textColor="@color/material_red" />
+            android:textSize="@dimen/text_size_20"
+            android:textColor="@color/material_violet_100" />
     <EditText
             android:id="@+id/editBookmarkUrlDialoglId"
             android:layout_width="wrap_content"
@@ -35,17 +32,5 @@
             android:maxLines="8"
             android:textSize="@dimen/text_size_14"
             android:textColor="@color/material_grey" />
-
-    <TextView
-            android:layout_gravity="right"
-            android:id="@+id/saveEditUrlDialogId"
-            android:textSize="@dimen/abc_text_size_medium_material"
-            android:textColor="@color/material_red"
-            android:layout_marginTop="@dimen/small_padding"
-            android:padding="@dimen/medium_padding"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:text="SAVE"/>
 
 </LinearLayout>

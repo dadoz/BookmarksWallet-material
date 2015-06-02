@@ -261,7 +261,8 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                 float absVelocityY = Math.abs(mVelocityTracker.getYVelocity());
                 boolean dismiss = false;
                 boolean dismissRight = false;
-                if (Math.abs(deltaX) > mViewWidth / 2 && mSwiping) {
+
+                if (Math.abs(deltaX) > mViewWidth / 8 && mSwiping) {
                     dismiss = true;
                     dismissRight = deltaX > 0;
                 } else if (mMinFlingVelocity <= absVelocityX && absVelocityX <= mMaxFlingVelocity
@@ -270,7 +271,11 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     dismiss = (velocityX < 0) == (deltaX < 0);
                     dismissRight = mVelocityTracker.getXVelocity() > 0;
                 }
+
+                Log.e("TAG", "dismiss " + (dismiss ? "true" : "false"));
+
                 if (dismiss && mDownPosition != ListView.INVALID_POSITION) {
+                    Log.e("TAG", "dismiss");
                     // dismiss
                     final View downView = mDownView; // mDownView gets null'd before animation ends
                     final int downPosition = mDownPosition;

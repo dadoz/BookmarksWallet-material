@@ -1,7 +1,9 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.*;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -103,6 +105,7 @@ public class AddBookmarkFragment extends Fragment implements
                         new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
                 return true;
             case  R.id.action_save_new_bookmark:
+                mActionBarHandlerSingleton.hideSoftKeyboard(mUrlEditText);
                 String linkUrl = mUrlEditText.getText().toString();
                 if(! isValidUrl(linkUrl)) {
                     invalidateLinkView(true);
@@ -129,19 +132,23 @@ public class AddBookmarkFragment extends Fragment implements
     }
 
     private void invalidateLinkView(boolean invalidate) {
-        View view = mAddBookmarkView.findViewById(R.id.errorLayoutId);
-//        mAddBookmarkView.findViewById(R.id.addBookmarkDescriptionTextId).setVisibility(invalidate ? View.GONE : View.VISIBLE);
-        mAddBookmarkView.findViewById(R.id.errorLayoutId).setVisibility(invalidate ? View.VISIBLE : View.GONE);
+        View view = mAddBookmarkView.findViewById(R.id.errorLayoutId); //TODO replace
+        mAddBookmarkView.findViewById(R.id.addBookmarkDescriptionTextviewId).setVisibility(!invalidate ? View.VISIBLE : View.GONE);
+        ((ViewGroup) view).getChildAt(0).setVisibility(! invalidate ? View.INVISIBLE : View.VISIBLE);
+        ((ViewGroup) view).getChildAt(1).setVisibility(! invalidate ? View.INVISIBLE : View.VISIBLE);
+
         view.setBackgroundColor(mAddActivityRef.
-                getResources().getColor(invalidate ? R.color.material_red : R.color.lightGrey));
+                getResources().getColor(invalidate ? R.color.material_violet_500 : R.color.lightGrey));
 
         if(invalidate) {
             if (Build.VERSION.SDK_INT >= 21) {
-                ViewAnimationUtils.createCircularReveal(view,
-                        view.getWidth() / 2,
-                        view.getHeight() / 2,
-                        0,
-                        view.getHeight()).start();
+                Animator reveal = ViewAnimationUtils
+                        .createCircularReveal(view,
+                                view.getWidth() / 2,
+                                view.getHeight() / 2,
+                                0,
+                                view.getHeight());
+                reveal.start();
             }
         }
 

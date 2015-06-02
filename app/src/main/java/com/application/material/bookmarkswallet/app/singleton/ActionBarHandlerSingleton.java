@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app.singleton;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
@@ -9,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animators.ScrollManager;
@@ -307,10 +310,28 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
         return layoutManagerType == LayoutManagerTypeEnum.LIST;
     }
 
+
+    //TODO move out
     public void setColorFilter(Drawable drawable, int color) {
         drawable.setColorFilter(mActivtyRef.getResources()
                         .getColor(color),
                 PorterDuff.Mode.SRC_IN);
+    }
+
+    public static void setColorFilter(Drawable drawable, int color, Activity activityRef) {
+        drawable.setColorFilter(activityRef.getResources()
+                        .getColor(color),
+                PorterDuff.Mode.SRC_IN);
+    }
+
+    public void hideSoftKeyboard(EditText editText) {
+        if(editText == null) {
+            return;
+        }
+
+        ((InputMethodManager) mActivtyRef
+                .getSystemService(Context.INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
 //    public void setViewOnActionMenu(SwipeRefreshLayout mSwipeRefreshLayout, View actionbarInfoView, int actionbarInfoLayoutId, BookmarkListFragment bookmarkListFragment) {

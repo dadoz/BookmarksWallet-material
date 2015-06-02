@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -78,9 +79,8 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 		mSettingsList = (ListView) getView().findViewById(R.id.settingsListId);
 
 		ArrayList<String> settingsNameList = new ArrayList<String>();
-//		settingsNameList.add("Remove ads");
 		settingsNameList.add("Rate it!");
-		settingsNameList.add("Url search filter enabled");
+		settingsNameList.add("Search on URL enabled");
 		settingsNameList.add("Delete all bookmarks!");
 		settingsNameList.add("Send a feedback");
 
@@ -94,6 +94,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 
 
 	private void openDeleteAllDialog() {
+        Resources res = mActivityRef.getResources();
 		AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef);
 		Dialog dialog = builder.setTitle("Delete bookmarks!").
 				setMessage("Are you sure you want to delete all your bookmarks?").

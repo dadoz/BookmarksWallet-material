@@ -3,6 +3,7 @@ package com.application.material.bookmarkswallet.app.singleton;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -37,7 +38,7 @@ import static com.application.material.bookmarkswallet.app.singleton.ActionBarHa
 /**
  * Created by davide on 31/03/15.
  */
-public class RecyclerViewActionsSingleton implements View.OnClickListener {
+public class RecyclerViewActionsSingleton {
     private static final String TAG = "RecyclerViewActionsSingleton";
     private static RecyclerViewActionsSingleton mInstance;
     private static RecyclerView mRecyclerView;
@@ -134,15 +135,21 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef);
             mEditDialog = builder.
-                    setTitle("Edit").
+                    setTitle("Edit bookmark").
                     setView(editBookmarkView).
+                    setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            saveEditLinkDialog();
+                        }
+                    }).
                     create();
             mEditDialog.show();
 
             mEditTitleViewRef = editBookmarkView.findViewById(R.id.editBookamrkTitleDialoglId);
             mEditUrlViewRef = editBookmarkView.findViewById(R.id.editBookmarkUrlDialoglId);
-            editBookmarkView.findViewById(R.id.saveEditUrlDialogId).
-                    setOnClickListener((View.OnClickListener) mListenerRef);
+//            editBookmarkView.findViewById(R.id.saveEditUrlDialogId).
+//                    setOnClickListener((View.OnClickListener) mListenerRef);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -440,20 +447,6 @@ public class RecyclerViewActionsSingleton implements View.OnClickListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.saveEditUrlDialogId:
-                saveEditLinkDialog();
-                break;
-//            case R.id.editUrlLabelId:
-//                String url = (String) v.getTag();
-//                editLinkDialog(url);
-//                break;
-        }
-
     }
 
 //    private void hideSoftKeyboard(EditText editText) {
