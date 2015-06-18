@@ -175,8 +175,8 @@
             android:orientation="vertical">
         <ImageView
                 android:id="@+id/moreInfoClosedIconId"
-                android:layout_width="@dimen/fab_icon_size"
-                android:layout_height="@dimen/fab_icon_size"
+                android:layout_width="@dimen/fab_size_micro"
+                android:layout_height="@dimen/fab_size_micro"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/linkTimestampId"
                 android:layout_marginRight="@dimen/medium_padding"

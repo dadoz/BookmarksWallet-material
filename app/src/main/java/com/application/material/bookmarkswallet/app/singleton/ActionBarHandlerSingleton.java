@@ -4,7 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.ActionBarActivity;
+import android.os.Build;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -16,6 +17,8 @@ import android.widget.ImageView;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animators.ScrollManager;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
+
+import java.util.List;
 
 /**
  * Created by davide on 18/03/15.
@@ -90,11 +93,11 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
 
     private void setActionBar() {
         toolbar = (Toolbar) mActivtyRef.findViewById(R.id.toolbarId);
-        ((ActionBarActivity) mActivtyRef).setSupportActionBar(toolbar);
+        ((AppCompatActivity) mActivtyRef).setSupportActionBar(toolbar);
     }
 
 
-    public void setToolbarScrollManager(final RecyclerView recyclerView, final View fab) {
+    public void setToolbarScrollManager(final RecyclerView recyclerView, final List<View> viewList) {
         scrollManager = new ScrollManager(mActivtyRef);
         try {
             toolbar.post(new Runnable() {
@@ -104,7 +107,8 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
 //                        scrollManager.addViewNoDown(infoInnerView, ScrollManager.Direction.UP);
 //                    }
 //                    scrollManager.setInitialOffset(toolbar.getHeight() + infoInnerView.getHeight());
-                    scrollManager.addView(fab, ScrollManager.Direction.DOWN);
+                    scrollManager.addView(viewList.get(0), ScrollManager.Direction.DOWN);
+                    scrollManager.addView(viewList.get(1), ScrollManager.Direction.DOWN);
                 }
             });
 
@@ -116,7 +120,7 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
     }
 
     private android.support.v7.app.ActionBar getActionBar() {
-        return ((ActionBarActivity) mActivtyRef).getSupportActionBar();
+        return ((AppCompatActivity) mActivtyRef).getSupportActionBar();
 
     }
 
@@ -168,8 +172,10 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
         Window window = mActivtyRef.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(mActivtyRef.getResources().getColor(
-                isChangeColor ? R.color.material_mustard_yellow : R.color.material_mustard_yellow_700));
+        if (Build.VERSION.SDK_INT >= 21) {
+            window.setStatusBarColor(mActivtyRef.getResources().getColor(
+                    isChangeColor ? R.color.material_mustard_yellow : R.color.material_mustard_yellow_700));
+        }
     }
 
     public void setDisplayHomeEnabled(boolean isHomeUpEnabled) {
@@ -315,6 +321,14 @@ public class ActionBarHandlerSingleton implements OnInitActionBarInterface {
     public void setColorFilter(Drawable drawable, int color) {
         drawable.setColorFilter(mActivtyRef.getResources()
                         .getColor(color),
+                PorterDuff.Mode.SRC_IN);
+    }
+
+    public void setColorResourceFilter(Drawable drawable, int colorResource) {
+        if (drawable == null) {
+            return;
+        }
+        drawable.setColorFilter(colorResource,
                 PorterDuff.Mode.SRC_IN);
     }
 

@@ -8,6 +8,17 @@
         <item name="android:textColorPrimary">@color/material_stone_black</item>
         <item name="colorPrimary">@color/material_mustard_yellow</item>
         <item name="android:textColor">@color/material_stone_black</item>
+
+        <!--<item name="android:alertDialogTheme">@style/dialogStyle</item>-->
+    </style>
+
+    <style name="dialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <!-- Used for the buttons -->
+        <item name="colorAccent">@color/material_violet_500</item>
+        <!-- Used for the title and text -->
+        <item name="android:textColorPrimary">@color/material_violet_500</item>
+        <!-- Used for the background -->
+        <!--<item name="android:background">#4CAF50</item>-->
     </style>
 
 </resources>

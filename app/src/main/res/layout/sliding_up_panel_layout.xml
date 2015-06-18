@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/slidingPanelLayoutId"
+        android:layout_width="fill_parent"
+        android:layout_height="200dip"
+        android:background="@color/material_violet_500"
+        android:paddingBottom="@dimen/medium_padding"
+        android:orientation="vertical">
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:id="@+id/slidingPanelLabelTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_padding"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/text_size_20"
+                android:padding="@dimen/medium_padding"
+                android:textColor="@color/white"
+                android:text="Add new"/>
+        <ImageView
+                android:visibility="gone"
+                android:layout_alignParentRight="true"
+                android:id="@+id/slidingPanelDoneIconId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/medium_padding"
+                android:src="@drawable/ic_done_black_36dp"/>
+
+    </RelativeLayout>
+        <CheckBox
+                android:id="@+id/httpFormatCheckboxId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/medium_padding"
+                android:padding="@dimen/medium_padding"
+                android:text="HTTPS"
+                android:buttonTint="@color/material_violet_500"
+                android:textColor="@color/material_violet_500"/>
+
+    <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <EditText
+                android:id="@+id/urlEditText"
+                android:focusableInTouchMode="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/medium_padding"
+                android:layout_marginLeft="@dimen/medium_padding"
+                android:textColor="@color/material_violet_500"
+                android:minWidth="250dip"
+                android:hint="type bookmark url...">
+        </EditText>
+    </ScrollView>
+
+
+</LinearLayout>

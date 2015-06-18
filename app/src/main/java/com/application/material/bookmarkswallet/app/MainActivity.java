@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.*;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +21,7 @@ import icepick.Icicle;
 import static com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton.NOT_SELECTED_ITEM_POSITION;
 
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
         implements OnChangeFragmentWrapperInterface {
     private String TAG = "MainActivity";
     private String EXTRA_DATA = "EXTRA_DATA";
@@ -196,6 +197,7 @@ public class MainActivity extends ActionBarActivity
                     .findFragmentByTag(BookmarkListFragment.FRAG_TAG);
             if (fragment != null) {
                 ((BookmarkListFragment) fragment).collapseAddLinkButton();
+                ((BookmarkListFragment) fragment).collapseSlidingPanel();
                 if (isEditMode) {
                     ((BookmarkListFragment) fragment).undoEditBookmarkRecyclerViewWrapper();
                 }

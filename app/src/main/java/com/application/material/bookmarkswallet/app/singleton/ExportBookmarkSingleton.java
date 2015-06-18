@@ -40,13 +40,13 @@ public class ExportBookmarkSingleton {
     public ExportBookmarkSingleton() {
     }
 
-    public void exportAction() {
+    public void exportAction(final RealmResults<Bookmark> mItems) {
         mExportBookmarksRevealView.findViewById(R.id.exportConfirmButtonDialogId).
                 setOnClickListener((View.OnClickListener) mListenerRef);
 //        mExportBookmarksRevealView.findViewById(R.id.dismissExportButtonDialogId).
 //                setOnClickListener((View.OnClickListener) mListenerRef);
 
-        if(mExportDialog == null) {
+        if (mExportDialog == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef);
             mExportDialog = builder.
                     setTitle("Bookmarks export!").
@@ -57,12 +57,25 @@ public class ExportBookmarkSingleton {
                             dialog.dismiss();
                         }
                     }).
+                    setPositiveButton("EXPORT", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            exportBookmarks(mItems);
+                        }
+                    }).
                     create();
         }
         mExportDialog.show();
     }
 
     public void exportBookmarks(RealmResults<Bookmark> items) {
+        boolean isFileCreated = CSVExportParser.writeFile(items);
+        if (isFileCreated) {
+            setSuccessExportView();
+        }
+    }
+
+    private void setSuccessExportView() {
         View view = mExportBookmarksRevealView.findViewById(R.id.exportFrameLayoutId);
         view.setBackgroundColor(mActivityRef.getResources().getColor(R.color.material_green));
         if (Build.VERSION.SDK_INT >= 21) {
@@ -70,23 +83,20 @@ public class ExportBookmarkSingleton {
                     view.getWidth() / 2, view.getHeight() / 2, 0, view.getHeight()).start();
         }
 
-        boolean isFileCreated = CSVExportParser.writeFile(items);
-        if(isFileCreated) {
-            (view.findViewById(R.id.exportInfoTextId)).setVisibility(View.GONE);
-            (view.findViewById(R.id.exportSuccessTextId)).setVisibility(View.VISIBLE);
-            ((TextView) view.findViewById(R.id.exportSuccessTextId)).
-                    append(CSVExportParser.EXPORT_FILE_NAME);
+        (view.findViewById(R.id.exportInfoTextId)).setVisibility(View.GONE);
+        (view.findViewById(R.id.exportSuccessTextId)).setVisibility(View.VISIBLE);
+        ((TextView) view.findViewById(R.id.exportSuccessTextId)).
+                append(CSVExportParser.EXPORT_FILE_NAME);
 
 //            ((TextView) view.findViewById(R.id.dismissExportButtonDialogId)).
 //                    setTextColor(mActivityRef.getResources().getColor(R.color.white));
 
-            (view.findViewById(R.id.exportConfirmButtonDialogId)).setOnClickListener(null);
+        (view.findViewById(R.id.exportConfirmButtonDialogId)).setOnClickListener(null);
 //            ActionBarHandlerSingleton.setColorFilter(((ImageView) view
 //                    .findViewById(R.id.exportConfirmButtonDialogId)).getDrawable(),
 //                    R.color.material_violet_500, mActivityRef);
-            ((ImageView) view.findViewById(R.id.exportConfirmButtonDialogId)).setImageDrawable(
-                    mActivityRef.getResources().getDrawable(R.drawable.ic_check_circle_white_48dp));
-        }
+        ((ImageView) view.findViewById(R.id.exportConfirmButtonDialogId)).setImageDrawable(
+                mActivityRef.getResources().getDrawable(R.drawable.ic_check_circle_white_48dp));
 
     }
 

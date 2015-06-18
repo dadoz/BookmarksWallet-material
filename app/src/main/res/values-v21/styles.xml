@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="android:windowActionBar">false</item>
@@ -19,7 +19,7 @@
         <item name="colorAccent">@color/material_violet_500</item>
         <!-- Used for the title and text -->
         <item name="android:textColorPrimary">@color/material_violet_500</item>
-        <!-- Used for the background -->
+            <!-- Used for the background -->
         <!--<item name="android:background">#4CAF50</item>-->
     </style>
 </resources>

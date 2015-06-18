@@ -1,10 +1,12 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
+import android.animation.ArgbEvaluator;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
@@ -32,19 +34,37 @@ import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSi
 import com.application.material.bookmarkswallet.app.singleton.ClipboardSingleton;
 import com.application.material.bookmarkswallet.app.singleton.ExportBookmarkSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.tjeannin.apprate.AppRate;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class BookmarkListFragment extends Fragment
 		implements View.OnClickListener,
-        Filterable, SwipeRefreshLayout.OnRefreshListener, FloatingActionsMenu.OnFloatingActionsMenuUpdateListener {
+        Filterable, SwipeRefreshLayout.OnRefreshListener, FloatingActionMenu.OnMenuToggleListener, SlidingUpPanelLayout.PanelSlideListener, CompoundButton.OnCheckedChangeListener {
 	private static final String TAG = "LinksListFragment_TAG";
 	public static final String FRAG_TAG = "LinksListFragment";
 	private MainActivity mMainActivityRef;
+	@InjectView(R.id.urlEditText)
+    EditText mUrlEditText;
+    @InjectView(R.id.httpFormatCheckboxId)
+    CheckBox mHttpFormatCheckbox;
+	@InjectView(R.id.slidingPanelLabelTextId)
+    TextView mSlidingPanelLabelText;
+	@InjectView(R.id.slidingPanelDoneIconId)
+    ImageView slidingPanelDoneIcon;
+	@InjectView(R.id.slidingPanelLayoutId)
+    LinearLayout mSlidingPanelLayout;
+	@InjectView(R.id.slidingLayerLayoutId)
+    SlidingUpPanelLayout mSlidingLayerLayout;
 	@InjectView(R.id.linksListId)
 	RecyclerViewCustom mRecyclerView;
 	@InjectView(R.id.addLinkButtonId)
@@ -52,15 +72,15 @@ public class BookmarkListFragment extends Fragment
 	@InjectView(R.id.importFloatingButtonId)
 	FloatingActionButton importFloatingButton;
 	@InjectView(R.id.clipboardFloatingButtonId)
-	FloatingActionButton clipboardFloatingButton;
+    FloatingActionButton clipboardFloatingButton;
 	@InjectView(R.id.floatingMenuButtonId)
-    FloatingActionsMenu mFloatingMenuButton;
-	@InjectView(R.id.undoLinkDeletedLayoutId)
-	View undoLinkDeletedLayout;
-	@InjectView(R.id.undoButtonId)
-	View undoButton;
-	@InjectView(R.id.dismissButtonId)
-	View dismissButton;
+    FloatingActionMenu mFloatingMenuButton;
+//	@InjectView(R.id.undoLinkDeletedLayoutId)
+//	View undoLinkDeletedLayout;
+//	@InjectView(R.id.undoButtonId)
+//	View undoButton;
+//	@InjectView(R.id.dismissButtonId)
+//	View dismissButton;
     @InjectView(R.id.emptyLinkListViewId)
 	View emptyLinkListView;
     @InjectView(R.id.emptySearchResultLayoutId)
@@ -118,54 +138,58 @@ public class BookmarkListFragment extends Fragment
 	}
 
 	private void onInitView() {
+        ArrayList<View> viewArrayList = new ArrayList<>();
+        viewArrayList.add(clipboardFloatingButton);
+        viewArrayList.add(mSlidingLayerLayout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_light,
+        mSlidingLayerLayout.setPanelSlideListener(this);
+        slidingPanelDoneIcon.setOnClickListener(this);
+//        mSlidingLayerLayout
+        mSwipeRefreshLayout.setColorSchemeColors(android.R.color.holo_red_light,
                 android.R.color.holo_orange_light, android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light);
 //		mActionBarHandlerSingleton.setViewOnActionMenu(mSwipeRefreshLayout, actionbarInfoView, R.id.actionbarInfoLayoutId, this);
-		mActionBarHandlerSingleton.setToolbarScrollManager(mRecyclerView, (View) addLinkButton.getParent());
+		mActionBarHandlerSingleton.setToolbarScrollManager(mRecyclerView, viewArrayList);
         mActionBarHandlerSingleton.setTitle(null);
         mActionBarHandlerSingleton.setDisplayHomeEnabled(false);
 
 //        View.OnClickListener longClickListener = (View.OnClickListener) mRecyclerView.getAdapter();
 //        touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, longClickListener, this); //LISTENER TO SWIPE
-        rvActionsSingleton = RecyclerViewActionsSingleton.
-                getInstance(mSwipeRefreshLayout, mRecyclerView, mMainActivityRef, this);
+        rvActionsSingleton = RecyclerViewActionsSingleton
+                .getInstance(mSwipeRefreshLayout, mRecyclerView, mMainActivityRef, this);
 
         mItems = rvActionsSingleton.getBookmarksList();
 
-        setIconOnFLoatingButton();
-		addLinkButton.setOnClickListener(this);
+//        setIconOnFLoatingButton();
+
+        addLinkButton.setOnClickListener(this);
         importFloatingButton.setOnClickListener(this);
         clipboardFloatingButton.setOnClickListener(this);
-		undoButton.setOnClickListener(this);
-		dismissButton.setOnClickListener(this);
 
-        mFloatingMenuButton.setOnFloatingActionsMenuUpdateListener(this);
+        mFloatingMenuButton.setOnMenuToggleListener(this);
 		initRecyclerView();
         rvActionsSingleton.setAdapter();
-        if(mActionBarHandlerSingleton.isEditMode()) {
+        if (mActionBarHandlerSingleton.isEditMode()) {
             rvActionsSingleton.selectBookmarkEditMenu(mActionBarHandlerSingleton.getEditItemPos());
         }
 	}
 
     private void setIconOnFLoatingButton() {
-        Resources res = mMainActivityRef.getResources();
-        Drawable icon = res.getDrawable(R.drawable.ic_insert_drive_file_white_24dp);
+//        Resources res = mMainActivityRef.getResources();
+/*        Drawable icon = res.getDrawable(R.drawable.ic_insert_drive_file_white_24dp);
         mActionBarHandlerSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
-        importFloatingButton.setIconDrawable(icon);
+        importFloatingButton.setImageDrawable(icon);
 
         icon = res.getDrawable(R.drawable.ic_content_paste_white_24dp);
         mActionBarHandlerSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
-        clipboardFloatingButton.setIconDrawable(icon);
+        clipboardFloatingButton.setImageDrawable(icon);
 
         icon = res.getDrawable(R.drawable.ic_edit_white_24dp);
         mActionBarHandlerSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
-        addLinkButton.setIconDrawable(icon);
+        addLinkButton.setImageDrawable(icon);*/
 
     }
-
 
     private void initRecyclerView() {
 		mLinkRecyclerViewAdapter =
@@ -199,18 +223,10 @@ public class BookmarkListFragment extends Fragment
 		inflater.inflate(isItemSelected ? R.menu.save_edit_link_menu :
                 R.menu.menu_main, menu);
 
-        if(! isItemSelected) {
-            Drawable icon = menu.findItem(R.id.action_search).getIcon();
-            icon.setColorFilter(mMainActivityRef.getResources().getColor(R.color.material_violet_500),
-                    PorterDuff.Mode.SRC_IN);
-            menu.findItem(R.id.action_search).setIcon(icon);
-        } else {
-            Drawable icon = menu.findItem(R.id.action_edit).getIcon();
-            icon.setColorFilter(mMainActivityRef.getResources().getColor(R.color.material_violet_500),
-                    PorterDuff.Mode.SRC_IN);
-            menu.findItem(R.id.action_edit).setIcon(icon);
-
-        }
+        Drawable icon = menu.findItem(! isItemSelected ? R.id.action_search : R.id.action_edit).getIcon();
+        icon.setColorFilter(mMainActivityRef.getResources().getColor(R.color.material_violet_500),
+                PorterDuff.Mode.SRC_IN);
+        menu.findItem(! isItemSelected ? R.id.action_search : R.id.action_edit).setIcon(icon);
         //LAYOUT MANAGER
 //        if(! isItemSelected) {
 //            menu.findItem(R.id.action_grid)
@@ -244,6 +260,7 @@ public class BookmarkListFragment extends Fragment
                             mRecyclerView.getAdapter().notifyDataSetChanged();
                             int startDelay = 600;
                             toggleAddLinkButton(true, startDelay);
+                            mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                             return true;
                         }
 
@@ -252,7 +269,7 @@ public class BookmarkListFragment extends Fragment
                             ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
                                     .setSearchMode(false);
                             rvActionsSingleton.setAdapter();
-                            toggleAddLinkButton(false, -1);
+//                            toggleAddLinkButton(false, -1);
                             return true;
                         }
                     });
@@ -309,7 +326,7 @@ public class BookmarkListFragment extends Fragment
                 mMainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
                 return true;
 			case R.id.action_export:
-				exportBookmarksSingleton.exportAction();
+				exportBookmarksSingleton.exportAction(mItems);
 				return true;
 //			case R.id.action_grid:
 //                mRecyclerView.setLayoutManager(new GridLayoutManager(mMainActivityRef, 2));
@@ -337,9 +354,6 @@ public class BookmarkListFragment extends Fragment
 //			case R.id.saveEditUrlDialogId:
 //                rvActionsSingleton.saveEditLinkDialog();
 //                break;
-			case R.id.exportConfirmButtonDialogId:
-				exportBookmarksSingleton.exportBookmarks(mItems);
-				break;
 			case R.id.importLocalBookmarksButtonId:
 				rvActionsSingleton.setBookmarksByProvider();
 				break;
@@ -354,67 +368,45 @@ public class BookmarkListFragment extends Fragment
                     break;
                 }
                 addLinkOnRecyclerViewWrapper(bookmarkUrl.trim());
-                mFloatingMenuButton.collapse();
+                mFloatingMenuButton.close(true);
                 break;
             case R.id.importFloatingButtonId:
                 mActionBarHandlerSingleton.toggleActionBar(true, false, false);
                 mMainActivityRef.changeFragment(new ImportBookmarkFragment(),
                         null, ImportBookmarkFragment.FRAG_TAG);
-                mFloatingMenuButton.collapse();
+                mFloatingMenuButton.close(true);
                 break;
 			case R.id.actionbarInfoActionIconId:
 				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
-//				mActionBarHandlerSingleton.initToggleSettings(false, false);
-//				mActionBarHandlerSingleton.showLayoutByMenuAction(R.id.actionbarInfoActionIconId);
 				break;
 			case R.id.actionbarImportActionIconId:
 				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
 				break;
 			case R.id.addLinkButtonId:
-				mMainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
-						AddBookmarkActivity.ADD_REQUEST, null);
-                mFloatingMenuButton.collapse();
+//				mMainActivityRef.startActivityForResultWrapper(AddBookmarkActivity.class,
+//						AddBookmarkActivity.ADD_REQUEST, null);
+                mFloatingMenuButton.close(true);
                 break;
-//			case R.id.editUrlLabelId:
-//				String url = (String) v.getTag();
-//				rvActionsSingleton.editLinkDialog(url);
-//				break;
+			case R.id.slidingPanelDoneIconId:
+                Log.e("TAG", mUrlEditText.getText().toString());
+                if (!isValidUrl(mUrlEditText.getText().toString())) {
+                    Toast.makeText(mMainActivityRef, "no valid url typed in!", Toast.LENGTH_SHORT).show();
+                    break;
+                }
 
-//			case R.id.undoButtonId:
-//				Toast.makeText(mMainActivityRef, "undo", Toast.LENGTH_SHORT).show();
-////				Bookmark deletedItem = adapter.getDeletedItem();
-//				int deletedItemPosition = adapter.getDeletedItemPosition();
-//                adapter.notifyItemInserted(deletedItemPosition);
-//                rvActionsSingleton.setDeletedItemPosition(-1);
-////				adapter.addOnPosition(deletedItem, deletedItemPosition);
-//				setUndoDeletedLinkLayout(false);
-//				break;
-//			case R.id.dismissButtonId:
-//				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
-////				deletedItem = adapter.getDeletedItem();
-////				dbConnector.deleteLinkById((int) deletedItem.getId());
-//                rvActionsSingleton.deleteBookmark(adapter.getDeletedItemPosition());
-//				setUndoDeletedLinkLayout(false);
-//				break;
+                try {
+                    rvActionsSingleton.addBookmarkWithInfo(mUrlEditText.getText().toString());
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
 
-//			case R.id.actionbarInfoLayoutId:
-//				mActionBarHandlerSingleton.toggleInnerLayoutByActionMenu(v.getId());
-//				break;
+                mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                mUrlEditText.setText("");
+                break;
 		}
 	}
 
 
-	//onclick listener
-/*	@Override
-	public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-		detector.onTouchEvent(motionEvent);
-		return false;
-	}
-
-	@Override
-	public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-	}
-*/
 	public void addLinkOnRecyclerViewWrapper(String url) {
         try {
             rvActionsSingleton.addBookmarkWithInfo(url);
@@ -425,29 +417,18 @@ public class BookmarkListFragment extends Fragment
         }
 	}
 
-	//TODO rename it
-//	public void setUndoDeletedLinkLayout(boolean isDeleting) {
-//		undoLinkDeletedLayout.setVisibility(isDeleting ? View.VISIBLE : View.GONE);
-//		addLinkButton.setVisibility(isDeleting ? View.GONE : View.VISIBLE);
-//	}
-
 	public void undoEditBookmarkRecyclerViewWrapper() {
 		rvActionsSingleton.undoEditBookmark();
-//        setInitialAdapter();
     }
 
-//	public void saveEditLinkRecyclerViewWrapper() {
-//        rvActionsSingleton.saveEditLink();
-//    }
-
 	public void collapseAddLinkButton() {
-        mFloatingMenuButton.collapse();
+        mFloatingMenuButton.close(true);
     }
 
 	public void toggleAddLinkButton(boolean isVisible, int startDelay) {
 		//hide fab button
-        mFloatingMenuButton.collapse();
-        mFloatingMenuButton.animate().
+//        mFloatingMenuButton.close(true);
+        clipboardFloatingButton.animate().
 				translationY(isVisible ? 300 : 0).
 				setInterpolator(new DecelerateInterpolator(3.f)).
 				setStartDelay(startDelay == -1 ? 200 : 600).
@@ -470,13 +451,68 @@ public class BookmarkListFragment extends Fragment
     }
 
     @Override
-    public void onMenuExpanded() {
-        mActionBarHandlerSingleton.setOverrideBackPressed(true);
+    public void onMenuToggle(boolean isVisible) {
+        mActionBarHandlerSingleton.setOverrideBackPressed(isVisible);
     }
 
     @Override
-    public void onMenuCollapsed() {
+    public void onPanelSlide(View view, float v) {
+        ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+        int startColor = mMainActivityRef.getResources().getColor(R.color.material_violet_500);
+        int endColor = mMainActivityRef.getResources().getColor(R.color.white);
+        int interpolatedColor = (int) argbEvaluator.evaluate(v, startColor, endColor);
+        int inverseInterpolatedColor = (int) argbEvaluator.evaluate(v, endColor, startColor);
+        mSlidingPanelLayout.setBackgroundColor(interpolatedColor);
+        mSlidingPanelLabelText.setTextColor(inverseInterpolatedColor);
+    }
+
+    @Override
+    public void onPanelCollapsed(View view) {
         mActionBarHandlerSingleton.setOverrideBackPressed(false);
+        mActionBarHandlerSingleton.hideSoftKeyboard(mUrlEditText);
+//        mActionBarHandlerSingleton.setColorFilter(slidingPanelLabelIcon.getDrawable(),
+//                R.color.white);
+        clipboardFloatingButton.show(true);
+        slidingPanelDoneIcon.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onPanelExpanded(View view) {
+        mActionBarHandlerSingleton.setOverrideBackPressed(true);
+        clipboardFloatingButton.hide(true);
+        slidingPanelDoneIcon.setVisibility(View.VISIBLE);
+        mActionBarHandlerSingleton.setColorResourceFilter(slidingPanelDoneIcon.getDrawable(),
+                R.color.material_violet_500);
+        mUrlEditText.setFocusableInTouchMode(true);
+        mUrlEditText.requestFocus();
+        mHttpFormatCheckbox.setOnCheckedChangeListener(this);
+        mUrlEditText.setText(mHttpFormatCheckbox.isChecked() ? "https://" : "http://");
+        mUrlEditText.setSelection(mUrlEditText.getText().length());
+    }
+
+    @Override
+    public void onPanelAnchored(View view) {
+        Log.e(TAG, "hey");
+//        mActionBarHandlerSingleton.hideSoftKeyboard(mUrlEditText);
+    }
+
+    @Override
+    public void onPanelHidden(View view) {
+
+    }
+
+    public void collapseSlidingPanel() {
+        mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.httpFormatCheckboxId:
+                mUrlEditText.setText(isChecked ? "https://" : "http://");
+                mUrlEditText.setSelection(mUrlEditText.getText().length());
+                break;
+        }
     }
 
     private class LinkFilter extends Filter {
@@ -512,6 +548,15 @@ public class BookmarkListFragment extends Fragment
                 }
             });
         }
+    }
+
+    private static boolean isValidUrl(String linkUrl) {
+        Pattern p = Pattern.
+                compile("(@)?(href=')?(HREF=')?(HREF=\")?(href=\")?(http://)?(https://)?(ftp://)?[a-zA-Z_0-9\\-]+(\\.\\w[a-zA-Z_0-9\\-]+)+(/[#&\\n\\-=?\\+\\%/\\.\\w]+)?");
+
+        Matcher m = p.matcher(linkUrl);
+        return ! linkUrl.equals("") &&
+                m.matches();
     }
 
 /*

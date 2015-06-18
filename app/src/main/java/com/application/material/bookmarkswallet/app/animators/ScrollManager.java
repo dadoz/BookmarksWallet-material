@@ -29,7 +29,8 @@ import android.view.animation.Interpolator;
 import android.widget.RelativeLayout;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.github.clans.fab.FloatingActionMenu;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.HashMap;
 
@@ -97,8 +98,13 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
             hidden = true;
             for (View view : viewsToHide.keySet()) {
                 hideView(view, viewsToHide.get(view));
-                if(view.getId() == R.id.floatingMenuButtonId) {
-                    ((FloatingActionsMenu) view).collapse();
+                switch (view.getId()) {
+                    case R.id.floatingMenuButtonId:
+                        ((FloatingActionMenu) view).close(true);
+                        break;
+//                    case R.id.slidingLayerLayoutId:
+//                        ((SlidingUpPanelLayout) view).setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+//                        break;
                 }
             }
 
@@ -128,7 +134,12 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
     }
 
     private void hideView(View view, Direction direction) {
-        //hide view
+        if (view.getId() == R.id.slidingLayerLayoutId) {
+            ((SlidingUpPanelLayout) view).setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            return;
+        }
+
+                //hide view
         int height = calculateTranslation(view);
         int translateY = direction == Direction.UP ? -height : height;
         runTranslateAnimation(view, translateY, new AccelerateInterpolator(3));
@@ -149,6 +160,11 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
     }
 
     private void showView(View view) {
+        if (view.getId() == R.id.slidingLayerLayoutId) {
+            ((SlidingUpPanelLayout) view).setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            return;
+        }
+
         runTranslateAnimation(view, 0, new DecelerateInterpolator(3));
     }
 
@@ -156,6 +172,7 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
         Animator slideInAnimation = ObjectAnimator.ofFloat(view, "translationY", translateY);
         slideInAnimation.setDuration(view.getContext().getResources().getInteger(android.R.integer.config_mediumAnimTime));
         slideInAnimation.setInterpolator(interpolator);
+        slideInAnimation.setStartDelay(translateY == 0 ? 300 : 0);
         slideInAnimation.start();
 /*        final int[] ended = new int[1];
         ended[0] = 1;
