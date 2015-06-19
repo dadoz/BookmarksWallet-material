@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
@@ -44,6 +45,7 @@ import io.realm.RealmResults;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.logging.LogRecord;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -457,6 +459,10 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onPanelSlide(View view, float v) {
+        if (v <= 0) {
+            return;
+        }
+
         ArgbEvaluator argbEvaluator = new ArgbEvaluator();
         int startColor = mMainActivityRef.getResources().getColor(R.color.material_violet_500);
         int endColor = mMainActivityRef.getResources().getColor(R.color.white);
