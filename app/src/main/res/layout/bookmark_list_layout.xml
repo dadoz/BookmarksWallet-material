@@ -48,8 +48,6 @@
             <!--slidingLayer:previewOffsetDistance="50dip"-->
             <!--slidingLayer:stickTo="bottom">-->
 
-
-
     <com.github.clans.fab.FloatingActionMenu
             android:visibility="gone"
             android:id="@+id/floatingMenuButtonId"

@@ -12,16 +12,16 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.adapter.SettingListAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
+import com.application.material.bookmarkswallet.app.models.Setting;
 import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
 import com.suredigit.inappfeedback.FeedbackDialog;
@@ -30,8 +30,10 @@ import io.realm.Realm;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SettingsFragment extends Fragment implements AdapterView.OnItemClickListener {
-	public static String FRAG_TAG = "SettingsFragment_FRAG";
+public class SettingsFragment extends Fragment implements AdapterView.OnItemClickListener,
+        CompoundButton.OnCheckedChangeListener {
+    private static final String TAG = "SettingsFragment";
+    public static String FRAG_TAG = "SettingsFragment_FRAG";
 	public static String TITLE = "Settings";
 	private Activity mActivityRef;
 	private View settingsView;
@@ -78,17 +80,20 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 
 		mSettingsList = (ListView) getView().findViewById(R.id.settingsListId);
 
-		ArrayList<String> settingsNameList = new ArrayList<String>();
-		settingsNameList.add("Rate it!");
-		settingsNameList.add("Search on URL enabled");
-		settingsNameList.add("Delete all bookmarks!");
-		settingsNameList.add("Send a feedback");
-
+		ArrayList<Setting> settingList = new ArrayList<Setting>();
+		settingList.add(new Setting("Rate it!", View.GONE, false));
+        settingList.add(new Setting("Search on URL enabled", View.VISIBLE, mRvActionsSingleton.getSearchOnUrlEnabled()));
+        settingList.add(new Setting("Delete all bookmarks!", View.GONE, true));
+        settingList.add(new Setting("Send a feedback", View.GONE, false));
+        //add switchCompat v7 on sm option
 		//I'm using the android std item layout to render listview
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getBaseContext(),
-				android.R.layout.simple_list_item_1, settingsNameList);
+//		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getBaseContext(),
+//				android.R.layout.simple_list_item_1, settingsNameList);
+		ArrayAdapter<Setting> adapter = new SettingListAdapter(getActivity().getBaseContext(),
+				R.layout.setting_item, settingList, this);
 
 		mSettingsList.setOnItemClickListener(this);
+
 		mSettingsList.setAdapter(adapter);
 	}
 
@@ -133,9 +138,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
                             Uri.parse("http://play.google.com/store/apps/details?id=" + mActivityRef.getPackageName())));
                 }
                 break;
-			case 1:
-                Log.e("Settings", "toggle checkbox");
-				break;
             case 2:
                 openDeleteAllDialog();
                 break;
@@ -144,4 +146,10 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
                 break;
 		}
 	}
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        mRvActionsSingleton.setSearchOnUrlEnabled(isChecked);
+        Log.e(TAG, "hey " + isChecked);
+    }
 }

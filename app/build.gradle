@@ -60,8 +60,9 @@ dependencies {
     compile 'io.realm:realm-android:0.80.1'
     compile 'org.jsoup:jsoup:1.8.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.sothree.slidinguppanel:library:3.0.0'
+//    compile 'com.sothree.slidinguppanel:library:3.0.0'
     compile 'frankiesardo:icepick:3.0.2'
     provided 'frankiesardo:icepick-processor:3.0.2'
+    compile project(':library')
 
 }

@@ -148,7 +148,7 @@ public class BookmarkListFragment extends Fragment
         mSlidingLayerLayout.setPanelSlideListener(this);
         slidingPanelDoneIcon.setOnClickListener(this);
 //        mSlidingLayerLayout
-        mSwipeRefreshLayout.setColorSchemeColors(android.R.color.holo_red_light,
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light,
                 android.R.color.holo_orange_light, android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light);
 //		mActionBarHandlerSingleton.setViewOnActionMenu(mSwipeRefreshLayout, actionbarInfoView, R.id.actionbarInfoLayoutId, this);
@@ -261,7 +261,7 @@ public class BookmarkListFragment extends Fragment
                                     .setSearchMode(true);
                             mRecyclerView.getAdapter().notifyDataSetChanged();
                             int startDelay = 600;
-                            toggleAddLinkButton(true, startDelay);
+                            toggleAddLinkButton(startDelay);
                             mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                             return true;
                         }
@@ -271,7 +271,8 @@ public class BookmarkListFragment extends Fragment
                             ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
                                     .setSearchMode(false);
                             rvActionsSingleton.setAdapter();
-//                            toggleAddLinkButton(false, -1);
+//                            toggleAddLinkButton(-1);
+//                            mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
                             return true;
                         }
                     });
@@ -427,11 +428,11 @@ public class BookmarkListFragment extends Fragment
         mFloatingMenuButton.close(true);
     }
 
-	public void toggleAddLinkButton(boolean isVisible, int startDelay) {
+	public void toggleAddLinkButton(int startDelay) {
 		//hide fab button
 //        mFloatingMenuButton.close(true);
         clipboardFloatingButton.animate().
-				translationY(isVisible ? 300 : 0).
+				translationY((clipboardFloatingButton.getVisibility() == View.VISIBLE) ? 300 : 0).
 				setInterpolator(new DecelerateInterpolator(3.f)).
 				setStartDelay(startDelay == -1 ? 200 : 600).
 				start();

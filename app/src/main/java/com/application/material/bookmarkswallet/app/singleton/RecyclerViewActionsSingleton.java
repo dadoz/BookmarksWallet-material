@@ -53,6 +53,7 @@ public class RecyclerViewActionsSingleton {
     private static Realm mRealm;
     private View mEditTitleViewRef;
     private View mEditUrlViewRef;
+    private boolean mSearchOnUrlEnabled;
 
     public RecyclerViewActionsSingleton() {
     }
@@ -443,7 +444,7 @@ public class RecyclerViewActionsSingleton {
 
     private void animateButton(boolean animate) {
         try {
-            ((BookmarkListFragment) mFragmentRef).toggleAddLinkButton(animate, -1);
+            ((BookmarkListFragment) mFragmentRef).toggleAddLinkButton(-1);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -497,4 +498,19 @@ public class RecyclerViewActionsSingleton {
     }
 
 
+    public void setSearchOnUrlEnabled(boolean searchOnUrlEnabled) {
+        this.mSearchOnUrlEnabled = searchOnUrlEnabled;
+    }
+
+    public boolean ismSearchOnUrlEnabled() {
+        return mSearchOnUrlEnabled;
+    }
+
+    public void setmSearchOnUrlEnabled(boolean mSearchOnUrlEnabled) {
+        this.mSearchOnUrlEnabled = mSearchOnUrlEnabled;
+    }
+
+    public boolean getSearchOnUrlEnabled() {
+        return mSearchOnUrlEnabled;
+    }
 }
