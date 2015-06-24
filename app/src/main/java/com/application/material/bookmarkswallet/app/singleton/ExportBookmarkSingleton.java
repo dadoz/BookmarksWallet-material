@@ -92,7 +92,7 @@ public class ExportBookmarkSingleton {
 //                    setTextColor(mActivityRef.getResources().getColor(R.color.white));
 
         (view.findViewById(R.id.exportConfirmButtonDialogId)).setOnClickListener(null);
-//            ActionBarHandlerSingleton.setColorFilter(((ImageView) view
+//            ActionbarSingleton.setColorFilter(((ImageView) view
 //                    .findViewById(R.id.exportConfirmButtonDialogId)).getDrawable(),
 //                    R.color.material_violet_500, mActivityRef);
         ((ImageView) view.findViewById(R.id.exportConfirmButtonDialogId)).setImageDrawable(

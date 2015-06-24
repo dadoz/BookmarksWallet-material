@@ -33,7 +33,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.UUID;
 
-import static com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton.NOT_SELECTED_ITEM_POSITION;
+import static com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton.NOT_SELECTED_ITEM_POSITION;
 
 /**
  * Created by davide on 31/03/15.
@@ -44,7 +44,7 @@ public class RecyclerViewActionsSingleton {
     private static RecyclerView mRecyclerView;
     private static Activity mActivityRef;
     private static Fragment mListenerRef;
-    private static ActionBarHandlerSingleton mActionBarHandlerSingleton;
+    private static ActionbarSingleton mActionbarSingleton;
     private static Fragment mFragmentRef;
 //    private static View mEditUrlView;
     private static BookmarkRecyclerViewAdapter mAdapter;
@@ -84,7 +84,7 @@ public class RecyclerViewActionsSingleton {
         mListenerRef = fragmentRef;
         mFragmentRef = fragmentRef;
 //        mTouchListener = touchListener;
-        mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
+        mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
 //        mEditUrlView = mActivityRef.getLayoutInflater().
 //                inflate(R.layout.dialog_edit_url_layout, null);
         updateAdapterRef();
@@ -102,10 +102,11 @@ public class RecyclerViewActionsSingleton {
     public void undoEditBookmark() {
         updateAdapterRef();
         mAdapter.notifyDataSetChanged();
-        mActionBarHandlerSingleton.setEditItemPos(NOT_SELECTED_ITEM_POSITION);
-        mActionBarHandlerSingleton.setTitle(null);
+        mActionbarSingleton.setEditItemPos(NOT_SELECTED_ITEM_POSITION);
+        mActionbarSingleton.setTitle(null);
         mActivityRef.invalidateOptionsMenu();
-        animateButton(false);
+        showClipboardLinkButtonWrapper();
+        showSlidingPanelWrapper();
     }
 
     /**
@@ -114,15 +115,15 @@ public class RecyclerViewActionsSingleton {
      */
     public void selectBookmarkEditMenu(int position) {
         updateAdapterRef();
-        mActionBarHandlerSingleton.setEditItemPos(position);
-        mActionBarHandlerSingleton.setTitle("1");
-        mActionBarHandlerSingleton.toggleActionBar(true, true, true, R.id.infoOuterButtonId);
+        mActionbarSingleton.setEditItemPos(position);
+        mActionbarSingleton.setTitle("1");
+        mActionbarSingleton.changeActionbar(true);
 
         mAdapter.notifyDataSetChanged();
         mActivityRef.invalidateOptionsMenu();
-        animateButton(true);
+        hideClipboardLinkButtonWrapper();
+        hideSlidingPanelWrapper();
     }
-    
 
     //todo refactor in editUrlDialog
     public void editLinkDialog(Bookmark bookmark) {
@@ -178,7 +179,7 @@ public class RecyclerViewActionsSingleton {
         mRealm.commitTransaction();
 
         mRecyclerView.getAdapter()
-                .notifyItemChanged(mActionBarHandlerSingleton.getEditItemPos());
+                .notifyItemChanged(mActionbarSingleton.getEditItemPos());
         mActivityRef.onBackPressed();
     }
 
@@ -442,9 +443,42 @@ public class RecyclerViewActionsSingleton {
         return true;
     }
 
-    private void animateButton(boolean animate) {
+    private void toggleClipboardLinkButtonWrapper() {
         try {
-            ((BookmarkListFragment) mFragmentRef).toggleAddLinkButton(-1);
+            ((BookmarkListFragment) mFragmentRef).toggleClipboardLinkButton(-1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showClipboardLinkButtonWrapper() {
+        try {
+            ((BookmarkListFragment) mFragmentRef).showClipboardButton();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void hideClipboardLinkButtonWrapper() {
+        try {
+            ((BookmarkListFragment) mFragmentRef).hideClipboardButton();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void hideSlidingPanelWrapper() {
+        try {
+            ((BookmarkListFragment) mFragmentRef).hideSlidingPanel();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showSlidingPanelWrapper() {
+        try {
+            ((BookmarkListFragment) mFragmentRef).showSlidingPanel();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -470,7 +504,7 @@ public class RecyclerViewActionsSingleton {
 
     public Bookmark getSelectedItemFromAdapter() {
         return ((Bookmark) ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
-                .getItem(mActionBarHandlerSingleton.getEditItemPos()));
+                .getItem(mActionbarSingleton.getEditItemPos()));
     }
 
 

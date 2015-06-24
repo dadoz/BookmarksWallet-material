@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import com.application.material.bookmarkswallet.app.fragments.AddBookmarkFragment;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
+import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 
 
 public class AddBookmarkActivity extends ActionBarActivity
@@ -25,19 +25,19 @@ public class AddBookmarkActivity extends ActionBarActivity
     public static final int ADD_REQUEST = 99;
     public static String LINK_URL_EXTRA = "LINK_URL_EXTRA";
     private String TAG = "AddBookmarkActivity";
-    private ActionBarHandlerSingleton mActionBarHandlerSingleton;
+    private ActionbarSingleton mActionbarSingleton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(this);
+        mActionbarSingleton = ActionbarSingleton.getInstance(this);
 
         onInitView();
     }
 
     @Override
     public void onResume() {
-        mActionBarHandlerSingleton.setActivtyRef(this);
+        mActionbarSingleton.setActivtyRef(this);
         super.onResume();
     }
 
@@ -47,7 +47,7 @@ public class AddBookmarkActivity extends ActionBarActivity
     }
 
     public void onInitView() {
-        mActionBarHandlerSingleton.initActionBar();
+        mActionbarSingleton.initActionBar();
 
         AddBookmarkFragment addBookmarkFragment = new AddBookmarkFragment();
         getSupportFragmentManager().beginTransaction()

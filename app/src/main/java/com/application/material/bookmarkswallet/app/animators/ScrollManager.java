@@ -28,7 +28,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.RelativeLayout;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
+import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -38,7 +38,7 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
 
     private static final int MIN_SCROLL_TO_HIDE = 10;
     private final Activity mActivityRef;
-    private final ActionBarHandlerSingleton mActionBarHandlerSingleton;
+    private final ActionbarSingleton mActionbarSingleton;
     //    private final View infoView;
     private boolean hidden;
     private int accummulatedDy;
@@ -53,7 +53,7 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
 
     public ScrollManager(Activity activityRef) {
         mActivityRef = activityRef;
-        mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
+        mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
 //        infoView = view;
     }
 
@@ -75,6 +75,10 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
 
     @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         totalDy += dy;
+        if (mActionbarSingleton.isEditMode() ||
+                mActionbarSingleton.isSearchMode()) {
+            return;
+        }
 
         if (totalDy < initialOffset) {
             return;
@@ -123,8 +127,8 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
             hidden = false;
             for (View view : viewsToHide.keySet()) {
                 if(view.getId() == R.id.floatingMenuButtonId && (
-                        mActionBarHandlerSingleton.isEditMode() ||
-                        mActionBarHandlerSingleton.isSearchMode())) {
+                        mActionbarSingleton.isEditMode() ||
+                        mActionbarSingleton.isSearchMode())) {
                     Log.e("TAG", "hey u're tring to show floating button");
                     return;
                 }

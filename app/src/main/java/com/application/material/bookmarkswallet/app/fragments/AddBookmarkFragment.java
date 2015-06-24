@@ -20,7 +20,7 @@ import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeActionbarLayoutAction;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
+import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.ClipboardSingleton;
 
 import java.util.regex.Matcher;
@@ -44,7 +44,7 @@ public class AddBookmarkFragment extends Fragment implements
     EditText mUrlEditText;
 
     public static int PICK_IMAGE_REQ_CODE;
-    private ActionBarHandlerSingleton mActionBarHandlerSingleton;
+    private ActionbarSingleton mActionbarSingleton;
 
     @Override
     public void onAttach(Activity activity) {
@@ -54,7 +54,7 @@ public class AddBookmarkFragment extends Fragment implements
                     + " must implement OnLoadViewHandlerInterface");
         }
         mAddActivityRef = (AddBookmarkActivity) activity;
-        mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mAddActivityRef);
+        mActionbarSingleton = ActionbarSingleton.getInstance(mAddActivityRef);
 
     }
 
@@ -76,10 +76,10 @@ public class AddBookmarkFragment extends Fragment implements
     }
 
     private void onInitView() {
-//        mActionBarHandlerSingleton.setViewOnActionMenu(mAddBookmarkView.
+//        mActionbarSingleton.setViewOnActionMenu(mAddBookmarkView.
 //                findViewById(R.id.addBookmarkLayoutId), R.id.addBookmarkLayoutId);
         ((EditText) mAddBookmarkView.findViewById(R.id.urlEditText)).addTextChangedListener(this);
-        mActionBarHandlerSingleton.setTitle("Add");
+        mActionbarSingleton.setTitle("Add");
 
         httpFormatCheckbox.setOnCheckedChangeListener(this);
         httpsFormatCheckbox.setOnCheckedChangeListener(this);
@@ -105,7 +105,7 @@ public class AddBookmarkFragment extends Fragment implements
                         new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
                 return true;
             case  R.id.action_save_new_bookmark:
-                mActionBarHandlerSingleton.hideSoftKeyboard(mUrlEditText);
+                mActionbarSingleton.hideSoftKeyboard(mUrlEditText);
                 String linkUrl = mUrlEditText.getText().toString();
                 if(! isValidUrl(linkUrl)) {
                     invalidateLinkView(true);

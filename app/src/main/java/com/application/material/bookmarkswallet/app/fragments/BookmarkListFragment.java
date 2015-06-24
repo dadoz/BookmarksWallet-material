@@ -31,7 +31,7 @@ import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChang
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
-import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
+import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.ClipboardSingleton;
 import com.application.material.bookmarkswallet.app.singleton.ExportBookmarkSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
 
 public class BookmarkListFragment extends Fragment
 		implements View.OnClickListener,
-        Filterable, SwipeRefreshLayout.OnRefreshListener, FloatingActionMenu.OnMenuToggleListener, SlidingUpPanelLayout.PanelSlideListener, CompoundButton.OnCheckedChangeListener {
+        Filterable, SwipeRefreshLayout.OnRefreshListener, SlidingUpPanelLayout.PanelSlideListener, CompoundButton.OnCheckedChangeListener {
 	private static final String TAG = "LinksListFragment_TAG";
 	public static final String FRAG_TAG = "LinksListFragment";
 	private MainActivity mMainActivityRef;
@@ -94,12 +94,14 @@ public class BookmarkListFragment extends Fragment
 	private RealmResults<Bookmark> mItems;
 	private GestureDetectorCompat detector;
 	private View mLinkListView;
-	private ActionBarHandlerSingleton mActionBarHandlerSingleton;
+	private ActionbarSingleton mActionbarSingleton;
 	private RecyclerViewActionsSingleton rvActionsSingleton;
 	private ExportBookmarkSingleton exportBookmarksSingleton;
     private BookmarkRecyclerViewAdapter mLinkRecyclerViewAdapter;
     private static Realm mRealm;
     private ClipboardSingleton mClipboardSingleton;
+
+    private MenuItem mSearchItem;
 
 
     @Override
@@ -110,7 +112,7 @@ public class BookmarkListFragment extends Fragment
 					+ " must implement OnLoadViewHandlerInterface");
 		}
 		mMainActivityRef =  (MainActivity) activity;
-		mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mMainActivityRef);
+		mActionbarSingleton = ActionbarSingleton.getInstance(mMainActivityRef);
 		exportBookmarksSingleton = ExportBookmarkSingleton.getInstance(this, mMainActivityRef);
         mClipboardSingleton = ClipboardSingleton.getInstance(mMainActivityRef);
         mRealm = Realm.getInstance(mMainActivityRef);
@@ -151,10 +153,10 @@ public class BookmarkListFragment extends Fragment
         mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light,
                 android.R.color.holo_orange_light, android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light);
-//		mActionBarHandlerSingleton.setViewOnActionMenu(mSwipeRefreshLayout, actionbarInfoView, R.id.actionbarInfoLayoutId, this);
-		mActionBarHandlerSingleton.setToolbarScrollManager(mRecyclerView, viewArrayList);
-        mActionBarHandlerSingleton.setTitle(null);
-        mActionBarHandlerSingleton.setDisplayHomeEnabled(false);
+//		mActionbarSingleton.setViewOnActionMenu(mSwipeRefreshLayout, actionbarInfoView, R.id.actionbarInfoLayoutId, this);
+		mActionbarSingleton.setToolbarScrollManager(mRecyclerView, viewArrayList);
+        mActionbarSingleton.setTitle(null);
+        mActionbarSingleton.setDisplayHomeEnabled(false);
 
 //        View.OnClickListener longClickListener = (View.OnClickListener) mRecyclerView.getAdapter();
 //        touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, longClickListener, this); //LISTENER TO SWIPE
@@ -169,26 +171,26 @@ public class BookmarkListFragment extends Fragment
         importFloatingButton.setOnClickListener(this);
         clipboardFloatingButton.setOnClickListener(this);
 
-        mFloatingMenuButton.setOnMenuToggleListener(this);
+//        mFloatingMenuButton.setOnMenuToggleListener(this);
 		initRecyclerView();
         rvActionsSingleton.setAdapter();
-        if (mActionBarHandlerSingleton.isEditMode()) {
-            rvActionsSingleton.selectBookmarkEditMenu(mActionBarHandlerSingleton.getEditItemPos());
+        if (mActionbarSingleton.isEditMode()) {
+            rvActionsSingleton.selectBookmarkEditMenu(mActionbarSingleton.getEditItemPos());
         }
 	}
 
     private void setIconOnFLoatingButton() {
 //        Resources res = mMainActivityRef.getResources();
 /*        Drawable icon = res.getDrawable(R.drawable.ic_insert_drive_file_white_24dp);
-        mActionBarHandlerSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
+        mActionbarSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
         importFloatingButton.setImageDrawable(icon);
 
         icon = res.getDrawable(R.drawable.ic_content_paste_white_24dp);
-        mActionBarHandlerSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
+        mActionbarSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
         clipboardFloatingButton.setImageDrawable(icon);
 
         icon = res.getDrawable(R.drawable.ic_edit_white_24dp);
-        mActionBarHandlerSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
+        mActionbarSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
         addLinkButton.setImageDrawable(icon);*/
 
     }
@@ -220,7 +222,7 @@ public class BookmarkListFragment extends Fragment
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        boolean isItemSelected = mActionBarHandlerSingleton.isEditMode();
+        boolean isItemSelected = mActionbarSingleton.isEditMode();
 
 		inflater.inflate(isItemSelected ? R.menu.save_edit_link_menu :
                 R.menu.menu_main, menu);
@@ -232,10 +234,10 @@ public class BookmarkListFragment extends Fragment
         //LAYOUT MANAGER
 //        if(! isItemSelected) {
 //            menu.findItem(R.id.action_grid)
-//                    .setVisible(mActionBarHandlerSingleton
+//                    .setVisible(mActionbarSingleton
 //                            .isLayoutManagerList());
 //            menu.findItem(R.id.action_list)
-//                    .setVisible(mActionBarHandlerSingleton
+//                    .setVisible(mActionbarSingleton
 //                            .isLayoutManagerGrid());
 //        }
 
@@ -245,29 +247,39 @@ public class BookmarkListFragment extends Fragment
         super.onCreateOptionsMenu(menu, inflater);
 	}
 
+    public void collapseSearchActionView() {
+        if (mSearchItem == null) {
+            return;
+        }
+        mSearchItem.collapseActionView();
+    }
+
     public void searchViewHandler(Menu menu) {
         //SEARCH ITEM
-        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        mSearchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) mMainActivityRef.getSystemService(Context.SEARCH_SERVICE);
 
         SearchView searchView = null;
-        if (searchItem != null) {
-            searchView = (SearchView) searchItem.getActionView();
-            MenuItemCompat.setOnActionExpandListener(searchItem,
+        if (mSearchItem != null) {
+            searchView = (SearchView) mSearchItem.getActionView();
+            MenuItemCompat.setOnActionExpandListener(mSearchItem,
                     new MenuItemCompat.OnActionExpandListener() {
                         @Override
                         public boolean onMenuItemActionExpand(MenuItem item) {
+                            mActionbarSingleton.setSearchMode(true);
                             ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
                                     .setSearchMode(true);
                             mRecyclerView.getAdapter().notifyDataSetChanged();
                             int startDelay = 600;
-                            toggleAddLinkButton(startDelay);
+                            hideClipboardButton(startDelay);
+//                            toggleClipboardLinkButton(startDelay);
                             mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                             return true;
                         }
 
                         @Override
                         public boolean onMenuItemActionCollapse(MenuItem item) {
+                            mActionbarSingleton.setSearchMode(false);
                             ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
                                     .setSearchMode(false);
                             rvActionsSingleton.setAdapter();
@@ -325,7 +337,7 @@ public class BookmarkListFragment extends Fragment
                 mMainActivityRef.startActivity(Intent.createChooser(intent, "share bookmark to..."));
 				break;
 			case R.id.action_settings:
-				mActionBarHandlerSingleton.toggleActionBar(true, false, false);
+				mActionbarSingleton.changeActionbar(true);
                 mMainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
                 return true;
 			case R.id.action_export:
@@ -334,13 +346,13 @@ public class BookmarkListFragment extends Fragment
 //			case R.id.action_grid:
 //                mRecyclerView.setLayoutManager(new GridLayoutManager(mMainActivityRef, 2));
 //                mRecyclerView.getAdapter().notifyDataSetChanged();
-//                mActionBarHandlerSingleton.setLayoutManagerType(LayoutManagerTypeEnum.GRID);
+//                mActionbarSingleton.setLayoutManagerType(LayoutManagerTypeEnum.GRID);
 //                mMainActivityRef.invalidateOptionsMenu();
 //				return true;
 //			case R.id.action_list:
 //                mRecyclerView.setLayoutManager(new LinearLayoutManager(mMainActivityRef));
 //                mRecyclerView.getAdapter().notifyDataSetChanged();
-//                mActionBarHandlerSingleton.setLayoutManagerType(LayoutManagerTypeEnum.LIST);
+//                mActionbarSingleton.setLayoutManagerType(LayoutManagerTypeEnum.LIST);
 //                mMainActivityRef.invalidateOptionsMenu();
 //				return true;
 		}
@@ -374,7 +386,7 @@ public class BookmarkListFragment extends Fragment
                 mFloatingMenuButton.close(true);
                 break;
             case R.id.importFloatingButtonId:
-                mActionBarHandlerSingleton.toggleActionBar(true, false, false);
+                mActionbarSingleton.changeActionbar(true);
                 mMainActivityRef.changeFragment(new ImportBookmarkFragment(),
                         null, ImportBookmarkFragment.FRAG_TAG);
                 mFloatingMenuButton.close(true);
@@ -424,19 +436,35 @@ public class BookmarkListFragment extends Fragment
 		rvActionsSingleton.undoEditBookmark();
     }
 
-	public void collapseAddLinkButton() {
-        mFloatingMenuButton.close(true);
+    /**button**/
+    public void hideClipboardButton(int startDelay) {
+        animateClipboardButton(startDelay, true);
+        clipboardFloatingButton.setVisibility(View.INVISIBLE);
     }
 
-	public void toggleAddLinkButton(int startDelay) {
-		//hide fab button
-//        mFloatingMenuButton.close(true);
-        clipboardFloatingButton.animate().
-				translationY((clipboardFloatingButton.getVisibility() == View.VISIBLE) ? 300 : 0).
-				setInterpolator(new DecelerateInterpolator(3.f)).
-				setStartDelay(startDelay == -1 ? 200 : 600).
-				start();
+    public void hideClipboardButton() {
+        animateClipboardButton(0, true);
+        clipboardFloatingButton.setVisibility(View.INVISIBLE);
+    }
+
+    public void showClipboardButton() {
+        animateClipboardButton(0, false);
+        clipboardFloatingButton.setVisibility(View.VISIBLE);
+    }
+
+    public void toggleClipboardLinkButton(int startDelay) {
+        animateClipboardButton(startDelay, clipboardFloatingButton.getVisibility() == View.VISIBLE);
+        clipboardFloatingButton.setVisibility(clipboardFloatingButton
+                .getVisibility() == View.INVISIBLE ? View.VISIBLE : View.INVISIBLE);
 	}
+
+    private void animateClipboardButton(int startDelay, boolean buttonVisible) {
+        clipboardFloatingButton.animate().
+                translationY(buttonVisible ? 300 : 0).
+                        setInterpolator(new DecelerateInterpolator(3.f)).
+                setStartDelay(startDelay == -1 ? 200 : 600).
+                start();
+    }
 
     @Override
     public Filter getFilter() {
@@ -451,11 +479,6 @@ public class BookmarkListFragment extends Fragment
 //        ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
 
         //NEED TO BE IMPLEMENTED
-    }
-
-    @Override
-    public void onMenuToggle(boolean isVisible) {
-        mActionBarHandlerSingleton.setOverrideBackPressed(isVisible);
     }
 
     @Override
@@ -475,20 +498,18 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onPanelCollapsed(View view) {
-        mActionBarHandlerSingleton.setOverrideBackPressed(false);
-        mActionBarHandlerSingleton.hideSoftKeyboard(mUrlEditText);
-//        mActionBarHandlerSingleton.setColorFilter(slidingPanelLabelIcon.getDrawable(),
-//                R.color.white);
+        mActionbarSingleton.setPanelExpanded(false);
+        mActionbarSingleton.hideSoftKeyboard(mUrlEditText);
         clipboardFloatingButton.show(true);
         slidingPanelDoneIcon.setVisibility(View.GONE);
     }
 
     @Override
     public void onPanelExpanded(View view) {
-        mActionBarHandlerSingleton.setOverrideBackPressed(true);
+        mActionbarSingleton.setPanelExpanded(true);
         clipboardFloatingButton.hide(true);
         slidingPanelDoneIcon.setVisibility(View.VISIBLE);
-        mActionBarHandlerSingleton.setColorResourceFilter(slidingPanelDoneIcon.getDrawable(),
+        mActionbarSingleton.setColorResourceFilter(slidingPanelDoneIcon.getDrawable(),
                 R.color.material_violet_500);
         mUrlEditText.setFocusableInTouchMode(true);
         mUrlEditText.requestFocus();
@@ -500,7 +521,7 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onPanelAnchored(View view) {
         Log.e(TAG, "hey");
-//        mActionBarHandlerSingleton.hideSoftKeyboard(mUrlEditText);
+//        mActionbarSingleton.hideSoftKeyboard(mUrlEditText);
     }
 
     @Override
@@ -520,6 +541,14 @@ public class BookmarkListFragment extends Fragment
                 mUrlEditText.setSelection(mUrlEditText.getText().length());
                 break;
         }
+    }
+
+    public void hideSlidingPanel() {
+        mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+    }
+
+    public void showSlidingPanel() {
+        mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 
     private class LinkFilter extends Filter {
@@ -610,7 +639,7 @@ public class BookmarkListFragment extends Fragment
 					(BookmarkRecyclerViewAdapter.ViewHolder) mRecyclerView.
 							findViewHolderForPosition(position);
 			holder.itemView.setSelected(true);
-            mActionBarHandlerSingleton.setEditItemPos(position);
+            mActionbarSingleton.setEditItemPos(position);
 
 			// handle long press
 			rvActionsSingleton.selectBookmarkEditMenu(position);

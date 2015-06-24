@@ -20,7 +20,7 @@ import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
-import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
+import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
 import com.application.material.bookmarkswallet.app.touchListener.SwipeDismissRecyclerViewTouchListener;
 import io.realm.Realm;
@@ -36,7 +36,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         View.OnClickListener, View.OnLongClickListener,
         SwipeDismissRecyclerViewTouchListener.DismissCallbacks {
     private final Activity mActivityRef;
-    private final ActionBarHandlerSingleton mActionBarHandlerSingleton;
+    private final ActionbarSingleton mActionbarSingleton;
     private final RecyclerViewCustom mRecyclerView;
     private final RecyclerViewActionsSingleton mRvActionsSingleton;
     private View.OnTouchListener mTouchListener;
@@ -46,7 +46,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         mActivityRef = activity;
         mRecyclerView = recyclerView;
         mRvActionsSingleton = RecyclerViewActionsSingleton.getInstance(mActivityRef);
-        mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
+        mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
         mTouchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this, this); //LISTENER TO SWIPE
     }
 
@@ -67,7 +67,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         holder.mLabelView.setTextColor(res.getColor(R.color.material_violet_500));
 
         holder.mUrlView.setTextColor(res.getColor(
-                mActionBarHandlerSingleton.isSearchMode() ?
+                mActionbarSingleton.isSearchMode() ?
                         R.color.material_grey_200 : R.color.material_red));
         holder.mUrlView.setText(bookmark.getUrl());
         holder.mUrlView.setVisibility(View.VISIBLE);
@@ -77,7 +77,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         holder.mTimestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark.getTimestamp()));
         holder.mLastUpdateView.setText(Bookmark.Utils.getParsedTimestamp(bookmark.getLastUpdate()));
 
-        boolean isSelectedItem = mActionBarHandlerSingleton.isEditMode();
+        boolean isSelectedItem = mActionbarSingleton.isEditMode();
         setIcon(holder.mIconView, null, false);
         setIcon(holder.mIconOpenedView, bookmark, false);
         holder.itemView.setBackgroundColor(mActivityRef
@@ -85,7 +85,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 
         //CHANGE COLOR on more icon
         Drawable drawable = holder.mMoreInfoClosedIconView.getDrawable();
-        mActionBarHandlerSingleton.setColorFilter(drawable, R.color.material_violet_500);
+        mActionbarSingleton.setColorFilter(drawable, R.color.material_violet_500);
         holder.mMoreInfoClosedIconView.setImageDrawable(drawable);
 
         holder.mLinkIconFlipperView.setAnimateFirstView(false);
@@ -119,7 +119,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
                 (BookmarkRecyclerViewAdapter.ViewHolder) mRecyclerView.
                         findViewHolderForPosition(position);
         holder.itemView.setSelected(true);
-        mActionBarHandlerSingleton.setEditItemPos(position);
+        mActionbarSingleton.setEditItemPos(position);
 
         // handle long press
         mRvActionsSingleton.selectBookmarkEditMenu(position);
@@ -147,7 +147,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         holder.itemView.setOnLongClickListener(isSelectedItem ? null : this);
         holder.itemView.setOnTouchListener(isSelectedItem ? null : mTouchListener);
 
-        if (position == mActionBarHandlerSingleton.getEditItemPos() &&
+        if (position == mActionbarSingleton.getEditItemPos() &&
                 isSelectedItem) {
             setIcon(holder.mIconView, bookmark, isSelectedItem);
             holder.itemView.setBackgroundColor(resources
@@ -162,7 +162,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
                 .getDrawable(isSelectedItem ?
                         R.drawable.ic_bookmark_black_48dp :
                         R.drawable.ic_bookmark_outline_black_48dp);
-        mActionBarHandlerSingleton.setColorFilter(res, R.color.material_violet_500);
+        mActionbarSingleton.setColorFilter(res, R.color.material_violet_500);
         iconView.setImageDrawable(res);
 
         if (bookmark != null) {
@@ -175,11 +175,11 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
     }
 
     public boolean isSearchMode() {
-        return mActionBarHandlerSingleton.isSearchMode();
+        return mActionbarSingleton.isSearchMode();
     }
 
     public void setSearchMode(boolean value) {
-        mActionBarHandlerSingleton.setSearchMode(value);
+        mActionbarSingleton.setSearchMode(value);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

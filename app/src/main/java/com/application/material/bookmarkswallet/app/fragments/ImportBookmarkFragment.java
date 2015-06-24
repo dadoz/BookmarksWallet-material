@@ -18,7 +18,7 @@ import com.application.material.bookmarkswallet.app.adapter.old.AddBookmarkRecyc
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.BookmarkCardview;
 import com.application.material.bookmarkswallet.app.models.BookmarkCardview.CardviewTypeEnum;
-import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
+import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.flurry.android.FlurryAgent;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class ImportBookmarkFragment extends Fragment implements
     public static int PICK_IMAGE_REQ_CODE;
     private AddBookmarkRecyclerViewAdapter mAdapter;
     private ArrayList<BookmarkCardview> cardviewList;
-    private ActionBarHandlerSingleton mActionBarHandlerSingleton;
+    private ActionbarSingleton mActionbarSingleton;
 
     @Override
     public void onAttach(Activity activity) {
@@ -48,7 +48,7 @@ public class ImportBookmarkFragment extends Fragment implements
                     + " must implement OnLoadViewHandlerInterface");
         }
         mMainActivityRef = (MainActivity) activity;
-        mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mMainActivityRef);
+        mActionbarSingleton = ActionbarSingleton.getInstance(mMainActivityRef);
     }
 
     @Override
@@ -69,9 +69,9 @@ public class ImportBookmarkFragment extends Fragment implements
     }
 
     private void onInitView() {
-        mActionBarHandlerSingleton.initActionBar();
-        mActionBarHandlerSingleton.setTitle(TITLE);
-        mActionBarHandlerSingleton.setDisplayHomeEnabled(true);
+        mActionbarSingleton.initActionBar();
+        mActionbarSingleton.setTitle(TITLE);
+        mActionbarSingleton.setDisplayHomeEnabled(true);
 
         cardviewList = new ArrayList<BookmarkCardview>();
         RecyclerView.LayoutManager lm = new LinearLayoutManager(mMainActivityRef);
@@ -119,7 +119,7 @@ public class ImportBookmarkFragment extends Fragment implements
             case  R.id.action_settings:
                 mMainActivityRef.changeFragment(
                         new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
-                mActionBarHandlerSingleton.toggleActionBar(true, false, false);
+                mActionbarSingleton.changeActionbar(false);
                 return true;
 
         }

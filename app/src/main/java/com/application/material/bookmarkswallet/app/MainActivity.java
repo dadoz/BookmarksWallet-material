@@ -13,31 +13,32 @@ import android.view.MotionEvent;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
+import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
+import com.application.material.bookmarkswallet.app.singleton.BackPressedSingleton;
 import com.flurry.android.FlurryAgent;
 import icepick.Icepick;
 import icepick.Icicle;
 
-import static com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton.NOT_SELECTED_ITEM_POSITION;
+import static com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton.NOT_SELECTED_ITEM_POSITION;
 
 
 public class MainActivity extends AppCompatActivity
         implements OnChangeFragmentWrapperInterface {
     private String TAG = "MainActivity";
     private String EXTRA_DATA = "EXTRA_DATA";
-    private ActionBarHandlerSingleton mActionBarHandlerSingleton;
+    private ActionbarSingleton mActionbarSingleton;
+    private BackPressedSingleton mBackPressedSingleton;
     @Icicle
     int mSelectedItemPosition;
-//    @Icicle String edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Icepick.restoreInstanceState(this, savedInstanceState);
         setContentView(R.layout.activity_main);
-        mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(this);
-        mActionBarHandlerSingleton.initActionBar();
-//        mActionBarHandlerSingleton.setEditItemPos(mSelectedItemPosition);
+        mActionbarSingleton = ActionbarSingleton.getInstance(this);
+        mActionbarSingleton.initActionBar();
+        mBackPressedSingleton = BackPressedSingleton.getInstance(this);
         handleIntent(getIntent());
 
         FlurryAgent.setLogEnabled(true);
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onResume() {
-        mActionBarHandlerSingleton.setActivtyRef(this);
+        mActionbarSingleton.setActivtyRef(this);
         super.onResume();
     }
 
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         Fragment frag;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             int fragCount = getSupportFragmentManager().getBackStackEntryCount();
             String fragTag = getSupportFragmentManager().getBackStackEntryAt(fragCount - 1).getName();
             frag = getSupportFragmentManager().findFragmentByTag(fragTag);
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        if(getSupportFragmentManager().getBackStackEntryCount() == 0 &&
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0 &&
                 (frag = getSupportFragmentManager().
                         findFragmentByTag(BookmarkListFragment.FRAG_TAG)) != null) {
             transaction.replace(R.id.fragmentContainerFrameLayoutId,
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void changeFragment(Fragment fragment, Bundle bundle, String tag) {
-        if(fragment == null) {
+        if (fragment == null) {
             Log.e(TAG, "null fragment injected");
             return;
         }
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity
                 beginTransaction();
 
         transaction.replace(R.id.fragmentContainerFrameLayoutId, fragment, tag);
-        if(! tag.equals(BookmarkListFragment.FRAG_TAG)) {
+        if (! tag.equals(BookmarkListFragment.FRAG_TAG)) {
             transaction.addToBackStack(tag);
         }
         transaction.commit();
@@ -150,19 +151,19 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void startActivityForResultWrapper(Class activityClassName, int requestCode, Bundle bundle) {
-        Intent intent = new Intent(this, activityClassName);
+/*        Intent intent = new Intent(this, activityClassName);
         if(bundle != null) {
             intent.putExtra(EXTRA_DATA, bundle);
         }
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
-        ActivityCompat.startActivityForResult(this, intent, requestCode, options.toBundle());
+        ActivityCompat.startActivityForResult(this, intent, requestCode, options.toBundle());*/
     }
 
-    @Override
+/*    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case AddBookmarkActivity.ADD_REQUEST:
                     try {
@@ -179,33 +180,14 @@ public class MainActivity extends AppCompatActivity
                     break;
             }
         }
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "OnBackPressed - ");
-        boolean isBackOverridden = mActionBarHandlerSingleton.getOverrideBackPressed();
-        boolean isEditMode = mActionBarHandlerSingleton.isEditMode();
-
-        boolean isHomeUpEnabled = getSupportFragmentManager().getBackStackEntryCount() >= 2;
-        mActionBarHandlerSingleton.toggleActionBar(isHomeUpEnabled,
-                isBackOverridden, false); // u always must change color back to yellow
-
-        if (isBackOverridden) {
-            mActionBarHandlerSingleton.setOverrideBackPressed(false);
-            Fragment fragment  = getSupportFragmentManager()
-                    .findFragmentByTag(BookmarkListFragment.FRAG_TAG);
-            if (fragment != null) {
-                ((BookmarkListFragment) fragment).collapseAddLinkButton();
-                ((BookmarkListFragment) fragment).collapseSlidingPanel();
-                if (isEditMode) {
-                    ((BookmarkListFragment) fragment).undoEditBookmarkRecyclerViewWrapper();
-                }
-            }
+        if (mBackPressedSingleton.isBackPressedHandled()) {
             return;
         }
         super.onBackPressed();
-
     }
 
     @Override

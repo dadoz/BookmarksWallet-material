@@ -22,7 +22,7 @@ import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.SettingListAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Setting;
-import com.application.material.bookmarkswallet.app.singleton.ActionBarHandlerSingleton;
+import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
 import com.suredigit.inappfeedback.FeedbackDialog;
 import io.realm.Realm;
@@ -38,7 +38,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 	private Activity mActivityRef;
 	private View settingsView;
 	private ListView mSettingsList;
-	private ActionBarHandlerSingleton mActionBarHandlerSingleton;
+	private ActionbarSingleton mActionbarSingleton;
     private Realm mRealm;
     private RecyclerViewActionsSingleton mRvActionsSingleton;
     private FeedbackDialog mFeedBackDialog;
@@ -55,8 +55,8 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 //					+ " must implement OnInitActionBarInterface");
 //		}
 		mActivityRef = activity;
-		mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
-		mActionBarHandlerSingleton = ActionBarHandlerSingleton.getInstance(mActivityRef);
+		mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
+		mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
         mRvActionsSingleton = RecyclerViewActionsSingleton.getInstance(mActivityRef);
         mFeedBackDialog = new FeedbackDialog(mActivityRef,
                 mActivityRef.getResources().getString(R.string.ANDROID_FEEDBACK_KEY));
@@ -67,8 +67,8 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 	public View onCreateView(LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState) {
 		settingsView = inflater.inflate(R.layout.settings_layout, null);
-        mActionBarHandlerSingleton.setTitle(TITLE);
-        mActionBarHandlerSingleton.setDisplayHomeEnabled(true);
+        mActionbarSingleton.setTitle(TITLE);
+        mActionbarSingleton.setDisplayHomeEnabled(true);
         mRealm = Realm.getInstance(mActivityRef);
 
         return settingsView;
