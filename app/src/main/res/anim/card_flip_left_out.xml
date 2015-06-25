@@ -1,32 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android">
-    <alpha
-            android:fromAlpha="0.0"
-            android:toAlpha="1.0"
-            android:duration="1"/>
-
-    <scale xmlns:android="http://schemas.android.com/apk/res/android"
-           android:fromXScale="1.0"
-           android:toXScale="0.0"
-           android:fromYScale="1.0"
-           android:toYScale="1.0"
-           android:pivotX="50%"
-           android:fillAfter="false"
-           android:duration="@integer/card_flip_time_full">
-    </scale>
-
-    <!--<rotate-->
-            <!--android:fromDegrees="-180"-->
-            <!--android:toDegrees="0"-->
-            <!--android:pivotX="50%"-->
-            <!--android:pivotY="50%"-->
-            <!--android:interpolator="@android:interpolator/accelerate_decelerate"-->
-            <!--android:duration="@integer/card_flip_time_full"/>-->
-
-    <!--<alpha-->
-            <!--android:fromAlpha="0.0"-->
-            <!--android:toAlpha="1.0"-->
-            <!--android:startOffset="@integer/card_flip_time_half"-->
-            <!--android:duration="1"/>-->
-
+    <scale
+            android:interpolator="@android:anim/linear_interpolator"
+            android:fromXScale="0.0"
+            android:toXScale="1.0"
+            android:fromYScale="1.0"
+            android:toYScale="1.0"
+            android:fillAfter="false"
+            android:startOffset="100"
+            android:duration="300" />
+    <translate
+            android:fromXDelta="50%"
+            android:toXDelta="0"
+            android:startOffset="100"
+            android:duration="300" />
 </set>

@@ -112,7 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:layout_marginBottom="@dimen/large_padding"
-            android:src="@drawable/ic_content_paste_white_24dp"
+            android:src="@drawable/ic_attach_file_black_24dp"
             fab:fab_shadowRadius="2dp"
             fab:fab_shadowYOffset="2dp"
             fab:fab_size="normal"
