@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -40,6 +41,7 @@ import static com.application.material.bookmarkswallet.app.singleton.ActionbarSi
  */
 public class RecyclerViewActionsSingleton {
     private static final String TAG = "RecyclerViewActionsSingleton";
+    private static final String NO_TITLE_SET = "(no title)";
     private static RecyclerViewActionsSingleton mInstance;
     private static RecyclerView mRecyclerView;
     private static Activity mActivityRef;
@@ -53,7 +55,9 @@ public class RecyclerViewActionsSingleton {
     private static Realm mRealm;
     private View mEditTitleViewRef;
     private View mEditUrlViewRef;
-    private boolean mSearchOnUrlEnabled;
+    private static boolean mSearchOnUrlEnabled;
+    private static String SEARCH_URL_MODE = "SEARCH_URL_MODE";
+    private static String BOOKMARKS_WALLET_SHAREDPREF = "BOOKMARKS_WALLET_SHAREDPREF";
 
     public RecyclerViewActionsSingleton() {
     }
@@ -83,12 +87,13 @@ public class RecyclerViewActionsSingleton {
         mActivityRef = activityRef;
         mListenerRef = fragmentRef;
         mFragmentRef = fragmentRef;
-//        mTouchListener = touchListener;
         mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
-//        mEditUrlView = mActivityRef.getLayoutInflater().
-//                inflate(R.layout.dialog_edit_url_layout, null);
         updateAdapterRef();
         mRealm = Realm.getInstance(mActivityRef);
+
+        mSearchOnUrlEnabled = mActivityRef
+                .getSharedPreferences(BOOKMARKS_WALLET_SHAREDPREF, 0)
+                .getBoolean(SEARCH_URL_MODE, false);
     }
 
     private static BookmarkRecyclerViewAdapter updateAdapterRef() {
@@ -226,6 +231,10 @@ public class RecyclerViewActionsSingleton {
 
             @Override
             protected void onPostExecute(Boolean isBookmarkInfoRetrieved) {
+                if (bookmarkTitle == null ||
+                        bookmarkTitle.trim().equals("")) {
+                    bookmarkTitle = NO_TITLE_SET;
+                }
                 try {
                     addBookmarkIconByUrl(iconUrl, bookmarkUrl, bookmarkTitle);
                 } catch (MalformedURLException e) {
@@ -533,15 +542,11 @@ public class RecyclerViewActionsSingleton {
 
 
     public void setSearchOnUrlEnabled(boolean searchOnUrlEnabled) {
+        SharedPreferences sharedPref = mActivityRef
+                .getSharedPreferences(BOOKMARKS_WALLET_SHAREDPREF, 0);
+
+        sharedPref.edit().putBoolean(SEARCH_URL_MODE, searchOnUrlEnabled).apply();
         this.mSearchOnUrlEnabled = searchOnUrlEnabled;
-    }
-
-    public boolean ismSearchOnUrlEnabled() {
-        return mSearchOnUrlEnabled;
-    }
-
-    public void setmSearchOnUrlEnabled(boolean mSearchOnUrlEnabled) {
-        this.mSearchOnUrlEnabled = mSearchOnUrlEnabled;
     }
 
     public boolean getSearchOnUrlEnabled() {

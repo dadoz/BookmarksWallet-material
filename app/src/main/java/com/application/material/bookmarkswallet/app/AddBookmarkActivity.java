@@ -90,31 +90,6 @@ public class AddBookmarkActivity extends ActionBarActivity
 
     }
 
-    @Override
-    public void pushCurrentFragTag(String tag) {
-
-    }
-
-    @Override
-    public void setCurrentFragTag(String tag) {
-
-    }
-
-    @Override
-    public String popCurrentFragTag() {
-        return null;
-    }
-
-    @Override
-    public String getCurrentFragTag() {
-        return null;
-    }
-
-    @Override
-    public void startActivityForResultWrapper(Class activityClassName, int requestCode, Bundle bundle) {
-
-    }
-
     public void initActionBarWithCustomView(Toolbar toolbar) {
         //set action bar
         setSupportActionBar(toolbar);

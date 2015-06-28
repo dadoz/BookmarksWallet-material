@@ -25,6 +25,7 @@ import com.application.material.bookmarkswallet.app.models.Setting;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
 import com.suredigit.inappfeedback.FeedbackDialog;
+import com.suredigit.inappfeedback.FeedbackSettings;
 import io.realm.Realm;
 
 import java.util.ArrayList;
@@ -56,11 +57,11 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 //		}
 		mActivityRef = activity;
 		mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
-		mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
         mRvActionsSingleton = RecyclerViewActionsSingleton.getInstance(mActivityRef);
+        FeedbackSettings feedbackSettings = new FeedbackSettings();
+        feedbackSettings.setRadioButtons(false);
         mFeedBackDialog = new FeedbackDialog(mActivityRef,
-                mActivityRef.getResources().getString(R.string.ANDROID_FEEDBACK_KEY));
-
+                mActivityRef.getResources().getString(R.string.ANDROID_FEEDBACK_KEY), feedbackSettings);
     }
 
 	@Override
@@ -81,10 +82,10 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 		mSettingsList = (ListView) getView().findViewById(R.id.settingsListId);
 
 		ArrayList<Setting> settingList = new ArrayList<Setting>();
-		settingList.add(new Setting("Rate it!", View.GONE, false));
-        settingList.add(new Setting("Search on URL enabled", View.VISIBLE, mRvActionsSingleton.getSearchOnUrlEnabled()));
-        settingList.add(new Setting("Delete all bookmarks!", View.GONE, true));
-        settingList.add(new Setting("Send a feedback", View.GONE, false));
+		settingList.add(new Setting("Rate it!", null, View.GONE, false));
+        settingList.add(new Setting("Search on URL enabled", "extend bookmark search by URL string even that only search by title.", View.VISIBLE, mRvActionsSingleton.getSearchOnUrlEnabled()));
+        settingList.add(new Setting("Delete all bookmarks!", "clear all your stored bookmarks.", View.GONE, true));
+        settingList.add(new Setting("Send a feedback", null, View.GONE, false));
         //add switchCompat v7 on sm option
 		//I'm using the android std item layout to render listview
 //		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getBaseContext(),
@@ -93,7 +94,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 				R.layout.setting_item, settingList, this);
 
 		mSettingsList.setOnItemClickListener(this);
-
 		mSettingsList.setAdapter(adapter);
 	}
 

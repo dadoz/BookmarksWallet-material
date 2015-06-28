@@ -8,15 +8,20 @@ import android.view.View;
 public class Setting {
 
     private final boolean mSwitchCheck;
+    private final String mDescription;
     private String mLabel;
     private int mSwitchVisibility;
 
-    public Setting(String label, int switchVisibility, boolean switchCheck) {
+    public Setting(String label, String description, int switchVisibility, boolean switchCheck) {
         this.mLabel = label;
+        this.mDescription = description;
         this.mSwitchVisibility = switchVisibility;
         this.mSwitchCheck = switchCheck;
     }
 
+    public String getDescription() {
+        return mDescription;
+    }
     public String getLabel() {
         return mLabel;
     }

@@ -1,5 +1,6 @@
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:wheel="http://schemas.android.com/apk/res-auto"
         android:id="@+id/exportFrameLayoutId"
         android:layout_width="fill_parent"
         android:padding="@dimen/small_padding"
@@ -14,6 +15,15 @@
                 android:layout_marginLeft="@dimen/medium_padding"
                 android:layout_marginRight="@dimen/medium_padding"
                 android:orientation="vertical">
+            <com.pnikosis.materialishprogress.ProgressWheel
+                    android:visibility="gone"
+                    android:id="@+id/progressWheelId"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    wheel:matProg_barColor="@color/material_violet_500"
+                    wheel:matProg_progressIndeterminate="false" />
             <ImageView
                     android:id="@+id/exportSuccessIconId"
                     android:visibility="gone"
@@ -30,54 +40,6 @@
                 android:textColor="@color/material_violet_100"
                 android:text="Export your bookmarks as a CSV file in your Download folder."/>
 
-                <!--<TextView-->
-                    <!--android:gravity="center"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="Eureka:\n bookmarks exported with Success!\n checkout on Download folder."/>-->
-
-            <!--<LinearLayout-->
-                    <!--android:id="@+id/exportErrorLayoutId"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:orientation="vertical">-->
-
-                <!--<ImageView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_gravity="center_horizontal"-->
-                        <!--android:src="@drawable/ic_error_white_48dp"/>-->
-                <!--<TextView-->
-                        <!--android:id="@+id/exportErrorTextId"-->
-                        <!--android:gravity="center"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:text="Error to export bookmarks! Please contact us!"/>-->
-            <!--</LinearLayout>-->
-                <!--<ImageView-->
-                        <!--android:id="@+id/exportConfirmButtonDialogId"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:src="@drawable/ic_archive_grey600_48dp"/>-->
-
-                <!--<TextView-->
-                        <!--android:id="@+id/exportInfoTextId"-->
-                        <!--android:layout_below="@id/exportConfirmButtonDialogId"-->
-                        <!--android:gravity="center"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:textColor="@color/material_violet_100"-->
-                        <!--android:text="tap to DOWNLOAD"/>-->
-                <!--<TextView-->
-                        <!--android:layout_alignParentRight="true"-->
-                        <!--android:layout_alignParentBottom="true"-->
-                        <!--android:id="@+id/dismissExportButtonDialogId"-->
-                        <!--android:padding="@dimen/medium_padding"-->
-                        <!--android:textSize="@dimen/abc_text_size_medium_material"-->
-                        <!--android:textColor="@color/material_mustard_yellow_700"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:text="DISMISS"/>-->
         </LinearLayout>
 
 </FrameLayout>

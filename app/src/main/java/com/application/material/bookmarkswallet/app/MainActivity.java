@@ -2,6 +2,7 @@ package com.application.material.bookmarkswallet.app;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.*;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -16,6 +17,9 @@ import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChang
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.BackPressedSingleton;
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.tjeannin.apprate.AppRate;
 import icepick.Icepick;
 import icepick.Icicle;
 
@@ -25,11 +29,11 @@ import static com.application.material.bookmarkswallet.app.singleton.ActionbarSi
 public class MainActivity extends AppCompatActivity
         implements OnChangeFragmentWrapperInterface {
     private String TAG = "MainActivity";
-    private String EXTRA_DATA = "EXTRA_DATA";
     private ActionbarSingleton mActionbarSingleton;
     private BackPressedSingleton mBackPressedSingleton;
-    @Icicle
-    int mSelectedItemPosition;
+    private AdView mAdView;
+//    @Icicle
+//    int mSelectedItemPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,26 +43,36 @@ public class MainActivity extends AppCompatActivity
         mActionbarSingleton = ActionbarSingleton.getInstance(this);
         mActionbarSingleton.initActionBar();
         mBackPressedSingleton = BackPressedSingleton.getInstance(this);
-        handleIntent(getIntent());
+//        handleIntent(getIntent());
 
         FlurryAgent.setLogEnabled(true);
         FlurryAgent.init(this, getResources().getString(R.string.FLURRY_API_KEY));
+
+        new AppRate(this)
+                .setMinDaysUntilPrompt(7)
+                .setMinLaunchesUntilPrompt(20)
+                .init();
+
+        //TODO ads - move on fragment
+//        mAdView = (AdView) findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
+
         onInitFragment();
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-        if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            //do smthing with query
-        }
-
-    }
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        setIntent(intent);
+//        handleIntent(intent);
+//    }
+//
+//    private void handleIntent(Intent intent) {
+//        if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
+//            String query = intent.getStringExtra(SearchManager.QUERY);
+//            do smthing with query
+//        }
+//    }
 
     @Override
     public void onResume() {
@@ -132,57 +146,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void pushCurrentFragTag(String tag) {
-    }
-
-    @Override
-    public void setCurrentFragTag(String tag) {
-    }
-
-    @Override
-    public String popCurrentFragTag() {
-        return null;
-    }
-
-    @Override
-    public String getCurrentFragTag() {
-        return null;
-    }
-
-    @Override
-    public void startActivityForResultWrapper(Class activityClassName, int requestCode, Bundle bundle) {
-/*        Intent intent = new Intent(this, activityClassName);
-        if(bundle != null) {
-            intent.putExtra(EXTRA_DATA, bundle);
-        }
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
-        ActivityCompat.startActivityForResult(this, intent, requestCode, options.toBundle());*/
-    }
-
-/*    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case AddBookmarkActivity.ADD_REQUEST:
-                    try {
-                        BookmarkListFragment fragment = (BookmarkListFragment)
-                                getSupportFragmentManager().findFragmentByTag(BookmarkListFragment.FRAG_TAG);
-                        String url = data.getExtras().getString(AddBookmarkActivity.LINK_URL_EXTRA);
-                        fragment.addLinkOnRecyclerViewWrapper(url);
-
-                        Log.e(TAG, url);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
-            }
-        }
-    }*/
-
-    @Override
     public void onBackPressed() {
         if (mBackPressedSingleton.isBackPressedHandled()) {
             return;
@@ -195,4 +158,5 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         Icepick.saveInstanceState(this, outState);
     }
+
 }

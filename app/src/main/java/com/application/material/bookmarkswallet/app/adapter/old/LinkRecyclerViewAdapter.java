@@ -61,7 +61,7 @@ public class LinkRecyclerViewAdapter extends RecyclerView.Adapter<LinkRecyclerVi
         }
         Bookmark bookmark = mDataset.get(position);
         String linkName = bookmark.getName().trim().equals("") ?
-                "(no title)" : bookmark.getName().trim();
+                " - " : bookmark.getName().trim();
         String urlName = bookmark.getUrl();
         holder.mLabelView.setText(linkName);
         holder.mUrlView.setText(urlName);

@@ -48,35 +48,35 @@
             <!--slidingLayer:previewOffsetDistance="50dip"-->
             <!--slidingLayer:stickTo="bottom">-->
 
-    <com.github.clans.fab.FloatingActionMenu
-            android:visibility="gone"
-            android:id="@+id/floatingMenuButtonId"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerHorizontal="true"
-            fab:menu_shadowColor="#66000000"
-            fab:menu_fab_size="normal"
-            fab:menu_openDirection="up"
-            fab:menu_backgroundColor="#99eeeeee"
-            fab:menu_labels_textColor="@color/material_violet_500"
-            fab:menu_labels_colorNormal="@color/white"
-            fab:menu_labels_colorPressed="@color/white"
-            fab:menu_labels_margin="@dimen/small_padding"
-            fab:menu_colorNormal="@color/material_mustard_yellow"
-            fab:menu_colorPressed="@color/material_mustard_yellow_700">
-        <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/importFloatingButtonId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_shadowRadius="2dp"
-                fab:fab_shadowYOffset="2dp"
-                fab:fab_size="mini"
-                fab:fab_label="Import bookmarks"
-                android:src="@drawable/ic_insert_drive_file_white_24dp"
-                fab:fab_colorNormal="@color/material_violet_500"
-                fab:fab_colorPressed="@color/material_violet_500"/>
+    <!--<com.github.clans.fab.FloatingActionMenu-->
+            <!--android:visibility="gone"-->
+            <!--android:id="@+id/floatingMenuButtonId"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--fab:menu_shadowColor="#66000000"-->
+            <!--fab:menu_fab_size="normal"-->
+            <!--fab:menu_openDirection="up"-->
+            <!--fab:menu_backgroundColor="#99eeeeee"-->
+            <!--fab:menu_labels_textColor="@color/material_violet_500"-->
+            <!--fab:menu_labels_colorNormal="@color/white"-->
+            <!--fab:menu_labels_colorPressed="@color/white"-->
+            <!--fab:menu_labels_margin="@dimen/small_padding"-->
+            <!--fab:menu_colorNormal="@color/material_mustard_yellow"-->
+            <!--fab:menu_colorPressed="@color/material_mustard_yellow_700">-->
+        <!--<com.github.clans.fab.FloatingActionButton-->
+                <!--android:id="@+id/importFloatingButtonId"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--fab:fab_shadowRadius="2dp"-->
+                <!--fab:fab_shadowYOffset="2dp"-->
+                <!--fab:fab_size="mini"-->
+                <!--fab:fab_label="Import bookmarks"-->
+                <!--android:src="@drawable/ic_insert_drive_file_white_24dp"-->
+                <!--fab:fab_colorNormal="@color/material_violet_500"-->
+                <!--fab:fab_colorPressed="@color/material_violet_500"/>-->
         <!--<com.github.clans.fab.FloatingActionButton-->
                 <!--android:id="@+id/clipboardFloatingButtonId"-->
                 <!--android:layout_width="wrap_content"-->
@@ -88,18 +88,18 @@
                 <!--android:src="@drawable/ic_content_paste_white_24dp"-->
                 <!--fab:fab_colorNormal="@color/material_violet_500"-->
                 <!--fab:fab_colorPressed="@color/material_violet_500"/>-->
-        <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/addLinkButtonId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_shadowRadius="2dp"
-                fab:fab_shadowYOffset="2dp"
-                fab:fab_size="mini"
-                fab:fab_label="Add new bookmark"
-                android:src="@drawable/ic_edit_white_24dp"
-                fab:fab_colorNormal="@color/material_violet_500"
-                fab:fab_colorPressed="@color/material_violet_500"/>
-    </com.github.clans.fab.FloatingActionMenu>
+        <!--<com.github.clans.fab.FloatingActionButton-->
+                <!--android:id="@+id/addLinkButtonId"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--fab:fab_shadowRadius="2dp"-->
+                <!--fab:fab_shadowYOffset="2dp"-->
+                <!--fab:fab_size="mini"-->
+                <!--fab:fab_label="Add new bookmark"-->
+                <!--android:src="@drawable/ic_edit_white_24dp"-->
+                <!--fab:fab_colorNormal="@color/material_violet_500"-->
+                <!--fab:fab_colorPressed="@color/material_violet_500"/>-->
+    <!--</com.github.clans.fab.FloatingActionMenu>-->
 
     </RelativeLayout>
 

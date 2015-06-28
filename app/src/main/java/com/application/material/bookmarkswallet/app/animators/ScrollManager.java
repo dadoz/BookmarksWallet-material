@@ -102,48 +102,36 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
             hidden = true;
             for (View view : viewsToHide.keySet()) {
                 hideView(view, viewsToHide.get(view));
-                switch (view.getId()) {
-                    case R.id.floatingMenuButtonId:
-                        ((FloatingActionMenu) view).close(true);
-                        break;
-//                    case R.id.slidingLayerLayoutId:
-//                        ((SlidingUpPanelLayout) view).setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-//                        break;
-                }
-            }
-
-            for (View view : viewsNotToShow.keySet()) {
-                hideViewWithoutAnimation(view);
             }
         }
     }
 
-    private void hideViewWithoutAnimation(View view) {
-        view.setVisibility(View.GONE);
-    }
+//    private void hideViewWithoutAnimation(View view) {
+//        view.setVisibility(View.GONE);
+//    }
 
     private void showViews() {
         if (hidden) {
             hidden = false;
             for (View view : viewsToHide.keySet()) {
-                if(view.getId() == R.id.floatingMenuButtonId && (
-                        mActionbarSingleton.isEditMode() ||
-                        mActionbarSingleton.isSearchMode())) {
-                    Log.e("TAG", "hey u're tring to show floating button");
-                    return;
-                }
                 showView(view);
             }
         }
     }
 
     private void hideView(View view, Direction direction) {
-        if (view.getId() == R.id.slidingLayerLayoutId) {
-            ((SlidingUpPanelLayout) view).setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-            return;
+        switch (view.getId()) {
+            case R.id.slidingLayerLayoutId:
+                ((SlidingUpPanelLayout) view).setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                return;
+            case R.id.adViewId:
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                return;
         }
 
-                //hide view
+        //hide view
         int height = calculateTranslation(view);
         int translateY = direction == Direction.UP ? -height : height;
         runTranslateAnimation(view, translateY, new AccelerateInterpolator(3));

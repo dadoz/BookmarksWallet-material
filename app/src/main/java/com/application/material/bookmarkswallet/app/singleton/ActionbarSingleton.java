@@ -79,8 +79,9 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
 //                        scrollManager.addViewNoDown(infoInnerView, ScrollManager.Direction.UP);
 //                    }
 //                    scrollManager.setInitialOffset(toolbar.getHeight() + infoInnerView.getHeight());
-                    scrollManager.addView(viewList.get(0), ScrollManager.Direction.DOWN);
-                    scrollManager.addView(viewList.get(1), ScrollManager.Direction.DOWN);
+                    for (View view : viewList) {
+                        scrollManager.addView(view, ScrollManager.Direction.DOWN);
+                    }
                 }
             });
 

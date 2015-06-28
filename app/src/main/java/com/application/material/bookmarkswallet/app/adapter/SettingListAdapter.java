@@ -41,12 +41,15 @@ public class SettingListAdapter extends ArrayAdapter<Setting> {
         if(convertView == null) {
             convertView = inflater.inflate(R.layout.setting_item, parent, false);
         }
+        TextView label = (TextView) convertView.findViewById(R.id.settingLabelTextId);
+        TextView description = ((TextView) convertView.findViewById(R.id.settingDescriptionTextId));
+        SwitchCompat switchCompat = ((SwitchCompat) convertView.findViewById(R.id.settingSwitchId));
 
-        ((TextView) ((ViewGroup) convertView).getChildAt(0))
-                .setText(settingObj.getLabel());
+        label.setText(settingObj.getLabel());
 
+        description.setVisibility(settingObj.getDescription() == null ? View.GONE : View.VISIBLE);
+        description.setText(settingObj.getDescription());
 
-        SwitchCompat switchCompat = ((SwitchCompat) ((ViewGroup) convertView).getChildAt(1));
         switchCompat.setVisibility(settingObj.isSwitchVisible() ? View.VISIBLE : View.GONE);
         switchCompat.setChecked(settingObj.isSwitchVisible() && settingObj.isSwitchCheck());
         switchCompat.setOnCheckedChangeListener(mCheckedChangeListener);

@@ -3,7 +3,9 @@ package com.application.material.bookmarkswallet.app.singleton;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
@@ -18,8 +20,10 @@ import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.exportFeature.CSVExportParser;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.pnikosis.materialishprogress.ProgressWheel;
 import io.realm.RealmResults;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -29,9 +33,11 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
     private static ExportBookmarkSingleton  mInstance;
     private static Fragment mListenerRef;
     private static Activity mActivityRef;
+    private static RecyclerViewActionsSingleton mRvActionsSingleton;
     private AlertDialog mExportDialog;
     private RealmResults<Bookmark> mItems;
     private View mExportBookmarksDialogView;
+    private ProgressWheel mProgressWheel;
 
     public ExportBookmarkSingleton() {
     }
@@ -39,11 +45,11 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
     public static ExportBookmarkSingleton getInstance(Fragment listenerRef, Activity activityRef) {
         mListenerRef = listenerRef;
         mActivityRef = activityRef;
+        mRvActionsSingleton = RecyclerViewActionsSingleton.getInstance(mActivityRef);
         return mInstance == null ? mInstance = new ExportBookmarkSingleton() : mInstance;
     }
 
-    public void exportAction(final RealmResults<Bookmark> data) {
-        mItems = data;
+    public void exportAction() {
         mExportBookmarksDialogView = mActivityRef.getLayoutInflater().
                 inflate(R.layout.dialog_export_bookmarks_layout, null, false);
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef);
@@ -62,14 +68,30 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
         mExportDialog.show();
     }
 
-    public void exportBookmarks(RealmResults<Bookmark> items) {
-        boolean isFileCreated = CSVExportParser.writeFile(items);
-        if (! isFileCreated) {
-            setErrorExportView();
-            mExportDialog.dismiss();
-            return;
-        }
-        setSuccessExportView();
+
+    public void exportBookmarks() {
+        new AsyncTask<Integer, Integer, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Integer... params) {
+                mProgressWheel = (ProgressWheel) mExportBookmarksDialogView.findViewById(R.id.progressWheelId);
+                final RealmResults<Bookmark> list = mRvActionsSingleton.getBookmarksList();
+                return CSVExportParser.writeFile(list);
+            }
+
+            protected void onProgressUpdate(Integer... progress) {
+                mProgressWheel.spin();
+            }
+
+            protected void onPostExecute(Boolean result) {
+                mProgressWheel.stopSpinning();
+                if (! result) {
+                    setErrorExportView();
+                    mExportDialog.dismiss();
+                    return;
+                }
+                setSuccessExportView();
+            }
+        }.execute(0);
     }
 
     private void setErrorExportView() {
@@ -79,40 +101,11 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
     private void setSuccessExportView() {
         View exportSuccessIcon = mExportBookmarksDialogView.findViewById(R.id.exportSuccessIconId);
         TextView exportInfoText = (TextView) mExportBookmarksDialogView.findViewById(R.id.exportInfoTextId);
-        exportInfoText.setText("Eureka:\n bookmarks exported with Success!Checkout on Download folder.");
+        exportInfoText.setText("All bookmarks exported with Success!\nCheckout DOWNLOAD folder.");
         mExportDialog.getButton(AlertDialog.BUTTON_POSITIVE).setVisibility(View.GONE);
         exportSuccessIcon.setVisibility(View.VISIBLE);
         Animation animation = AnimationUtils.loadAnimation(mActivityRef, R.anim.card_flip_left_out);
         exportSuccessIcon.startAnimation(animation);
-
-/*        View view = mExportBookmarksRevealView.findViewById(R.id.exportFrameLayoutId);
-        view.setBackgroundColor(mActivityRef.getResources().getColor(R.color.material_green));
-        if (Build.VERSION.SDK_INT >= 21) {
-            ViewAnimationUtils.createCircularReveal(view,
-                    view.getWidth() / 2, view.getHeight() / 2, 0, view.getHeight()).start();
-        }
-
-        (view.findViewById(R.id.exportInfoTextId)).setVisibility(View.GONE);
-        (view.findViewById(R.id.exportSuccessTextId)).setVisibility(View.VISIBLE);
-        ((TextView) view.findViewById(R.id.exportSuccessTextId)).
-                append(CSVExportParser.EXPORT_FILE_NAME);
-
-//            ((TextView) view.findViewById(R.id.dismissExportButtonDialogId)).
-//                    setTextColor(mActivityRef.getResources().getColor(R.color.white));
-
-        (view.findViewById(R.id.exportConfirmButtonDialogId)).setOnClickListener(null);
-//            ActionbarSingleton.setColorFilter(((ImageView) view
-//                    .findViewById(R.id.exportConfirmButtonDialogId)).getDrawable(),
-//                    R.color.material_violet_500, mActivityRef);
-        ((ImageView) view.findViewById(R.id.exportConfirmButtonDialogId)).setImageDrawable(
-                mActivityRef.getResources().getDrawable(R.drawable.ic_check_circle_white_48dp));
-*/
-    }
-
-    public void dismissExportDialog() {
-        if(mExportDialog != null) {
-            mExportDialog.dismiss();
-        }
     }
 
     @Override
@@ -121,7 +114,7 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exportBookmarks(mItems);
+                exportBookmarks();
             }
         });
     }
