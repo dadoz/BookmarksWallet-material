@@ -69,8 +69,8 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
     }
 
 
-    public void setToolbarScrollManager(final RecyclerView recyclerView, final List<View> viewList) {
-        scrollManager = new ScrollManager(mActivityRef);
+    public void setToolbarScrollManager(final RecyclerView recyclerView, final List<View> viewList, int adsOffsetHeight) {
+        scrollManager = new ScrollManager(mActivityRef, adsOffsetHeight);
         try {
             toolbar.post(new Runnable() {
                 @Override public void run() {

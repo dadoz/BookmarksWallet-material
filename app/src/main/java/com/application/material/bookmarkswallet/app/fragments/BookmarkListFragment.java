@@ -56,7 +56,7 @@ import java.util.regex.Pattern;
 
 public class BookmarkListFragment extends Fragment
 		implements View.OnClickListener,
-        Filterable, SwipeRefreshLayout.OnRefreshListener, SlidingUpPanelLayout.PanelSlideListener, CompoundButton.OnCheckedChangeListener {
+        Filterable, SwipeRefreshLayout.OnRefreshListener, SlidingUpPanelLayout.PanelSlideListener, CompoundButton.OnCheckedChangeListener, View.OnLayoutChangeListener {
 	private static final String TAG = "LinksListFragment_TAG";
 	public static final String FRAG_TAG = "LinksListFragment";
 	private MainActivity mMainActivityRef;
@@ -74,22 +74,12 @@ public class BookmarkListFragment extends Fragment
     SlidingUpPanelLayout mSlidingLayerLayout;
 	@InjectView(R.id.linksListId)
 	RecyclerViewCustom mRecyclerView;
-//	@InjectView(R.id.addLinkButtonId)
-//    FloatingActionButton addLinkButton;
-//	@InjectView(R.id.importFloatingButtonId)
-//	FloatingActionButton importFloatingButton;
 	@InjectView(R.id.clipboardFloatingButtonId)
     FloatingActionButton clipboardFloatingButton;
-//	@InjectView(R.id.floatingMenuButtonId)
-//    FloatingActionMenu mFloatingMenuButton;
-//	@InjectView(R.id.undoLinkDeletedLayoutId)
-//	View undoLinkDeletedLayout;
-//	@InjectView(R.id.undoButtonId)
-//	View undoButton;
-//	@InjectView(R.id.dismissButtonId)
-//	View dismissButton;
     @InjectView(R.id.emptyLinkListViewId)
 	View emptyLinkListView;
+    @InjectView(R.id.adViewId)
+	View mAdsView;
     @InjectView(R.id.emptySearchResultLayoutId)
     View mEmptySearchResultView;
     @InjectView(R.id.mainContainerViewId)
@@ -107,7 +97,6 @@ public class BookmarkListFragment extends Fragment
     private ClipboardSingleton mClipboardSingleton;
 
     private MenuItem mSearchItem;
-    private View mAdView;
 
 
     @Override
@@ -122,7 +111,7 @@ public class BookmarkListFragment extends Fragment
 		exportBookmarksSingleton = ExportBookmarkSingleton.getInstance(this, mMainActivityRef);
         mClipboardSingleton = ClipboardSingleton.getInstance(mMainActivityRef);
         mRealm = Realm.getInstance(mMainActivityRef);
-//        mAdView = mMainActivityRef.getWindow().getDecorView().findViewById(R.id.adViewId);
+//        mAdsView = mMainActivityRef.getWindow().getDecorView().findViewById(R.id.adViewId);
 //		dataApplication = (DataApplication) addActivityRef.getApplication();
 	}
 
@@ -146,28 +135,25 @@ public class BookmarkListFragment extends Fragment
 
 	private void onInitView() {
         ArrayList<View> viewArrayList = new ArrayList<>();
-//        viewArrayList.add(mAdView);
+        viewArrayList.add(mAdsView);
         viewArrayList.add(clipboardFloatingButton);
         viewArrayList.add(mSlidingLayerLayout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mSlidingLayerLayout.setPanelSlideListener(this);
-
-
+        mSlidingLayerLayout.addOnLayoutChangeListener(this);
         slidingPanelDoneIcon.setOnClickListener(this);
-//        mSlidingLayerLayout
+
         mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light,
                 android.R.color.holo_orange_light, android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light);
-//		mActionbarSingleton.setViewOnActionMenu(mSwipeRefreshLayout, actionbarInfoView, R.id.actionbarInfoLayoutId, this);
-		mActionbarSingleton.setToolbarScrollManager(mRecyclerView, viewArrayList);
+		mActionbarSingleton.setToolbarScrollManager(mRecyclerView, viewArrayList, mSlidingLayerLayout.getPanelHeight());
         mActionbarSingleton.setTitle(null);
         mActionbarSingleton.setDisplayHomeEnabled(false);
 
-//        View.OnClickListener longClickListener = (View.OnClickListener) mRecyclerView.getAdapter();
-//        touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, longClickListener, this); //LISTENER TO SWIPE
         rvActionsSingleton = RecyclerViewActionsSingleton
                 .getInstance(mSwipeRefreshLayout, mRecyclerView, mMainActivityRef, this);
+        rvActionsSingleton.setAdsView(mAdsView, mSlidingLayerLayout.getPanelHeight());
 
         mItems = rvActionsSingleton.getBookmarksList();
 
@@ -177,30 +163,14 @@ public class BookmarkListFragment extends Fragment
         if (mActionbarSingleton.isEditMode()) {
             rvActionsSingleton.selectBookmarkEditMenu(mActionbarSingleton.getEditItemPos());
         }
-//        setAdLayoutParams(mSlidingLayerLayout.getPanelHeight());
-    }
-
-    private void setIconOnFLoatingButton() {
-//        Resources res = mMainActivityRef.getResources();
-/*        Drawable icon = res.getDrawable(R.drawable.ic_insert_drive_file_white_24dp);
-        mActionbarSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
-        importFloatingButton.setImageDrawable(icon);
-
-        icon = res.getDrawable(R.drawable.ic_content_paste_white_24dp);
-        mActionbarSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
-        clipboardFloatingButton.setImageDrawable(icon);
-
-        icon = res.getDrawable(R.drawable.ic_edit_white_24dp);
-        mActionbarSingleton.setColorFilter(icon, R.color.material_mustard_yellow);
-        addLinkButton.setImageDrawable(icon);*/
-
+        if (mActionbarSingleton.isSearchMode()) {
+            onMenuItemActionCollapseImpl();
+        }
     }
 
     private void initRecyclerView() {
 		mLinkRecyclerViewAdapter =
 				new BookmarkRecyclerViewAdapter(mMainActivityRef, mRecyclerView);
-
-//		detector = new GestureDetectorCompat(mMainActivityRef, new RecyclerViewOnGestureListener()); //ONCLICK - ONLONGCLICK
 
 		linearLayoutManager = new LinearLayoutManager(mMainActivityRef);
 		emptyLinkListView.findViewById(R.id.importLocalBookmarksButtonId).setOnClickListener(this);
@@ -254,6 +224,12 @@ public class BookmarkListFragment extends Fragment
         }
         mSearchItem.collapseActionView();
     }
+    public void expandSearchActionView() {
+        if (mSearchItem == null) {
+            return;
+        }
+        mSearchItem.expandActionView();
+    }
 
     public void searchViewHandler(Menu menu) {
         //SEARCH ITEM
@@ -275,19 +251,13 @@ public class BookmarkListFragment extends Fragment
                             hideClipboardButton(startDelay);
 //                            toggleClipboardLinkButton(startDelay);
                             mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-//                            mAdView.setVisibility(View.GONE);
+                            mAdsView.setVisibility(View.GONE);
                             return true;
                         }
 
                         @Override
                         public boolean onMenuItemActionCollapse(MenuItem item) {
-                            mActionbarSingleton.setSearchMode(false);
-                            ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
-                                    .setSearchMode(false);
-                            rvActionsSingleton.setAdapter();
-//                            mAdView.setVisibility(View.VISIBLE);
-//                            toggleAddLinkButton(-1);
-//                            mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                            onMenuItemActionCollapseImpl();
                             return true;
                         }
                     });
@@ -317,6 +287,15 @@ public class BookmarkListFragment extends Fragment
 
     }
 
+    private void onMenuItemActionCollapseImpl() {
+        mActionbarSingleton.setSearchMode(false);
+        ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
+                .setSearchMode(false);
+        rvActionsSingleton.setAdapter();
+        mAdsView.setVisibility(View.VISIBLE);
+        showClipboardButton();
+    }
+
 
 /*    private void setInitialAdapter() {
         if(mRecyclerView.getAdapter() != mLinkRecyclerViewAdapter) {
@@ -342,6 +321,7 @@ public class BookmarkListFragment extends Fragment
 			case R.id.action_settings:
 				mActionbarSingleton.changeActionbar(true);
                 mMainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
+                onMenuItemActionCollapseImpl();
                 return true;
 			case R.id.action_export:
 				exportBookmarksSingleton.exportAction();
@@ -498,6 +478,7 @@ public class BookmarkListFragment extends Fragment
         if (v <= 0) {
             return;
         }
+        mAdsView.setVisibility(View.GONE);
 
         ArgbEvaluator argbEvaluator = new ArgbEvaluator();
         int startColor = mMainActivityRef.getResources().getColor(R.color.material_violet_500);
@@ -510,15 +491,19 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onPanelCollapsed(View view) {
+        mSlidingLayerLayout.addOnLayoutChangeListener(this);
         mActionbarSingleton.setPanelExpanded(false);
         mActionbarSingleton.hideSoftKeyboard(mUrlEditText);
         clipboardFloatingButton.show(true);
         slidingPanelDoneIcon.setVisibility(View.GONE);
+        mAdsView.setVisibility(View.VISIBLE);
+
 //        setAdLayoutParams(mSlidingLayerLayout.getPanelHeight());
     }
 
     @Override
     public void onPanelExpanded(View view) {
+        mSlidingLayerLayout.removeOnLayoutChangeListener(this);
         mActionbarSingleton.setPanelExpanded(true);
         clipboardFloatingButton.hide(true);
         slidingPanelDoneIcon.setVisibility(View.VISIBLE);
@@ -529,13 +514,10 @@ public class BookmarkListFragment extends Fragment
         mHttpFormatCheckbox.setOnCheckedChangeListener(this);
         mUrlEditText.setText(mHttpFormatCheckbox.isChecked() ? "https://" : "http://");
         mUrlEditText.setSelection(mUrlEditText.getText().length());
-//        mAdView.setVisibility(View.GONE);
     }
 
     @Override
     public void onPanelAnchored(View view) {
-        Log.e(TAG, "hey");
-//        mActionbarSingleton.hideSoftKeyboard(mUrlEditText);
     }
 
     @Override
@@ -565,6 +547,16 @@ public class BookmarkListFragment extends Fragment
         mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 
+    @Override
+    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+        if (! mActionbarSingleton.isSearchMode() &&
+            ! mActionbarSingleton.isEditMode() &&
+                bottom > 1500) {
+            mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        }
+//        Log.e("TAG", "Bla");
+    }
+
     private class LinkFilter extends Filter {
         public LinkFilter() {
         }
@@ -586,9 +578,17 @@ public class BookmarkListFragment extends Fragment
                     RealmResults<Bookmark> filteredList;
                     String searchValue = ((String) constraint).toLowerCase();
                     boolean caseSensitive = false;
-                    filteredList = query
-                            .contains("name", searchValue, caseSensitive)
-                            .findAll();
+
+                    if (rvActionsSingleton.isSearchOnUrlEnabled()) {
+                        filteredList = query
+                                .contains("url", searchValue, caseSensitive).or()
+                                .contains("name", searchValue, caseSensitive)
+                                .findAll();
+                    } else {
+                        filteredList = query
+                                .contains("name", searchValue, caseSensitive)
+                                .findAll();
+                    }
 
                     Log.e(TAG, "hey" + filteredList.size());
                     if (filteredList.size() == 0) {
@@ -610,12 +610,12 @@ public class BookmarkListFragment extends Fragment
     }
 
 //    private void setAdLayoutParams(int marginBottom) {
-//        if (mAdView == null) {
+//        if (mAdsView == null) {
 //            return;
 //        }
-//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mAdView.getLayoutParams();
+//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mAdsView.getLayoutParams();
 //        params.setMargins(0, 0, 0, marginBottom);
-//        mAdView.setLayoutParams(params);
+//        mAdsView.setLayoutParams(params);
 //
 //    }
 

@@ -83,7 +83,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 
 		ArrayList<Setting> settingList = new ArrayList<Setting>();
 		settingList.add(new Setting("Rate it!", null, View.GONE, false));
-        settingList.add(new Setting("Search on URL enabled", "extend bookmark search by URL string even that only search by title.", View.VISIBLE, mRvActionsSingleton.getSearchOnUrlEnabled()));
+        settingList.add(new Setting("Search on URL enabled", "extend bookmark search by URL string even that only search by title.", View.VISIBLE, mRvActionsSingleton.isSearchOnUrlEnabled()));
         settingList.add(new Setting("Delete all bookmarks!", "clear all your stored bookmarks.", View.GONE, true));
         settingList.add(new Setting("Send a feedback", null, View.GONE, false));
         //add switchCompat v7 on sm option

@@ -113,6 +113,9 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 
     @Override
     public boolean onLongClick(View v) {
+        if (isSearchMode()) {
+            return true;
+        }
         Log.e("TAG", "long click");
         int position = mRecyclerView.getChildPosition(v);
         BookmarkRecyclerViewAdapter.ViewHolder holder =

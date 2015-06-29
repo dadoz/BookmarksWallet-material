@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
@@ -39,6 +40,7 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
     private static final int MIN_SCROLL_TO_HIDE = 10;
     private final Activity mActivityRef;
     private final ActionbarSingleton mActionbarSingleton;
+    private final int mAdsOffsetHeight;
     //    private final View infoView;
     private boolean hidden;
     private int accummulatedDy;
@@ -51,9 +53,10 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
 
     public static enum Direction {UP, DOWN}
 
-    public ScrollManager(Activity activityRef) {
+    public ScrollManager(Activity activityRef, int adsOffsetHeight) {
         mActivityRef = activityRef;
         mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
+        mAdsOffsetHeight = adsOffsetHeight;
 //        infoView = view;
     }
 
@@ -120,21 +123,37 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
     }
 
     private void hideView(View view, Direction direction) {
+        int offset = 0;
         switch (view.getId()) {
             case R.id.slidingLayerLayoutId:
                 ((SlidingUpPanelLayout) view).setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 return;
             case R.id.adViewId:
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                params.setMargins(0, 0, 0, 0);
-                view.setLayoutParams(params);
-                return;
+                offset = mAdsOffsetHeight;
+                break;
         }
 
         //hide view
         int height = calculateTranslation(view);
         int translateY = direction == Direction.UP ? -height : height;
-        runTranslateAnimation(view, translateY, new AccelerateInterpolator(3));
+        runTranslateAnimation(view, translateY - offset, new AccelerateInterpolator(3));
+//        runTranslateAnimationWrapper(view, direction, offset);
+    }
+
+    private void showView(View view) {
+        switch (view.getId()) {
+            case R.id.slidingLayerLayoutId:
+                ((SlidingUpPanelLayout) view).setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                return;
+        }
+
+        runTranslateAnimation(view, 0, new DecelerateInterpolator(3));
+    }
+
+    public static int getTranslateY(View view , Direction direction, int offset) {
+        int height = calculateTranslation(view);
+        int translateY = direction == Direction.UP ? -height : height;
+        return translateY - offset;
     }
 
     /**
@@ -142,7 +161,7 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
      * @param view View to translate
      * @return translation in pixels
      */
-    private int calculateTranslation(View view) {
+    private static int calculateTranslation(View view) {
         int height = view.getHeight();
 
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -151,20 +170,20 @@ public class ScrollManager extends RecyclerView.OnScrollListener {
         return height + margins;
     }
 
-    private void showView(View view) {
-        if (view.getId() == R.id.slidingLayerLayoutId) {
-            ((SlidingUpPanelLayout) view).setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-            return;
+    private static int getDelay(int viewId, int translateY) {
+        if (viewId == R.id.adViewId) {
+            return 150;
         }
 
-        runTranslateAnimation(view, 0, new DecelerateInterpolator(3));
+        return translateY == 0 ? 300 : 0;
     }
 
-    private void runTranslateAnimation(View view, final int translateY, Interpolator interpolator) {
+    public static void runTranslateAnimation(View view, final int translateY, Interpolator interpolator) {
+        int delay = getDelay(view.getId(), translateY);
         Animator slideInAnimation = ObjectAnimator.ofFloat(view, "translationY", translateY);
         slideInAnimation.setDuration(view.getContext().getResources().getInteger(android.R.integer.config_mediumAnimTime));
         slideInAnimation.setInterpolator(interpolator);
-        slideInAnimation.setStartDelay(translateY == 0 ? 300 : 0);
+        slideInAnimation.setStartDelay(delay);
         slideInAnimation.start();
 /*        final int[] ended = new int[1];
         ended[0] = 1;

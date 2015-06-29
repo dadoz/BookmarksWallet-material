@@ -5,106 +5,41 @@
         xmlns:fab="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-<com.sothree.slidinguppanel.SlidingUpPanelLayout
-        android:id="@+id/slidingLayerLayoutId"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        sothree:umanoPanelHeight="60dp"
-        sothree:umanoShadowHeight="4dp">
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+            android:id="@+id/slidingLayerLayoutId"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            sothree:umanoPanelHeight="60dp"
+            sothree:umanoShadowHeight="4dp">
 
-<RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/material_grey_200"
-        android:orientation="vertical">
-
-    <!--<include layout="@layout/actionbar_info_action_layout"/>-->
-    <android.support.v4.widget.SwipeRefreshLayout
-            android:layout_above="@id/toolbarId"
-            android:id="@+id/mainContainerViewId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        <com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:id="@+id/linksListId"
+        <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
-    <include layout="@layout/empty_link_list_layout"/>
-    <include layout="@layout/empty_search_result_layout"/>
+                android:layout_height="fill_parent"
+                android:background="@color/material_grey_200"
+                android:orientation="vertical">
 
-    <!--BOTTOM bar-->
-    <!--<include layout="@layout/bottom_bar_undo_redo_layout"/>-->
+            <!--<include layout="@layout/actionbar_info_action_layout"/>-->
+            <android.support.v4.widget.SwipeRefreshLayout
+                    android:layout_above="@id/toolbarId"
+                    android:id="@+id/mainContainerViewId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                <com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        android:id="@+id/linksListId"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical"/>
+            </android.support.v4.widget.SwipeRefreshLayout>
+            <include layout="@layout/empty_link_list_layout"/>
+            <include layout="@layout/empty_search_result_layout"/>
 
-    <!--<com.wunderlist.slidinglayer.SlidingLayer-->
-            <!--android:id="@+id/slidingLayerLayoutId"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="200dip"-->
-            <!--slidingLayer:offsetDistance="50dip"-->
-            <!--slidingLayer:changeStateOnTap="false"-->
-            <!--slidingLayer:previewOffsetDistance="50dip"-->
-            <!--slidingLayer:stickTo="bottom">-->
+        </RelativeLayout>
 
-    <!--<com.github.clans.fab.FloatingActionMenu-->
-            <!--android:visibility="gone"-->
-            <!--android:id="@+id/floatingMenuButtonId"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="fill_parent"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--fab:menu_shadowColor="#66000000"-->
-            <!--fab:menu_fab_size="normal"-->
-            <!--fab:menu_openDirection="up"-->
-            <!--fab:menu_backgroundColor="#99eeeeee"-->
-            <!--fab:menu_labels_textColor="@color/material_violet_500"-->
-            <!--fab:menu_labels_colorNormal="@color/white"-->
-            <!--fab:menu_labels_colorPressed="@color/white"-->
-            <!--fab:menu_labels_margin="@dimen/small_padding"-->
-            <!--fab:menu_colorNormal="@color/material_mustard_yellow"-->
-            <!--fab:menu_colorPressed="@color/material_mustard_yellow_700">-->
-        <!--<com.github.clans.fab.FloatingActionButton-->
-                <!--android:id="@+id/importFloatingButtonId"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--fab:fab_shadowRadius="2dp"-->
-                <!--fab:fab_shadowYOffset="2dp"-->
-                <!--fab:fab_size="mini"-->
-                <!--fab:fab_label="Import bookmarks"-->
-                <!--android:src="@drawable/ic_insert_drive_file_white_24dp"-->
-                <!--fab:fab_colorNormal="@color/material_violet_500"-->
-                <!--fab:fab_colorPressed="@color/material_violet_500"/>-->
-        <!--<com.github.clans.fab.FloatingActionButton-->
-                <!--android:id="@+id/clipboardFloatingButtonId"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--fab:fab_shadowRadius="2dp"-->
-                <!--fab:fab_shadowYOffset="2dp"-->
-                <!--fab:fab_size="mini"-->
-                <!--fab:fab_label="Paste from clipboard"-->
-                <!--android:src="@drawable/ic_content_paste_white_24dp"-->
-                <!--fab:fab_colorNormal="@color/material_violet_500"-->
-                <!--fab:fab_colorPressed="@color/material_violet_500"/>-->
-        <!--<com.github.clans.fab.FloatingActionButton-->
-                <!--android:id="@+id/addLinkButtonId"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--fab:fab_shadowRadius="2dp"-->
-                <!--fab:fab_shadowYOffset="2dp"-->
-                <!--fab:fab_size="mini"-->
-                <!--fab:fab_label="Add new bookmark"-->
-                <!--android:src="@drawable/ic_edit_white_24dp"-->
-                <!--fab:fab_colorNormal="@color/material_violet_500"-->
-                <!--fab:fab_colorPressed="@color/material_violet_500"/>-->
-    <!--</com.github.clans.fab.FloatingActionMenu>-->
-
-    </RelativeLayout>
-
-    <include layout="@layout/sliding_up_panel_layout" />
-</com.sothree.slidinguppanel.SlidingUpPanelLayout>
+        <include layout="@layout/sliding_up_panel_layout"/>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
     <com.github.clans.fab.FloatingActionButton
             android:id="@+id/clipboardFloatingButtonId"
@@ -120,5 +55,13 @@
             fab:fab_colorNormal="@color/material_mustard_yellow"
             fab:fab_colorPressed="@color/material_mustard_yellow_700"/>
 
+    <LinearLayout
+            android:id="@+id/adViewId"
+            android:orientation="vertical"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="60dip"
+            android:background="@color/black" />
 
 </FrameLayout>

@@ -1,11 +1,23 @@
-<ListView
-		xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/settingsListId"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:background="@color/material_grey_200"
-	android:paddingLeft="10dip"
-	android:paddingRight="10dip">
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+    <ListView
+            android:id="@+id/settingsListId"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/material_grey_200"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip">
 
-</ListView>
+    </ListView>
+    <LinearLayout
+            android:id="@+id/adView2Id"
+            android:orientation="vertical"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom|center"
+            android:background="@color/black" />
+
+</FrameLayout>
 
