@@ -3,6 +3,7 @@ package com.sothree.slidinguppanel;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -16,10 +17,7 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.view.accessibility.AccessibilityEvent;
 
 import android.view.inputmethod.InputMethodManager;
@@ -40,10 +38,10 @@ public class SlidingUpPanelLayout extends ViewGroup {
      */
     private static final float DEFAULT_ANCHOR_POINT = 1.0f; // In relative %
 
-    /**
-     * Min height for slideable view
-     */
-    private static final int SLIDEABLE_MIN_HEIGHT = 1920;
+//    /**
+//     * Min height for slideable view
+//     */
+//    private static final int SLIDEABLE_MIN_HEIGHT = -1;
 
     /**
      * Default initial state for the component
@@ -944,26 +942,6 @@ public class SlidingUpPanelLayout extends ViewGroup {
                 : getPaddingTop() - slidingViewHeight + mPanelHeight + slidePixelOffset;
     }
 
-    /**
-     * calculate if keyboard is shown or not
-     * @return boolean
-     */
-    private boolean isKeyboardShowing() {
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        return imm.isAcceptingText();
-    }
-
-    /**
-     * calculate keyboard height
-     * @return int
-     */
-    private int getKeyboardHeight() {
-        Rect r = new Rect();
-        getWindowVisibleDisplayFrame(r);
-        int heigth = getRootView().getHeight();
-        return heigth - (r.bottom - r.top);
-    }
-
     /*
      * Computes the slide offset based on the top position of the panel
      */
@@ -1040,6 +1018,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
     }
 
     private void onPanelDragged(int newTop) {
+        int slideMaxHeight = getRootView().getHeight();
         mLastNotDraggingSlideState = mSlideState;
         mSlideState = PanelState.DRAGGING;
         // Recompute the slide offset based on the new top position
@@ -1050,17 +1029,39 @@ public class SlidingUpPanelLayout extends ViewGroup {
         // If the slide offset is negative, and overlay is not on, we need to increase the
         // height of the main content
         LayoutParams lp = (LayoutParams)mMainView.getLayoutParams();
-        int defaultHeight = getHeight() - getPaddingBottom() - getPaddingTop() - mPanelHeight;
+//        int defaultHeight = getHeight() - getPaddingBottom() - getPaddingTop() - mPanelHeight;
+        int defaultHeight = getDefaultHeight();
+
 
         if (mSlideOffset <= 0 && !mOverlayContent) {
             // expand the main view
 //            lp.height = mIsSlidingUp ? (newTop - getPaddingBottom()) : (getHeight() - getPaddingBottom() - mSlideableView.getMeasuredHeight() - newTop);
-            lp.height = mSlideableView != null ? mSlideableView.getRootView().getHeight() - getPanelHeight() : SLIDEABLE_MIN_HEIGHT;
+//            lp.height = mSlideableView != null ? mSlideableView.getRootView().getHeight() - getPanelHeight() : slideMaxHeight;
+            lp.height = defaultHeight;
             mMainView.requestLayout();
         } else if (lp.height != defaultHeight && !mOverlayContent) {
             lp.height = defaultHeight;
             mMainView.requestLayout();
         }
+    }
+
+    public int getDefaultHeight() {
+        int statusBarHeight = 0;
+        int navigationBarHeight = 0;
+        boolean portraitOrientation = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+
+        resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0 &&
+                portraitOrientation) {
+            navigationBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+
+        return getRootView().getMeasuredHeight() - statusBarHeight - navigationBarHeight - mPanelHeight;
     }
 
     @Override
