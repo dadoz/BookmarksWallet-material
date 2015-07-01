@@ -1110,7 +1110,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
      * @param velocity initial velocity in case of fling, or 0.
      */
     boolean smoothSlideTo(float slideOffset, int velocity) {
-        Log.e("Library", " - " + computePanelTopPosition(slideOffset));
+//        Log.e("Library", " - " + computePanelTopPosition(slideOffset));
         if (!isEnabled()) {
             // Nothing to do.
             return false;
