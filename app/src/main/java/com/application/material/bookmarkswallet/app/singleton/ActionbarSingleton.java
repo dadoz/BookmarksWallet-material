@@ -124,17 +124,15 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
     }
 
     private void setStatusBarColor() {
-        if (Build.VERSION.SDK_INT < 21) {
-            return;
+        if (Build.VERSION.SDK_INT > 21) {
+            Window window = mActivityRef.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            int color = mActivityRef.getResources()
+                    .getColor(isEditMode() ? R.color.material_mustard_yellow :
+                            R.color.material_mustard_yellow_700);
+            window.setStatusBarColor(color);
         }
-
-        Window window = mActivityRef.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        int color = mActivityRef.getResources()
-                .getColor(isEditMode() ? R.color.material_mustard_yellow :
-                        R.color.material_mustard_yellow_700);
-        window.setStatusBarColor(color);
     }
 
     public void setDisplayHomeEnabled(boolean isHomeUpEnabled) {

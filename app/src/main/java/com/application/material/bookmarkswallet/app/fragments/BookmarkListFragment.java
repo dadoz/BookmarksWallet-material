@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,7 @@ import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton
 import com.application.material.bookmarkswallet.app.singleton.ClipboardSingleton;
 import com.application.material.bookmarkswallet.app.singleton.ExportBookmarkSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
+import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton.BrowserEnum;
 import com.github.clans.fab.FloatingActionButton;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import io.realm.Realm;
@@ -61,7 +63,7 @@ public class BookmarkListFragment extends Fragment
 	@InjectView(R.id.slidingPanelLabelTextId)
     TextView mSlidingPanelLabelText;
 	@InjectView(R.id.slidingPanelDoneIconId)
-    ImageView slidingPanelDoneIcon;
+    ImageView slidingPanelDoneText;
 	@InjectView(R.id.slidingPanelLayoutId)
     LinearLayout mSlidingPanelLayout;
 	@InjectView(R.id.slidingLayerLayoutId)
@@ -133,7 +135,7 @@ public class BookmarkListFragment extends Fragment
 
         mSlidingLayerLayout.setPanelSlideListener(this);
         mSlidingLayerLayout.addOnLayoutChangeListener(this);
-        slidingPanelDoneIcon.setOnClickListener(this);
+        slidingPanelDoneText.setOnClickListener(this);
 
         mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light,
                 android.R.color.holo_orange_light, android.R.color.holo_blue_bright,
@@ -325,8 +327,9 @@ public class BookmarkListFragment extends Fragment
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.importLocalBookmarksButtonId:
-				rvActionsSingleton.setBookmarksByProvider();
-				break;
+                BrowserEnum [] temp = {BrowserEnum.CHROME, BrowserEnum.DEFAULT};
+                rvActionsSingleton.addBookmarksByProvider(temp);
+                break;
             case R.id.clipboardFloatingButtonId:
                 if(! mClipboardSingleton.hasClipboardText()) {
                     Toast.makeText(mMainActivityRef, "no text in clipboard", Toast.LENGTH_SHORT).show();
@@ -451,7 +454,7 @@ public class BookmarkListFragment extends Fragment
         mActionbarSingleton.setPanelExpanded(false);
         mActionbarSingleton.hideSoftKeyboard(mUrlEditText);
         mClipboardFloatingButton.show(true);
-        slidingPanelDoneIcon.setVisibility(View.GONE);
+        slidingPanelDoneText.setVisibility(View.GONE);
         mAdsView.setVisibility(View.VISIBLE);
     }
 
@@ -460,9 +463,9 @@ public class BookmarkListFragment extends Fragment
         mSlidingLayerLayout.removeOnLayoutChangeListener(this);
         mActionbarSingleton.setPanelExpanded(true);
         mClipboardFloatingButton.hide(true);
-        slidingPanelDoneIcon.setVisibility(View.VISIBLE);
-        mActionbarSingleton.setColorResourceFilter(slidingPanelDoneIcon.getDrawable(),
-                R.color.material_violet_500);
+        slidingPanelDoneText.setVisibility(View.VISIBLE);
+//        mActionbarSingleton.setColorResourceFilter(slidingPanelDoneIcon.getDrawable(),
+//                R.color.material_violet_500);
         mUrlEditText.setFocusableInTouchMode(true);
         mUrlEditText.requestFocus();
         mHttpFormatCheckbox.setOnCheckedChangeListener(this);
@@ -503,7 +506,6 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-        Log.e(TAG, " - " + bottom + " - " + ((SlidingUpPanelLayout) v).getDefaultHeight());
         if (! mActionbarSingleton.isSearchMode() &&
             ! mActionbarSingleton.isEditMode() &&
                 bottom > ((SlidingUpPanelLayout) v).getDefaultHeight()) {

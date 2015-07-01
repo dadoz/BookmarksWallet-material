@@ -1,7 +1,7 @@
 package com.application.material.bookmarkswallet.app.singleton;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -62,6 +62,7 @@ public class RecyclerViewActionsSingleton {
     private static String BOOKMARKS_WALLET_SHAREDPREF = "BOOKMARKS_WALLET_SHAREDPREF";
     private View mAdsView;
     private int mAdsOffset;
+    public enum BrowserEnum { DEFAULT, CHROME, FIREFOX };
 
     public RecyclerViewActionsSingleton() {
     }
@@ -311,42 +312,25 @@ public class RecyclerViewActionsSingleton {
         return realm.where(Bookmark.class).findAll();
     }
 
-    public void setBookmarksByProvider() {
+    public void addBookmarksByProvider(final BrowserEnum[] browserList) {
         mSwipeRefreshLayout.setRefreshing(true);
         new AsyncTask<URL, String, Boolean>() {
 
             @Override
             protected Boolean doInBackground(URL... params) {
                 try {
-                    ContentResolver cr = mActivityRef.getContentResolver();
-                    Realm realm = Realm.getInstance(mActivityRef);
-                    String[] projection = {
-                            Browser.BookmarkColumns.CREATED,
-                            Browser.BookmarkColumns.FAVICON,
-                            Browser.BookmarkColumns.TITLE,
-                            Browser.BookmarkColumns.URL
-                    };
-                    Cursor cursor = cr.query(Browser.BOOKMARKS_URI, projection, null, null, null);
-                    int urlId = cursor.getColumnIndex(Browser.BookmarkColumns.URL);
-                    int titleId = cursor.getColumnIndex(Browser.BookmarkColumns.TITLE);
-                    int faviconId = cursor.getColumnIndex(Browser.BookmarkColumns.FAVICON);
-//                    long timestamp = cursor.getColumnIndex(Browser.BookmarkColumns.CREATED);
-
-                    if(cursor.moveToFirst()) {
-                        do {
-                            Log.e(TAG, "hey " + cursor.getString(urlId));
-                            byte[] blobIcon = cursor.getBlob(faviconId);
-
-                            //add item on realm
-                            addOrmObject(realm, cursor.getString(titleId), null, blobIcon, cursor.getString(urlId));
-                        } while(cursor.moveToNext());
-
-                    }
+                    Uri bookmarksUri = getBookmarksUriByBrowser(browserList[0]);
+                    addBookmarksByProviderJob(bookmarksUri);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    try {
+                        Uri bookmarksUri = getBookmarksUriByBrowser(browserList[1]);
+                        addBookmarksByProviderJob(bookmarksUri);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+
                 }
-
-
                 return null;
             }
 
@@ -358,6 +342,51 @@ public class RecyclerViewActionsSingleton {
                 setAdapter();
             }
         }.execute();
+    }
+
+    private void addBookmarksByProviderJob(Uri bookmarksUri) throws Exception {
+        ContentResolver cr = mActivityRef.getContentResolver();
+        Realm realm = Realm.getInstance(mActivityRef);
+        String[] projection = {
+                Browser.BookmarkColumns.CREATED,
+                Browser.BookmarkColumns.FAVICON,
+                Browser.BookmarkColumns.TITLE,
+                Browser.BookmarkColumns.URL
+        };
+        Cursor cursor = cr.query(bookmarksUri, projection, null, null, null);
+        int urlId = cursor.getColumnIndex(Browser.BookmarkColumns.URL);
+        int titleId = cursor.getColumnIndex(Browser.BookmarkColumns.TITLE);
+        int faviconId = cursor.getColumnIndex(Browser.BookmarkColumns.FAVICON);
+        //                    long timestamp = cursor.getColumnIndex(Browser.BookmarkColumns.CREATED);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Log.e(TAG, "hey " + cursor.getString(urlId));
+                byte[] blobIcon = cursor.getBlob(faviconId);
+
+                //add item on realm
+                addOrmObject(realm, cursor.getString(titleId), null, blobIcon, cursor.getString(urlId));
+            } while (cursor.moveToNext());
+
+        }
+    }
+
+    private Uri getBookmarksUriByBrowser(BrowserEnum browser) {
+        if (browser.ordinal() == BrowserEnum.DEFAULT.ordinal()) {
+            return Browser.BOOKMARKS_URI;
+        } else if (browser.ordinal() == BrowserEnum.CHROME.ordinal()) {
+            String chromePackage = "com.android.chrome";
+            Uri chromeUri = Uri.parse("content://com.android.chrome.browser/bookmarks");
+            mActivityRef.grantUriPermission(chromePackage, chromeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            return chromeUri;
+        } else if (browser.ordinal() == BrowserEnum.FIREFOX.ordinal()) {
+            Uri firefoxUri = Uri.parse("content://org.mozilla.firefox.db.browser/bookmarks");
+            String firefoxPackage = "org.mozilla.firefox";
+            mActivityRef.grantUriPermission(firefoxPackage, firefoxUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            return firefoxUri;
+        }
+
+        return Browser.BOOKMARKS_URI;
     }
 
     public boolean addOrmObject(Realm realm, String title, String iconPath, byte[] blobIcon, String url) {

@@ -16,8 +16,8 @@
 	<color name="cobaltGreen">#59da9a</color>
 
 
-    <!--<color name="material_stone_black">#2b2929</color>-->
-    <color name="material_stone_black">#3C3251</color>
+    <color name="material_stone_black">#2b2929</color>
+    <!--<color name="material_stone_black">#3C3251</color>-->
 	<color name="material_green">#009688</color>
 	<!--<color name="material_red">#f25244</color>-->
 	<!--<color name="material_red">#fe4365</color>-->

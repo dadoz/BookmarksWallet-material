@@ -1,7 +1,7 @@
 package com.application.material.bookmarkswallet.app.singleton;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;

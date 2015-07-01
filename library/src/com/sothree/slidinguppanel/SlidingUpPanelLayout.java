@@ -1057,7 +1057,8 @@ public class SlidingUpPanelLayout extends ViewGroup {
 
         resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
         if (resourceId > 0 &&
-                portraitOrientation) {
+                portraitOrientation &&
+                Build.VERSION.SDK_INT > 21) {
             navigationBarHeight = getResources().getDimensionPixelSize(resourceId);
         }
 
