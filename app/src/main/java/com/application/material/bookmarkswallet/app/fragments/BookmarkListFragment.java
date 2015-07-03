@@ -37,6 +37,8 @@ import com.application.material.bookmarkswallet.app.singleton.ExportBookmarkSing
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton.BrowserEnum;
 import com.github.clans.fab.FloatingActionButton;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import io.realm.Realm;
 import io.realm.RealmQuery;
@@ -74,14 +76,14 @@ public class BookmarkListFragment extends Fragment
     FloatingActionButton mClipboardFloatingButton;
     @InjectView(R.id.emptyLinkListViewId)
 	View emptyLinkListView;
-    @InjectView(R.id.adViewId)
-	View mAdsView;
     @InjectView(R.id.emptySearchResultLayoutId)
     View mEmptySearchResultView;
     @InjectView(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    @InjectView(R.id.adViewId)
+    AdView mAdsView;
 
-	private LinearLayoutManager linearLayoutManager;
+    private LinearLayoutManager linearLayoutManager;
 	private RealmResults<Bookmark> mItems;
 	private GestureDetectorCompat detector;
 	private View mLinkListView;
@@ -106,7 +108,8 @@ public class BookmarkListFragment extends Fragment
 		exportBookmarksSingleton = ExportBookmarkSingleton.getInstance(this, mMainActivityRef);
         mClipboardSingleton = ClipboardSingleton.getInstance(mMainActivityRef);
         mRealm = Realm.getInstance(mMainActivityRef);
-	}
+
+    }
 
 	@Override
 	public void onActivityCreated(Bundle savedInstance) {
@@ -119,10 +122,12 @@ public class BookmarkListFragment extends Fragment
 		mLinkListView = inflater.inflate(R.layout.bookmark_list_layout,
 				container, false);
 		ButterKnife.inject(this, mLinkListView);
+        //load ads
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdsView.loadAd(adRequest);
 
-		setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
 		onInitView();
-
         return mLinkListView;
 	}
 

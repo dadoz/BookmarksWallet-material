@@ -24,7 +24,10 @@ import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChang
 import com.application.material.bookmarkswallet.app.models.Setting;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
+import com.google.android.gms.ads.AdRequest;
 import com.willowtreeapps.saguaro.android.Saguaro;
+import com.google.android.gms.ads.AdView;
+
 import io.realm.Realm;
 
 import java.util.ArrayList;
@@ -41,6 +44,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 	private ActionbarSingleton mActionbarSingleton;
     private Realm mRealm;
     private RecyclerViewActionsSingleton mRvActionsSingleton;
+    private AdView mAdView;
 
     @Override
 	public void onAttach(Activity activity) {
@@ -49,17 +53,11 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnLoadViewHandlerInterface");
 		}
-//		if (! (activity instanceof OnInitActionBarInterface)) {
-//			throw new ClassCastException(activity.toString()
-//					+ " must implement OnInitActionBarInterface");
-//		}
+
 		mActivityRef = activity;
 		mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
         mRvActionsSingleton = RecyclerViewActionsSingleton.getInstance(mActivityRef);
-//        FeedbackSettings feedbackSettings = new FeedbackSettings();
-//        feedbackSettings.setRadioButtons(false);
-//        mFeedBackDialog = new FeedbackDialog(mActivityRef,
-//                mActivityRef.getResources().getString(R.string.ANDROID_FEEDBACK_KEY), feedbackSettings);
+
     }
 
 	@Override
@@ -69,6 +67,11 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
         mActionbarSingleton.setTitle(TITLE);
         mActionbarSingleton.setDisplayHomeEnabled(true);
         mRealm = Realm.getInstance(mActivityRef);
+
+        //load ads
+        mAdView = (AdView) settingsView.findViewById(R.id.adView2Id);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         return settingsView;
 	}

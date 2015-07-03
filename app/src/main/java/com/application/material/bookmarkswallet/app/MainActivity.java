@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity
         FlurryAgent.init(this, getResources().getString(R.string.FLURRY_API_KEY));
 
         AppRate.with(this)
-                .setInstallDays(0) // default 10, 0 means install day.
-                .setLaunchTimes(1) // default 10
+                .setInstallDays(2) // default 10, 0 means install day.
+                .setLaunchTimes(10) // default 10
                 .setRemindInterval(1) // default 1
                 .setShowNeutralButton(true) // default true
                 .setDebug(false) // default false
@@ -64,11 +64,6 @@ public class MainActivity extends AppCompatActivity
                 .monitor();
         // Show a dialog if meets conditions
         AppRate.showRateDialogIfMeetsConditions(this);
-        //TODO ads - move on fragment
-//        mAdView = (AdView) findViewById(R.id.adView);
-//        AdRequest adRequest = new AdRequest.Builder().build();
-//        mAdView.loadAd(adRequest);
-
         onInitFragment();
     }
 

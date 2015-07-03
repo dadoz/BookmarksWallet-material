@@ -2,6 +2,7 @@
 <FrameLayout
         xmlns:sothree="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
         xmlns:fab="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -41,6 +42,15 @@
         <include layout="@layout/sliding_up_panel_layout"/>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
+    <com.google.android.gms.ads.AdView
+            android:id="@+id/adViewId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ads:adSize="BANNER"
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="60dip"
+            ads:adUnitId="@string/banner_ad_unit_id" />
+
     <com.github.clans.fab.FloatingActionButton
             android:id="@+id/clipboardFloatingButtonId"
             android:layout_width="wrap_content"
@@ -54,14 +64,5 @@
             fab:fab_label="Add new bookmark"
             fab:fab_colorNormal="@color/material_mustard_yellow"
             fab:fab_colorPressed="@color/material_mustard_yellow_700"/>
-
-    <LinearLayout
-            android:id="@+id/adViewId"
-            android:orientation="vertical"
-            android:layout_width="200dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom|center"
-            android:layout_marginBottom="60dip"
-            android:background="@color/black" />
 
 </FrameLayout>
