@@ -13,22 +13,23 @@
 <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-    <ImageView
-            android:id="@+id/infoIconId"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/icon_size"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:paddingRight="@dimen/medium_padding"
-            android:layout_marginTop="@dimen/medium_padding"
-            android:src="@drawable/ic_info_black_48dp"/>
+    <!--<ImageView-->
+            <!--android:id="@+id/infoIconId"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="@dimen/icon_size"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:paddingRight="@dimen/medium_padding"-->
+            <!--android:layout_marginTop="@dimen/medium_padding"-->
+            <!--android:src="@drawable/ic_info_black_48dp"/>-->
     <LinearLayout
             android:id="@+id/infoMainLayoutId"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/medium_padding"
-            android:layout_toRightOf="@id/infoIconId"
             android:orientation="vertical">
+        <!--android:layout_toRightOf="@id/infoIconId"-->
+
         <TextView
                 android:id="@+id/infoTitleViewId"
                 android:layout_width="fill_parent"

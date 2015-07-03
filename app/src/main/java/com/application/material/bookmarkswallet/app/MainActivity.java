@@ -19,7 +19,8 @@ import com.application.material.bookmarkswallet.app.singleton.BackPressedSinglet
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.tjeannin.apprate.AppRate;
+import hotchemi.android.rate.AppRate;
+import hotchemi.android.rate.OnClickButtonListener;
 import icepick.Icepick;
 import icepick.Icicle;
 
@@ -48,11 +49,21 @@ public class MainActivity extends AppCompatActivity
         FlurryAgent.setLogEnabled(true);
         FlurryAgent.init(this, getResources().getString(R.string.FLURRY_API_KEY));
 
-        new AppRate(this)
-                .setMinDaysUntilPrompt(7)
-                .setMinLaunchesUntilPrompt(20)
-                .init();
-
+        AppRate.with(this)
+                .setInstallDays(0) // default 10, 0 means install day.
+                .setLaunchTimes(1) // default 10
+                .setRemindInterval(1) // default 1
+                .setShowNeutralButton(true) // default true
+                .setDebug(false) // default false
+                .setOnClickButtonListener(new OnClickButtonListener() { // callback listener.
+                    @Override
+                    public void onClickButton(int which) {
+                        Log.d(MainActivity.class.getName(), Integer.toString(which));
+                    }
+                })
+                .monitor();
+        // Show a dialog if meets conditions
+        AppRate.showRateDialogIfMeetsConditions(this);
         //TODO ads - move on fragment
 //        mAdView = (AdView) findViewById(R.id.adView);
 //        AdRequest adRequest = new AdRequest.Builder().build();

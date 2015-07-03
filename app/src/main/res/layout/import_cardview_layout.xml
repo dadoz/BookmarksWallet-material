@@ -36,20 +36,20 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/medium_padding">
-                <ImageView
-                        android:id="@+id/csvFormatIconId"
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_book_black_24dp"/>
-                <TextView
-                        android:layout_toRightOf="@id/csvFormatIconId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/small_padding"
-                        android:maxWidth="@dimen/import_label_width"
-                        android:text="csv format"/>
+                <!--<ImageView-->
+                        <!--android:id="@+id/csvFormatIconId"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:src="@drawable/ic_book_black_24dp"/>-->
+                <!--<TextView-->
+                        <!--android:layout_toRightOf="@id/csvFormatIconId"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_marginLeft="@dimen/small_padding"-->
+                        <!--android:maxWidth="@dimen/import_label_width"-->
+                        <!--android:text="csv format"/>-->
                 <CheckBox
                         android:layout_alignParentRight="true"
                         android:id="@+id/csvFormatCheckboxId"
@@ -64,20 +64,20 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:layout_marginTop="@dimen/medium_padding">
-                <ImageView
-                        android:id="@+id/htmlFormatIconId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ic_book_black_24dp"/>
-                <TextView
-                        android:layout_toRightOf="@id/htmlFormatIconId"
-                        android:maxWidth="@dimen/import_label_width"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/small_padding"
-                        android:layout_centerVertical="true"
-                        android:text="html format (Chrome/Firefox)"/>
+                <!--<ImageView-->
+                        <!--android:id="@+id/htmlFormatIconId"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:src="@drawable/ic_book_black_24dp"/>-->
+                <!--<TextView-->
+                        <!--android:layout_toRightOf="@id/htmlFormatIconId"-->
+                        <!--android:maxWidth="@dimen/import_label_width"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="@dimen/small_padding"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:text="html format (Chrome/Firefox)"/>-->
                 <CheckBox
                         android:layout_alignParentRight="true"
                         android:id="@+id/htmlFormatCheckboxId"

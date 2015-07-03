@@ -25,11 +25,11 @@
                 android:visibility="gone"
                 android:layout_alignParentRight="true"
                 android:id="@+id/slidingPanelDoneIconId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="36dip"
+                android:layout_height="36dip"
                 android:layout_centerVertical="true"
                 android:layout_margin="@dimen/medium_padding"
-                android:src="@drawable/ic_done_black_36dp"/>
+                android:src="@drawable/ic_done_black_48dp"/>
 
     </RelativeLayout>
         <CheckBox

@@ -150,7 +150,7 @@ public class RecyclerViewActionsSingleton {
             ((EditText) editBookmarkView.findViewById(R.id.editBookamrkTitleDialoglId)).
                     setText(Bookmark.Utils.getBookmarkNameWrapper(bookmark.getName()));
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef);
+            AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef, R.style.CustomLollipopDialogStyle);
             mEditDialog = builder.
                     setTitle("Edit bookmark").
                     setView(editBookmarkView).

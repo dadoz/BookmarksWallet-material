@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+import com.application.material.bookmarkswallet.app.R;
 
 /**
  * Created by davide on 27/01/15.
@@ -34,7 +35,7 @@ public class ChromeSync implements DialogInterface.OnClickListener {
                 items[i] = accounts[i].name;
             }
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef);
+            AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef, R.style.CustomLollipopDialogStyle);
             builder.setTitle("Choice account");
             builder.setItems(items, this);
             AlertDialog dialog = builder.create();

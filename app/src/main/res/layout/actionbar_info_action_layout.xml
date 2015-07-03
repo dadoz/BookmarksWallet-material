@@ -29,14 +29,14 @@
                         android:layout_gravity="left|center_vertical"
                         android:text="INFO"/>
 
-                <ImageView
-                        android:visibility="gone"
-                        android:id="@+id/refreshInfoIconId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical"
-                        android:layout_marginLeft="@dimen/small_padding"
-                        android:src="@drawable/ic_refresh_black_24dp"/>
+                <!--<ImageView-->
+                        <!--android:visibility="gone"-->
+                        <!--android:id="@+id/refreshInfoIconId"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_gravity="right|center_vertical"-->
+                        <!--android:layout_marginLeft="@dimen/small_padding"-->
+                        <!--android:src="@drawable/ic_refresh_black_24dp"/>-->
 
         </LinearLayout>
 

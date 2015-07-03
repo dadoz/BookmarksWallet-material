@@ -5,21 +5,40 @@
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="android:windowActionBar">false</item>
-        <item name="android:textColorPrimary">@color/material_stone_black</item>
+        <item name="android:textColorPrimary">@color/material_violet_500</item>
         <item name="colorPrimaryDark">@color/material_mustard_yellow_700</item>
         <item name="colorPrimary">@color/material_mustard_yellow</item>
 
         <item name="android:windowEnterTransition">@android:transition/slide_top</item>
         <item name="android:windowReturnTransition">@android:transition/slide_bottom</item>
         <item name="colorControlActivated">@color/material_violet_500</item>
-        <item name="android:alertDialogTheme">@style/dialogStyle</item>
+        <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
     </style>
-    <style name="dialogStyle" parent="Theme.AppCompat.Light.Dialog">
+    <style name="CustomLollipopDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- Used for the buttons -->
-        <item name="colorAccent">@color/material_violet_500</item>
+        <item name="android:colorAccent">@color/material_violet_500</item>
         <!-- Used for the title and text -->
         <item name="android:textColorPrimary">@color/material_violet_500</item>
             <!-- Used for the background -->
         <!--<item name="android:background">#4CAF50</item>-->
+        <item name="android:buttonBarButtonStyle">@style/CustomButtonBarButtonStyle</item>
+        <item name="android:buttonBarStyle">@style/CustomButtonBarStyle</item>
+    </style>
+
+    <style name="CustomButtonBarStyle" parent="Widget.AppCompat.ButtonBar.AlertDialog">
+        <!-- Making sure, the button bar uses parent width and is not restricted in height -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:height">@null</item>
+        <item name="android:minHeight">@null</item>
+    </style>
+
+    <style name="CustomButtonBarButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <!-- Setting the weight as follows should result in equally wide buttons filling the alert dialog width,
+            but instead they span further out of the dialog, breaking in multiple lines though -->
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <!-- TODO: setting a fixed width as follows results in narrow buttons with line breaks, but of course this is not a solution -->
+        <item name="android:width">100dp</item>
     </style>
 </resources>

@@ -50,9 +50,15 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
     }
 
     public void exportAction() {
+        final RealmResults<Bookmark> list = mRvActionsSingleton.getBookmarksList();
+        if (list == null || list.size() == 0) {
+            emptyExportAction();
+            return;
+        }
+
         mExportBookmarksDialogView = mActivityRef.getLayoutInflater().
                 inflate(R.layout.dialog_export_bookmarks_layout, null, false);
-        AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef, R.style.CustomLollipopDialogStyle);
         mExportDialog = builder
                 .setTitle("Bookmarks export!")
                 .setView(mExportBookmarksDialogView)
@@ -65,6 +71,23 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
                 .setPositiveButton("EXPORT", null)
                 .create();
         mExportDialog.setOnShowListener(this);
+        mExportDialog.show();
+    }
+
+    private void emptyExportAction() {
+        mExportBookmarksDialogView = mActivityRef.getLayoutInflater().
+                inflate(R.layout.dialog_export_bookmarks_layout, null, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef, R.style.CustomLollipopDialogStyle);
+        mExportDialog = builder
+                .setTitle("Bookmarks export!")
+                .setMessage("Sorry! No bookmarks saved.")
+                .setNegativeButton("DISMISS", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
         mExportDialog.show();
     }
 

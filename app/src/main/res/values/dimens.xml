@@ -24,6 +24,6 @@
     <dimen name="actionbar_infoaction_height">50dp</dimen>
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="medium_padding_custom">12dip</dimen>
-    <dimen name="export_bookmarks_framelayout_width">240dip</dimen>
+    <dimen name="export_bookmarks_framelayout_width">260dip</dimen>
     <dimen name="fab_size_micro">20dip</dimen>
 </resources>

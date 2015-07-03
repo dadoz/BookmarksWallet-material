@@ -24,8 +24,7 @@ import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChang
 import com.application.material.bookmarkswallet.app.models.Setting;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
-import com.suredigit.inappfeedback.FeedbackDialog;
-import com.suredigit.inappfeedback.FeedbackSettings;
+import com.willowtreeapps.saguaro.android.Saguaro;
 import io.realm.Realm;
 
 import java.util.ArrayList;
@@ -42,7 +41,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 	private ActionbarSingleton mActionbarSingleton;
     private Realm mRealm;
     private RecyclerViewActionsSingleton mRvActionsSingleton;
-    private FeedbackDialog mFeedBackDialog;
 
     @Override
 	public void onAttach(Activity activity) {
@@ -58,10 +56,10 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 		mActivityRef = activity;
 		mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
         mRvActionsSingleton = RecyclerViewActionsSingleton.getInstance(mActivityRef);
-        FeedbackSettings feedbackSettings = new FeedbackSettings();
-        feedbackSettings.setRadioButtons(false);
-        mFeedBackDialog = new FeedbackDialog(mActivityRef,
-                mActivityRef.getResources().getString(R.string.ANDROID_FEEDBACK_KEY), feedbackSettings);
+//        FeedbackSettings feedbackSettings = new FeedbackSettings();
+//        feedbackSettings.setRadioButtons(false);
+//        mFeedBackDialog = new FeedbackDialog(mActivityRef,
+//                mActivityRef.getResources().getString(R.string.ANDROID_FEEDBACK_KEY), feedbackSettings);
     }
 
 	@Override
@@ -100,23 +98,24 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 
 	private void openDeleteAllDialog() {
         Resources res = mActivityRef.getResources();
-		AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef);
-		Dialog dialog = builder.setTitle("Delete bookmarks!").
-				setMessage("Are you sure you want to delete all your bookmarks?").
-				setPositiveButton("ok", new DialogInterface.OnClickListener() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(mActivityRef, R.style.CustomLollipopDialogStyle);
+		Dialog dialog = builder
+                .setTitle("Delete bookmarks!")
+				.setMessage("Are you sure you want to delete all your bookmarks?")
+				.setPositiveButton("ok", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						deleteAllLinks();
 						Toast.makeText(mActivityRef,
 								"All your bookmarks has been deleted with success", Toast.LENGTH_SHORT).show();
 					}
-				}).
-				setNegativeButton("dismiss", new DialogInterface.OnClickListener() {
+				})
+				.setNegativeButton("dismiss", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();					}
-				}).
-				create();
+				})
+				.create();
 		dialog.show();
 	}
 
@@ -142,7 +141,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
                 openDeleteAllDialog();
                 break;
             case 3:
-                mFeedBackDialog.show();
+                startActivity(Saguaro.getSendFeedbackIntent(mActivityRef));
                 break;
 		}
 	}

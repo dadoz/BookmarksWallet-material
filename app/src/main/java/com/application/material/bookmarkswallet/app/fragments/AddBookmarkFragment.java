@@ -104,19 +104,19 @@ public class AddBookmarkFragment extends Fragment implements
                 mAddActivityRef.changeFragment(
                         new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
                 return true;
-            case  R.id.action_save_new_bookmark:
-                mActionbarSingleton.hideSoftKeyboard(mUrlEditText);
-                String linkUrl = mUrlEditText.getText().toString();
-                if(! isValidUrl(linkUrl)) {
-                    invalidateLinkView(true);
-                    return true;
-                }
-
-                Intent intent = new Intent();
-                intent.putExtra(AddBookmarkActivity.LINK_URL_EXTRA, linkUrl);
-                mAddActivityRef.setResult(Activity.RESULT_OK, intent);
-                mAddActivityRef.finish();
-                return true;
+//            case  R.id.action_save_new_bookmark:
+//                mActionbarSingleton.hideSoftKeyboard(mUrlEditText);
+//                String linkUrl = mUrlEditText.getText().toString();
+//                if(! isValidUrl(linkUrl)) {
+//                    invalidateLinkView(true);
+//                    return true;
+//                }
+//
+//                Intent intent = new Intent();
+//                intent.putExtra(AddBookmarkActivity.LINK_URL_EXTRA, linkUrl);
+//                mAddActivityRef.setResult(Activity.RESULT_OK, intent);
+//                mAddActivityRef.finish();
+//                return true;
 
         }
         return super.onOptionsItemSelected(item);

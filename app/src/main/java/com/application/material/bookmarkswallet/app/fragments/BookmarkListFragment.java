@@ -342,12 +342,12 @@ public class BookmarkListFragment extends Fragment
                 }
                 addLinkOnRecyclerViewWrapper(bookmarkUrl.trim());
                 break;
-			case R.id.actionbarInfoActionIconId:
-				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
-				break;
-			case R.id.actionbarImportActionIconId:
-				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
-				break;
+//			case R.id.actionbarInfoActionIconId:
+//				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
+//				break;
+//			case R.id.actionbarImportActionIconId:
+//				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
+//				break;
 			case R.id.slidingPanelDoneIconId:
                 Log.e("TAG", mUrlEditText.getText().toString());
                 if (!isValidUrl(mUrlEditText.getText().toString())) {
