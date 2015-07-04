@@ -272,10 +272,10 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     dismissRight = mVelocityTracker.getXVelocity() > 0;
                 }
 
-                Log.e("TAG", "dismiss " + (dismiss ? "true" : "false"));
+//                Log.e("TAG", "dismiss " + (dismiss ? "true" : "false"));
 
                 if (dismiss && mDownPosition != ListView.INVALID_POSITION) {
-                    Log.e("TAG", "dismiss");
+//                    Log.e("TAG", "dismiss");
                     // dismiss
                     final View downView = mDownView; // mDownView gets null'd before animation ends
                     final int downPosition = mDownPosition;
@@ -321,7 +321,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     if(mDownView != null) {
                         mDownView.setOnLongClickListener(null);
                         mDownView.setOnClickListener(null);
-                        Log.e("TAG", "rm long click listener");
+//                        Log.e("TAG", "rm long click listener");
                     }
                     mSwipingSlop = (deltaX > 0 ? mSlop : -mSlop);
                     mRecyclerView.requestDisallowInterceptTouchEvent(true);

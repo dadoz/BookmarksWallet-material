@@ -4,14 +4,15 @@
               android:id="@+id/emptyLinkListViewId"
               android:visibility="gone"
               android:padding="@dimen/medium_padding"
+              android:paddingBottom="@dimen/sliding_panel_header_height"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:gravity="center"
               android:orientation="vertical">
 
     <ImageView
-            android:layout_width="144dip"
-            android:layout_height="144dip"
+            android:layout_width="@dimen/extra_large_icon_size"
+            android:layout_height="@dimen/extra_large_icon_size"
             android:src="@drawable/ic_folder_open_black_48dp"/>
     <!--<TextView-->
             <!--android:layout_width="wrap_content"-->
