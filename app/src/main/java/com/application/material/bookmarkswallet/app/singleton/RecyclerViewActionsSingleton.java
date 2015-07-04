@@ -62,6 +62,8 @@ public class RecyclerViewActionsSingleton {
     private static String BOOKMARKS_WALLET_SHAREDPREF = "BOOKMARKS_WALLET_SHAREDPREF";
     private View mAdsView;
     private int mAdsOffset;
+    private BookmarksProviderAsyncTask mBookmarksProviderAsyncTask;
+
     public enum BrowserEnum { DEFAULT, CHROME, FIREFOX };
 
     public RecyclerViewActionsSingleton() {
@@ -314,34 +316,56 @@ public class RecyclerViewActionsSingleton {
 
     public void addBookmarksByProvider(final BrowserEnum[] browserList) {
         mSwipeRefreshLayout.setRefreshing(true);
-        new AsyncTask<URL, String, Boolean>() {
+        mBookmarksProviderAsyncTask = new BookmarksProviderAsyncTask(browserList);
+        mBookmarksProviderAsyncTask.execute();
+    }
 
-            @Override
-            protected Boolean doInBackground(URL... params) {
+    public class BookmarksProviderAsyncTask extends AsyncTask<URL, Integer, Boolean> {
+
+        private final BrowserEnum[] browserList;
+
+        public BookmarksProviderAsyncTask(BrowserEnum[] list) {
+            browserList = list;
+        }
+
+        @Override
+        protected Boolean doInBackground(URL... params) {
+            try {
+                Uri bookmarksUri = getBookmarksUriByBrowser(browserList[0]);
+                addBookmarksByProviderJob(bookmarksUri);
+            } catch (Exception e) {
+                e.printStackTrace();
                 try {
-                    Uri bookmarksUri = getBookmarksUriByBrowser(browserList[0]);
+                    Uri bookmarksUri = getBookmarksUriByBrowser(browserList[1]);
                     addBookmarksByProviderJob(bookmarksUri);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    try {
-                        Uri bookmarksUri = getBookmarksUriByBrowser(browserList[1]);
-                        addBookmarksByProviderJob(bookmarksUri);
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
-
+                    publishProgress();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
                 }
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(Boolean result) {
-                mSwipeRefreshLayout.setRefreshing(false);
-//                mRecyclerView.getAdapter().notifyItemInserted(0);
-                updateAdapterRef();
-                setAdapter();
             }
-        }.execute();
+            return null;
+        }
+
+        public void doProgress(int count) {
+            publishProgress(count);
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            //TODO set how to show result to user
+            if (! mSwipeRefreshLayout.isRefreshing()) {
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            mSwipeRefreshLayout.setRefreshing(false);
+    //                mRecyclerView.getAdapter().notifyItemInserted(0);
+            updateAdapterRef();
+            setAdapter();
+        }
     }
 
     private void addBookmarksByProviderJob(Uri bookmarksUri) throws Exception {
@@ -358,14 +382,16 @@ public class RecyclerViewActionsSingleton {
         int titleId = cursor.getColumnIndex(Browser.BookmarkColumns.TITLE);
         int faviconId = cursor.getColumnIndex(Browser.BookmarkColumns.FAVICON);
         //                    long timestamp = cursor.getColumnIndex(Browser.BookmarkColumns.CREATED);
-
+        int cnt = 0;
         if (cursor.moveToFirst()) {
             do {
-                Log.e(TAG, "hey " + cursor.getString(urlId));
+                mBookmarksProviderAsyncTask.doProgress(cnt);
+                Log.e(TAG, "hey " + cursor.getString(urlId) + " # of imported: " + cnt);
                 byte[] blobIcon = cursor.getBlob(faviconId);
 
                 //add item on realm
                 addOrmObject(realm, cursor.getString(titleId), null, blobIcon, cursor.getString(urlId));
+                cnt ++;
             } while (cursor.moveToNext());
 
         }

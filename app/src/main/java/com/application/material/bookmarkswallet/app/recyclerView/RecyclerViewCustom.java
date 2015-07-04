@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app.recyclerView;
 
 import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,6 +15,8 @@ import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecycl
 public class RecyclerViewCustom extends RecyclerView {
     private View emptyView = null;
     private View mEmptySearchResultView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout.OnRefreshListener mSwipeRefreshListener;
 
     final AdapterDataObserver observer = new AdapterDataObserver() {
         @Override
@@ -41,7 +44,7 @@ public class RecyclerViewCustom extends RecyclerView {
         boolean isEmpty = getAdapter().getItemCount() == 0;
         boolean isSearchMode = ((BookmarkRecyclerViewAdapter) getAdapter()).isSearchMode();
 
-
+//        mSwipeRefreshLayout.setOnRefreshListener(isEmpty ? null : mSwipeRefreshListener);
         emptyView.setVisibility(isEmpty && ! isSearchMode ? VISIBLE : GONE);
         mEmptySearchResultView.setVisibility(isEmpty && isSearchMode ? VISIBLE : GONE);
         setVisibility(isEmpty ? GONE : VISIBLE);
@@ -78,6 +81,11 @@ public class RecyclerViewCustom extends RecyclerView {
 
     public void setEmptySearchResultView(View view) {
         mEmptySearchResultView = view;
+    }
+    public void setSwipeRefreshLayout(SwipeRefreshLayout view, SwipeRefreshLayout.OnRefreshListener listener) {
+        mSwipeRefreshLayout = view;
+        mSwipeRefreshListener = listener;
+
     }
 
     public void setEmptySearchResultQuery(CharSequence emptySearchResultQuery) {

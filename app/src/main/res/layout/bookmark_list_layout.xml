@@ -42,15 +42,20 @@
         <include layout="@layout/sliding_up_panel_layout"/>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-    <com.google.android.gms.ads.AdView
-            android:id="@+id/adViewId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            ads:adSize="BANNER"
-            android:layout_gravity="bottom|center"
-            android:layout_marginBottom="60dip"
-            ads:adUnitId="@string/banner_ad_unit_id" />
+    <!--<com.google.android.gms.ads.AdView-->
+            <!--android:id="@+id/adViewId"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--ads:adSize="BANNER"-->
+            <!--android:layout_gravity="bottom|center"-->
+            <!--android:layout_marginBottom="60dip"-->
+            <!--ads:adUnitId="@string/banner_ad_unit_id" />-->
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/adViewId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <com.github.clans.fab.FloatingActionButton
             android:id="@+id/clipboardFloatingButtonId"
             android:layout_width="wrap_content"

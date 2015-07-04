@@ -13,7 +13,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animators.ScrollManager;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
@@ -75,10 +74,6 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
             toolbar.post(new Runnable() {
                 @Override public void run() {
                     scrollManager.attach(recyclerView);
-//                    if(actionbarInfoActionView != null) {
-//                        scrollManager.addViewNoDown(infoInnerView, ScrollManager.Direction.UP);
-//                    }
-//                    scrollManager.setInitialOffset(toolbar.getHeight() + infoInnerView.getHeight());
                     for (View view : viewList) {
                         scrollManager.addView(view, ScrollManager.Direction.DOWN);
                     }
@@ -88,8 +83,6 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-//        ((ActionBarActivity) mActivityRef).setSupportActionBar(toolbar);
     }
 
     private android.support.v7.app.ActionBar getActionBar() {
@@ -99,8 +92,9 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
 
     public boolean setTitle(String title) {
         try {
-            String appName = mActivityRef.getResources().getString(R.string.app_name);
-            getActionBar().setTitle(title == null ? appName : title);
+//            String appName = mActivityRef.getResources().getString(R.string.app_name);
+            String mainTitle = mActivityRef.getResources().getString(R.string.main_title);
+            getActionBar().setTitle(title == null ? mainTitle : title);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -194,113 +188,4 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
     public void setPanelExpanded(boolean panelExpanded) {
         this.mPanelExpanded = panelExpanded;
     }
-
-
-/*
-    public void setInfoView(View infoView) {
-        this.infoView = infoView;
-    }
-
-    public View getInfoView() {
-        return infoView;
-    }
-
-
-    public static void setColorFilter(Drawable drawable, int color, Activity activityRef) {
-        drawable.setColorFilter(activityRef.getResources()
-                        .getColor(color),
-                PorterDuff.Mode.SRC_IN);
-    }
-
-    private void colorizeIcon(ImageView imgStatus) {
-        // Get the Image container object
-        Drawable d = imgStatus.getDrawable();
-//                Drawable d = mActivityRef.getResources().getDrawable(R.drawable.ic_refresh_black_36dp);
-        int iconColor = mActivityRef.getResources().getColor(R.color.material_red);
-        d.setColorFilter(iconColor, PorterDuff.Mode.SRC_ATOP);
-        imgStatus.setImageDrawable(d);
-    }
-
-    public void setLayoutManagerType(LayoutManagerTypeEnum type) {
-        layoutManagerType = type;
-    }
-
-    public boolean isLayoutManagerGrid() {
-        return layoutManagerType == LayoutManagerTypeEnum.GRID;
-    }
-
-    public boolean isLayoutManagerList() {
-        return layoutManagerType == LayoutManagerTypeEnum.LIST;
-    }
-
-    @Override
-    public void toggleLayoutByActionMenu(int layoutId) {
-        switch (layoutId) {
-            case R.id.infoOuterButtonId:
-                int visibility = actionbarInfoActionView.getVisibility();
-                actionbarInfoActionView.setVisibility(visibility == View.VISIBLE ?
-                        View.GONE : View.VISIBLE);
-
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)
-                        swipeRefreshLayout.getLayoutParams();
-                float height = mActivityRef.getResources().getDimension(R.dimen.actionbar_infoaction_height);
-                params.setMargins(0,
-                        visibility == View.VISIBLE ? 0 : (int) height, 0 ,0);
-                break;
-        }
-
-    }*/
-/*
-    @Override
-    public void showLayoutByActionMenu(int layoutId) {
-        switch (layoutId) {
-            case R.id.actionbarInfoLayoutId:
-                //animation
-                actionbarInfoActionView.setVisibility(View.VISIBLE);
-                break;
-        }
-
-    }
-
-    @Override
-    public void hideLayoutByActionMenu(int layoutId) {
-        switch (layoutId) {
-            case R.id.actionbarInfoLayoutId:
-                //animation
-                actionbarInfoActionView.setVisibility(View.GONE);
-                break;
-        }
-    }*/
-
-//    @Override
-//    public void toggleInnerLayoutByActionMenu(int layoutId) {
-//        switch (layoutId) {
-//            case R.id.action_info:
-//                View innerView = actionbarInfoActionView.findViewById(R.id.infoInnerLayoutId);
-//                View outerView = actionbarInfoActionView.findViewById(R.id.infoOuterLayoutId);
-//                colorizeIcon((ImageView) actionbarInfoActionView.findViewById(R.id.refreshInfoIconId));
-//
-//                animation
-//                innerView.setVisibility(innerView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-//                outerView.setBackgroundColor(innerView.getVisibility() == View.VISIBLE ? Color.WHITE : mustardYellow);
-//                outerView.setBackgroundColor(Color.WHITE);
-//                actionbarInfoActionView.findViewById(R.id.refreshInfoIconId).
-//                        setVisibility(innerView.getVisibility() == View.VISIBLE ?
-//                                View.VISIBLE : View.GONE);
-//                break;
-//        }
-//
-//    }
-
-//    @Override
-//    public boolean getOverrideBackPressed() {
-//        return mOverrideBack;
-//    }
-//
-//    @Override
-//    public void setOverrideBackPressed(boolean value) {
-//        mOverrideBack = value;
-//    }
-
-
 }

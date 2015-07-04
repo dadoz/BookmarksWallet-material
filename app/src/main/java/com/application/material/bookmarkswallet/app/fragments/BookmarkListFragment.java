@@ -80,8 +80,10 @@ public class BookmarkListFragment extends Fragment
     View mEmptySearchResultView;
     @InjectView(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
+//    @InjectView(R.id.adViewId)
+//    AdView mAdsView;
     @InjectView(R.id.adViewId)
-    AdView mAdsView;
+    LinearLayout mAdsView;
 
     private LinearLayoutManager linearLayoutManager;
 	private RealmResults<Bookmark> mItems;
@@ -123,8 +125,8 @@ public class BookmarkListFragment extends Fragment
 				container, false);
 		ButterKnife.inject(this, mLinkListView);
         //load ads
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdsView.loadAd(adRequest);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdsView.loadAd(adRequest);
 
         setHasOptionsMenu(true);
 		onInitView();
@@ -136,7 +138,7 @@ public class BookmarkListFragment extends Fragment
         viewArrayList.add(mAdsView);
         viewArrayList.add(mClipboardFloatingButton);
         viewArrayList.add(mSlidingLayerLayout);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setOnRefreshListener(this); //default - if items then set onRefreshListener
 
         mSlidingLayerLayout.setPanelSlideListener(this);
         mSlidingLayerLayout.addOnLayoutChangeListener(this);
@@ -179,6 +181,8 @@ public class BookmarkListFragment extends Fragment
 		mRecyclerView.setEmptyView(emptyLinkListView);
 		mRecyclerView.setEmptySearchResultView(mEmptySearchResultView);
 		mRecyclerView.setHasFixedSize(true);
+        //set refresh layout listener
+//        mRecyclerView.setSwipeRefreshLayout(mSwipeRefreshLayout, this);
 
 		//set layout manager
 		mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -354,7 +358,7 @@ public class BookmarkListFragment extends Fragment
 //				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
 //				break;
 			case R.id.slidingPanelDoneIconId:
-                Log.e("TAG", mUrlEditText.getText().toString());
+//                Log.e("TAG", mUrlEditText.getText().toString());
                 if (!isValidUrl(mUrlEditText.getText().toString())) {
                     Toast.makeText(mMainActivityRef, "no valid url typed in!", Toast.LENGTH_SHORT).show();
                     break;
@@ -551,7 +555,7 @@ public class BookmarkListFragment extends Fragment
                                 .findAll();
                     }
 
-                    Log.e(TAG, "hey" + filteredList.size());
+//                    Log.e(TAG, "hey" + filteredList.size());
                     if (filteredList.size() == 0) {
                         mRecyclerView.setEmptySearchResultQuery(constraint);
                     }

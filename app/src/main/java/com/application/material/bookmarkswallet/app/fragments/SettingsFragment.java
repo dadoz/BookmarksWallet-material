@@ -69,9 +69,9 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
         mRealm = Realm.getInstance(mActivityRef);
 
         //load ads
-        mAdView = (AdView) settingsView.findViewById(R.id.adView2Id);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+//        mAdView = (AdView) settingsView.findViewById(R.id.adView2Id);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
 
         return settingsView;
 	}

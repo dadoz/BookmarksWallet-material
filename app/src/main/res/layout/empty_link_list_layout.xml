@@ -10,16 +10,16 @@
               android:orientation="vertical">
 
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="144dip"
+            android:layout_height="144dip"
             android:src="@drawable/ic_folder_open_black_48dp"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/medium_padding"
-            android:text="Still no bookmarks are saved!"
-            android:textSize="@dimen/text_size_14"
-            android:textColor="@color/material_grey"/>
+    <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="@dimen/medium_padding"-->
+            <!--android:text="Still no bookmarks are saved!"-->
+            <!--android:textSize="@dimen/text_size_14"-->
+            <!--android:textColor="@color/material_grey"/>-->
     <Button
             android:id="@+id/importLocalBookmarksButtonId"
             android:layout_width="wrap_content"
