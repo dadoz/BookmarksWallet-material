@@ -21,12 +21,19 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
-        versionName "1.0"
+        versionName "1.2"
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+        }
         release {
             minifyEnabled false
+//            storeFile file("../keystore/debug-keystore.jks")
+//            storePassword "dadoxx86"
+//            keyAlias "davide"
+//            keyPassword "dadoxx86"
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

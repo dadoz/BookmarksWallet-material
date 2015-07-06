@@ -63,6 +63,8 @@ public class RecyclerViewActionsSingleton {
     private View mAdsView;
     private int mAdsOffset;
     private BookmarksProviderAsyncTask mBookmarksProviderAsyncTask;
+    private static boolean mBookmarkSyncByProvider = false;
+
 
     public enum BrowserEnum { DEFAULT, CHROME, FIREFOX };
 
@@ -108,6 +110,12 @@ public class RecyclerViewActionsSingleton {
                 mRecyclerView.getAdapter();
     }
 
+    public void cancelAsyncTask() {
+        if (mBookmarksProviderAsyncTask != null &&
+                mBookmarksProviderAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
+            mBookmarksProviderAsyncTask.cancel(true);
+        }
+    }
     /**
      * TODO refactor name
      */
@@ -320,54 +328,6 @@ public class RecyclerViewActionsSingleton {
         mBookmarksProviderAsyncTask.execute();
     }
 
-    public class BookmarksProviderAsyncTask extends AsyncTask<URL, Integer, Boolean> {
-
-        private final BrowserEnum[] browserList;
-
-        public BookmarksProviderAsyncTask(BrowserEnum[] list) {
-            browserList = list;
-        }
-
-        @Override
-        protected Boolean doInBackground(URL... params) {
-            try {
-                Uri bookmarksUri = getBookmarksUriByBrowser(browserList[0]);
-                addBookmarksByProviderJob(bookmarksUri);
-            } catch (Exception e) {
-                e.printStackTrace();
-                try {
-                    Uri bookmarksUri = getBookmarksUriByBrowser(browserList[1]);
-                    addBookmarksByProviderJob(bookmarksUri);
-                    publishProgress();
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-
-            }
-            return null;
-        }
-
-        public void doProgress(int count) {
-            publishProgress(count);
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            //TODO set how to show result to user
-            if (! mSwipeRefreshLayout.isRefreshing()) {
-                mSwipeRefreshLayout.setRefreshing(true);
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            mSwipeRefreshLayout.setRefreshing(false);
-    //                mRecyclerView.getAdapter().notifyItemInserted(0);
-            updateAdapterRef();
-            setAdapter();
-        }
-    }
-
     private void addBookmarksByProviderJob(Uri bookmarksUri) throws Exception {
         ContentResolver cr = mActivityRef.getContentResolver();
         Realm realm = Realm.getInstance(mActivityRef);
@@ -385,6 +345,9 @@ public class RecyclerViewActionsSingleton {
         int cnt = 0;
         if (cursor.moveToFirst()) {
             do {
+                if (mBookmarksProviderAsyncTask.isCancelled()) {
+                    return;
+                }
                 mBookmarksProviderAsyncTask.doProgress(cnt);
                 Log.e(TAG, "hey " + cursor.getString(urlId) + " # of imported: " + cnt);
                 byte[] blobIcon = cursor.getBlob(faviconId);
@@ -610,7 +573,7 @@ public class RecyclerViewActionsSingleton {
                 .getSharedPreferences(BOOKMARKS_WALLET_SHAREDPREF, 0);
 
         sharedPref.edit().putBoolean(SEARCH_URL_MODE, searchOnUrlEnabled).apply();
-        this.mSearchOnUrlEnabled = searchOnUrlEnabled;
+        mSearchOnUrlEnabled = searchOnUrlEnabled;
     }
 
     public boolean isSearchOnUrlEnabled() {
@@ -621,4 +584,64 @@ public class RecyclerViewActionsSingleton {
         mAdsView = view;
         mAdsOffset = panelHeight;
     }
+
+    public boolean isBookmarkSyncByProvider() {
+        return mBookmarkSyncByProvider;
+    }
+
+    public void setBookmarkSyncByProvider(boolean value) {
+        mBookmarkSyncByProvider = value;
+    }
+
+    public class BookmarksProviderAsyncTask extends AsyncTask<URL, Integer, Boolean> {
+
+        private final Integer N_OCCURENCES = 30;
+        private final BrowserEnum[] browserList;
+
+        public BookmarksProviderAsyncTask(BrowserEnum[] list) {
+            browserList = list;
+        }
+
+        @Override
+        protected Boolean doInBackground(URL... params) {
+            mBookmarkSyncByProvider = true;
+            try {
+                Uri bookmarksUri = getBookmarksUriByBrowser(browserList[0]);
+                addBookmarksByProviderJob(bookmarksUri);
+            } catch (Exception e) {
+                e.printStackTrace();
+                try {
+                    Uri bookmarksUri = getBookmarksUriByBrowser(browserList[1]);
+                    addBookmarksByProviderJob(bookmarksUri);
+                    publishProgress();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+
+            }
+            return null;
+        }
+
+        public void doProgress(int count) {
+            publishProgress(count);
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+//            every ten occurence
+            if (values[0] % N_OCCURENCES == 0) {
+                updateAdapterRef();
+                setAdapter();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            mBookmarkSyncByProvider = false;
+            updateAdapterRef();
+            setAdapter();
+        }
+    }
+
 }

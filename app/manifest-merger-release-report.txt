@@ -25,26 +25,10 @@ MERGED from com.google.android.gms:play-services-ads:7.5.0:21:5
 MERGED from com.google.android.gms:play-services-analytics:7.5.0:22:5
 	android:name
 		ADDED from AndroidManifest.xml:6:22
-uses-permission#android.permission.ACCESS_COARSE_LOCATION
-ADDED from AndroidManifest.xml:7:5
-	android:name
-		ADDED from AndroidManifest.xml:7:22
-uses-permission#android.permission.GET_ACCOUNTS
-ADDED from AndroidManifest.xml:8:5
-	android:name
-		ADDED from AndroidManifest.xml:8:22
-uses-permission#android.permission.USE_CREDENTIALS
-ADDED from AndroidManifest.xml:9:5
-	android:name
-		ADDED from AndroidManifest.xml:9:22
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
 ADDED from AndroidManifest.xml:10:5
 	android:name
 		ADDED from AndroidManifest.xml:10:22
-uses-permission#android.permission.ACCESS_LOCATION_EXTRA_COMMANDS
-ADDED from AndroidManifest.xml:11:5
-	android:name
-		ADDED from AndroidManifest.xml:11:22
 uses-permission#com.android.browser.permission.READ_HISTORY_BOOKMARKS
 ADDED from AndroidManifest.xml:14:5
 	android:name

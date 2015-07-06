@@ -5,11 +5,13 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
@@ -133,6 +135,26 @@ public class BookmarkListFragment extends Fragment
         return mLinkListView;
 	}
 
+    @Override
+    public void onPause() {
+        super.onPause();
+//        rvActionsSingleton.cancelAsyncTask();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        rvActionsSingleton.cancelAsyncTask();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        //set refresh layout depending on isBookmarksSyncByProvider
+        if (rvActionsSingleton.isBookmarkSyncByProvider()) {
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
+    }
+
 	private void onInitView() {
         ArrayList<View> viewArrayList = new ArrayList<>();
         viewArrayList.add(mAdsView);
@@ -167,6 +189,19 @@ public class BookmarkListFragment extends Fragment
         if (mActionbarSingleton.isSearchMode()) {
             mAdsView.setVisibility(View.GONE);
             mClipboardFloatingButton.hide(false);
+        }
+
+        if (! rvActionsSingleton.isBookmarkSyncByProvider()) {
+            Snackbar
+                    .make(mLinkListView, "Got problem to sync!", Snackbar.LENGTH_LONG)
+                    .setActionTextColor(mMainActivityRef.getResources().getColor(R.color.material_mustard_yellow))
+                    .setAction("SYNC", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    })
+                    .show();
         }
     }
 
