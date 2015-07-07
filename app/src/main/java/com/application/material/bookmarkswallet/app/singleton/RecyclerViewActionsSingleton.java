@@ -291,7 +291,6 @@ public class RecyclerViewActionsSingleton {
             @Override
             protected void onPostExecute(byte[] iconByteArray) {
                 mSwipeRefreshLayout.setRefreshing(false);
-
                 //CHECK out what u need
                 addBookmark(bookmarkUrl, iconByteArray, bookmarkTitle);
             }
@@ -299,12 +298,6 @@ public class RecyclerViewActionsSingleton {
     }
 
     public void addBookmark(String url, byte[] iconBlob, String title) {
-//        title = title == null ? "" : title;
-//        Link link = new Link(-1, null, null, title, url, -1, Link.getTodayTimestamp());
-//        mDbConnector.insertLink(link);
-
-//        ((LinkRecyclerViewAdapter) mRecyclerView.getAdapter()).add(link);
-//        ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter()).updateDataset();
         //UPDATE DATASET REF
         mRecyclerView.scrollToPosition(0);
         addOrmObject(mRealm, title, null, iconBlob, url);
@@ -349,7 +342,6 @@ public class RecyclerViewActionsSingleton {
         if (cursor.moveToFirst()) {
             do {
                 if (mBookmarksProviderAsyncTask.isCancelled()) {
-                    showSlidingPanelWrapper();
                     setSyncByProviderRunning(true);
                     return;
                 }
@@ -656,7 +648,8 @@ public class RecyclerViewActionsSingleton {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            showSlidingPanelWrapper();
+//            showClipboardLinkButtonWrapper();
+//            showSlidingPanelWrapper();
             setSyncByProviderRunning(false);
             mSwipeRefreshLayout.setRefreshing(false);
             mSyncByProviderRunning = false;

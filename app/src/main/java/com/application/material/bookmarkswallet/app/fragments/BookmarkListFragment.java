@@ -365,7 +365,6 @@ public class BookmarkListFragment extends Fragment
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.importLocalBookmarksButtonId:
-                hideSlidingPanel();
                 rvActionsSingleton.addBookmarksByProvider(mBrowserList);
                 break;
             case R.id.notSyncLayoutId:
@@ -392,7 +391,11 @@ public class BookmarkListFragment extends Fragment
 //				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
 //				break;
 			case R.id.slidingPanelDoneIconId:
-//                Log.e("TAG", mUrlEditText.getText().toString());
+                if (rvActionsSingleton.isSyncByProviderRunning()) {
+                    Toast.makeText(mMainActivityRef, "Action denied. U're already importing bookmarks!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (!isValidUrl(mUrlEditText.getText().toString())) {
                     Toast.makeText(mMainActivityRef, "no valid url typed in!", Toast.LENGTH_SHORT).show();
                     break;
