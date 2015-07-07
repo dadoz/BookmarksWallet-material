@@ -51,6 +51,9 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton.SyncStatusEnum.CANCELED;
+import static com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton.SyncStatusEnum.RUNNING;
+
 public class BookmarkListFragment extends Fragment
 		implements View.OnClickListener, Filterable,
         SwipeRefreshLayout.OnRefreshListener,
@@ -153,7 +156,7 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         //set refresh layout depending on isBookmarksSyncByProvider
-        if (rvActionsSingleton.isSyncByProviderRunning()) {
+        if (rvActionsSingleton.getSyncStatus() == CANCELED) {
             mSwipeRefreshLayout.setRefreshing(true);
         }
     }
@@ -194,7 +197,7 @@ public class BookmarkListFragment extends Fragment
             mClipboardFloatingButton.hide(false);
         }
 
-        if (rvActionsSingleton.isSyncByProviderRunning()) {
+        if (rvActionsSingleton.getSyncStatus() == CANCELED) {
             rvActionsSingleton.setBookmarksNotSyncView(true);
         }
     }
@@ -391,7 +394,7 @@ public class BookmarkListFragment extends Fragment
 //				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
 //				break;
 			case R.id.slidingPanelDoneIconId:
-                if (rvActionsSingleton.isSyncByProviderRunning()) {
+                if (rvActionsSingleton.getSyncStatus() == RUNNING) {
                     Toast.makeText(mMainActivityRef, "Action denied. U're already importing bookmarks!", Toast.LENGTH_SHORT).show();
                     return;
                 }

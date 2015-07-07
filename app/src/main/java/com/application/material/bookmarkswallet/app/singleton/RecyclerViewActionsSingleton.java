@@ -62,13 +62,17 @@ public class RecyclerViewActionsSingleton {
     private View mAdsView;
     private int mAdsOffset;
     private BookmarksProviderAsyncTask mBookmarksProviderAsyncTask;
+    private static boolean mSyncByProviderCancel = false;
     private static boolean mSyncByProviderRunning = false;
+//    private static boolean syncByProviderRunning;
 
     private static final String SEARCH_URL_MODE = "SEARCH_URL_MODE";
-    private static final String SYNC_BY_PROVIDER_RUNNING_MODE = "SYNC_BY_PROVIDER_RUNNING_MODE";
+    private static final String SYNC_STATUS = "SYNC_STATUS";
     private static String BOOKMARKS_WALLET_SHAREDPREF = "BOOKMARKS_WALLET_SHAREDPREF";
+    private static SyncStatusEnum mSyncStatus;
 
-    public enum BrowserEnum { DEFAULT, CHROME, FIREFOX };
+    public enum BrowserEnum { DEFAULT, CHROME, FIREFOX }
+    public enum SyncStatusEnum { RUNNING, CANCELED, DONE, NOT_SET }
 
     public RecyclerViewActionsSingleton() {
     }
@@ -90,7 +94,7 @@ public class RecyclerViewActionsSingleton {
     }
 
     public static void initReferences(SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView,
-                                      View notSyncLayout, Activity activityRef, Fragment fragmentRef) {
+                               View notSyncLayout, Activity activityRef, Fragment fragmentRef) {
         mSwipeRefreshLayout = swipeRefreshLayout;
         mRecyclerView = recyclerView;
         mActivityRef = activityRef;
@@ -104,7 +108,8 @@ public class RecyclerViewActionsSingleton {
         SharedPreferences sharedPref = mActivityRef
                 .getSharedPreferences(BOOKMARKS_WALLET_SHAREDPREF, 0);
         mSearchOnUrlEnabled = sharedPref.getBoolean(SEARCH_URL_MODE, false);
-        mSyncByProviderRunning = sharedPref.getBoolean(SYNC_BY_PROVIDER_RUNNING_MODE, false);
+        String syncName = sharedPref.getString(SYNC_STATUS, SyncStatusEnum.NOT_SET.name());
+        mSyncStatus = SyncStatusEnum.valueOf(syncName);
     }
 
     private static BookmarkRecyclerViewAdapter updateAdapterRef() {
@@ -342,7 +347,7 @@ public class RecyclerViewActionsSingleton {
         if (cursor.moveToFirst()) {
             do {
                 if (mBookmarksProviderAsyncTask.isCancelled()) {
-                    setSyncByProviderRunning(true);
+                    setSyncStatus(SyncStatusEnum.CANCELED);
                     return;
                 }
                 mBookmarksProviderAsyncTask.doProgress(cnt);
@@ -376,25 +381,32 @@ public class RecyclerViewActionsSingleton {
     }
 
     public boolean addOrmObject(Realm realm, String title, String iconPath, byte[] blobIcon, String url) {
-        if(url == null) {
-            return false;
+        boolean result = false;
+        try {
+            if(url == null) {
+                return false;
+            }
+            realm.beginTransaction();
+            Bookmark bookmark = realm.createObject(Bookmark.class);
+            bookmark.setId(UUID.randomUUID().getLeastSignificantBits());
+            bookmark.setName(title == null ? "" : title);
+            if(iconPath != null) {
+                bookmark.setIconPath(iconPath);
+            }
+            if(blobIcon != null) {
+                bookmark.setBlobIcon(blobIcon);
+            }
+            bookmark.setUrl(url);
+            bookmark.setTimestamp(Bookmark.Utils.getTodayTimestamp());
+            bookmark.setLastUpdate(Bookmark.Utils.getTodayTimestamp());
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = false;
+        } finally {
+            realm.commitTransaction();
         }
-
-        realm.beginTransaction();
-        Bookmark bookmark = realm.createObject(Bookmark.class);
-        bookmark.setId(UUID.randomUUID().getLeastSignificantBits());
-        bookmark.setName(title == null ? "" : title);
-        if(iconPath != null) {
-            bookmark.setIconPath(iconPath);
-        }
-        if(blobIcon != null) {
-            bookmark.setBlobIcon(blobIcon);
-        }
-        bookmark.setUrl(url);
-        bookmark.setTimestamp(Bookmark.Utils.getTodayTimestamp());
-        bookmark.setLastUpdate(Bookmark.Utils.getTodayTimestamp());
-        realm.commitTransaction();
-        return true;
+        return result;
     }
 
     public void deleteBookmark(int position) {
@@ -582,23 +594,24 @@ public class RecyclerViewActionsSingleton {
         mAdsOffset = panelHeight;
     }
 
-    public boolean isSyncByProviderRunning() {
-        return mSyncByProviderRunning;
+    public SyncStatusEnum getSyncStatus() {
+        return mSyncStatus;
     }
 
-    public void setSyncByProviderRunning(boolean value) {
+    public void setSyncStatus(SyncStatusEnum value) {
         SharedPreferences sharedPref = mActivityRef
                 .getSharedPreferences(BOOKMARKS_WALLET_SHAREDPREF, 0);
 
-        sharedPref.edit().putBoolean(SYNC_BY_PROVIDER_RUNNING_MODE, value).apply();
-        mSyncByProviderRunning = value;
+        sharedPref.edit().putString(SYNC_STATUS, value.name()).apply();
+        mSyncStatus = value;
     }
 
     public void setBookmarksNotSyncView(boolean visible) {
-        setSyncByProviderRunning(visible);
+        setSyncStatus(visible ? SyncStatusEnum.CANCELED : SyncStatusEnum.DONE);
         mNotSyncLayout.setOnClickListener(visible ? (View.OnClickListener) mFragmentRef : null);
         mNotSyncLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
+
 
 
     public class BookmarksProviderAsyncTask extends AsyncTask<URL, Integer, Boolean> {
@@ -613,7 +626,7 @@ public class RecyclerViewActionsSingleton {
 
         @Override
         protected Boolean doInBackground(URL... params) {
-            mSyncByProviderRunning = true;
+            setSyncStatus(SyncStatusEnum.RUNNING);
             try {
                 Uri bookmarksUri = getBookmarksUriByBrowser(browserList[0]);
                 addBookmarksByProviderJob(bookmarksUri);
@@ -650,7 +663,7 @@ public class RecyclerViewActionsSingleton {
         protected void onPostExecute(Boolean result) {
 //            showClipboardLinkButtonWrapper();
 //            showSlidingPanelWrapper();
-            setSyncByProviderRunning(false);
+            setSyncStatus(SyncStatusEnum.DONE);
             mSwipeRefreshLayout.setRefreshing(false);
             mSyncByProviderRunning = false;
             updateAdapterRef();
