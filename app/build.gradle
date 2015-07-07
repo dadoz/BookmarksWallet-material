@@ -24,20 +24,31 @@ android {
         versionName "1.2"
     }
 
+    signingConfigs {
+        debug {
+        }
+
+        release {
+            storeFile file("../keystore/debug-keystore.jks")
+            storePassword "dadoxx86"
+            keyAlias "davide"
+            keyPassword "dadoxx86"
+        }
+    }
+
     buildTypes {
         debug {
             minifyEnabled false
         }
         release {
             minifyEnabled false
-//            storeFile file("../keystore/debug-keystore.jks")
-//            storePassword "dadoxx86"
-//            keyAlias "davide"
-//            keyPassword "dadoxx86"
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
-
+    lintOptions {
+        abortOnError false
+    }
 }
 
 
