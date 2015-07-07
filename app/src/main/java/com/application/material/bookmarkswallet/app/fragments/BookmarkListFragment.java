@@ -85,10 +85,8 @@ public class BookmarkListFragment extends Fragment
     View mEmptySearchResultView;
     @InjectView(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
-//    @InjectView(R.id.adViewId)
-//    AdView mAdsView;
     @InjectView(R.id.adViewId)
-    LinearLayout mAdsView;
+    AdView mAdsView;
     @InjectView(R.id.notSyncLayoutId)
     LinearLayout notSyncLayout;
 
@@ -133,8 +131,8 @@ public class BookmarkListFragment extends Fragment
 				container, false);
 		ButterKnife.inject(this, mLinkListView);
         //load ads
-//        AdRequest adRequest = new AdRequest.Builder().build();
-//        mAdsView.loadAd(adRequest);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdsView.loadAd(adRequest);
 
         setHasOptionsMenu(true);
 		onInitView();

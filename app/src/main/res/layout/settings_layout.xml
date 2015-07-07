@@ -12,12 +12,12 @@
             android:paddingRight="10dip">
 
     </ListView>
-    <!--<com.google.android.gms.ads.AdView-->
-            <!--android:id="@+id/adView2Id"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--ads:adSize="BANNER"-->
-            <!--android:layout_gravity="bottom|center"-->
-            <!--ads:adUnitId="@string/banner_ad_unit_id" />-->
+    <com.google.android.gms.ads.AdView
+            android:id="@+id/adView2Id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ads:adSize="BANNER"
+            android:layout_gravity="bottom|center"
+            ads:adUnitId="@string/banner_ad_unit_id" />
 </FrameLayout>
 
