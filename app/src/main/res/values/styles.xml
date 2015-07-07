@@ -12,6 +12,9 @@
 
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
     </style>
+    <style name="colorControlLightTheme">
+        <item name="colorControlActivated">@color/material_grey_200</item>
+    </style>
 
     <style name="CustomLollipopDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- Used for the buttons -->

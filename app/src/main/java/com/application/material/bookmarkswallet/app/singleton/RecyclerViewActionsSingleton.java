@@ -53,18 +53,20 @@ public class RecyclerViewActionsSingleton {
 //    private static View mEditUrlView;
     private static BookmarkRecyclerViewAdapter mAdapter;
     private static SwipeRefreshLayout mSwipeRefreshLayout;
+    private static View mNotSyncLayout;
     private AlertDialog mEditDialog;
     private static Realm mRealm;
     private View mEditTitleViewRef;
     private View mEditUrlViewRef;
     private static boolean mSearchOnUrlEnabled;
-    private static String SEARCH_URL_MODE = "SEARCH_URL_MODE";
-    private static String BOOKMARKS_WALLET_SHAREDPREF = "BOOKMARKS_WALLET_SHAREDPREF";
     private View mAdsView;
     private int mAdsOffset;
     private BookmarksProviderAsyncTask mBookmarksProviderAsyncTask;
-    private static boolean mBookmarkSyncByProvider = false;
+    private static boolean mSyncByProviderRunning = false;
 
+    private static final String SEARCH_URL_MODE = "SEARCH_URL_MODE";
+    private static final String SYNC_BY_PROVIDER_RUNNING_MODE = "SYNC_BY_PROVIDER_RUNNING_MODE";
+    private static String BOOKMARKS_WALLET_SHAREDPREF = "BOOKMARKS_WALLET_SHAREDPREF";
 
     public enum BrowserEnum { DEFAULT, CHROME, FIREFOX };
 
@@ -72,37 +74,37 @@ public class RecyclerViewActionsSingleton {
     }
 
     public static RecyclerViewActionsSingleton getInstance(SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView,
-                                                           Activity activityRef,
+                                                           View notSyncLayout, Activity activityRef,
                                                            Fragment listenerRef) {
-        initReferences(swipeRefreshLayout, recyclerView, activityRef, listenerRef);
-        if(mInstance == null) {
-            mInstance = new RecyclerViewActionsSingleton();
-        }
-        return mInstance;
+        initReferences(swipeRefreshLayout, recyclerView, notSyncLayout, activityRef, listenerRef);
+        return mInstance == null ?
+                mInstance = new RecyclerViewActionsSingleton() :
+                mInstance;
     }
 
     public static RecyclerViewActionsSingleton getInstance(Activity activityRef) {
         mActivityRef = activityRef;
-        if(mInstance == null) {
-            mInstance = new RecyclerViewActionsSingleton();
-        }
-        return mInstance;
+        return mInstance == null ?
+                mInstance = new RecyclerViewActionsSingleton() :
+                mInstance;
     }
 
     public static void initReferences(SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView,
-                                      Activity activityRef, Fragment fragmentRef) {
+                                      View notSyncLayout, Activity activityRef, Fragment fragmentRef) {
         mSwipeRefreshLayout = swipeRefreshLayout;
         mRecyclerView = recyclerView;
         mActivityRef = activityRef;
         mListenerRef = fragmentRef;
         mFragmentRef = fragmentRef;
+        mNotSyncLayout = notSyncLayout;
         mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
         updateAdapterRef();
         mRealm = Realm.getInstance(mActivityRef);
 
-        mSearchOnUrlEnabled = mActivityRef
-                .getSharedPreferences(BOOKMARKS_WALLET_SHAREDPREF, 0)
-                .getBoolean(SEARCH_URL_MODE, false);
+        SharedPreferences sharedPref = mActivityRef
+                .getSharedPreferences(BOOKMARKS_WALLET_SHAREDPREF, 0);
+        mSearchOnUrlEnabled = sharedPref.getBoolean(SEARCH_URL_MODE, false);
+        mSyncByProviderRunning = sharedPref.getBoolean(SYNC_BY_PROVIDER_RUNNING_MODE, false);
     }
 
     private static BookmarkRecyclerViewAdapter updateAdapterRef() {
@@ -312,6 +314,7 @@ public class RecyclerViewActionsSingleton {
     }
 
     public void deleteBookmarksList() {
+        setBookmarksNotSyncView(false);
         mRealm.beginTransaction();
         mRealm.where(Bookmark.class).findAll().clear();
         mRealm.commitTransaction();
@@ -346,6 +349,8 @@ public class RecyclerViewActionsSingleton {
         if (cursor.moveToFirst()) {
             do {
                 if (mBookmarksProviderAsyncTask.isCancelled()) {
+                    showSlidingPanelWrapper();
+                    setSyncByProviderRunning(true);
                     return;
                 }
                 mBookmarksProviderAsyncTask.doProgress(cnt);
@@ -585,18 +590,30 @@ public class RecyclerViewActionsSingleton {
         mAdsOffset = panelHeight;
     }
 
-    public boolean isBookmarkSyncByProvider() {
-        return mBookmarkSyncByProvider;
+    public boolean isSyncByProviderRunning() {
+        return mSyncByProviderRunning;
     }
 
-    public void setBookmarkSyncByProvider(boolean value) {
-        mBookmarkSyncByProvider = value;
+    public void setSyncByProviderRunning(boolean value) {
+        SharedPreferences sharedPref = mActivityRef
+                .getSharedPreferences(BOOKMARKS_WALLET_SHAREDPREF, 0);
+
+        sharedPref.edit().putBoolean(SYNC_BY_PROVIDER_RUNNING_MODE, value).apply();
+        mSyncByProviderRunning = value;
     }
+
+    public void setBookmarksNotSyncView(boolean visible) {
+        setSyncByProviderRunning(visible);
+        mNotSyncLayout.setOnClickListener(visible ? (View.OnClickListener) mFragmentRef : null);
+        mNotSyncLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
 
     public class BookmarksProviderAsyncTask extends AsyncTask<URL, Integer, Boolean> {
 
         private final Integer N_OCCURENCES = 30;
         private final BrowserEnum[] browserList;
+        private final Integer[] params = new Integer[1];
 
         public BookmarksProviderAsyncTask(BrowserEnum[] list) {
             browserList = list;
@@ -604,7 +621,7 @@ public class RecyclerViewActionsSingleton {
 
         @Override
         protected Boolean doInBackground(URL... params) {
-            mBookmarkSyncByProvider = true;
+            mSyncByProviderRunning = true;
             try {
                 Uri bookmarksUri = getBookmarksUriByBrowser(browserList[0]);
                 addBookmarksByProviderJob(bookmarksUri);
@@ -623,13 +640,15 @@ public class RecyclerViewActionsSingleton {
         }
 
         public void doProgress(int count) {
-            publishProgress(count);
+            params[0] = count;
+            publishProgress(params);
         }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
 //            every ten occurence
-            if (values[0] % N_OCCURENCES == 0) {
+            if (values.length != 0 &&
+                    values[0] % N_OCCURENCES == 0) {
                 updateAdapterRef();
                 setAdapter();
             }
@@ -637,8 +656,10 @@ public class RecyclerViewActionsSingleton {
 
         @Override
         protected void onPostExecute(Boolean result) {
+            showSlidingPanelWrapper();
+            setSyncByProviderRunning(false);
             mSwipeRefreshLayout.setRefreshing(false);
-            mBookmarkSyncByProvider = false;
+            mSyncByProviderRunning = false;
             updateAdapterRef();
             setAdapter();
         }

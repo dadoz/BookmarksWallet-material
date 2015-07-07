@@ -65,8 +65,6 @@ dependencies {
     compile 'com.willowtreeapps.saguaro:saguaro-android:1.0.0'
     compile 'com.github.hotchemi:android-rate:0.5.0'
     //    compile 'com.sothree.slidinguppanel:library:3.0.0'
-    compile 'frankiesardo:icepick:3.0.2'
-    provided 'frankiesardo:icepick-processor:3.0.2'
     compile project(':library')
 
 }

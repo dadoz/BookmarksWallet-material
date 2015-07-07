@@ -86,6 +86,8 @@ public class BookmarkListFragment extends Fragment
 //    AdView mAdsView;
     @InjectView(R.id.adViewId)
     LinearLayout mAdsView;
+    @InjectView(R.id.notSyncLayoutId)
+    LinearLayout notSyncLayout;
 
     private LinearLayoutManager linearLayoutManager;
 	private RealmResults<Bookmark> mItems;
@@ -99,6 +101,7 @@ public class BookmarkListFragment extends Fragment
     private ClipboardSingleton mClipboardSingleton;
 
     private MenuItem mSearchItem;
+    private static final BrowserEnum [] mBrowserList = {BrowserEnum.CHROME, BrowserEnum.DEFAULT};
 
     @Override
 	public void onAttach(Activity activity) {
@@ -150,7 +153,7 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         //set refresh layout depending on isBookmarksSyncByProvider
-        if (rvActionsSingleton.isBookmarkSyncByProvider()) {
+        if (rvActionsSingleton.isSyncByProviderRunning()) {
             mSwipeRefreshLayout.setRefreshing(true);
         }
     }
@@ -174,7 +177,7 @@ public class BookmarkListFragment extends Fragment
         mActionbarSingleton.setDisplayHomeEnabled(false);
 
         rvActionsSingleton = RecyclerViewActionsSingleton
-                .getInstance(mSwipeRefreshLayout, mRecyclerView, mMainActivityRef, this);
+                .getInstance(mSwipeRefreshLayout, mRecyclerView, notSyncLayout, mMainActivityRef, this);
         rvActionsSingleton.setAdsView(mAdsView, mSlidingLayerLayout.getPanelHeight());
 
         mItems = rvActionsSingleton.getBookmarksList();
@@ -191,17 +194,8 @@ public class BookmarkListFragment extends Fragment
             mClipboardFloatingButton.hide(false);
         }
 
-        if (! rvActionsSingleton.isBookmarkSyncByProvider()) {
-            Snackbar
-                    .make(mLinkListView, "Got problem to sync!", Snackbar.LENGTH_LONG)
-                    .setActionTextColor(mMainActivityRef.getResources().getColor(R.color.material_mustard_yellow))
-                    .setAction("SYNC", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    })
-                    .show();
+        if (rvActionsSingleton.isSyncByProviderRunning()) {
+            rvActionsSingleton.setBookmarksNotSyncView(true);
         }
     }
 
@@ -371,8 +365,13 @@ public class BookmarkListFragment extends Fragment
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.importLocalBookmarksButtonId:
-                BrowserEnum [] temp = {BrowserEnum.CHROME, BrowserEnum.DEFAULT};
-                rvActionsSingleton.addBookmarksByProvider(temp);
+                hideSlidingPanel();
+                rvActionsSingleton.addBookmarksByProvider(mBrowserList);
+                break;
+            case R.id.notSyncLayoutId:
+                mSwipeRefreshLayout.setRefreshing(true);
+                rvActionsSingleton.deleteBookmarksList();
+                rvActionsSingleton.addBookmarksByProvider(mBrowserList);
                 break;
             case R.id.clipboardFloatingButtonId:
                 if(! mClipboardSingleton.hasClipboardText()) {
@@ -483,13 +482,13 @@ public class BookmarkListFragment extends Fragment
         }
         mAdsView.setVisibility(View.GONE);
 
-        ArgbEvaluator argbEvaluator = new ArgbEvaluator();
-        int startColor = mMainActivityRef.getResources().getColor(R.color.material_violet_500);
-        int endColor = mMainActivityRef.getResources().getColor(R.color.white);
-        int interpolatedColor = (int) argbEvaluator.evaluate(v, startColor, endColor);
-        int inverseInterpolatedColor = (int) argbEvaluator.evaluate(v, endColor, startColor);
-        mSlidingPanelLayout.setBackgroundColor(interpolatedColor);
-        mSlidingPanelLabelText.setTextColor(inverseInterpolatedColor);
+//        ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+//        int startColor = mMainActivityRef.getResources().getColor(R.color.material_violet_500);
+//        int endColor = mMainActivityRef.getResources().getColor(R.color.white);
+//        int interpolatedColor = (int) argbEvaluator.evaluate(v, startColor, endColor);
+//        int inverseInterpolatedColor = (int) argbEvaluator.evaluate(v, endColor, startColor);
+//        mSlidingPanelLayout.setBackgroundColor(interpolatedColor);
+//        mSlidingPanelLabelText.setTextColor(inverseInterpolatedColor);
     }
 
     @Override

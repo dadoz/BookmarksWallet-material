@@ -50,6 +50,7 @@
             <!--android:layout_gravity="bottom|center"-->
             <!--android:layout_marginBottom="60dip"-->
             <!--ads:adUnitId="@string/banner_ad_unit_id" />-->
+    <include layout="@layout/bookmarks_not_sync_layout"></include>
 
     <LinearLayout
         android:orientation="vertical"

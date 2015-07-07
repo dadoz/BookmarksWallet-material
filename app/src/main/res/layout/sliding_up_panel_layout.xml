@@ -39,8 +39,8 @@
                 android:layout_marginLeft="@dimen/medium_padding"
                 android:padding="@dimen/medium_padding"
                 android:text="HTTPS"
-                android:buttonTint="@color/material_violet_500"
-                android:textColor="@color/material_violet_500"/>
+                android:buttonTint="@color/white"
+                android:textColor="@color/white"/>
 
     <ScrollView
             android:layout_width="fill_parent"
@@ -52,9 +52,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/medium_padding"
                 android:layout_marginLeft="@dimen/medium_padding"
-                android:textColor="@color/material_violet_500"
+                android:textColor="@color/white"
+                android:textColorHint="@color/material_grey_200"
                 android:minWidth="250dip"
-                android:hint="type bookmark url...">
+                android:hint="type bookmark url..."
+                android:theme="@style/colorControlLightTheme">
         </EditText>
     </ScrollView>
 

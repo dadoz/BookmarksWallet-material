@@ -2,7 +2,6 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/emptyLinkListViewId"
-              android:visibility="gone"
               android:padding="@dimen/medium_padding"
               android:paddingBottom="@dimen/sliding_panel_header_height"
               android:layout_width="fill_parent"
@@ -10,24 +9,45 @@
               android:gravity="center"
               android:orientation="vertical">
 
-    <ImageView
-            android:layout_width="@dimen/extra_large_icon_size"
-            android:layout_height="@dimen/extra_large_icon_size"
-            android:src="@drawable/ic_folder_open_black_48dp"/>
-    <!--<TextView-->
+    <LinearLayout
+            android:id="@+id/importLocalBookmarksButtonId"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?android:selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/sliding_panel_header_height">
+        <ImageView
+                android:layout_width="@dimen/large_icon_size"
+                android:layout_height="@dimen/large_icon_size"
+
+                android:src="@drawable/ic_folder_open_black_48dp"/>
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/medium_padding"
+                android:orientation="horizontal">
+            <ImageView
+                    android:layout_width="@dimen/small_icon_size"
+                    android:layout_height="@dimen/small_icon_size"
+                    android:layout_gravity="center"
+
+                    android:src="@drawable/ic_file_download_grey600_48dp"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No bookmarks here!\nTap to import."
+                    android:layout_marginLeft="@dimen/medium_padding"
+                    android:textSize="@dimen/text_size_14"
+                    android:textColor="@color/material_grey"/>
+
+            <!--<Button-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:padding="@dimen/medium_padding"-->
-            <!--android:text="Still no bookmarks are saved!"-->
+            <!--android:text="Import from your phone"-->
             <!--android:textSize="@dimen/text_size_14"-->
             <!--android:textColor="@color/material_grey"/>-->
-    <Button
-            android:id="@+id/importLocalBookmarksButtonId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/medium_padding"
-            android:text="Import from your phone"
-            android:textSize="@dimen/text_size_14"
-            android:textColor="@color/material_grey"/>
-
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

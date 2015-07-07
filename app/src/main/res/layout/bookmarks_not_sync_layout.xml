@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:visibility="gone"
+        android:id="@+id/notSyncLayoutId"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/sliding_panel_header_height"
+        android:padding="@dimen/medium_padding"
+        android:background="@color/material_stone_black_transparent"
+        android:clickable="true">
+
+    <TextView
+            android:layout_gravity="center_vertical|left"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sync not completed - retry!"/>
+    <ImageView
+            android:id="@+id/notSyncRefreshIconId"
+            android:layout_gravity="center_vertical|right"
+            android:layout_width="@dimen/medium_icon_size"
+            android:layout_height="@dimen/medium_icon_size"
+            android:src="@drawable/ic_sync_white_48dp"/>
+</LinearLayout>
