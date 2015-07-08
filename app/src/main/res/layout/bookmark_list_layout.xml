@@ -27,11 +27,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 <com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
                         android:id="@+id/linksListId"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/sliding_panel_header_height"
+                        android:clipToPadding="false"
                         android:scrollbars="vertical"/>
             </android.support.v4.widget.SwipeRefreshLayout>
             <include layout="@layout/empty_link_list_layout"/>
@@ -42,7 +42,7 @@
         <include layout="@layout/sliding_up_panel_layout"/>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-    <include layout="@layout/bookmarks_not_sync_layout"></include>
+    <include layout="@layout/bookmarks_not_sync_layout"/>
 
     <com.google.android.gms.ads.AdView
             android:id="@+id/adViewId"

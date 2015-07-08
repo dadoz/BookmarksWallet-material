@@ -17,7 +17,7 @@
             android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sync not completed - retry!"/>
+            android:text="Bookmarks not fully downloaded! Try again."/>
     <ImageView
             android:id="@+id/notSyncRefreshIconId"
             android:layout_gravity="center_vertical|right"

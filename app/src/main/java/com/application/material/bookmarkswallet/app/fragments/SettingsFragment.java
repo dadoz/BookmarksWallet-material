@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.support.v7.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -71,10 +72,18 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
         ListView settingsList = (ListView) getView().findViewById(R.id.settingsListId);
 
 		ArrayList<Setting> settingList = new ArrayList<Setting>();
-		settingList.add(new Setting("Rate it!", null, View.GONE, false));
-        settingList.add(new Setting("Search on URL enabled", "extend bookmark search by URL string even that only search by title.", View.VISIBLE, mRvActionsSingleton.isSearchOnUrlEnabled()));
-        settingList.add(new Setting("Delete all bookmarks!", "clear all your stored bookmarks.", View.GONE, true));
-        settingList.add(new Setting("Send a feedback", null, View.GONE, false));
+		settingList.add(new Setting(getResources().getString(R.string.setting_rate_label), null, View.GONE, false));
+        settingList.add(new Setting(getResources().getString(R.string.setting_url_search_label), "extend bookmark search by URL string even that only search by title.", View.VISIBLE, mRvActionsSingleton.isSearchOnUrlEnabled()));
+        settingList.add(new Setting(getResources().getString(R.string.setting_delete_all_label), "clear all your stored bookmarks.", View.GONE, true));
+        settingList.add(new Setting(getResources().getString(R.string.setting_feedback_label), null, View.GONE, false));
+
+        String versionName = "0.0";
+        try {
+            versionName = mActivityRef.getPackageManager().getPackageInfo(mActivityRef.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        settingList.add(new Setting(getResources().getString(R.string.setting_build_version_label), versionName, View.GONE, false));
 		ArrayAdapter<Setting> adapter = new SettingListAdapter(getActivity().getBaseContext(),
 				R.layout.setting_item, settingList, this);
 
