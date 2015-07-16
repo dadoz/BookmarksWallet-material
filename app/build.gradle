@@ -29,7 +29,7 @@ android {
         }
 
         release {
-            storeFile file("../keystore/debug-keystore.jks")
+            storeFile file("../keystore/release-keystore.jks")
             storePassword "dadoxx86"
             keyAlias "davide"
             keyPassword "dadoxx86"
@@ -44,6 +44,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            zipAlignEnabled true
         }
     }
     lintOptions {
