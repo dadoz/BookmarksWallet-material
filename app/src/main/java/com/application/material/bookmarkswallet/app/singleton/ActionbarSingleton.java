@@ -92,7 +92,6 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
 
     public boolean setTitle(String title) {
         try {
-//            String appName = mActivityRef.getResources().getString(R.string.app_name);
             String mainTitle = mActivityRef.getResources().getString(R.string.main_title);
             getActionBar().setTitle(title == null ? mainTitle : title);
         } catch (Exception e) {
@@ -137,7 +136,6 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
 
     public boolean isEditMode() {
         return mEditItemPos != NOT_SELECTED_ITEM_POSITION;
-//        return editMode;
     }
 
     public int getEditItemPos() {
@@ -152,14 +150,6 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
     public void setColorFilter(Drawable drawable, int color) {
         drawable.setColorFilter(mActivityRef.getResources()
                         .getColor(color),
-                PorterDuff.Mode.SRC_IN);
-    }
-
-    public void setColorResourceFilter(Drawable drawable, int colorResource) {
-        if (drawable == null) {
-            return;
-        }
-        drawable.setColorFilter(colorResource,
                 PorterDuff.Mode.SRC_IN);
     }
 

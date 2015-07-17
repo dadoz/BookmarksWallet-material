@@ -24,6 +24,7 @@ import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdap
 import com.application.material.bookmarkswallet.app.animators.ScrollManager;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -50,10 +51,10 @@ public class RecyclerViewActionsSingleton {
     private static Fragment mListenerRef;
     private static ActionbarSingleton mActionbarSingleton;
     private static Fragment mFragmentRef;
-//    private static View mEditUrlView;
     private static BookmarkRecyclerViewAdapter mAdapter;
     private static SwipeRefreshLayout mSwipeRefreshLayout;
     private static View mNotSyncLayout;
+    private static SharedPrefSingleton mSharedPrefSingleton;
     private AlertDialog mEditDialog;
     private static Realm mRealm;
     private View mEditTitleViewRef;
@@ -62,13 +63,7 @@ public class RecyclerViewActionsSingleton {
     private View mAdsView;
     private int mAdsOffset;
     private BookmarksProviderAsyncTask mBookmarksProviderAsyncTask;
-    private static boolean mSyncByProviderCancel = false;
-    private static boolean mSyncByProviderRunning = false;
-//    private static boolean syncByProviderRunning;
 
-    private static final String SEARCH_URL_MODE = "SEARCH_URL_MODE";
-    private static final String SYNC_STATUS = "SYNC_STATUS";
-    private static String BOOKMARKS_WALLET_SHAREDPREF = "BOOKMARKS_WALLET_SHAREDPREF";
     private static SyncStatusEnum mSyncStatus;
 
     public enum BrowserEnum { DEFAULT, CHROME, FIREFOX }
@@ -104,12 +99,12 @@ public class RecyclerViewActionsSingleton {
         mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
         updateAdapterRef();
         mRealm = Realm.getInstance(mActivityRef);
+        mSharedPrefSingleton = SharedPrefSingleton.getInstance(mActivityRef);
 
-        SharedPreferences sharedPref = mActivityRef
-                .getSharedPreferences(BOOKMARKS_WALLET_SHAREDPREF, 0);
-        mSearchOnUrlEnabled = sharedPref.getBoolean(SEARCH_URL_MODE, false);
-        String syncName = sharedPref.getString(SYNC_STATUS, SyncStatusEnum.NOT_SET.name());
-        mSyncStatus = SyncStatusEnum.valueOf(syncName);
+        mSearchOnUrlEnabled = (boolean) mSharedPrefSingleton
+                .getValue(Utils.SEARCH_URL_MODE, false);
+        mSyncStatus = (SyncStatusEnum) mSharedPrefSingleton
+                .getValue(Utils.SYNC_STATUS, SyncStatusEnum.NOT_SET.name());
     }
 
     private static BookmarkRecyclerViewAdapter updateAdapterRef() {
@@ -132,7 +127,6 @@ public class RecyclerViewActionsSingleton {
         mActionbarSingleton.setEditItemPos(NOT_SELECTED_ITEM_POSITION);
         mActionbarSingleton.setTitle(null);
         mActionbarSingleton.changeActionbar(false);
-//        ScrollManager.runTranslateAnimationWrapper(mAdsView, ScrollManager.Direction.UP, 0);
         ScrollManager.runTranslateAnimation(mAdsView, 0, new DecelerateInterpolator(3));
         mActivityRef.invalidateOptionsMenu();
         showClipboardLinkButtonWrapper();
@@ -182,8 +176,6 @@ public class RecyclerViewActionsSingleton {
 
             mEditTitleViewRef = editBookmarkView.findViewById(R.id.editBookamrkTitleDialoglId);
             mEditUrlViewRef = editBookmarkView.findViewById(R.id.editBookmarkUrlDialoglId);
-//            editBookmarkView.findViewById(R.id.saveEditUrlDialogId).
-//                    setOnClickListener((View.OnClickListener) mListenerRef);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -278,7 +270,6 @@ public class RecyclerViewActionsSingleton {
     public void addBookmarkIconByUrl(String iconUrl,
                                      final String bookmarkUrl,
                                      final String bookmarkTitle) throws MalformedURLException {
-        //                mSwipeRefreshLayout.setRefreshing(false);
         if(iconUrl == null) {
             //CHECK out what u need
             mSwipeRefreshLayout.setRefreshing(false);
@@ -342,7 +333,6 @@ public class RecyclerViewActionsSingleton {
         int urlId = cursor.getColumnIndex(Browser.BookmarkColumns.URL);
         int titleId = cursor.getColumnIndex(Browser.BookmarkColumns.TITLE);
         int faviconId = cursor.getColumnIndex(Browser.BookmarkColumns.FAVICON);
-        //                    long timestamp = cursor.getColumnIndex(Browser.BookmarkColumns.CREATED);
         int cnt = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -415,12 +405,10 @@ public class RecyclerViewActionsSingleton {
         adapter.getItem(position).removeFromRealm();
         mRealm.commitTransaction();
         adapter.notifyItemRemoved(position);
-//        mAdapter.remove(position);
     }
 
     public void setDeletedItemPosition(int deletedItemPosition) {
         updateAdapterRef();
-//        mAdapter.setSelectedItemPosition(deletedItemPosition);
     }
 
     public void onSwipeAction(int[] reverseSortedPositions) {
@@ -488,14 +476,6 @@ public class RecyclerViewActionsSingleton {
         return true;
     }
 
-    private void toggleClipboardLinkButtonWrapper() {
-        try {
-            ((BookmarkListFragment) mFragmentRef).toggleClipboardLinkButton(-1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void showClipboardLinkButtonWrapper() {
         try {
             ((BookmarkListFragment) mFragmentRef).showClipboardButton();
@@ -528,13 +508,6 @@ public class RecyclerViewActionsSingleton {
             e.printStackTrace();
         }
     }
-
-//    private void hideSoftKeyboard(EditText editText) {
-//        InputMethodManager imm = (InputMethodManager) mActivityRef.
-//                getSystemService(Context.INPUT_METHOD_SERVICE);
-//        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-//    }
-
 
     public Intent getIntentForEditBookmark(Bookmark bookmark) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -579,9 +552,9 @@ public class RecyclerViewActionsSingleton {
 
     public void setSearchOnUrlEnabled(boolean searchOnUrlEnabled) {
         SharedPreferences sharedPref = mActivityRef
-                .getSharedPreferences(BOOKMARKS_WALLET_SHAREDPREF, 0);
+                .getSharedPreferences(Utils.BOOKMARKS_WALLET_SHAREDPREF, 0);
 
-        sharedPref.edit().putBoolean(SEARCH_URL_MODE, searchOnUrlEnabled).apply();
+        sharedPref.edit().putBoolean(Utils.SEARCH_URL_MODE, searchOnUrlEnabled).apply();
         mSearchOnUrlEnabled = searchOnUrlEnabled;
     }
 
@@ -600,9 +573,9 @@ public class RecyclerViewActionsSingleton {
 
     public void setSyncStatus(SyncStatusEnum value) {
         SharedPreferences sharedPref = mActivityRef
-                .getSharedPreferences(BOOKMARKS_WALLET_SHAREDPREF, 0);
+                .getSharedPreferences(Utils.BOOKMARKS_WALLET_SHAREDPREF, 0);
 
-        sharedPref.edit().putString(SYNC_STATUS, value.name()).apply();
+        sharedPref.edit().putString(Utils.SYNC_STATUS, value.name()).apply();
         mSyncStatus = value;
     }
 
@@ -611,8 +584,6 @@ public class RecyclerViewActionsSingleton {
         mNotSyncLayout.setOnClickListener(visible ? (View.OnClickListener) mFragmentRef : null);
         mNotSyncLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
-
-
 
     public class BookmarksProviderAsyncTask extends AsyncTask<URL, Integer, Boolean> {
 
@@ -651,7 +622,6 @@ public class RecyclerViewActionsSingleton {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-//            every ten occurence
             if (values.length != 0 &&
                     values[0] % N_OCCURENCES == 0) {
                 updateAdapterRef();
@@ -661,11 +631,8 @@ public class RecyclerViewActionsSingleton {
 
         @Override
         protected void onPostExecute(Boolean result) {
-//            showClipboardLinkButtonWrapper();
-//            showSlidingPanelWrapper();
             setSyncStatus(SyncStatusEnum.DONE);
             mSwipeRefreshLayout.setRefreshing(false);
-            mSyncByProviderRunning = false;
             updateAdapterRef();
             setAdapter();
         }

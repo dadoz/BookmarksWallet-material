@@ -1,81 +1,50 @@
 package com.application.material.bookmarkswallet.app;
 
-import android.app.SearchManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v4.app.*;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.BackPressedSingleton;
+import com.application.material.bookmarkswallet.app.singleton.SharedPrefSingleton;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.flurry.android.FlurryAgent;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
-
-import static com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton.NOT_SELECTED_ITEM_POSITION;
-
 
 public class MainActivity extends AppCompatActivity
         implements OnChangeFragmentWrapperInterface {
     private String TAG = "MainActivity";
     private ActionbarSingleton mActionbarSingleton;
     private BackPressedSingleton mBackPressedSingleton;
-    private AdView mAdView;
-//    @Icicle
-//    int mSelectedItemPosition;
+    private SharedPrefSingleton mSharedPrefSingleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mActionbarSingleton = ActionbarSingleton.getInstance(this);
-        mActionbarSingleton.initActionBar();
         mBackPressedSingleton = BackPressedSingleton.getInstance(this);
-//        handleIntent(getIntent());
+        mActionbarSingleton.initActionBar(); //must be the last one
+        mSharedPrefSingleton = SharedPrefSingleton.getInstance(this);
 
         FlurryAgent.setLogEnabled(true);
         FlurryAgent.init(this, getResources().getString(R.string.FLURRY_API_KEY));
 
-        AppRate.with(this)
-                .setInstallDays(2) // default 10, 0 means install day.
-                .setLaunchTimes(10) // default 10
-                .setRemindInterval(1) // default 1
-                .setShowNeutralButton(true) // default true
-                .setDebug(false) // default false
-                .setOnClickButtonListener(new OnClickButtonListener() { // callback listener.
-                    @Override
-                    public void onClickButton(int which) {
-                        Log.d(MainActivity.class.getName(), Integer.toString(which));
-                    }
-                })
-                .monitor();
-        // Show a dialog if meets conditions
-        AppRate.showRateDialogIfMeetsConditions(this);
+        boolean tutorialDone = (boolean) mSharedPrefSingleton.getValue(Utils.TUTORIAL_DONE, false);
+        if (! tutorialDone) {
+            startActivity(new Intent(this, TutorialActivity.class));
+            finish(); //this end activity
+        }
+
+        onInitAppRate();
         onInitFragment();
     }
-
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        setIntent(intent);
-//        handleIntent(intent);
-//    }
-//
-//    private void handleIntent(Intent intent) {
-//        if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
-//            String query = intent.getStringExtra(SearchManager.QUERY);
-//            do smthing with query
-//        }
-//    }
 
     @Override
     public void onResume() {
@@ -88,22 +57,22 @@ public class MainActivity extends AppCompatActivity
         super.onPause();
     }
 
+    /**
+     * init fragment function
+     */
     public void onInitFragment() {
-        Fragment frag;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        int backStackCnt = getSupportFragmentManager().getBackStackEntryCount();
+        Fragment frag = getSupportFragmentManager().
+                findFragmentByTag(BookmarkListFragment.FRAG_TAG);
 
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            int fragCount = getSupportFragmentManager().getBackStackEntryCount();
-            String fragTag = getSupportFragmentManager().getBackStackEntryAt(fragCount - 1).getName();
-            frag = getSupportFragmentManager().findFragmentByTag(fragTag);
-            transaction.replace(R.id.fragmentContainerFrameLayoutId,
-                    frag, fragTag).commit();
+        if (backStackCnt > 0) {
+            handleBackStackEntry(transaction);
             return;
         }
 
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0 &&
-                (frag = getSupportFragmentManager().
-                        findFragmentByTag(BookmarkListFragment.FRAG_TAG)) != null) {
+        if (backStackCnt == 0 &&
+                frag != null) {
             transaction.replace(R.id.fragmentContainerFrameLayoutId,
                     frag, BookmarkListFragment.FRAG_TAG).commit();
             return;
@@ -114,9 +83,21 @@ public class MainActivity extends AppCompatActivity
                 new BookmarkListFragment(), BookmarkListFragment.FRAG_TAG).commit();
     }
 
+    /**
+     *
+     * @param transaction
+     */
+    private void handleBackStackEntry(FragmentTransaction transaction) {
+        int fragCount = getSupportFragmentManager().getBackStackEntryCount();
+        String fragTag = getSupportFragmentManager().getBackStackEntryAt(fragCount - 1).getName();
+        Fragment frag = getSupportFragmentManager().findFragmentByTag(fragTag);
+        transaction.replace(R.id.fragmentContainerFrameLayoutId,
+                frag, fragTag).commit();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //DEMANDING ON FRAGMENT
+        //DEMANDED ON FRAGMENT
         return true;
     }
 
@@ -146,6 +127,27 @@ public class MainActivity extends AppCompatActivity
             transaction.addToBackStack(tag);
         }
         transaction.commit();
+    }
+
+    /**
+     * init app rate dialog
+     */
+    private void onInitAppRate() {
+        AppRate.with(this)
+                .setInstallDays(2)
+                .setLaunchTimes(10)
+                .setRemindInterval(1)
+                .setShowNeutralButton(true)
+                .setDebug(false)
+                .setOnClickButtonListener(new OnClickButtonListener() { // callback listener.
+                    @Override
+                    public void onClickButton(int which) {
+                        Log.d(MainActivity.class.getName(), Integer.toString(which));
+                    }
+                })
+                .monitor();
+        // Show a dialog if meets conditions
+        AppRate.showRateDialogIfMeetsConditions(this);
     }
 
     @Override

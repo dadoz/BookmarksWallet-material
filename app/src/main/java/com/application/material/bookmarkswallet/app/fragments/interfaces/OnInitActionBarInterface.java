@@ -10,6 +10,5 @@ import android.support.v7.widget.Toolbar;
  */
 public interface OnInitActionBarInterface {
     public boolean setTitle(String title);
-
     public void changeActionbar(boolean isHomeUpEnabled);
 }

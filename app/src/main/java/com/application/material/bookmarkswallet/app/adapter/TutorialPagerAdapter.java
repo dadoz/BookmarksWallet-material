@@ -1,28 +1,28 @@
-package com.application.material.bookmarkswallet.app.adapter.old;
+package com.application.material.bookmarkswallet.app.adapter;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.fragments.ImportBookmarksCardviewFragment;
-import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 
 /**
  * Created by davide on 15/01/15.
  */
-public class BaseFragmentPagerAdapter extends FragmentStatePagerAdapter {
+public class TutorialPagerAdapter extends FragmentPagerAdapter implements OnPageChangeListener {
+    private final int mTotalItems;
     private String TAG = "SamplePagerAdapter";
-    private final Activity mainActivityRef;
-    private int maxPageCounter;
+    private final Activity mMainActivityRef;
 
-    public BaseFragmentPagerAdapter(FragmentManager fm, Activity activityRef, int n) {
+    public TutorialPagerAdapter(FragmentManager fm, Activity activityRef, int totalItems) {
         super(fm);
-        this.mainActivityRef = activityRef;
-        maxPageCounter = n;
+        mMainActivityRef = activityRef;
+        mTotalItems = totalItems;
     }
 
     /**
@@ -34,9 +34,9 @@ public class BaseFragmentPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new BookmarkListFragment();
+                return null;
             case 1:
-                return new ImportBookmarksCardviewFragment();
+                return null;
         }
         return null;
     }
@@ -51,11 +51,12 @@ public class BaseFragmentPagerAdapter extends FragmentStatePagerAdapter {
      */
     @Override
     public CharSequence getPageTitle(int position) {
+        Resources res = mMainActivityRef.getResources();
         switch (position) {
             case 0:
-                return mainActivityRef.getResources().getString(R.string.links_tab_name);
+                return res.getString(R.string.links_tab_name);
             case 1:
-                return mainActivityRef.getResources().getString(R.string.import_export_tab_name);
+                return res.getString(R.string.import_export_tab_name);
             default:
                 return "generic tab";
         }
@@ -66,7 +67,7 @@ public class BaseFragmentPagerAdapter extends FragmentStatePagerAdapter {
      */
     @Override
     public int getCount() {
-        return maxPageCounter;
+        return mTotalItems;
     }
 
 
@@ -78,6 +79,35 @@ public class BaseFragmentPagerAdapter extends FragmentStatePagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
         Log.i(TAG, "destroyItem() [position: " + position + "]");
+    }
+
+    /**
+     *
+     * @param position
+     * @param positionOffset
+     * @param positionOffsetPixels
+     */
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    /**
+     *
+     * @param position
+     */
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    /**
+     *
+     * @param state
+     */
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
 }

@@ -26,18 +26,6 @@ public class Bookmark extends RealmObject {
     @Ignore
     private static final String NO_TITLE_STRING = "(no title)";
 
-//    public Bookmark(int id, String iconPath, byte[] blobIcon, String name,
-//                    String url, int userId, long timestamp) {
-//        this.id = id;
-//        this.blobIcon= blobIcon;
-//        this.iconPath = iconPath;
-//        this.name = name;
-//        this.url = url;
-//        this.userId = userId;
-//        this.timestamp = timestamp;
-//    }
-
-
     public int getUserId() {
         return this.userId;
     }
@@ -71,8 +59,6 @@ public class Bookmark extends RealmObject {
     public long getLastUpdate() {
         return this.lastUpdate;
     }
-
-
 
     public void setBlobIcon(byte[] blobIcon) {
         this.blobIcon = blobIcon;
@@ -109,10 +95,6 @@ public class Bookmark extends RealmObject {
                 DateTimeFormatter fmt = DateTimeFormat.forPattern("HH:mm");
                 return fmt.print(dt);
             }
-
-            //        if(dt.getDayOfMonth() == DateTime.now().minusDays(1).getDayOfMonth()) {
-            //            return "yesterday";
-            //        }
 
             if(dt.getYear() == DateTime.now().getYear()) {
                 DateTimeFormatter fmt = DateTimeFormat.forPattern("MMM dd");

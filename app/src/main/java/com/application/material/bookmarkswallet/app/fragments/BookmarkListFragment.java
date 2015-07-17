@@ -1,6 +1,5 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
-import android.animation.ArgbEvaluator;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -19,13 +17,12 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.*;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.*;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.*;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.animators.ScrollManager;
@@ -63,31 +60,31 @@ public class BookmarkListFragment extends Fragment
 	private static final String TAG = "LinksListFragment_TAG";
 	public static final String FRAG_TAG = "LinksListFragment";
 	private MainActivity mMainActivityRef;
-	@InjectView(R.id.urlEditText)
+	@Bind(R.id.urlEditText)
     EditText mUrlEditText;
-    @InjectView(R.id.httpFormatCheckboxId)
+    @Bind(R.id.httpFormatCheckboxId)
     CheckBox mHttpFormatCheckbox;
-	@InjectView(R.id.slidingPanelLabelTextId)
+	@Bind(R.id.slidingPanelLabelTextId)
     TextView mSlidingPanelLabelText;
-	@InjectView(R.id.slidingPanelDoneIconId)
+	@Bind(R.id.slidingPanelDoneIconId)
     ImageView slidingPanelDoneText;
-	@InjectView(R.id.slidingPanelLayoutId)
+	@Bind(R.id.slidingPanelLayoutId)
     LinearLayout mSlidingPanelLayout;
-	@InjectView(R.id.slidingLayerLayoutId)
+	@Bind(R.id.slidingLayerLayoutId)
     SlidingUpPanelLayout mSlidingLayerLayout;
-	@InjectView(R.id.linksListId)
+	@Bind(R.id.linksListId)
 	RecyclerViewCustom mRecyclerView;
-	@InjectView(R.id.clipboardFloatingButtonId)
+	@Bind(R.id.clipboardFloatingButtonId)
     FloatingActionButton mClipboardFloatingButton;
-    @InjectView(R.id.emptyLinkListViewId)
+    @Bind(R.id.emptyLinkListViewId)
 	View emptyLinkListView;
-    @InjectView(R.id.emptySearchResultLayoutId)
+    @Bind(R.id.emptySearchResultLayoutId)
     View mEmptySearchResultView;
-    @InjectView(R.id.mainContainerViewId)
+    @Bind(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    @InjectView(R.id.adViewId)
+    @Bind(R.id.adViewId)
     AdView mAdsView;
-    @InjectView(R.id.notSyncLayoutId)
+    @Bind(R.id.notSyncLayoutId)
     LinearLayout notSyncLayout;
 
     private LinearLayoutManager linearLayoutManager;
@@ -129,7 +126,7 @@ public class BookmarkListFragment extends Fragment
 							 Bundle savedInstance) {
 		mLinkListView = inflater.inflate(R.layout.bookmark_list_layout,
 				container, false);
-		ButterKnife.inject(this, mLinkListView);
+		ButterKnife.bind(this, mLinkListView);
         //load ads
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdsView.loadAd(adRequest);
