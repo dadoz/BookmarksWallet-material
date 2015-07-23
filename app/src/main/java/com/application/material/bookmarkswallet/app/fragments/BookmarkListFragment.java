@@ -35,6 +35,7 @@ import com.application.material.bookmarkswallet.app.singleton.ClipboardSingleton
 import com.application.material.bookmarkswallet.app.singleton.ExportBookmarkSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton.BrowserEnum;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.github.clans.fab.FloatingActionButton;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -133,8 +134,17 @@ public class BookmarkListFragment extends Fragment
 
         setHasOptionsMenu(true);
 		onInitView();
+        triggerImport();
         return mLinkListView;
 	}
+
+    private void triggerImport() {
+        if (mMainActivityRef.getIntent()
+                .getExtras().getBoolean(Utils.IMPORT_TRIGGER)) {
+            rvActionsSingleton.addBookmarksByProvider(mBrowserList);
+            mMainActivityRef.getIntent().getExtras().remove(Utils.IMPORT_TRIGGER);
+        }
+    }
 
     @Override
     public void onPause() {
@@ -187,6 +197,7 @@ public class BookmarkListFragment extends Fragment
             ScrollManager.runTranslateAnimation(mAdsView, 0, new DecelerateInterpolator(3));
             rvActionsSingleton.selectBookmarkEditMenu(mActionbarSingleton.getEditItemPos());
         }
+
         if (mActionbarSingleton.isSearchMode()) {
             mAdsView.setVisibility(View.GONE);
             mClipboardFloatingButton.hide(false);

@@ -6,10 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.fragments.TutorialFragment;
 
 /**
  * Created by davide on 15/01/15.
@@ -34,9 +33,11 @@ public class TutorialPagerAdapter extends FragmentPagerAdapter implements OnPage
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return null;
+                return TutorialFragment.newInstance(position);
             case 1:
-                return null;
+                return TutorialFragment.newInstance(position);
+            case 2:
+                return TutorialFragment.newInstance(position);
         }
         return null;
     }
@@ -57,6 +58,8 @@ public class TutorialPagerAdapter extends FragmentPagerAdapter implements OnPage
                 return res.getString(R.string.links_tab_name);
             case 1:
                 return res.getString(R.string.import_export_tab_name);
+            case 2:
+                return res.getString(R.string.import_export_tab_name);
             default:
                 return "generic tab";
         }
@@ -68,17 +71,6 @@ public class TutorialPagerAdapter extends FragmentPagerAdapter implements OnPage
     @Override
     public int getCount() {
         return mTotalItems;
-    }
-
-
-    /**
-     * Destroy the item from the {@link android.support.v4.view.ViewPager}. In our case this is
-     * simply removing the {@link android.view.View}.
-     */
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((View) object);
-        Log.i(TAG, "destroyItem() [position: " + position + "]");
     }
 
     /**

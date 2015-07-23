@@ -6,7 +6,7 @@ package com.application.material.bookmarkswallet.app.utlis;
 public class Utils {
     public static final String SEARCH_URL_MODE = "SEARCH_URL_MODE";
     public static final String SYNC_STATUS = "SYNC_STATUS";
-    public static final String TUTORIAL_DONE = "TUTORIAL_DONE";
+    public static final String IMPORT_TRIGGER = "IMPORT_TRIGGER";
     public static String BOOKMARKS_WALLET_SHAREDPREF = "BOOKMARKS_WALLET_SHAREDPREF";
 
 }

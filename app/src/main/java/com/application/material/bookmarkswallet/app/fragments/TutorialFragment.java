@@ -1,19 +1,28 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.singleton.SharedPrefSingleton;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 /**
  * Created by davide on 17/07/15.
  */
-public class TutorialFragment extends Fragment {
+public class TutorialFragment extends Fragment implements View.OnClickListener {
 
+    private static final int LATEST_TUTORIAL_PAGE = 2;
     private static String ARG_SECTION_NUMBER = "ARG_SECTION_NUMBER";
     private int mSectionNumber;
+    private Button mFinishTutorialButton;
+    private View mView;
+    private SharedPrefSingleton mSharedPrefSingleton;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -31,20 +40,39 @@ public class TutorialFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
         ViewGroup container, Bundle savedInstanceState) {
         mSectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
-        int layoutRes = getViewLayout();
+        mView = inflater.inflate(getViewLayoutRes(), container, false);
+        mSharedPrefSingleton = SharedPrefSingleton.getInstance(getActivity());
 
-        return inflater.inflate(layoutRes, container, false);
+        onInitView();
+        return mView;
     }
 
-    public int getViewLayout() {
+    private void onInitView() {
+        if (mSectionNumber != LATEST_TUTORIAL_PAGE) {
+            return;
+        }
+
+        mFinishTutorialButton = (Button) mView.findViewById(R.id.finishTutorialBUttonId);
+        mFinishTutorialButton.setOnClickListener(this);
+    }
+
+    public int getViewLayoutRes() {
         switch (mSectionNumber) {
             case 0:
-                return R.layout.activity_main;
+                return R.layout.tutorial_fragment_layout_1;
             case 1:
-                return R.layout.activity_main;
+                return R.layout.tutorial_fragment_layout_2;
             case 2:
-                return R.layout.activity_main;
+                return R.layout.tutorial_fragment_layout_3;
         }
         return R.layout.activity_main;
+    }
+
+    @Override
+    public void onClick(View v) {
+        mSharedPrefSingleton.setValue(SharedPrefSingleton.TUTORIAL_DONE, true);
+        startActivity(new Intent(getActivity(), MainActivity.class)
+                .putExtra(Utils.IMPORT_TRIGGER, true));
+        getActivity().finish();
     }
 }
