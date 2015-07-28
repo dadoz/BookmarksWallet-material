@@ -7,7 +7,7 @@
         <shape android:dither="true" android:shape="rectangle">
             <corners android:bottomLeftRadius="@dimen/small_padding" android:bottomRightRadius="@dimen/small_padding" android:topLeftRadius="@dimen/small_padding" android:topRightRadius="@dimen/small_padding" />
 
-            <solid android:color="@color/material_violet_500" />
+            <solid android:color="@color/white" />
         </shape>
     </item>
     <item android:state_pressed="true"
@@ -16,7 +16,7 @@
         <shape android:dither="true" android:shape="rectangle">
             <corners android:bottomLeftRadius="@dimen/small_padding" android:bottomRightRadius="@dimen/small_padding" android:topLeftRadius="@dimen/small_padding" android:topRightRadius="@dimen/small_padding" />
 
-            <solid android:color="#803C3251" />
+            <solid android:color="#80ffffff" />
         </shape>
     </item>
 

@@ -13,13 +13,14 @@
         <ImageView
                 android:layout_width="128dp"
                 android:layout_height="128dp"
-                android:src="@drawable/close_icon"/>
+                android:src="@drawable/ic_delete_colorful_48dp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/material_violet_500"
                 android:gravity="center"
                 android:padding="@dimen/medium_padding"
-                android:text="Slide left or slide right to remove\nbookmarks in your list."/>
+                android:text="Swipe left or right to remove\na bookmarks from your list."/>
 
     </LinearLayout>
     <ImageView
@@ -27,6 +28,6 @@
             android:layout_centerHorizontal="true"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
-            android:src="@drawable/ic_more_horiz_white_48dp"/>
+            android:src="@drawable/ic_more_horiz_colorful_step1_48dp"/>
 
 </RelativeLayout>

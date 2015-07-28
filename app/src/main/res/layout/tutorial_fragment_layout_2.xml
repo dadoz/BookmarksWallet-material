@@ -12,13 +12,14 @@
         <ImageView
                 android:layout_width="128dp"
                 android:layout_height="128dp"
-                android:src="@drawable/done_icon"/>
+                android:src="@drawable/ic_edit_pencil_colorful_48dp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/material_violet_500"
                 android:gravity="center"
                 android:padding="@dimen/medium_padding"
-                android:text="Press and hold on a bookmark url \nto get edit mode menu"/>
+                android:text="Press and hold a bookmark url \nif you want to edit or change it."/>
 
     </LinearLayout>
     <ImageView
@@ -26,6 +27,6 @@
             android:layout_centerHorizontal="true"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
-            android:src="@drawable/ic_more_horiz_white_48dp"/>
+            android:src="@drawable/ic_more_horiz_colorful_step2_48dp"/>
 
 </RelativeLayout>

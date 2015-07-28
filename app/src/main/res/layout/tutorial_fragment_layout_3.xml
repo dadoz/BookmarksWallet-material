@@ -13,23 +13,27 @@
         <ImageView
                 android:layout_width="128dp"
                 android:layout_height="128dp"
-                android:src="@drawable/done_icon"/>
+                android:src="@drawable/ic_done_colorful_48dp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="@dimen/medium_padding"
-                android:text="Now u're ready to start.\nImport your bookmarks and "/>
-        <Button
-                android:id="@+id/finishTutorialBUttonId"
-                android:layout_marginTop="@dimen/medium_padding"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button_layout"
-                android:textColor="@color/white"
-                android:text="START"/>
+                android:textColor="@color/material_violet_500"
+                android:text="Now you're ready to start.\nImport your bookmarks from Chrome."/>
 
     </LinearLayout>
+    <Button
+            android:id="@+id/finishTutorialBUttonId"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/big_padding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_layout"
+            android:textColor="@color/material_violet_500"
+            android:text="START"/>
+
     <!--<ImageView-->
             <!--android:layout_alignParentBottom="true"-->
             <!--android:layout_centerHorizontal="true"-->
