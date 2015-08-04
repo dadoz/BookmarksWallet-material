@@ -48,4 +48,5 @@
     <!--<color name="highlight_color">#f9cdad</color>-->
     <!--<color name="highlight_color">#ECD078</color>-->
     <color name="highlight_color">#F0F0F0</color>
+    <color name="material_grey_50">#fafafa</color>
 </resources>

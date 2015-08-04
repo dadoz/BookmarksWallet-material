@@ -65,12 +65,8 @@ public class BookmarkListFragment extends Fragment
     EditText mUrlEditText;
     @Bind(R.id.httpFormatCheckboxId)
     CheckBox mHttpFormatCheckbox;
-	@Bind(R.id.slidingPanelLabelTextId)
-    TextView mSlidingPanelLabelText;
 	@Bind(R.id.slidingPanelDoneIconId)
     ImageView slidingPanelDoneText;
-	@Bind(R.id.slidingPanelLayoutId)
-    LinearLayout mSlidingPanelLayout;
 	@Bind(R.id.slidingLayerLayoutId)
     SlidingUpPanelLayout mSlidingLayerLayout;
 	@Bind(R.id.linksListId)
@@ -90,7 +86,6 @@ public class BookmarkListFragment extends Fragment
 
     private LinearLayoutManager linearLayoutManager;
 	private RealmResults<Bookmark> mItems;
-	private GestureDetectorCompat detector;
 	private View mLinkListView;
 	private ActionbarSingleton mActionbarSingleton;
 	private RecyclerViewActionsSingleton rvActionsSingleton;
@@ -149,7 +144,6 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-//        rvActionsSingleton.cancelAsyncTask();
     }
 
     @Override
@@ -219,8 +213,6 @@ public class BookmarkListFragment extends Fragment
 		mRecyclerView.setEmptyView(emptyLinkListView);
 		mRecyclerView.setEmptySearchResultView(mEmptySearchResultView);
 		mRecyclerView.setHasFixedSize(true);
-        //set refresh layout listener
-//        mRecyclerView.setSwipeRefreshLayout(mSwipeRefreshLayout, this);
 
 		//set layout manager
 		mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -284,7 +276,6 @@ public class BookmarkListFragment extends Fragment
                             mRecyclerView.getAdapter().notifyDataSetChanged();
                             int startDelay = 600;
                             hideClipboardButton(startDelay);
-//                            toggleClipboardLinkButton(startDelay);
                             mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                             mAdsView.setVisibility(View.GONE);
                             return true;
@@ -393,12 +384,6 @@ public class BookmarkListFragment extends Fragment
                 }
                 addLinkOnRecyclerViewWrapper(bookmarkUrl.trim());
                 break;
-//			case R.id.actionbarInfoActionIconId:
-//				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
-//				break;
-//			case R.id.actionbarImportActionIconId:
-//				Toast.makeText(mMainActivityRef, "dismiss", Toast.LENGTH_SHORT).show();
-//				break;
 			case R.id.slidingPanelDoneIconId:
                 if (rvActionsSingleton.getSyncStatus() == RUNNING) {
                     Toast.makeText(mMainActivityRef, "Action denied. U're already importing bookmarks!", Toast.LENGTH_SHORT).show();
@@ -452,12 +437,6 @@ public class BookmarkListFragment extends Fragment
         mClipboardFloatingButton.setVisibility(View.VISIBLE);
     }
 
-    public void toggleClipboardLinkButton(int startDelay) {
-        animateClipboardButton(startDelay, mClipboardFloatingButton.getVisibility() == View.VISIBLE);
-        mClipboardFloatingButton.setVisibility(mClipboardFloatingButton
-                .getVisibility() == View.INVISIBLE ? View.VISIBLE : View.INVISIBLE);
-	}
-
     private void animateClipboardButton(int startDelay, boolean buttonVisible) {
         mClipboardFloatingButton.animate().
                 translationY(buttonVisible ? 300 : 0).
@@ -493,14 +472,6 @@ public class BookmarkListFragment extends Fragment
             return;
         }
         mAdsView.setVisibility(View.GONE);
-
-//        ArgbEvaluator argbEvaluator = new ArgbEvaluator();
-//        int startColor = mMainActivityRef.getResources().getColor(R.color.material_violet_500);
-//        int endColor = mMainActivityRef.getResources().getColor(R.color.white);
-//        int interpolatedColor = (int) argbEvaluator.evaluate(v, startColor, endColor);
-//        int inverseInterpolatedColor = (int) argbEvaluator.evaluate(v, endColor, startColor);
-//        mSlidingPanelLayout.setBackgroundColor(interpolatedColor);
-//        mSlidingPanelLabelText.setTextColor(inverseInterpolatedColor);
     }
 
     @Override
@@ -519,8 +490,6 @@ public class BookmarkListFragment extends Fragment
         mActionbarSingleton.setPanelExpanded(true);
         mClipboardFloatingButton.hide(true);
         slidingPanelDoneText.setVisibility(View.VISIBLE);
-//        mActionbarSingleton.setColorResourceFilter(slidingPanelDoneIcon.getDrawable(),
-//                R.color.material_violet_500);
         mUrlEditText.setFocusableInTouchMode(true);
         mUrlEditText.requestFocus();
         mHttpFormatCheckbox.setOnCheckedChangeListener(this);

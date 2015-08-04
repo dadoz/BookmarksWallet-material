@@ -37,10 +37,10 @@ public class MainActivity extends AppCompatActivity
         FlurryAgent.init(this, getResources().getString(R.string.FLURRY_API_KEY));
 
         boolean tutorialDone = (boolean) mSharedPrefSingleton.getValue(SharedPrefSingleton.TUTORIAL_DONE, false);
-        if (! tutorialDone) {
-            startActivity(new Intent(this, TutorialActivity.class));
-            finish(); //this end activity
-        }
+//        if (! tutorialDone) {
+//            startActivity(new Intent(this, TutorialActivity.class));
+//            finish(); //this end activity
+//        }
 
         onInitAppRate();
         onInitFragment();

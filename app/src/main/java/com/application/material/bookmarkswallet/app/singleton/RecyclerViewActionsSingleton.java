@@ -327,13 +327,17 @@ public class RecyclerViewActionsSingleton {
                 Browser.BookmarkColumns.CREATED,
                 Browser.BookmarkColumns.FAVICON,
                 Browser.BookmarkColumns.TITLE,
-                Browser.BookmarkColumns.URL
+                Browser.BookmarkColumns.URL,
+                Browser.BookmarkColumns.BOOKMARK
         };
+
         Cursor cursor = cr.query(bookmarksUri, projection, null, null, null);
         int urlId = cursor.getColumnIndex(Browser.BookmarkColumns.URL);
         int titleId = cursor.getColumnIndex(Browser.BookmarkColumns.TITLE);
         int faviconId = cursor.getColumnIndex(Browser.BookmarkColumns.FAVICON);
+        int bookmarkId = cursor.getColumnIndex(Browser.BookmarkColumns.BOOKMARK);
         int cnt = 0;
+
         if (cursor.moveToFirst()) {
             do {
                 if (mBookmarksProviderAsyncTask.isCancelled()) {
@@ -342,11 +346,13 @@ public class RecyclerViewActionsSingleton {
                 }
                 mBookmarksProviderAsyncTask.doProgress(cnt);
                 Log.e(TAG, "hey " + cursor.getString(urlId) + " # of imported: " + cnt);
-                byte[] blobIcon = cursor.getBlob(faviconId);
+                cnt ++;
 
                 //add item on realm
-                addOrmObject(realm, cursor.getString(titleId), null, blobIcon, cursor.getString(urlId));
-                cnt ++;
+                if (cursor.getInt(bookmarkId) == 1) {
+                    byte[] blobIcon = cursor.getBlob(faviconId);
+                    addOrmObject(realm, cursor.getString(titleId), null, blobIcon, cursor.getString(urlId));
+                }
             } while (cursor.moveToNext());
 
         }

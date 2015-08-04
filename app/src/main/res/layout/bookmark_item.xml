@@ -72,8 +72,7 @@
                             android:textSize="@dimen/text_size_16"
                             android:ellipsize="end"
                             android:lines="2"
-                            android:textColor="@color/material_red"/>
-
+                            android:textColor="@color/material_stone_black"/>
                 </LinearLayout>
                 <!-- DATE -->
                 <TextView
@@ -86,105 +85,42 @@
                         android:paddingRight="@dimen/medium_padding"
                         android:textSize="@dimen/text_size_14"
                         android:text=" date "
-                        android:textColor="@color/material_violet_100"/>
+                        android:textColor="@color/material_mustard_yellow"/>
             </RelativeLayout>
 
-        </LinearLayout>
-        <!--OPENED LAYOUT -->
-        <RelativeLayout
-                android:id="@+id/linkOpenedLayoutId"
-                android:baselineAligned="false"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/link_row_height"
-                android:paddingTop="@dimen/small_padding"
-                android:paddingBottom="@dimen/small_padding">
-
-            <ImageView
-                    android:id="@+id/linkIconOpenedIconId"
-                    android:contentDescription="link_icon_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="@dimen/fab_size_mini"
-                    android:minHeight="@dimen/fab_size_mini"
-                    android:maxWidth="@dimen/fab_size_normal"
-                    android:maxHeight="@dimen/fab_size_normal"
-                    android:layout_marginLeft="@dimen/medium_padding"
-                    android:layout_marginRight="@dimen/medium_padding"
-                    android:layout_marginBottom="@dimen/medium_padding"
-                    android:layout_marginTop="@dimen/medium_padding_custom"
-                    android:src="@drawable/ic_bookmark_outline_black_48dp"/>
-
-
-            <LinearLayout
+            <TextView
+                    android:id="@+id/moreInfoClosedIconId"
+                    android:background="@color/material_grey_50"
+                    android:visibility="invisible"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/linkIconOpenedIconId"
-                    android:layout_marginRight="@dimen/medium_padding"
-                    android:orientation="vertical">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Link:"
-                        android:textSize="@dimen/text_size_24"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textColor="@color/material_violet_500"/>
-                <TextView
-                        android:id="@+id/linkUrlOpenedId"
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:text="http://www.google.it"
-                        android:textSize="@dimen/text_size_16"
-                        android:ellipsize="end"
-                        android:maxLines="10"
-                        android:textColor="@color/material_violet_100"/>
+                    android:padding="@dimen/medium_padding"
+                    android:textColor="@color/material_violet_500"
+                    android:gravity="right"
+                    android:text="more"/>
 
-                <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/medium_padding"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Last update: "
-                            android:textSize="@dimen/text_size_14"
-                            android:textColor="@color/material_violet_500"/>
-                    <TextView
-                            android:id="@+id/lastUpdateTextId"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" - "
-                            android:textSize="@dimen/text_size_14"
-                            android:textColor="@color/material_violet_100"/>
-                </LinearLayout>
+        </LinearLayout>
 
-            </LinearLayout>
-        </RelativeLayout>
-    </ViewFlipper>
-    <!-- more button -->
-    <LinearLayout
-            android:id="@+id/moreInfoClosedContainerId"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+
         <ImageView
-                android:id="@+id/moreInfoClosedIconId"
-                android:layout_width="@dimen/fab_size_micro"
-                android:layout_height="@dimen/fab_size_micro"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/linkTimestampId"
+                android:id="@+id/linkIconOpenedIconId"
+                android:visibility="gone"
+                android:contentDescription="link_icon_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/fab_size_mini"
+                android:minHeight="@dimen/fab_size_mini"
+                android:maxWidth="@dimen/fab_size_normal"
+                android:maxHeight="@dimen/fab_size_normal"
+                android:layout_marginLeft="@dimen/medium_padding"
                 android:layout_marginRight="@dimen/medium_padding"
-                android:layout_gravity="right"
+                android:layout_marginBottom="@dimen/medium_padding"
+                android:layout_marginTop="@dimen/medium_padding_custom"
+                android:src="@drawable/ic_bookmark_outline_black_48dp"/>
 
-                android:src="@drawable/ic_more_horiz_black_48dp"/>
+        <!--<include layout="@layout/bookmark_item_open" />-->
 
-    </LinearLayout>
+    </ViewFlipper>
 </LinearLayout>
 </LinearLayout>
 </FrameLayout>
