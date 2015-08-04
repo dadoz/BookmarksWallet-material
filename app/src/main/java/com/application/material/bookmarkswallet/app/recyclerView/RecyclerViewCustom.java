@@ -85,4 +85,12 @@ public class RecyclerViewCustom extends RecyclerView {
                 findViewById(R.id.searchResultQueryTextId)).
                 setText(emptySearchResultQuery);
     }
+
+    public void init() {
+        //set empty view
+//        emptyLinkListView.findViewById(R.id.importLocalBookmarksButtonId).setOnClickListener(this);
+//        mRecyclerView.setEmptyView(emptyLinkListView); //to be added on recyvlerView class
+//        mRecyclerView.setEmptySearchResultView(mEmptySearchResultView);
+    }
+
 }

@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
-import com.application.material.bookmarkswallet.app.animators.ScrollManager;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
@@ -60,7 +59,7 @@ public class RecyclerViewActionsSingleton {
     private View mEditTitleViewRef;
     private View mEditUrlViewRef;
     private static boolean mSearchOnUrlEnabled;
-    private View mAdsView;
+//    private View mAdsView;
     private int mAdsOffset;
     private BookmarksProviderAsyncTask mBookmarksProviderAsyncTask;
 
@@ -127,7 +126,7 @@ public class RecyclerViewActionsSingleton {
         mActionbarSingleton.setEditItemPos(NOT_SELECTED_ITEM_POSITION);
         mActionbarSingleton.setTitle(null);
         mActionbarSingleton.changeActionbar(false);
-        ScrollManager.runTranslateAnimation(mAdsView, 0, new DecelerateInterpolator(3));
+//        ScrollManager.runTranslateAnimation(mAdsView, 0, new DecelerateInterpolator(3));
         mActivityRef.invalidateOptionsMenu();
         showClipboardLinkButtonWrapper();
         showSlidingPanelWrapper();
@@ -142,8 +141,8 @@ public class RecyclerViewActionsSingleton {
         mActionbarSingleton.setEditItemPos(position);
         mActionbarSingleton.setTitle("1");
         mActionbarSingleton.changeActionbar(true);
-        int translateY = ScrollManager.getTranslateY(mAdsView, ScrollManager.Direction.DOWN, mAdsOffset);
-        ScrollManager.runTranslateAnimation(mAdsView, translateY, new DecelerateInterpolator(3));
+//        int translateY = ScrollManager.getTranslateY(mAdsView, ScrollManager.Direction.DOWN, mAdsOffset);
+//        ScrollManager.runTranslateAnimation(mAdsView, translateY, new DecelerateInterpolator(3));
 
         mAdapter.notifyDataSetChanged();
         mActivityRef.invalidateOptionsMenu();
@@ -569,7 +568,7 @@ public class RecyclerViewActionsSingleton {
     }
 
     public void setAdsView(View view, int panelHeight) {
-        mAdsView = view;
+//        mAdsView = view;
         mAdsOffset = panelHeight;
     }
 

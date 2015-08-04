@@ -14,7 +14,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.animators.ScrollManager;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
     private static final String TAG = "ActionbarSingleton";
     private static Activity mActivityRef;
     private static ActionbarSingleton mSingletonRef;
-    private static ScrollManager scrollManager;
+//    private static ScrollManager scrollManager;
     private Toolbar toolbar;
 
     public static int NOT_SELECTED_ITEM_POSITION = -1;
@@ -68,22 +67,22 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
     }
 
 
-    public void setToolbarScrollManager(final RecyclerView recyclerView, final List<View> viewList, int adsOffsetHeight) {
-        scrollManager = new ScrollManager(mActivityRef, adsOffsetHeight);
-        try {
-            toolbar.post(new Runnable() {
-                @Override public void run() {
-                    scrollManager.attach(recyclerView);
-                    for (View view : viewList) {
-                        scrollManager.addView(view, ScrollManager.Direction.DOWN);
-                    }
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public void setToolbarScrollManager(final RecyclerView recyclerView, final List<View> viewList, int adsOffsetHeight) {
+//        scrollManager = new ScrollManager(mActivityRef, adsOffsetHeight);
+//        try {
+//            toolbar.post(new Runnable() {
+//                @Override public void run() {
+//                    scrollManager.attach(recyclerView);
+//                    for (View view : viewList) {
+//                        scrollManager.addView(view, ScrollManager.Direction.DOWN);
+//                    }
+//                }
+//            });
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private android.support.v7.app.ActionBar getActionBar() {
         return ((AppCompatActivity) mActivityRef).getSupportActionBar();

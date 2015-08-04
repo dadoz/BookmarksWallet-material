@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-        xmlns:sothree="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
-        xmlns:fab="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
-            android:id="@+id/slidingLayerLayoutId"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom"
-            sothree:umanoPanelHeight="@dimen/sliding_panel_header_height"
-            sothree:umanoShadowHeight="4dp">
 
         <RelativeLayout
                 android:layout_width="fill_parent"
@@ -34,36 +25,21 @@
                         android:clipToPadding="false"
                         android:scrollbars="vertical"/>
             </android.support.v4.widget.SwipeRefreshLayout>
+
             <include layout="@layout/empty_link_list_layout"/>
             <include layout="@layout/empty_search_result_layout"/>
 
         </RelativeLayout>
 
-        <include layout="@layout/sliding_up_panel_layout"/>
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
-
-    <include layout="@layout/bookmarks_not_sync_layout"/>
-
-    <com.google.android.gms.ads.AdView
-            android:id="@+id/adViewId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            ads:adSize="BANNER"
-            android:layout_gravity="bottom|center"
-            android:layout_marginBottom="60dip"
-            ads:adUnitId="@string/banner_ad_unit_id" />
-    <com.github.clans.fab.FloatingActionButton
+    <!--<include layout="@layout/sliding_up_panel_layout"/>-->
+    <!--<include layout="@layout/bookmarks_not_sync_layout"/>-->
+    <android.support.design.widget.FloatingActionButton
             android:id="@+id/clipboardFloatingButtonId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:layout_marginBottom="@dimen/large_padding"
-            android:src="@drawable/ic_attach_file_black_24dp"
-            fab:fab_shadowRadius="2dp"
-            fab:fab_shadowYOffset="2dp"
-            fab:fab_size="normal"
-            fab:fab_label="Add new bookmark"
-            fab:fab_colorNormal="@color/material_mustard_yellow"
-            fab:fab_colorPressed="@color/material_mustard_yellow_700"/>
-
+            android:layout_margin="@dimen/large_padding"
+            android:src="@drawable/ic_sync_white_48dp"
+            app:backgroundTint="@color/material_violet_500"
+            app:fabSize="normal"/>
 </FrameLayout>
