@@ -32,4 +32,6 @@
     <dimen name="sliding_panel_header_height">60dip</dimen>
     <dimen name="small_icon_size">18dip</dimen>
     <dimen name="large_icon_size">72dip</dimen>
+    <dimen name="height_button">40dip</dimen>
+    <dimen name="button_radius">3dip</dimen>
 </resources>

@@ -7,11 +7,17 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:textColorPrimary">@color/material_violet_500</item>
         <item name="android:textColor">@color/material_violet_500</item>
-        <item name="colorPrimary">@color/material_mustard_yellow</item>
+        <item name="colorPrimary">@color/material_red</item>
         <item name="colorControlActivated">@color/material_violet_500</item>
+        <item name="actionModeStyle">@style/ActionMode</item>
 
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
     </style>
+
+    <style name="ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@color/material_red</item>
+    </style>
+
     <style name="colorControlLightTheme">
         <item name="colorControlActivated">@color/material_grey_200</item>
     </style>
@@ -39,6 +45,23 @@
         <item name="android:layout_weight">1</item>
         <!-- TODO: setting a fixed width as follows results in narrow buttons with line breaks, but of course this is not a solution -->
         <item name="android:width">100dp</item>
+    </style>
+
+    <style name="BottomSheet.StyleDialog" parent="BottomSheet.Dialog">
+        <item name="android:backgroundDimAmount">0.5</item>
+        <item name="android:windowAnimationStyle">@style/BottomSheet.Animation</item>
+        <item name="android:textColorPrimary">@color/material_violet_500</item>
+        <item name="android:textColorSecondary">@color/material_violet_500</item>
+        <item name="android:textColorHint">@color/material_violet_700</item>
+        <item name="bs_dialogBackground">@color/white</item>
+        <item name="bs_dividerColor">@color/abc_search_url_text_pressed</item>
+        <item name="bs_numColumns">2</item>
+        <item name="bs_listStyle">@style/BottomSheet.StyleList</item>
+    </style>
+
+    <style name="BottomSheet.StyleList" parent="BottomSheet.List.Dark" >
+        <item name="android:listSelector">@drawable/list_selector</item>
+        <!--<item name="android:layoutAnimation">@anim/bs_list_layout_fade_in</item>-->
     </style>
 
 </resources>

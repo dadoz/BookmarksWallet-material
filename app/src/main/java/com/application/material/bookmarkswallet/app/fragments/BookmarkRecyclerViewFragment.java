@@ -1,12 +1,17 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.*;
+import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.bookmarkswallet.app.MainActivity;
@@ -16,6 +21,9 @@ import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdap
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
+import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
+import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
+import com.application.material.bookmarkswallet.app.singleton.search.SearchHandlerSingleton;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -23,9 +31,11 @@ import io.realm.RealmResults;
  * Created by davide on 04/08/15.
  */
 public class BookmarkRecyclerViewFragment extends Fragment
-        implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+        implements View.OnClickListener, View.OnLongClickListener,
+        SwipeRefreshLayout.OnRefreshListener,
+        MenuItemCompat.OnActionExpandListener {
     public static final String FRAG_TAG = "LinksListFragment";
-    @Bind(R.id.clipboardFloatingButtonId)
+    @Bind(R.id.addBookmarkFabId)
     FloatingActionButton mAddBookmarkFab;
     @Bind(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -34,6 +44,10 @@ public class BookmarkRecyclerViewFragment extends Fragment
 
     private MainActivity mMainActivityRef;
     private Realm mRealm;
+    private SearchHandlerSingleton mSearchHandlerSingleton;
+    private ActionbarSingleton mActionbarSingleton;
+    private BookmarkActionSingleton mBookmarkActionSingleton;
+    private View mView;
 
     @Override
     public void onAttach(Activity activity) {
@@ -43,7 +57,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
                     + " must implement OnLoadViewHandlerInterface");
         }
         mMainActivityRef =  (MainActivity) activity;
-        mRealm = Realm.getInstance(mMainActivityRef);
+        initSingletonInstances();
     }
 
     @Override
@@ -54,13 +68,13 @@ public class BookmarkRecyclerViewFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstance) {
-        View view = inflater.inflate(R.layout.bookmark_recycler_view_layout,
+        mView = inflater.inflate(R.layout.bookmark_recycler_view_layout,
                 container, false);
-        ButterKnife.bind(this, view);
+        ButterKnife.bind(this, mView);
         setHasOptionsMenu(true);
         onInitView();
 
-        return view;
+        return mView;
     }
 
     @Override
@@ -76,7 +90,64 @@ public class BookmarkRecyclerViewFragment extends Fragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+        mSearchHandlerSingleton.handleSearch(menu);
+        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), this);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        mAddBookmarkFab.setVisibility(View.GONE);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        mAddBookmarkFab.setVisibility(View.VISIBLE);
+        return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.addBookmarkFabId:
+                mBookmarkActionSingleton.addBookmarkAction(this);
+                break;
+            case R.id.backgroundLayoutId:
+                mBookmarkActionSingleton.handleClickAction(v, mRecyclerView);
+                break;
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        mBookmarkActionSingleton.handleLongClickAction(v, mRecyclerView);
+        return true;
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                shareBookmark();
+                break;
+            case R.id.action_settings:
+                handleSetting();
+                return true;
+            case R.id.action_export:
+//                exportBookmarksSingleton.exportAction();
+                return true;
+            case R.id.action_terms_and_licences:
+                handleTermsAndLicences();
+                return true;
+        }
+        return true;
     }
 
     /**
@@ -86,13 +157,8 @@ public class BookmarkRecyclerViewFragment extends Fragment
     private void onInitView() {
         initPullToRefresh();
         initTitle();
-
-//        mItems = getBookmarksList();
-        onInitRecyclerView();
-
+        initRecyclerView();
         mAddBookmarkFab.setOnClickListener(this);
-
-        setSearchMode();
         setNotSyncBookmarks();
     }
 
@@ -100,25 +166,15 @@ public class BookmarkRecyclerViewFragment extends Fragment
      * init view on recyclerView - setup adapter and other stuff
      * connected to main fragment app
      */
-    private void onInitRecyclerView() {
+    private void initRecyclerView() {
         BookmarkRecyclerViewAdapter recyclerViewAdapter =
-                new BookmarkRecyclerViewAdapter(mMainActivityRef, mRecyclerView);
+                new BookmarkRecyclerViewAdapter(mMainActivityRef, this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mMainActivityRef));
         mRecyclerView.setAdapter(recyclerViewAdapter);
         setRealmAdapter(recyclerViewAdapter);
 
         mRecyclerView.setItemAnimator(null);
         mRecyclerView.setHasFixedSize(true);
-    }
-
-    @Override
-    public void onClick(View v) {
-
-    }
-
-    @Override
-    public void onRefresh() {
-
     }
 
     /**
@@ -144,21 +200,16 @@ public class BookmarkRecyclerViewFragment extends Fragment
     }
 
     /**
-     * private function
+     * init title - set
      */
-
-    private void setSearchMode() {
-//        if (mActionbarSingleton.isSearchMode()) {
-//            mAdsView.setVisibility(View.GONE);
-//            mClipboardFloatingButton.hide(false);
-//        }
-    }
-
     private void initTitle() {
-//        mActionbarSingleton.setTitle(null);
+        mActionbarSingleton.setTitle(null);
 //        mActionbarSingleton.setDisplayHomeEnabled(false);
     }
 
+    /**
+     * pull to refresh init
+     */
     private void initPullToRefresh() {
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout
@@ -167,9 +218,75 @@ public class BookmarkRecyclerViewFragment extends Fragment
                         android.R.color.holo_green_light);
     }
 
+    /**
+     * set not fully sync bookmarks
+     */
     private void setNotSyncBookmarks() {
+        Snackbar.make(mView, "hey snack", Snackbar.LENGTH_LONG)
+                .setAction("SYNC", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mMainActivityRef, "hey", Toast.LENGTH_SHORT).show();
+                    }
+                }).show();
 //        if (rvActionsSingleton.getSyncStatus() == CANCELED) {
 //            rvActionsSingleton.setBookmarksNotSyncView(true);
 //        }
+    }
+
+    /**
+     * handle terms and licences
+     */
+    private void handleTermsAndLicences() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.apache.org/licenses/LICENSE-2.0"));
+        startActivity(browserIntent);
+    }
+
+    /**
+     * handle setting option - open up a new activity with all preferences available
+     */
+    private void handleSetting() {
+        mActionbarSingleton.changeActionbar(true);
+        mMainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
+    }
+
+    /**
+     * share bookmark through intent you like more
+     */
+    private void shareBookmark() {
+        Intent intent = getIntentForEditBookmark(getSelectedItem());
+        mMainActivityRef.startActivity(Intent.createChooser(intent, "share bookmark to..."));
+    }
+
+    /**
+     * get bookmark obj by item pos on recycler view
+     * @return
+     */
+    public Bookmark getSelectedItem() {
+        BookmarkRecyclerViewAdapter adapter =
+                (BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter();
+        return ((Bookmark) adapter.getItem(mActionbarSingleton.getEditItemPos()));
+    }
+
+    /**
+     * get shared intent
+     * @param bookmark
+     * @return
+     */
+    public Intent getIntentForEditBookmark(Bookmark bookmark) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, Bookmark.Utils.stringify(bookmark));
+        shareIntent.setType("text/plain");
+        return shareIntent;
+    }
+
+    /**
+     * init singleton instances
+     */
+    private void initSingletonInstances() {
+        mRealm = Realm.getInstance(mMainActivityRef);
+        mSearchHandlerSingleton = SearchHandlerSingleton.getInstance(mMainActivityRef);
+        mActionbarSingleton = ActionbarSingleton.getInstance(mMainActivityRef);
+        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(mMainActivityRef);
     }
 }

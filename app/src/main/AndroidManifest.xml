@@ -45,6 +45,10 @@
                 android:name=".TutorialActivity"
                 android:label="Tutorial Activity">
         </activity>
+        <activity
+                android:name=".AddBookmarkActivity"
+                android:label="AddBookmark Activity">
+        </activity>
 
     </application>
 

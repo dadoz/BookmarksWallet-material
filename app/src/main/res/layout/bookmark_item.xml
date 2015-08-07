@@ -4,123 +4,104 @@
              android:layout_height="wrap_content"
              android:layout_width="fill_parent">
     <LinearLayout
-            android:id="@+id/backgroundLayoutId"
-            android:baselineAligned="false"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-    <LinearLayout
             android:background="?android:selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    <LinearLayout
+            android:id="@+id/backgroundLayoutId"
+            android:paddingTop="@dimen/medium_padding"
+            android:paddingBottom="@dimen/medium_padding"
             android:baselineAligned="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-    <ViewFlipper
-            android:id="@+id/linkIconFlipperIconId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-        <LinearLayout
+        <RelativeLayout
                 android:id="@+id/linkLayoutId"
                 android:baselineAligned="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:minHeight="@dimen/link_row_height">
+                android:paddingTop="@dimen/small_padding"
+                android:paddingBottom="@dimen/small_padding">
 
-            <RelativeLayout
-                    android:baselineAligned="false"
-                    android:layout_width="match_parent"
+            <ImageView
+                    android:id="@+id/linkIconId"
+                    android:contentDescription="link_icon_id"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/small_padding"
-                    android:paddingBottom="@dimen/small_padding">
-
-                <ImageView
-                        android:id="@+id/linkIconId"
-                        android:contentDescription="link_icon_id"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_margin="@dimen/medium_padding"
-                        android:src="@drawable/ic_bookmark_outline_black_48dp"/>
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/medium_padding"
+                    android:src="@drawable/ic_bookmark_outline_black_48dp"/>
 
 
-                <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/linkIconId"
-                        android:layout_marginRight="@dimen/row_timestamp_width"
-                        android:orientation="vertical">
-                    <TextView
-                            android:id="@+id/linkTitleId"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="bookmark namedsf"
-                            android:textSize="@dimen/text_size_24"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:textColor="@color/material_violet_500"/>
-                    <TextView
-                            android:id="@+id/linkUrlId"
-                            android:layout_centerVertical="true"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:text="http://www.google.it"
-                            android:textSize="@dimen/text_size_16"
-                            android:ellipsize="end"
-                            android:lines="2"
-                            android:textColor="@color/material_stone_black"/>
-                </LinearLayout>
-                <!-- DATE -->
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/linkIconId"
+                    android:layout_marginRight="@dimen/row_timestamp_width"
+                    android:orientation="vertical">
                 <TextView
-                        android:id="@+id/linkTimestampId"
+                        android:id="@+id/linkTitleId"
                         android:layout_width="wrap_content"
-                        android:maxWidth="@dimen/row_timestamp_width"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:paddingTop="@dimen/medium_padding"
-                        android:paddingRight="@dimen/medium_padding"
-                        android:textSize="@dimen/text_size_14"
-                        android:text=" date "
-                        android:textColor="@color/material_mustard_yellow"/>
-            </RelativeLayout>
-
+                        android:text="bookmark namedsf"
+                        android:textSize="@dimen/text_size_24"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@color/material_violet_500"/>
+                <TextView
+                        android:id="@+id/linkUrlId"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="http://www.google.it"
+                        android:textSize="@dimen/text_size_16"
+                        android:ellipsize="end"
+                        android:lines="2"
+                        android:textColor="@color/material_red"/>
+            </LinearLayout>
+            <!-- DATE -->
             <TextView
-                    android:id="@+id/moreInfoClosedIconId"
-                    android:background="@color/material_grey_50"
-                    android:visibility="invisible"
-                    android:layout_width="fill_parent"
+                    android:id="@+id/linkTimestampId"
+                    android:layout_width="wrap_content"
+                    android:maxWidth="@dimen/row_timestamp_width"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/medium_padding"
-                    android:textColor="@color/material_violet_500"
-                    android:gravity="right"
-                    android:text="more"/>
+                    android:layout_alignParentRight="true"
+                    android:paddingTop="@dimen/medium_padding"
+                    android:paddingRight="@dimen/medium_padding"
+                    android:textSize="@dimen/text_size_14"
+                    android:text=" date "
+                    android:textColor="@color/material_violet_100"/>
+        </RelativeLayout>
 
-        </LinearLayout>
 
-
-        <ImageView
-                android:id="@+id/linkIconOpenedIconId"
+        <ViewFlipper
                 android:visibility="gone"
-                android:contentDescription="link_icon_id"
+                android:id="@+id/linkIconFlipperIconId"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="@dimen/fab_size_mini"
-                android:minHeight="@dimen/fab_size_mini"
-                android:maxWidth="@dimen/fab_size_normal"
-                android:maxHeight="@dimen/fab_size_normal"
-                android:layout_marginLeft="@dimen/medium_padding"
-                android:layout_marginRight="@dimen/medium_padding"
-                android:layout_marginBottom="@dimen/medium_padding"
-                android:layout_marginTop="@dimen/medium_padding_custom"
-                android:src="@drawable/ic_bookmark_outline_black_48dp"/>
+                android:layout_height="wrap_content">
 
-        <!--<include layout="@layout/bookmark_item_open" />-->
+            <ImageView
+                    android:id="@+id/linkIconOpenedIconId"
+                    android:visibility="gone"
+                    android:contentDescription="link_icon_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="@dimen/fab_size_mini"
+                    android:minHeight="@dimen/fab_size_mini"
+                    android:maxWidth="@dimen/fab_size_normal"
+                    android:maxHeight="@dimen/fab_size_normal"
+                    android:layout_marginLeft="@dimen/medium_padding"
+                    android:layout_marginRight="@dimen/medium_padding"
+                    android:layout_marginBottom="@dimen/medium_padding"
+                    android:layout_marginTop="@dimen/medium_padding_custom"
+                    android:src="@drawable/ic_bookmark_outline_black_48dp"/>
 
-    </ViewFlipper>
-</LinearLayout>
-</LinearLayout>
+            <!--<include layout="@layout/bookmark_item_open" />-->
+
+        </ViewFlipper>
+    </LinearLayout>
+    </LinearLayout>
 </FrameLayout>

@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fab="http://schemas.android.com/apk/res-auto"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
     <LinearLayout
             android:id="@+id/addBookmarkMainContainerLayoutId"
             android:layout_width="fill_parent"
-            android:orientation="vertical"
-            android:layout_height="fill_parent">
-        <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/material_mustard_yellow"
-                android:paddingBottom="@dimen/medium_padding"
-                android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:background="@color/material_violet_500"
+            android:padding="@dimen/medium_padding"
+            android:orientation="vertical">
             <!--<TextView-->
                     <!--android:id="@+id/addBookmarkDescriptionTextId"-->
                     <!--android:layout_width="fill_parent"-->
@@ -30,102 +26,57 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/medium_padding"
-                    android:layout_marginLeft="@dimen/medium_padding"
-                    android:textColor="@color/material_stone_black"
+                    android:textColor="@color/material_grey_200"
+                    android:textColorHint="@color/material_grey"
                     android:minWidth="250dip"
                     android:maxLines="6"
-                    android:hint="type bookmark url...">
+                    android:hint="name...">
                 <requestFocus/>
             </EditText>
-
-            <LinearLayout
+            <android.support.v7.widget.AppCompatEditText
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="@dimen/small_padding"
-                    android:layout_marginLeft="@dimen/medium_padding"
-                    android:layout_marginRight="@dimen/medium_padding">
-                <CheckBox
-                        android:id="@+id/httpFormatCheckboxId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/material_violet_500"
-                        android:checked="true"
-                        android:text="http"
-                        android:textColor="@color/material_violet_500"/>
-
-                <CheckBox
-                        android:id="@+id/httpsFormatCheckboxId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/material_violet_500"
-                        android:text="https"
-                        android:textColor="@color/material_violet_500"/>
-
-            </LinearLayout>
-
-            <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:textColor="@color/material_violet_100"-->
-                    <!--android:textSize="@dimen/text_size_14"-->
-                    <!--android:layout_margin="@dimen/medium_padding"-->
-                    <!--android:text="Type in a valid URL.\nFor example (http://www.google.it)"/>-->
+                    android:layout_marginBottom="@dimen/medium_padding"
+                    android:textColor="@color/material_grey_200"
+                    android:textColorHint="@color/material_grey"
+                    android:minWidth="250dip"
+                    android:maxLines="6"
+                    android:hint="url...">
+                <requestFocus/>
+            </android.support.v7.widget.AppCompatEditText>
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/height_button"
+                    android:background="@drawable/button_layout"
+                    android:text="CLIPBOARD"
+                    android:textColor="@color/material_violet_500"/>
         </LinearLayout>
 
         <LinearLayout
-                android:id="@+id/addBookmarkDescriptionTextviewId"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/large_padding"
-                    android:paddingRight="@dimen/large_padding"
-                    android:paddingTop="@dimen/large_padding"
-                    android:gravity="center"
-                    android:textColor="@color/material_violet_100"
-                    android:textSize="@dimen/text_size_14"
-                    android:text="Type in a valid URL.\nAn example:"/>
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/large_padding"
-                    android:paddingRight="@dimen/large_padding"
-                    android:paddingBottom="@dimen/large_padding"
-                    android:gravity="center"
-                    android:textColor="@color/material_violet_500"
-                    android:textSize="@dimen/text_size_18"
-                    android:text="(http://www.yourUrl.com)"/>
-
-        </LinearLayout>
-
-
-        <LinearLayout
-                android:id="@+id/errorLayoutId"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:layout_below="@id/addBookmarkMainContainerLayoutId"
                 android:gravity="center"
                 android:orientation="vertical">
-            <!--<ImageView-->
-                    <!--android:layout_width="96dip"-->
-                    <!--android:layout_height="96dip"-->
-                    <!--android:visibility="invisible"-->
-                    <!--android:src="@drawable/ic_error_white_48dp"/>-->
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible"
-                    android:padding="@dimen/large_padding"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_14"
-                    android:text="Wrong bookmark url:\nplease check it out or add http "/>
+            <ImageView
+                    android:layout_width="96dip"
+                    android:layout_height="96dip"
+                    android:src="@drawable/ic_bookmark_outline_black_48dp"/>
         </LinearLayout>
 
 
-    </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addBookmarkFabId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/large_padding"
+            android:layout_marginTop="140dip"
+            android:src="@drawable/ic_done_black_48dp"
+            app:backgroundTint="@color/material_grey_200"
+            app:fabSize="normal"/>
 
 </RelativeLayout>

@@ -6,9 +6,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -16,7 +14,6 @@ import android.widget.EditText;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 
-import java.util.List;
 
 /**
  * Created by davide on 18/03/15.
@@ -127,11 +124,36 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
         }
     }
 
+    /**
+     * change background color
+     * @param toolbarColorRes
+     * @param statusbarColorRes
+     */
+    public void setBackgroundColor(int toolbarColorRes, int statusbarColorRes) {
+        getActionBar().setBackgroundDrawable(mActivityRef.getResources().
+                getDrawable(toolbarColorRes));
+        if (Build.VERSION.SDK_INT >= 21) {
+            Window window = mActivityRef.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            int color = mActivityRef.getResources()
+                    .getColor(statusbarColorRes);
+            window.setStatusBarColor(color);
+        }
+    }
+
     public void setDisplayHomeEnabled(boolean isHomeUpEnabled) {
         getActionBar().setDisplayHomeAsUpEnabled(isHomeUpEnabled);
         getActionBar().setDisplayShowHomeEnabled(isHomeUpEnabled);
     }
 
+    public void setSearchMode(boolean searchMode) {
+        this.mSearchMode = searchMode;
+    }
+
+    public boolean isSearchMode() {
+        return mSearchMode;
+    }
 
     public boolean isEditMode() {
         return mEditItemPos != NOT_SELECTED_ITEM_POSITION;
@@ -145,13 +167,6 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
         this.mEditItemPos = editItemPos;
     }
 
-    //TODO move out
-    public void setColorFilter(Drawable drawable, int color) {
-        drawable.setColorFilter(mActivityRef.getResources()
-                        .getColor(color),
-                PorterDuff.Mode.SRC_IN);
-    }
-
     public void hideSoftKeyboard(EditText editText) {
         if(editText == null) {
             return;
@@ -162,13 +177,6 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
                 .hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
-    public void setSearchMode(boolean searchMode) {
-        this.mSearchMode = searchMode;
-    }
-
-    public boolean isSearchMode() {
-        return mSearchMode;
-    }
 
     public boolean isPanelExpanded() {
         return mPanelExpanded;

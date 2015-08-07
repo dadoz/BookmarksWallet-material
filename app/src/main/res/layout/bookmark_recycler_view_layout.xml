@@ -34,7 +34,7 @@
     <!--<include layout="@layout/sliding_up_panel_layout"/>-->
     <!--<include layout="@layout/bookmarks_not_sync_layout"/>-->
     <android.support.design.widget.FloatingActionButton
-            android:id="@+id/clipboardFloatingButtonId"
+            android:id="@+id/addBookmarkFabId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"

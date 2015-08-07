@@ -15,7 +15,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
@@ -457,24 +456,6 @@ public class RecyclerViewActionsSingleton {
                 .findAll();
 
         return filteredList;
-    }
-
-    public void openLinkOnBrowser(String linkUrl) {
-        try {
-            if(! checkURL(linkUrl)) {
-                Toast.makeText(mActivityRef, "your URL is wrong "
-                        + linkUrl, Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse(linkUrl));
-            mActivityRef.startActivity(browserIntent);
-        } catch(Exception e) {
-            Log.e(TAG, "error - " + e);
-            Toast.makeText(mActivityRef, "I cant load your URL "
-                    + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
     }
 
     private boolean checkURL(String linkUrl) {

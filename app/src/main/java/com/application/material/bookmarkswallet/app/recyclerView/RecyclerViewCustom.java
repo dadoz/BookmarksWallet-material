@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
 
 /**
  * Created by davide on 12/03/15.
@@ -39,7 +38,8 @@ public class RecyclerViewCustom extends RecyclerView {
         }
 
         boolean isEmpty = getAdapter().getItemCount() == 0;
-        boolean isSearchMode = ((BookmarkRecyclerViewAdapter) getAdapter()).isSearchMode();
+//        boolean isSearchMode = ((BookmarkRecyclerViewAdapter) getAdapter()).isSearchMode();
+        boolean isSearchMode = false;
 
 //        mSwipeRefreshLayout.setOnRefreshListener(isEmpty ? null : mSwipeRefreshListener);
         emptyView.setVisibility(isEmpty && ! isSearchMode ? VISIBLE : GONE);

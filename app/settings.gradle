@@ -1,3 +1,0 @@
-include 'androidslidingup'
-
-project(':androidslidingup').projectDir = new File(settingsDir, '../library/')
