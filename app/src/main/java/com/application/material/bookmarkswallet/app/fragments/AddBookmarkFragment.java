@@ -49,7 +49,7 @@ public class AddBookmarkFragment extends Fragment {
      */
     private void initStatusbar() {
         mActionbarSingleton.setTitle("Add new");
-        mActionbarSingleton.setBackgroundColor(R.color.material_violet_500,
+        mActionbarSingleton.setBackgroundColor(R.color.blue_grey_700,
                 R.color.material_violet_700);
     }
 

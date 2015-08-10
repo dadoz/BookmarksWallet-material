@@ -1,25 +1,21 @@
 package com.application.material.bookmarkswallet.app.singleton;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
-import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionMode;
 import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
-import com.cocosw.bottomsheet.BottomSheet;
 import io.realm.Realm;
+
+import java.util.UUID;
 
 /**
  * Created by davide on 04/08/15.
@@ -28,6 +24,7 @@ public class BookmarkActionSingleton {
     private static BookmarkActionSingleton mInstance;
     private static Activity mActivityRef;
     private static Realm mRealm;
+    private static StatusSingleton mStatusSingleton;
     private String TAG = "BookmarkActionSingleton";
 
     public BookmarkActionSingleton() {
@@ -41,6 +38,7 @@ public class BookmarkActionSingleton {
     public static BookmarkActionSingleton getInstance(Activity activity) {
         mActivityRef = activity;
         mRealm = Realm.getInstance(mActivityRef);
+        mStatusSingleton = StatusSingleton.getInstance();
         return mInstance == null ?
                 mInstance = new BookmarkActionSingleton() :
                 mInstance;
@@ -98,7 +96,10 @@ public class BookmarkActionSingleton {
      * handle click on recycler view
      */
     public void handleLongClickAction(final View v, final RecyclerView recyclerView) {
+        int pos = getBookmarkPosByView(v, recyclerView);
         mActivityRef.startActionMode(new EditBookmarkActionMode(this, v, recyclerView));
+        mStatusSingleton.setEditMode(pos);
+        recyclerView.getAdapter().notifyItemChanged(pos);
     }
 
     /**
@@ -160,4 +161,37 @@ public class BookmarkActionSingleton {
         Intent intent = getIntentForEditBookmark(bookmark);
         mActivityRef.startActivity(Intent.createChooser(intent, "share bookmark to..."));
     }
+
+    /**
+     * TODO move into realm class
+     */
+    public boolean addOrmObject(Realm realm, String title, String iconPath, byte[] blobIcon, String url) {
+        boolean result = false;
+        try {
+            if (url == null) {
+                return false;
+            }
+            realm.beginTransaction();
+            Bookmark bookmark = realm.createObject(Bookmark.class);
+            bookmark.setId(UUID.randomUUID().getLeastSignificantBits());
+            bookmark.setName(title == null ? "" : title);
+            if (iconPath != null) {
+                bookmark.setIconPath(iconPath);
+            }
+            if (blobIcon != null) {
+                bookmark.setBlobIcon(blobIcon);
+            }
+            bookmark.setUrl(url);
+            bookmark.setTimestamp(Bookmark.Utils.getTodayTimestamp());
+            bookmark.setLastUpdate(Bookmark.Utils.getTodayTimestamp());
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = false;
+        } finally {
+            realm.commitTransaction();
+        }
+        return result;
+    }
+
 }

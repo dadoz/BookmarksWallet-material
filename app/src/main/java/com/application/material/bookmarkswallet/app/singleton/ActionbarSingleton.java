@@ -103,9 +103,7 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
         try {
             setDisplayHomeEnabled(isHomeUpEnabled);
             getActionBar().setBackgroundDrawable(mActivityRef.getResources().
-                    getDrawable(isEditMode() ?
-                            R.color.material_mustard_yellow_300 :
-                            R.color.material_mustard_yellow));
+                    getDrawable(R.color.yellow_400));
             setStatusBarColor();
         } catch (Exception e) {
             e.printStackTrace();

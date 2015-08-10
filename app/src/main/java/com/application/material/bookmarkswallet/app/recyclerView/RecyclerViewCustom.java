@@ -1,5 +1,6 @@
 package com.application.material.bookmarkswallet.app.recyclerView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -7,12 +8,26 @@ import android.view.View;
 import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
 
+import java.util.zip.Inflater;
+
 /**
  * Created by davide on 12/03/15.
  */
 public class RecyclerViewCustom extends RecyclerView {
     private View emptyView = null;
     private View mEmptySearchResultView;
+
+    public RecyclerViewCustom(Context context) {
+        super(context);
+    }
+
+    public RecyclerViewCustom(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public RecyclerViewCustom(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
     final AdapterDataObserver observer = new AdapterDataObserver() {
         @Override
@@ -47,19 +62,6 @@ public class RecyclerViewCustom extends RecyclerView {
         setVisibility(isEmpty ? GONE : VISIBLE);
     }
 
-    public RecyclerViewCustom(Context context) {
-        super(context);
-    }
-
-    public RecyclerViewCustom(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public RecyclerViewCustom(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
-
     @Override
     public void setAdapter(Adapter adapter) {
         if(getAdapter() != null) {
@@ -69,7 +71,7 @@ public class RecyclerViewCustom extends RecyclerView {
         if(adapter != null) {
             adapter.registerAdapterDataObserver(observer);
         }
-        showHideEmptyView();
+//        showHideEmptyView();
     }
 
     public void setEmptyView(View view) {
@@ -86,7 +88,8 @@ public class RecyclerViewCustom extends RecyclerView {
                 setText(emptySearchResultQuery);
     }
 
-    public void init() {
+    public void initRef() {
+//        emptyView = context.getLayoutInflater().inflate(R.layout.empty_link_list_layout, null, false);
         //set empty view
 //        emptyLinkListView.findViewById(R.id.importLocalBookmarksButtonId).setOnClickListener(this);
 //        mRecyclerView.setEmptyView(emptyLinkListView); //to be added on recyvlerView class

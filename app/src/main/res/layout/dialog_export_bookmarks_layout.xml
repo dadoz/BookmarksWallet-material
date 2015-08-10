@@ -23,7 +23,7 @@
                     android:layout_height="80dp"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    wheel:matProg_barColor="@color/material_violet_500"
+                    wheel:matProg_barColor="@color/blue_grey_700"
                     wheel:matProg_progressIndeterminate="false" />
             <ImageView
                     android:id="@+id/exportSuccessIconId"

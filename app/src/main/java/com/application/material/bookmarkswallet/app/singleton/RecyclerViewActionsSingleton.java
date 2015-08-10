@@ -58,9 +58,6 @@ public class RecyclerViewActionsSingleton {
     private View mEditTitleViewRef;
     private View mEditUrlViewRef;
     private static boolean mSearchOnUrlEnabled;
-//    private View mAdsView;
-    private int mAdsOffset;
-    private BookmarksProviderAsyncTask mBookmarksProviderAsyncTask;
 
     private static SyncStatusEnum mSyncStatus;
 
@@ -81,6 +78,7 @@ public class RecyclerViewActionsSingleton {
 
     public static RecyclerViewActionsSingleton getInstance(Activity activityRef) {
         mActivityRef = activityRef;
+        mRealm = Realm.getInstance(mActivityRef);
         return mInstance == null ?
                 mInstance = new RecyclerViewActionsSingleton() :
                 mInstance;
@@ -110,12 +108,12 @@ public class RecyclerViewActionsSingleton {
                 mRecyclerView.getAdapter();
     }
 
-    public void cancelAsyncTask() {
-        if (mBookmarksProviderAsyncTask != null &&
-                mBookmarksProviderAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
-            mBookmarksProviderAsyncTask.cancel(true);
-        }
-    }
+//    public void cancelAsyncTask() {
+//        if (mBookmarksProviderAsyncTask != null &&
+//                mBookmarksProviderAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
+//            mBookmarksProviderAsyncTask.cancel(true);
+//        }
+//    }
     /**
      * TODO refactor name
      */
@@ -294,7 +292,7 @@ public class RecyclerViewActionsSingleton {
     public void addBookmark(String url, byte[] iconBlob, String title) {
         //UPDATE DATASET REF
         mRecyclerView.scrollToPosition(0);
-        addOrmObject(mRealm, title, null, iconBlob, url);
+//        addOrmObject(mRealm, title, null, iconBlob, url);
         setAdapter();
         mRecyclerView.getAdapter().notifyItemInserted(0);
         updateAdapterRef();
@@ -312,96 +310,96 @@ public class RecyclerViewActionsSingleton {
         return realm.where(Bookmark.class).findAll();
     }
 
-    public void addBookmarksByProvider(final BrowserEnum[] browserList) {
-        mSwipeRefreshLayout.setRefreshing(true);
-        mBookmarksProviderAsyncTask = new BookmarksProviderAsyncTask(browserList);
-        mBookmarksProviderAsyncTask.execute();
-    }
+//    public void addBookmarksByProvider(final BrowserEnum[] browserList) {
+//        mSwipeRefreshLayout.setRefreshing(true);
+//        mBookmarksProviderAsyncTask = new BookmarksProviderAsyncTask(browserList);
+//        mBookmarksProviderAsyncTask.execute();
+//    }
+//
+//    private void addBookmarksByProviderJob(Uri bookmarksUri) throws Exception {
+//        ContentResolver cr = mActivityRef.getContentResolver();
+//        Realm realm = Realm.getInstance(mActivityRef);
+//        String[] projection = {
+//                Browser.BookmarkColumns.CREATED,
+//                Browser.BookmarkColumns.FAVICON,
+//                Browser.BookmarkColumns.TITLE,
+//                Browser.BookmarkColumns.URL,
+//                Browser.BookmarkColumns.BOOKMARK
+//        };
+//
+//        Cursor cursor = cr.query(bookmarksUri, projection, null, null, null);
+//        int urlId = cursor.getColumnIndex(Browser.BookmarkColumns.URL);
+//        int titleId = cursor.getColumnIndex(Browser.BookmarkColumns.TITLE);
+//        int faviconId = cursor.getColumnIndex(Browser.BookmarkColumns.FAVICON);
+//        int bookmarkId = cursor.getColumnIndex(Browser.BookmarkColumns.BOOKMARK);
+//        int cnt = 0;
+//
+//        if (cursor.moveToFirst()) {
+//            do {
+//                if (mBookmarksProviderAsyncTask.isCancelled()) {
+//                    setSyncStatus(SyncStatusEnum.CANCELED);
+//                    return;
+//                }
+//                mBookmarksProviderAsyncTask.doProgress(cnt);
+//                Log.e(TAG, "hey " + cursor.getString(urlId) + " # of imported: " + cnt);
+//                cnt ++;
+//
+//                //add item on realm
+//                if (cursor.getInt(bookmarkId) == 1) {
+//                    byte[] blobIcon = cursor.getBlob(faviconId);
+//                    addOrmObject(realm, cursor.getString(titleId), null, blobIcon, cursor.getString(urlId));
+//                }
+//            } while (cursor.moveToNext());
+//
+//        }
+//    }
+//
+//    private Uri getBookmarksUriByBrowser(BrowserEnum browser) {
+//        if (browser.ordinal() == BrowserEnum.DEFAULT.ordinal()) {
+//            return Browser.BOOKMARKS_URI;
+//        } else if (browser.ordinal() == BrowserEnum.CHROME.ordinal()) {
+//            String chromePackage = "com.android.chrome";
+//            Uri chromeUri = Uri.parse("content://com.android.chrome.browser/bookmarks");
+//            mActivityRef.grantUriPermission(chromePackage, chromeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//            return chromeUri;
+//        } else if (browser.ordinal() == BrowserEnum.FIREFOX.ordinal()) {
+//            Uri firefoxUri = Uri.parse("content://org.mozilla.firefox.db.browser/bookmarks");
+//            String firefoxPackage = "org.mozilla.firefox";
+//            mActivityRef.grantUriPermission(firefoxPackage, firefoxUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//            return firefoxUri;
+//        }
+//
+//        return Browser.BOOKMARKS_URI;
+//    }
 
-    private void addBookmarksByProviderJob(Uri bookmarksUri) throws Exception {
-        ContentResolver cr = mActivityRef.getContentResolver();
-        Realm realm = Realm.getInstance(mActivityRef);
-        String[] projection = {
-                Browser.BookmarkColumns.CREATED,
-                Browser.BookmarkColumns.FAVICON,
-                Browser.BookmarkColumns.TITLE,
-                Browser.BookmarkColumns.URL,
-                Browser.BookmarkColumns.BOOKMARK
-        };
-
-        Cursor cursor = cr.query(bookmarksUri, projection, null, null, null);
-        int urlId = cursor.getColumnIndex(Browser.BookmarkColumns.URL);
-        int titleId = cursor.getColumnIndex(Browser.BookmarkColumns.TITLE);
-        int faviconId = cursor.getColumnIndex(Browser.BookmarkColumns.FAVICON);
-        int bookmarkId = cursor.getColumnIndex(Browser.BookmarkColumns.BOOKMARK);
-        int cnt = 0;
-
-        if (cursor.moveToFirst()) {
-            do {
-                if (mBookmarksProviderAsyncTask.isCancelled()) {
-                    setSyncStatus(SyncStatusEnum.CANCELED);
-                    return;
-                }
-                mBookmarksProviderAsyncTask.doProgress(cnt);
-                Log.e(TAG, "hey " + cursor.getString(urlId) + " # of imported: " + cnt);
-                cnt ++;
-
-                //add item on realm
-                if (cursor.getInt(bookmarkId) == 1) {
-                    byte[] blobIcon = cursor.getBlob(faviconId);
-                    addOrmObject(realm, cursor.getString(titleId), null, blobIcon, cursor.getString(urlId));
-                }
-            } while (cursor.moveToNext());
-
-        }
-    }
-
-    private Uri getBookmarksUriByBrowser(BrowserEnum browser) {
-        if (browser.ordinal() == BrowserEnum.DEFAULT.ordinal()) {
-            return Browser.BOOKMARKS_URI;
-        } else if (browser.ordinal() == BrowserEnum.CHROME.ordinal()) {
-            String chromePackage = "com.android.chrome";
-            Uri chromeUri = Uri.parse("content://com.android.chrome.browser/bookmarks");
-            mActivityRef.grantUriPermission(chromePackage, chromeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            return chromeUri;
-        } else if (browser.ordinal() == BrowserEnum.FIREFOX.ordinal()) {
-            Uri firefoxUri = Uri.parse("content://org.mozilla.firefox.db.browser/bookmarks");
-            String firefoxPackage = "org.mozilla.firefox";
-            mActivityRef.grantUriPermission(firefoxPackage, firefoxUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            return firefoxUri;
-        }
-
-        return Browser.BOOKMARKS_URI;
-    }
-
-    public boolean addOrmObject(Realm realm, String title, String iconPath, byte[] blobIcon, String url) {
-        boolean result = false;
-        try {
-            if(url == null) {
-                return false;
-            }
-            realm.beginTransaction();
-            Bookmark bookmark = realm.createObject(Bookmark.class);
-            bookmark.setId(UUID.randomUUID().getLeastSignificantBits());
-            bookmark.setName(title == null ? "" : title);
-            if(iconPath != null) {
-                bookmark.setIconPath(iconPath);
-            }
-            if(blobIcon != null) {
-                bookmark.setBlobIcon(blobIcon);
-            }
-            bookmark.setUrl(url);
-            bookmark.setTimestamp(Bookmark.Utils.getTodayTimestamp());
-            bookmark.setLastUpdate(Bookmark.Utils.getTodayTimestamp());
-            result = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            result = false;
-        } finally {
-            realm.commitTransaction();
-        }
-        return result;
-    }
+//    public boolean addOrmObject(Realm realm, String title, String iconPath, byte[] blobIcon, String url) {
+//        boolean result = false;
+//        try {
+//            if(url == null) {
+//                return false;
+//            }
+//            realm.beginTransaction();
+//            Bookmark bookmark = realm.createObject(Bookmark.class);
+//            bookmark.setId(UUID.randomUUID().getLeastSignificantBits());
+//            bookmark.setName(title == null ? "" : title);
+//            if(iconPath != null) {
+//                bookmark.setIconPath(iconPath);
+//            }
+//            if(blobIcon != null) {
+//                bookmark.setBlobIcon(blobIcon);
+//            }
+//            bookmark.setUrl(url);
+//            bookmark.setTimestamp(Bookmark.Utils.getTodayTimestamp());
+//            bookmark.setLastUpdate(Bookmark.Utils.getTodayTimestamp());
+//            result = true;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            result = false;
+//        } finally {
+//            realm.commitTransaction();
+//        }
+//        return result;
+//    }
 
     public void deleteBookmark(int position) {
         BookmarkRecyclerViewAdapter adapter = updateAdapterRef();
@@ -550,7 +548,7 @@ public class RecyclerViewActionsSingleton {
 
     public void setAdsView(View view, int panelHeight) {
 //        mAdsView = view;
-        mAdsOffset = panelHeight;
+//        mAdsOffset = panelHeight;
     }
 
     public SyncStatusEnum getSyncStatus() {
@@ -567,61 +565,61 @@ public class RecyclerViewActionsSingleton {
 
     public void setBookmarksNotSyncView(boolean visible) {
         setSyncStatus(visible ? SyncStatusEnum.CANCELED : SyncStatusEnum.DONE);
-        mNotSyncLayout.setOnClickListener(visible ? (View.OnClickListener) mFragmentRef : null);
-        mNotSyncLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+//        mNotSyncLayout.setOnClickListener(visible ? (View.OnClickListener) mFragmentRef : null);
+//        mNotSyncLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    public class BookmarksProviderAsyncTask extends AsyncTask<URL, Integer, Boolean> {
-
-        private final Integer N_OCCURENCES = 30;
-        private final BrowserEnum[] browserList;
-        private final Integer[] params = new Integer[1];
-
-        public BookmarksProviderAsyncTask(BrowserEnum[] list) {
-            browserList = list;
-        }
-
-        @Override
-        protected Boolean doInBackground(URL... params) {
-            setSyncStatus(SyncStatusEnum.RUNNING);
-            try {
-                Uri bookmarksUri = getBookmarksUriByBrowser(browserList[0]);
-                addBookmarksByProviderJob(bookmarksUri);
-            } catch (Exception e) {
-                e.printStackTrace();
-                try {
-                    Uri bookmarksUri = getBookmarksUriByBrowser(browserList[1]);
-                    addBookmarksByProviderJob(bookmarksUri);
-                    publishProgress();
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-
-            }
-            return null;
-        }
-
-        public void doProgress(int count) {
-            params[0] = count;
-            publishProgress(params);
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            if (values.length != 0 &&
-                    values[0] % N_OCCURENCES == 0) {
-                updateAdapterRef();
-                setAdapter();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            setSyncStatus(SyncStatusEnum.DONE);
-            mSwipeRefreshLayout.setRefreshing(false);
-            updateAdapterRef();
-            setAdapter();
-        }
-    }
+//    public class BookmarksProviderAsyncTask extends AsyncTask<URL, Integer, Boolean> {
+//
+//        private final Integer N_OCCURENCES = 30;
+//        private final BrowserEnum[] browserList;
+//        private final Integer[] params = new Integer[1];
+//
+//        public BookmarksProviderAsyncTask(BrowserEnum[] list) {
+//            browserList = list;
+//        }
+//
+//        @Override
+//        protected Boolean doInBackground(URL... params) {
+//            setSyncStatus(SyncStatusEnum.RUNNING);
+//            try {
+//                Uri bookmarksUri = getBookmarksUriByBrowser(browserList[0]);
+//                addBookmarksByProviderJob(bookmarksUri);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                try {
+//                    Uri bookmarksUri = getBookmarksUriByBrowser(browserList[1]);
+//                    addBookmarksByProviderJob(bookmarksUri);
+//                    publishProgress();
+//                } catch (Exception e1) {
+//                    e1.printStackTrace();
+//                }
+//
+//            }
+//            return null;
+//        }
+//
+//        public void doProgress(int count) {
+//            params[0] = count;
+//            publishProgress(params);
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(Integer... values) {
+//            if (values.length != 0 &&
+//                    values[0] % N_OCCURENCES == 0) {
+//                updateAdapterRef();
+//                setAdapter();
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Boolean result) {
+//            setSyncStatus(SyncStatusEnum.DONE);
+//            mSwipeRefreshLayout.setRefreshing(false);
+//            updateAdapterRef();
+//            setAdapter();
+//        }
+//    }
 
 }

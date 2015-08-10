@@ -17,7 +17,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/material_violet_500"
+                android:textColor="@color/blue_grey_700"
                 android:gravity="center"
                 android:padding="@dimen/medium_padding"
                 android:text="Swipe left or right to remove\na bookmarks from your list."/>

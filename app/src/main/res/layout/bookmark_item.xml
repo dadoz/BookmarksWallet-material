@@ -49,7 +49,7 @@
                         android:textSize="@dimen/text_size_24"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textColor="@color/material_violet_500"/>
+                        android:textColor="@color/blue_grey_700"/>
                 <TextView
                         android:id="@+id/linkUrlId"
                         android:layout_centerVertical="true"
@@ -60,7 +60,7 @@
                         android:textSize="@dimen/text_size_16"
                         android:ellipsize="end"
                         android:lines="2"
-                        android:textColor="@color/material_red"/>
+                        android:textColor="@color/material_yellow_900"/>
             </LinearLayout>
             <!-- DATE -->
             <TextView
@@ -73,7 +73,7 @@
                     android:paddingRight="@dimen/medium_padding"
                     android:textSize="@dimen/text_size_14"
                     android:text=" date "
-                    android:textColor="@color/material_violet_100"/>
+                    android:textColor="@color/blue_grey_300"/>
         </RelativeLayout>
 
 

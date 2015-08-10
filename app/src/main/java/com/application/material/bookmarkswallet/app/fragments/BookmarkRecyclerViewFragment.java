@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -20,9 +21,9 @@ import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecycl
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.recyclerView.RecyclerViewCustom;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
+import com.application.material.bookmarkswallet.app.singleton.BookmarkProviderSingleton;
 import com.application.material.bookmarkswallet.app.singleton.search.SearchHandlerSingleton;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -33,14 +34,16 @@ import io.realm.RealmResults;
 public class BookmarkRecyclerViewFragment extends Fragment
         implements View.OnClickListener, View.OnLongClickListener,
         SwipeRefreshLayout.OnRefreshListener,
-        MenuItemCompat.OnActionExpandListener {
+        MenuItemCompat.OnActionExpandListener, OnTaskCompleted {
     public static final String FRAG_TAG = "LinksListFragment";
     @Bind(R.id.addBookmarkFabId)
     FloatingActionButton mAddBookmarkFab;
     @Bind(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @Bind(R.id.linksListId)
-    RecyclerViewCustom mRecyclerView;
+    RecyclerView mRecyclerView;
+    @Bind(R.id.emptyLinkListViewId)
+    View mEmptyLinkListView;
 
     private MainActivity mMainActivityRef;
     private Realm mRealm;
@@ -48,6 +51,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
     private ActionbarSingleton mActionbarSingleton;
     private BookmarkActionSingleton mBookmarkActionSingleton;
     private View mView;
+    private BookmarkProviderSingleton mBookmarkProviderSingleton;
 
     @Override
     public void onAttach(Activity activity) {
@@ -169,6 +173,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
     private void initRecyclerView() {
         BookmarkRecyclerViewAdapter recyclerViewAdapter =
                 new BookmarkRecyclerViewAdapter(mMainActivityRef, this);
+        recyclerViewAdapter.registerAdapterDataObserver(new EmptyDataObserver());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mMainActivityRef));
         mRecyclerView.setAdapter(recyclerViewAdapter);
         setRealmAdapter(recyclerViewAdapter);
@@ -288,5 +293,42 @@ public class BookmarkRecyclerViewFragment extends Fragment
         mSearchHandlerSingleton = SearchHandlerSingleton.getInstance(mMainActivityRef);
         mActionbarSingleton = ActionbarSingleton.getInstance(mMainActivityRef);
         mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(mMainActivityRef);
+        mBookmarkProviderSingleton = BookmarkProviderSingleton.getInstance(mMainActivityRef, this);
+    }
+
+    @Override
+    public void onTaskCompleted(boolean isRefreshEnabled) {
+        try {
+            mRecyclerView.getAdapter().notifyDataSetChanged();
+            if (! isRefreshEnabled) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * set empty view on empty data TODO move
+     */
+    private class EmptyDataObserver extends RecyclerView.AdapterDataObserver {
+        @Override
+        public void onChanged() {
+            boolean isEmptyData = mRecyclerView.getAdapter().getItemCount() == 0;
+            mEmptyLinkListView.setVisibility(isEmptyData ? View.VISIBLE : View.GONE);
+            mEmptyLinkListView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSwipeRefreshLayout.setRefreshing(true);
+                    mBookmarkProviderSingleton.addByDefaultBrowser();
+                }
+            });
+        }
+
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+        }
+
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+        }
     }
 }

@@ -19,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="@dimen/medium_padding"
-                android:textColor="@color/material_violet_500"
+                android:textColor="@color/blue_grey_700"
                 android:text="Now you're ready to start.\nImport your bookmarks from Chrome."/>
 
     </LinearLayout>
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_layout"
-            android:textColor="@color/material_violet_500"
+            android:textColor="@color/blue_grey_700"
             android:text="START"/>
 
     <!--<ImageView-->

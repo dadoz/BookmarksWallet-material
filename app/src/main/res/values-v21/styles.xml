@@ -5,21 +5,21 @@
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="android:windowActionBar">false</item>
-        <item name="android:textColorPrimary">@color/material_grey_200</item>
-        <item name="colorPrimaryDark">@color/material_red_700</item>
+        <item name="android:textColorPrimary">@color/blue_grey_800</item>
+        <item name="colorPrimaryDark">@color/yellow_600</item>
         <item name="colorPrimary">@color/material_red</item>
         <item name="windowActionModeOverlay">true</item>
 
         <item name="android:windowEnterTransition">@android:transition/slide_top</item>
         <item name="android:windowReturnTransition">@android:transition/slide_bottom</item>
-        <item name="colorControlActivated">@color/material_violet_500</item>
+        <item name="colorControlActivated">@color/blue_grey_500</item>
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
 
         <item name="actionModeStyle">@style/ActionMode</item>
     </style>
 
     <style name="ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-        <item name="background">@color/material_violet_500</item>
+        <item name="background">@color/blue_grey_500</item>
     </style>
 
     <style name="colorControlLightTheme">
@@ -28,9 +28,9 @@
 
     <style name="CustomLollipopDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- Used for the buttons -->
-        <item name="android:colorAccent">@color/material_violet_500</item>
+        <item name="android:colorAccent">@color/blue_grey_800</item>
         <!-- Used for the title and text -->
-        <item name="android:textColorPrimary">@color/material_violet_500</item>
+        <item name="android:textColorPrimary">@color/blue_grey_800</item>
             <!-- Used for the background -->
         <!--<item name="android:background">#4CAF50</item>-->
         <item name="android:buttonBarButtonStyle">@style/CustomButtonBarButtonStyle</item>

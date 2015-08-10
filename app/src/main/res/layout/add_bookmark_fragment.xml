@@ -9,7 +9,7 @@
             android:id="@+id/addBookmarkMainContainerLayoutId"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/material_violet_500"
+            android:background="@color/blue_grey_700"
             android:padding="@dimen/medium_padding"
             android:orientation="vertical">
             <!--<TextView-->
@@ -51,7 +51,7 @@
                     android:layout_height="@dimen/height_button"
                     android:background="@drawable/button_layout"
                     android:text="CLIPBOARD"
-                    android:textColor="@color/material_violet_500"/>
+                    android:textColor="@color/blue_grey_700"/>
         </LinearLayout>
 
         <LinearLayout

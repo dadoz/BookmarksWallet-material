@@ -4,7 +4,7 @@
         android:id="@+id/slidingPanelLayoutId"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/sliding_panel_height"
-        android:background="@color/material_violet_500"
+        android:background="@color/blue_grey_700"
         android:paddingBottom="@dimen/medium_padding"
         android:orientation="vertical">
 

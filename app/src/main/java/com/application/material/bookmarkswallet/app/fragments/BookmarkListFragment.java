@@ -133,7 +133,7 @@ public class BookmarkListFragment extends Fragment
     private void triggerImport() {
         if (mMainActivityRef.getIntent()
                 .getExtras().getBoolean(Utils.IMPORT_TRIGGER)) {
-            rvActionsSingleton.addBookmarksByProvider(mBrowserList);
+//            rvActionsSingleton.addBookmarksByProvider(mBrowserList);
             mMainActivityRef.getIntent().getExtras().remove(Utils.IMPORT_TRIGGER);
         }
     }
@@ -146,7 +146,7 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onStop() {
         super.onStop();
-        rvActionsSingleton.cancelAsyncTask();
+//        rvActionsSingleton.cancelAsyncTask();
     }
 
     @Override
@@ -225,7 +225,7 @@ public class BookmarkListFragment extends Fragment
                 R.menu.menu_main, menu);
 
         Drawable icon = menu.findItem(! isItemSelected ? R.id.action_search : R.id.action_edit).getIcon();
-        icon.setColorFilter(mMainActivityRef.getResources().getColor(R.color.material_violet_500),
+        icon.setColorFilter(mMainActivityRef.getResources().getColor(R.color.blue_grey_700),
                 PorterDuff.Mode.SRC_IN);
         menu.findItem(! isItemSelected ? R.id.action_search : R.id.action_edit).setIcon(icon);
         //LAYOUT MANAGER
@@ -362,12 +362,12 @@ public class BookmarkListFragment extends Fragment
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.importLocalBookmarksButtonId:
-                rvActionsSingleton.addBookmarksByProvider(mBrowserList);
+//                rvActionsSingleton.addBookmarksByProvider(mBrowserList);
                 break;
             case R.id.notSyncLayoutId:
                 mSwipeRefreshLayout.setRefreshing(true);
                 rvActionsSingleton.deleteBookmarksList();
-                rvActionsSingleton.addBookmarksByProvider(mBrowserList);
+//                rvActionsSingleton.addBookmarksByProvider(mBrowserList);
                 break;
             case R.id.addBookmarkFabId:
                 if(! mClipboardSingleton.hasClipboardText()) {
