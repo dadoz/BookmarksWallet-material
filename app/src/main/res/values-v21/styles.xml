@@ -7,7 +7,7 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:textColorPrimary">@color/blue_grey_800</item>
         <item name="colorPrimaryDark">@color/yellow_600</item>
-        <item name="colorPrimary">@color/material_red</item>
+        <item name="colorPrimary">@color/yellow_400</item>
         <item name="windowActionModeOverlay">true</item>
 
         <item name="android:windowEnterTransition">@android:transition/slide_top</item>
@@ -19,7 +19,7 @@
     </style>
 
     <style name="ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-        <item name="background">@color/blue_grey_500</item>
+        <item name="background">@color/yellow_200</item>
     </style>
 
     <style name="colorControlLightTheme">

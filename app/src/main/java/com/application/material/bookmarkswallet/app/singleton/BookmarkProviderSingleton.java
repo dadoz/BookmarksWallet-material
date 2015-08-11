@@ -38,7 +38,6 @@ public class BookmarkProviderSingleton {
                 mInstance;
     }
 
-
     /**
      * add by chrome
      */
@@ -64,7 +63,6 @@ public class BookmarkProviderSingleton {
         mAsyncTask.execute();
     }
 
-
     /**
      * cancel current async task
      */
@@ -74,7 +72,6 @@ public class BookmarkProviderSingleton {
             mAsyncTask.cancel(true);
         }
     }
-
 
     /**
      * TODO refactor it :)

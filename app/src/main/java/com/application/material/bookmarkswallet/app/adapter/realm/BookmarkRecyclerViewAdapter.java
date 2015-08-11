@@ -32,7 +32,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         mActivityRef = activity;
         mListener = listener;
         mStatusSingleton = StatusSingleton.getInstance();
-        mDarkGrey = mActivityRef.getResources().getColor(R.color.yellow_100);
+        mDarkGrey = mActivityRef.getResources().getColor(R.color.grey_300);
         mLightGrey = Color.TRANSPARENT;
     }
 
@@ -47,7 +47,6 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         final ViewHolder holder = (ViewHolder) rvh;
         final Bookmark bookmark = (Bookmark) getItem(position);
 
-
         holder.mLabelView.setText(getBookmarkNameWrapper(bookmark.getName()));
         holder.mUrlView.setText(bookmark.getUrl());
         holder.mTimestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark
@@ -55,15 +54,28 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 
         setItemListeners(holder);
 
-        //ICON why this
-        setIcon(holder.mIconView, null, false);
-//        setIcon(holder.mIconOpenedView, bookmark, false);
-        setEditItem(holder.mLayoutView);
+        boolean isEditMode = getEditModeStatus(position);
+        setIcon(holder.mIconView, null, isEditMode);
+        setEditItem(holder.mLayoutView, isEditMode);
     }
 
-    private void setEditItem(View v) {
-        v.setBackgroundColor(mStatusSingleton.isEditMode() ? mDarkGrey
-                : mLightGrey);
+    /**
+     *
+     * @param pos
+     * @return
+     */
+    private boolean getEditModeStatus(int pos) {
+        return mStatusSingleton.isEditMode() &&
+                mStatusSingleton.getEditItemPos() == pos;
+    }
+
+    /**
+     *
+     * @param v
+     * @param isEdit
+     */
+    private void setEditItem(View v, boolean isEdit) {
+        v.setBackgroundColor(isEdit ? mDarkGrey : mLightGrey);
     }
 
     @Override
