@@ -13,6 +13,7 @@ import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActio
 import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.Realm;
 
 import java.util.UUID;
@@ -81,7 +82,7 @@ public class BookmarkActionSingleton {
      */
     public void addBookmarkAction(Fragment fragment) {
         Intent intent = new Intent(mActivityRef, AddBookmarkActivity.class);
-        fragment.startActivityForResult(intent, 0);
+        fragment.startActivityForResult(intent, Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE);
     }
 
     /**

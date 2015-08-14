@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 public interface OnInitActionBarInterface {
     public void initActionBar();
     public boolean setTitle(String title);
+    public boolean setTitle(String title, int color);
     public void udpateActionbar(boolean isHomeUpEnabled);
     public void udpateActionbar(boolean isHomeUpEnabled,
                                    int actionbarColor, Drawable toolbarColor);

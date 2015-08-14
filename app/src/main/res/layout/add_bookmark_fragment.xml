@@ -19,34 +19,37 @@
                     <!--android:padding="@dimen/large_padding"-->
                     <!--android:textColor="@color/material_stone_black"-->
                     <!--android:text="Type in new bookmark url in the field below"/>-->
-            <EditText
-                    android:id="@+id/urlEditText"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/medium_padding"
-                    android:textColor="@color/material_grey_200"
-                    android:textColorHint="@color/material_grey"
-                    android:minWidth="250dip"
-                    android:maxLines="6"
-                    android:hint="name...">
-                <requestFocus/>
-            </EditText>
             <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/titleEditTextId"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/medium_padding"
-                    android:textColor="@color/material_grey_200"
-                    android:textColorHint="@color/material_grey"
+                    android:textColor="@color/grey_100"
+                    android:textColorHint="@color/grey_400"
                     android:minWidth="250dip"
-                    android:maxLines="6"
+                    android:maxLines="1"
+                    android:hint="title...">
+                <requestFocus/>
+            </android.support.v7.widget.AppCompatEditText>
+            <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/urlEditTextId"
+
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/medium_padding"
+                    android:textColor="@color/grey_100"
+                    android:textColorHint="@color/grey_400"
+                    android:minWidth="250dip"
+                    android:maxLines="3"
                     android:hint="url...">
                 <requestFocus/>
             </android.support.v7.widget.AppCompatEditText>
             <Button
+                    android:id="@+id/pasteClipboardButtonId"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/height_button"
                     android:background="@drawable/button_layout"
@@ -55,8 +58,11 @@
         </LinearLayout>
 
         <LinearLayout
+                android:id="@+id/iconImageViewId"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:clickable="true"
+                android:background="?@android:attr/selectableItemBackground"
                 android:layout_below="@id/addBookmarkMainContainerLayoutId"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -71,12 +77,12 @@
             android:id="@+id/addBookmarkFabId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/large_padding"
-            android:layout_marginTop="140dip"
+            android:layout_below="@id/addBookmarkMainContainerLayoutId"
+            android:layout_marginTop="-30dp"
             android:src="@drawable/ic_done_black_48dp"
-            app:backgroundTint="@color/material_grey_200"
+            app:backgroundTint="@color/blue_grey_900"
             app:fabSize="normal"/>
 
 </RelativeLayout>

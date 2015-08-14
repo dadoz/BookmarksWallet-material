@@ -13,7 +13,6 @@ import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.services.BookmarksProviderService;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.BackPressedSingleton;
-import com.application.material.bookmarkswallet.app.singleton.BookmarkProviderSingleton;
 import com.application.material.bookmarkswallet.app.singleton.SharedPrefSingleton;
 import com.flurry.android.FlurryAgent;
 import hotchemi.android.rate.AppRate;

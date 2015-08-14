@@ -26,6 +26,7 @@ import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSing
 import com.application.material.bookmarkswallet.app.singleton.BookmarkProviderSingleton;
 import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
 import com.application.material.bookmarkswallet.app.singleton.search.SearchHandlerSingleton;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -156,16 +157,38 @@ public class BookmarkRecyclerViewFragment extends Fragment
         return true;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE) {
+            notifyDataChanged();
+        }
+    }
     /**
      * init view on recyclerView - setup adapter and other stuff
      * connected to main fragment app
      */
     private void onInitView() {
         initPullToRefresh();
-        initTitle();
+        initActionbar();
         initRecyclerView();
         mAddBookmarkFab.setOnClickListener(this);
         setNotSyncBookmarks();
+    }
+
+    /**
+     *
+     */
+    private void initActionbar() {
+       initTitle();
+        mActionbarSingleton.udpateActionbar(false);
+    }
+
+    /**
+     * init title - set
+     */
+    private void initTitle() {
+        mActionbarSingleton.setTitle(null);
+//        mActionbarSingleton.setDisplayHomeEnabled(false);
     }
 
     /**
@@ -204,14 +227,6 @@ public class BookmarkRecyclerViewFragment extends Fragment
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * init title - set
-     */
-    private void initTitle() {
-        mActionbarSingleton.setTitle(null);
-//        mActionbarSingleton.setDisplayHomeEnabled(false);
     }
 
     /**
@@ -287,6 +302,12 @@ public class BookmarkRecyclerViewFragment extends Fragment
         return shareIntent;
     }
 
+    /**
+     * notify data changed
+     */
+    public void notifyDataChanged() {
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+    }
     /**
      * init singleton instances
      */
