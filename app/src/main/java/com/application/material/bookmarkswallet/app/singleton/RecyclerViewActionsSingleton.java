@@ -35,7 +35,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.UUID;
 
-import static com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton.NOT_SELECTED_ITEM_POSITION;
 
 /**
  * Created by davide on 31/03/15.
@@ -120,9 +119,9 @@ public class RecyclerViewActionsSingleton {
     public void undoEditBookmark() {
         updateAdapterRef();
         mAdapter.notifyDataSetChanged();
-        mActionbarSingleton.setEditItemPos(NOT_SELECTED_ITEM_POSITION);
+//        mActionbarSingleton.setEditItemPos(NOT_SELECTED_ITEM_POSITION);
         mActionbarSingleton.setTitle(null);
-        mActionbarSingleton.changeActionbar(false);
+//        mActionbarSingleton.changeActionbar(false);
 //        ScrollManager.runTranslateAnimation(mAdsView, 0, new DecelerateInterpolator(3));
         mActivityRef.invalidateOptionsMenu();
         showClipboardLinkButtonWrapper();
@@ -135,9 +134,9 @@ public class RecyclerViewActionsSingleton {
      */
     public void selectBookmarkEditMenu(int position) {
         updateAdapterRef();
-        mActionbarSingleton.setEditItemPos(position);
+//        mActionbarSingleton.setEditItemPos(position);
         mActionbarSingleton.setTitle("1");
-        mActionbarSingleton.changeActionbar(true);
+//        mActionbarSingleton.changeActionbar(true);
 //        int translateY = ScrollManager.getTranslateY(mAdsView, ScrollManager.Direction.DOWN, mAdsOffset);
 //        ScrollManager.runTranslateAnimation(mAdsView, translateY, new DecelerateInterpolator(3));
 
@@ -198,8 +197,8 @@ public class RecyclerViewActionsSingleton {
 
         mRealm.commitTransaction();
 
-        mRecyclerView.getAdapter()
-                .notifyItemChanged(mActionbarSingleton.getEditItemPos());
+//        mRecyclerView.getAdapter()
+//                .notifyItemChanged(mActionbarSingleton.getEditItemPos());
         mActivityRef.onBackPressed();
     }
 
@@ -505,8 +504,9 @@ public class RecyclerViewActionsSingleton {
     }
 
     public Bookmark getSelectedItemFromAdapter() {
-        return ((Bookmark) ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
-                .getItem(mActionbarSingleton.getEditItemPos()));
+//        return ((Bookmark) ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
+//                .getItem(mActionbarSingleton.getEditItemPos()));
+        return null;
     }
 
 

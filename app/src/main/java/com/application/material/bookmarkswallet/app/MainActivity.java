@@ -9,8 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkRecyclerViewFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.application.material.bookmarkswallet.app.services.BookmarksProviderService;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.BackPressedSingleton;
+import com.application.material.bookmarkswallet.app.singleton.BookmarkProviderSingleton;
 import com.application.material.bookmarkswallet.app.singleton.SharedPrefSingleton;
 import com.flurry.android.FlurryAgent;
 import hotchemi.android.rate.AppRate;
@@ -27,10 +30,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mActionbarSingleton = ActionbarSingleton.getInstance(this);
-        mBackPressedSingleton = BackPressedSingleton.getInstance(this);
+        initSingletonRef();
         mActionbarSingleton.initActionBar(); //must be the last one
-        mSharedPrefSingleton = SharedPrefSingleton.getInstance(this);
 
         FlurryAgent.setLogEnabled(true);
         FlurryAgent.init(this, getResources().getString(R.string.FLURRY_API_KEY));
@@ -41,9 +42,18 @@ public class MainActivity extends AppCompatActivity
         onInitFragment();
     }
 
+    /**
+     * init singleton references
+     */
+    private void initSingletonRef() {
+        mActionbarSingleton = ActionbarSingleton.getInstance(this);
+        mBackPressedSingleton = BackPressedSingleton.getInstance(this);
+        mSharedPrefSingleton = SharedPrefSingleton.getInstance(this);
+    }
+
     @Override
     public void onResume() {
-        mActionbarSingleton.setActivtyRef(this);
+//        mActionbarSingleton.setActivtyRef(this);
         super.onResume();
     }
 

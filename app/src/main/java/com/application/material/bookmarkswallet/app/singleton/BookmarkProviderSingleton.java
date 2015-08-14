@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.provider.Browser;
 import android.util.Log;
 import com.application.material.bookmarkswallet.app.fragments.OnTaskCompleted;
+import com.application.material.bookmarkswallet.app.services.BookmarksProviderService;
 import io.realm.Realm;
 
 import java.net.URL;
@@ -59,18 +60,11 @@ public class BookmarkProviderSingleton {
      * @param browserList
      */
     public void addByBrowserList(final BrowserEnum[] browserList) {
+//        Intent intent = new Intent(mActivityRef, BookmarksProviderService.class);
+//        intent.putExtra("DATA_TO_SERVICES", true);
+//        mActivityRef.startService(intent);
         mAsyncTask = new BookmarksProviderAsyncTask(browserList);
         mAsyncTask.execute();
-    }
-
-    /**
-     * cancel current async task
-     */
-    public void cancelAsyncTask() {
-        if (mAsyncTask != null &&
-                mAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
-            mAsyncTask.cancel(true);
-        }
     }
 
     /**
@@ -109,29 +103,70 @@ public class BookmarkProviderSingleton {
                 //add item on realm
                 if (cursor.getInt(bookmarkId) == 1) {
                     byte[] blobIcon = cursor.getBlob(faviconId);
-                    mBookmarkActionSingleton.addOrmObject(realm, cursor.getString(titleId), null, blobIcon, cursor.getString(urlId));
+                    mBookmarkActionSingleton.addOrmObject(realm,
+                            cursor.getString(titleId), null,
+                            blobIcon, cursor.getString(urlId));
                 }
             } while (cursor.moveToNext());
 
         }
     }
 
+    /**
+     * @param browser
+     * @return
+     */
     private Uri getBookmarksUriByBrowser(BrowserEnum browser) {
         if (browser.ordinal() == BrowserEnum.DEFAULT.ordinal()) {
             return Browser.BOOKMARKS_URI;
         } else if (browser.ordinal() == BrowserEnum.CHROME.ordinal()) {
-            String chromePackage = "com.android.chrome";
-            Uri chromeUri = Uri.parse("content://com.android.chrome.browser/bookmarks");
-            mActivityRef.grantUriPermission(chromePackage, chromeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            return chromeUri;
+            return getChromeUriBrowser();
         } else if (browser.ordinal() == BrowserEnum.FIREFOX.ordinal()) {
-            Uri firefoxUri = Uri.parse("content://org.mozilla.firefox.db.browser/bookmarks");
-            String firefoxPackage = "org.mozilla.firefox";
-            mActivityRef.grantUriPermission(firefoxPackage, firefoxUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            return firefoxUri;
+            return getFirefoxUriBrowser();
         }
 
         return Browser.BOOKMARKS_URI;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Uri getChromeUriBrowser() {
+        String chromePackage = "com.android.chrome";
+        Uri chromeUri = Uri.parse("content://com.android.chrome.browser/bookmarks");
+        mActivityRef.grantUriPermission(chromePackage, chromeUri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        return chromeUri;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Uri getFirefoxUriBrowser() {
+        Uri firefoxUri = Uri.parse("content://org.mozilla.firefox.db.browser/bookmarks");
+        String firefoxPackage = "org.mozilla.firefox";
+        mActivityRef.grantUriPermission(firefoxPackage, firefoxUri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        return firefoxUri;
+    }
+
+    /**
+     * cancel current async task
+     */
+    public void cancelAsyncTask() {
+        if (mAsyncTask != null &&
+                mAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
+            mAsyncTask.cancel(true);
+        }
+    }
+
+    /**
+     * update adapter to set data on interface
+     */
+    private void updateAdapter(boolean isRefreshingEnabled) {
+        mListener.onTaskCompleted(isRefreshingEnabled);
     }
 
     /**
@@ -187,12 +222,5 @@ public class BookmarkProviderSingleton {
             updateAdapter(false);
 //            setSyncStatus(SyncStatusEnum.DONE);
         }
-    }
-
-    /**
-     * update adapter to set data on interface
-     */
-    private void updateAdapter(boolean isRefreshingEnabled) {
-        mListener.onTaskCompleted(isRefreshingEnabled);
     }
 }

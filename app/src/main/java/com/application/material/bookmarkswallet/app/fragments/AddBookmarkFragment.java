@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -49,8 +50,24 @@ public class AddBookmarkFragment extends Fragment {
      */
     private void initStatusbar() {
         mActionbarSingleton.setTitle("Add new");
-        mActionbarSingleton.setBackgroundColor(R.color.blue_grey_700,
-                R.color.material_violet_700);
+        mActionbarSingleton.udpateActionbar(false, getActionbarColor(), getToolbarDrawableColor());
     }
 
+    /**
+     *
+     * @return
+     */
+    public Drawable getToolbarDrawableColor() {
+        return mAddActivityRef
+                .getResources().getDrawable(R.color.blue_grey_700);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getActionbarColor() {
+        return mAddActivityRef.getResources()
+                .getColor(R.color.blue_grey_700);
+    }
 }

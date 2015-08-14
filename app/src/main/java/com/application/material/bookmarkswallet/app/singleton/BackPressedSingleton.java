@@ -10,9 +10,10 @@ import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragme
  */
 public class BackPressedSingleton {
 
-    private static BackPressedSingleton mInstance;
-    private static AppCompatActivity mActivityRef;
-    private static ActionbarSingleton mActionbarSingleton;
+    private static BackPressedSingleton instanceRef;
+    private static AppCompatActivity activityRef;
+    private static ActionbarSingleton actionbarSingleton;
+    private static StatusSingleton statusSingleton;
 
     public BackPressedSingleton() {
     }
@@ -23,40 +24,43 @@ public class BackPressedSingleton {
      * @return BackPressedSingleton
      */
     public static BackPressedSingleton getInstance(Activity activity) {
-        mActivityRef = (AppCompatActivity) activity;
-        mActionbarSingleton = ActionbarSingleton.getInstance(activity);
-        return mInstance == null ? mInstance = new BackPressedSingleton() : mInstance;
+        activityRef = (AppCompatActivity) activity;
+        initSingletonRef();
+        return instanceRef == null ? instanceRef = new BackPressedSingleton() : instanceRef;
     }
 
     /**
-     *
+     * init singleton ref
+     */
+    private static void initSingletonRef() {
+        actionbarSingleton = ActionbarSingleton.getInstance(activityRef);
+        statusSingleton = StatusSingleton.getInstance();
+    }
+
+    /**
+     * //TODO refactor :)
      * @return boolean
      */
     public boolean isBackPressedHandled() {
-        boolean editMode = mActionbarSingleton.isEditMode();
-        boolean panelExpanded = mActionbarSingleton.isPanelExpanded();
-        boolean searchMode = mActionbarSingleton.isSearchMode();
+        boolean isHomeUpEnabled = homeUpEnabled();
+        actionbarSingleton.udpateActionbar(isHomeUpEnabled);
 
-        boolean isHomeUpEnabled = mActivityRef
-                .getSupportFragmentManager().getBackStackEntryCount() >= 2;
-        mActionbarSingleton.changeActionbar(isHomeUpEnabled);
-
-        //backPressed handler
-        Fragment fragment  = mActivityRef.getSupportFragmentManager()
-                .findFragmentByTag(BookmarkListFragment.FRAG_TAG);
-        if ((! editMode && ! panelExpanded && ! searchMode) ||
-                fragment == null) {
+        if (! statusSingleton.isSearchMode()) {
             return false;
         }
 
         //handle back
-        ((BookmarkListFragment) fragment).collapseSearchActionView();
-        ((BookmarkListFragment) fragment).showClipboardButton();
-        ((BookmarkListFragment) fragment).collapseSlidingPanel();
-        if (editMode) {
-            ((BookmarkListFragment) fragment).undoEditBookmarkRecyclerViewWrapper();
-        }
+//        ((BookmarkListFragment) fragment).collapseSearchActionView();
         return true;
+    }
+
+    /**
+     * check if home is enabled
+     * @return
+     */
+    private boolean homeUpEnabled() {
+        return activityRef.getSupportFragmentManager()
+                .getBackStackEntryCount() >= 2;
     }
 
 }

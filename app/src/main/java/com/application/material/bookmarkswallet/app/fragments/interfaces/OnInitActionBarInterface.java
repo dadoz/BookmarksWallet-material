@@ -1,14 +1,14 @@
 package com.application.material.bookmarkswallet.app.fragments.interfaces;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
+import android.graphics.drawable.Drawable;
 
 /**
  * Created by davide on 07/11/14.
  */
 public interface OnInitActionBarInterface {
+    public void initActionBar();
     public boolean setTitle(String title);
-    public void changeActionbar(boolean isHomeUpEnabled);
+    public void udpateActionbar(boolean isHomeUpEnabled);
+    public void udpateActionbar(boolean isHomeUpEnabled,
+                                   int actionbarColor, Drawable toolbarColor);
 }

@@ -1,16 +1,12 @@
 package com.application.material.bookmarkswallet.app.singleton;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 
@@ -21,36 +17,25 @@ import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitA
 public class ActionbarSingleton implements OnInitActionBarInterface {
 
     private static final String TAG = "ActionbarSingleton";
-    private static Activity mActivityRef;
-    private static ActionbarSingleton mSingletonRef;
-//    private static ScrollManager scrollManager;
-    private Toolbar toolbar;
-
-    public static int NOT_SELECTED_ITEM_POSITION = -1;
-    private int mEditItemPos = NOT_SELECTED_ITEM_POSITION;
-    private boolean mSearchMode;
-    private boolean mPanelExpanded;
-
-    //LAYOUT MANAGER TYPE
-//    public enum LayoutManagerTypeEnum { GRID, LIST };
-//    private LayoutManagerTypeEnum layoutManagerType = LayoutManagerTypeEnum.LIST;
+    public static Activity activityRef;
+    private static ActionbarSingleton instanceRef;
 
     private ActionbarSingleton() {
     }
 
-    public static ActionbarSingleton getInstance(Activity activityRef) {
-        mActivityRef = activityRef;
-        return mSingletonRef == null ?
-                mSingletonRef = new ActionbarSingleton() : mSingletonRef;
+    public static ActionbarSingleton getInstance(Activity activity) {
+        activityRef = activity;
+        return instanceRef == null ?
+                instanceRef = new ActionbarSingleton() : instanceRef;
     }
 
-    public void setActivtyRef(Activity activtyRef) {
-        mActivityRef = activtyRef;
-    }
-
+    /**
+     * init action bar
+     */
+    @Override
     public void initActionBar() {
-        setActionBar();
         try {
+            setActionBar();
             getActionBar().setDisplayShowTitleEnabled(true);
             getActionBar().setDisplayShowCustomEnabled(false);
         } catch (Exception e) {
@@ -58,37 +43,15 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
         }
     }
 
-    private void setActionBar() {
-        toolbar = (Toolbar) mActivityRef.findViewById(R.id.toolbarId);
-        ((AppCompatActivity) mActivityRef).setSupportActionBar(toolbar);
-    }
-
-
-//    public void setToolbarScrollManager(final RecyclerView recyclerView, final List<View> viewList, int adsOffsetHeight) {
-//        scrollManager = new ScrollManager(mActivityRef, adsOffsetHeight);
-//        try {
-//            toolbar.post(new Runnable() {
-//                @Override public void run() {
-//                    scrollManager.attach(recyclerView);
-//                    for (View view : viewList) {
-//                        scrollManager.addView(view, ScrollManager.Direction.DOWN);
-//                    }
-//                }
-//            });
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    private android.support.v7.app.ActionBar getActionBar() {
-        return ((AppCompatActivity) mActivityRef).getSupportActionBar();
-
-    }
-
+    /**
+     * init title on toolbar
+     * @param title
+     * @return
+     */
+    @Override
     public boolean setTitle(String title) {
         try {
-            String mainTitle = mActivityRef.getResources().getString(R.string.main_title);
+            String mainTitle = activityRef.getResources().getString(R.string.main_title);
             getActionBar().setTitle(title == null ? mainTitle : title);
         } catch (Exception e) {
             e.printStackTrace();
@@ -97,90 +60,99 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
         return true;
     }
 
-
+    /**
+     *
+     * @param isHomeUpEnabled
+     */
     @Override
-    public void changeActionbar(boolean isHomeUpEnabled) {
+    public void udpateActionbar(boolean isHomeUpEnabled) {
         try {
             setDisplayHomeEnabled(isHomeUpEnabled);
-            getActionBar().setBackgroundDrawable(mActivityRef.getResources().
-                    getDrawable(R.color.yellow_400));
-//            setStatusBarColor();
+            setStatusbarColor(getDefaultActionbarColor());
+            setToolbarColor(getDefaultToolbarDrawableColor());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setStatusBarColor() {
-        if (Build.VERSION.SDK_INT > 21) {
-            Window window = mActivityRef.getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            int color = mActivityRef.getResources()
-                    .getColor(isEditMode() ? R.color.material_mustard_yellow :
-                            R.color.material_mustard_yellow_700);
-            window.setStatusBarColor(color);
+    /**
+     *
+     * @param isHomeUpEnabled
+     * @param actionbarColor
+     * @param toolbarColor
+     */
+    @Override
+    public void udpateActionbar(boolean isHomeUpEnabled,
+                                int actionbarColor, Drawable toolbarColor) {
+        try {
+            setDisplayHomeEnabled(isHomeUpEnabled);
+            setStatusbarColor(actionbarColor);
+            setToolbarColor(toolbarColor);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     /**
-     * change background color
-     * @param toolbarColorRes
-     * @param statusbarColorRes
+     * set toolbar color
      */
-    public void setBackgroundColor(int toolbarColorRes, int statusbarColorRes) {
-        getActionBar().setBackgroundDrawable(mActivityRef.getResources().
-                getDrawable(toolbarColorRes));
-        if (Build.VERSION.SDK_INT >= 21) {
-            Window window = mActivityRef.getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            int color = mActivityRef.getResources()
-                    .getColor(statusbarColorRes);
-            window.setStatusBarColor(color);
-        }
+    private void setToolbarColor(Drawable drawableColor) {
+        getActionBar().setBackgroundDrawable(drawableColor);
     }
 
+    /**
+     *
+     * @param isHomeUpEnabled
+     */
     public void setDisplayHomeEnabled(boolean isHomeUpEnabled) {
         getActionBar().setDisplayHomeAsUpEnabled(isHomeUpEnabled);
         getActionBar().setDisplayShowHomeEnabled(isHomeUpEnabled);
     }
 
-    public void setSearchMode(boolean searchMode) {
-        this.mSearchMode = searchMode;
-    }
-
-    public boolean isSearchMode() {
-        return mSearchMode;
-    }
-
-    public boolean isEditMode() {
-        return mEditItemPos != NOT_SELECTED_ITEM_POSITION;
-    }
-
-    public int getEditItemPos() {
-        return mEditItemPos;
-    }
-
-    public void setEditItemPos(int editItemPos) {
-        this.mEditItemPos = editItemPos;
-    }
-
-    public void hideSoftKeyboard(EditText editText) {
-        if(editText == null) {
-            return;
+    /**
+     *
+     * @param color
+     */
+    private void setStatusbarColor(int color) {
+        if (Build.VERSION.SDK_INT > 21) {
+            Window window = activityRef.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(color);
         }
-
-        ((InputMethodManager) mActivityRef
-                .getSystemService(Context.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
-
-    public boolean isPanelExpanded() {
-        return mPanelExpanded;
+    /**
+     * set toolbar
+     */
+    private void setActionBar() {
+        Toolbar toolbar = (Toolbar) activityRef.findViewById(R.id.toolbarId);
+        ((AppCompatActivity) activityRef).setSupportActionBar(toolbar);
     }
 
-    public void setPanelExpanded(boolean panelExpanded) {
-        this.mPanelExpanded = panelExpanded;
+    /**
+     * get toolbar
+     * @return
+     */
+    private android.support.v7.app.ActionBar getActionBar() {
+        return ((AppCompatActivity) activityRef).getSupportActionBar();
     }
+
+    /**
+     * default toolbar color
+     * @return
+     */
+    private Drawable getDefaultToolbarDrawableColor() {
+        return activityRef.getResources()
+                .getDrawable(R.color.yellow_400);
+    }
+
+    /**
+     * default actionbar color
+     * @return
+     */
+    private int getDefaultActionbarColor() {
+        return activityRef.getResources().getColor(R.color.yellow_700);
+    }
+
 }

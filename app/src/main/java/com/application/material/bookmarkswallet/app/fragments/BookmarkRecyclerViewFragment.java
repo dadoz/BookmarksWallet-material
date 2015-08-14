@@ -24,6 +24,7 @@ import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
 import com.application.material.bookmarkswallet.app.singleton.BookmarkProviderSingleton;
+import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
 import com.application.material.bookmarkswallet.app.singleton.search.SearchHandlerSingleton;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -52,6 +53,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
     private BookmarkActionSingleton mBookmarkActionSingleton;
     private View mView;
     private BookmarkProviderSingleton mBookmarkProviderSingleton;
+    private StatusSingleton mStatusSingleton;
 
     @Override
     public void onAttach(Activity activity) {
@@ -251,7 +253,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
      * handle setting option - open up a new activity with all preferences available
      */
     private void handleSetting() {
-        mActionbarSingleton.changeActionbar(true);
+        mActionbarSingleton.udpateActionbar(true);
         mMainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
     }
 
@@ -270,7 +272,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
     public Bookmark getSelectedItem() {
         BookmarkRecyclerViewAdapter adapter =
                 (BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter();
-        return ((Bookmark) adapter.getItem(mActionbarSingleton.getEditItemPos()));
+        return ((Bookmark) adapter.getItem(mStatusSingleton.getEditItemPos()));
     }
 
     /**
@@ -290,6 +292,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
      */
     private void initSingletonInstances() {
         mRealm = Realm.getInstance(mMainActivityRef);
+        mStatusSingleton = StatusSingleton.getInstance();
         mSearchHandlerSingleton = SearchHandlerSingleton.getInstance(mMainActivityRef);
         mActionbarSingleton = ActionbarSingleton.getInstance(mMainActivityRef);
         mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(mMainActivityRef);
