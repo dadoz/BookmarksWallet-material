@@ -2,6 +2,10 @@ package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -20,14 +25,20 @@ import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
+import com.application.material.bookmarkswallet.app.singleton.ClipboardSingleton;
+import com.application.material.bookmarkswallet.app.singleton.RetrieveIconAsyncTask;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
+import com.cocosw.bottomsheet.BottomSheet;
 import io.realm.Realm;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
 /**
  * Created by davide on 06/08/15.
  */
-public class AddBookmarkFragment extends Fragment implements View.OnClickListener {
+public class AddBookmarkFragment extends Fragment implements View.OnClickListener, OnTaskCompleted {
     public static final String FRAG_TAG = "AddBookmarkFragmentTAG";
     private Activity mAddActivityRef;
     private ActionbarSingleton mActionbarSingleton;
@@ -37,14 +48,15 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     @Bind(R.id.addBookmarkFabId)
     FloatingActionButton mAddBookmarkFab;
     @Bind(R.id.urlEditTextId)
-    EditText urlEditText;
+    EditText mUrlEditText;
     @Bind(R.id.titleEditTextId)
-    EditText titleEditText;
+    EditText mTitleEditText;
     @Bind(R.id.iconImageViewId)
     View mIconImageView;
     @Bind(R.id.pasteClipboardButtonId)
     Button mPasteClipboardButton;
     private View mView;
+    private byte[] mBookmarkBlobIcon;
 
     @Override
     public void onAttach(Activity activity) {
@@ -82,7 +94,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * init title - set
      */
     private void initStatusbar() {
-        mActionbarSingleton.setTitle("Add new", mAddActivityRef.getResources().getColor(R.color.grey_400));
+        mActionbarSingleton.setTitle("Add new", mAddActivityRef.getResources().getColor(R.color.blue_grey_900));
         mActionbarSingleton.udpateActionbar(false, getActionbarColor(), getToolbarDrawableColor());
     }
 
@@ -147,7 +159,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      */
     private boolean validateInput() {
         return ! getBookmarkUrl().trim().equals("") &&
-                Utils.validateUrl(getBookmarkUrl());
+                Utils.isValidUrl(getBookmarkUrl());
     }
 
     /**
@@ -176,7 +188,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         try {
             cancelProgressDialog();
             //show result
-            mAddActivityRef.finish();
+//            mAddActivityRef.finish();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -188,7 +200,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      */
     public String getBookmarkTitle() {
         //TODO implement if title == not_set -> retrieve it from jsoup
-        return titleEditText.getText().toString();
+        return mTitleEditText.getText().toString();
     }
 
     /**
@@ -196,7 +208,15 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * @return
      */
     public String getBookmarkUrl() {
-        return urlEditText.getText().toString();
+        return mUrlEditText.getText().toString();
+    }
+
+    /**
+     *
+     * @param mBookmarkBlobIcon
+     */
+    public void setBookmarkBlobIcon(byte[] mBookmarkBlobIcon) {
+        this.mBookmarkBlobIcon = mBookmarkBlobIcon;
     }
 
     /**
@@ -205,21 +225,62 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      */
     public byte[] getBookmarkBlobIcon() {
         //TODO to be implemented
-        return null;
+        return mBookmarkBlobIcon;
     }
 
     /**
      * retrieve icon from gallery or url
      */
     private void retrieveIcon() {
+        new BottomSheet.Builder(mAddActivityRef)
+                .sheet(R.menu.gallery_url_menu)
+                .listener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case R.id.urlActionId:
+                                retrieveIconByUrl(getBookmarkUrl());
+                                break;
+                            case R.id.galleryActionId:
+                                retrieveIconByGallery();
+                                break;
+                        }
+                    }
+                })
+                .grid()
+                .show();
         //TODO implement
+    }
+
+    /**
+     * by url - auto detect icon
+     */
+    private void retrieveIconByUrl(String url) {
+        try {
+            url = "http://" + url;
+            initProgressDialog();
+            new RetrieveIconAsyncTask(this).execute(new URL(url));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * get image from gallery
+     */
+    private void retrieveIconByGallery() {
+        Toast.makeText(mAddActivityRef, "feature will be added soon!", Toast.LENGTH_LONG)
+                .show();
     }
 
     /**
      * paste clipboard content
      */
     private void pasteClipboard() {
-        Toast.makeText(mAddActivityRef, "clipboard", Toast.LENGTH_SHORT).show();
+        ClipboardSingleton clipboardSingleton =
+                ClipboardSingleton.getInstance(mAddActivityRef);
+        String url = clipboardSingleton.getTextFromClipboard();
+        mUrlEditText.setText(url);
     }
 
     @Override
@@ -239,4 +300,30 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     }
 
 
+    @Override
+    public void onTaskCompleted(boolean isRefreshEnabled) {
+        return;
+    }
+
+    @Override
+    public void onTaskCompleted(byte[] data) {
+        cancelProgressDialog();
+        if (data == null) {
+            showErrorMessage();
+            return;
+        }
+
+        setBookmarkBlobIcon(data);
+        setIconOnUi();
+    }
+
+    private void setIconOnUi() {
+        try {
+            Bitmap icon = BitmapFactory.decodeByteArray(mBookmarkBlobIcon, 0, mBookmarkBlobIcon.length);
+            ((ImageView) ((ViewGroup) mIconImageView).getChildAt(0))
+                    .setImageBitmap(icon);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

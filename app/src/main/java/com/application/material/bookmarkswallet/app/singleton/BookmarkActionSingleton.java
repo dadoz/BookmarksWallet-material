@@ -98,7 +98,7 @@ public class BookmarkActionSingleton {
      */
     public void handleLongClickAction(final View v, final RecyclerView recyclerView) {
         int pos = getBookmarkPosByView(v, recyclerView);
-        mActivityRef.startActionMode(new EditBookmarkActionMode(this, v, recyclerView));
+        mActivityRef.startActionMode(new EditBookmarkActionMode(mActivityRef, v, recyclerView));
         mStatusSingleton.setEditMode(pos);
         recyclerView.getAdapter().notifyItemChanged(pos);
     }

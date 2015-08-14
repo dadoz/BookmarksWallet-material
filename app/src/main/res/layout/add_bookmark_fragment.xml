@@ -82,7 +82,7 @@
             android:layout_below="@id/addBookmarkMainContainerLayoutId"
             android:layout_marginTop="-30dp"
             android:src="@drawable/ic_done_black_48dp"
-            app:backgroundTint="@color/blue_grey_900"
+            app:backgroundTint="@color/blue_grey_800"
             app:fabSize="normal"/>
 
 </RelativeLayout>

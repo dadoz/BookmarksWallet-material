@@ -1,5 +1,6 @@
 package com.application.material.bookmarkswallet.app.actionMode;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import com.application.material.bookmarkswallet.app.R;
@@ -18,15 +19,14 @@ public class EditBookmarkActionMode implements ActionMode.Callback {
 
     /**
      *
-     * @param singletonRef
+     * @param activity
      * @param v
      * @param recyclerView
      */
-    public EditBookmarkActionMode(BookmarkActionSingleton singletonRef,
-                                  final View v, final RecyclerView recyclerView) {
+    public EditBookmarkActionMode(Activity activity, final View v, final RecyclerView recyclerView) {
         mItemView = v;
         mRecyclerView = recyclerView;
-        mBookmarkActionSingleton = singletonRef;
+        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(activity);
         mStatusSingleton = StatusSingleton.getInstance();
     }
 

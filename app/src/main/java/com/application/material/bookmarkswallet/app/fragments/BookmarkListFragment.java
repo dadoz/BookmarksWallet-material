@@ -33,8 +33,6 @@ import com.application.material.bookmarkswallet.app.singleton.ExportBookmarkSing
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton;
 import com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton.BrowserEnum;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
-import com.github.clans.fab.FloatingActionButton;
-import com.google.android.gms.ads.AdRequest;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -65,8 +63,6 @@ public class BookmarkListFragment extends Fragment
 //    SlidingUpPanelLayout mSlidingLayerLayout;
     @Bind(R.id.linksListId)
     RecyclerViewCustom mRecyclerView;
-    @Bind(R.id.addBookmarkFabId)
-    FloatingActionButton mClipboardFloatingButton;
     @Bind(R.id.emptyLinkListViewId)
     View emptyLinkListView;
     @Bind(R.id.emptySearchResultLayoutId)
@@ -181,7 +177,7 @@ public class BookmarkListFragment extends Fragment
 
         mItems = rvActionsSingleton.getBookmarksList();
 
-        mClipboardFloatingButton.setOnClickListener(this);
+//        mClipboardFloatingButton.setOnClickListener(this);
 //		initRecyclerView();
         rvActionsSingleton.setAdapter();
 //        if (mActionbarSingleton.isEditMode()) {
@@ -219,27 +215,8 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        boolean isItemSelected = mActionbarSingleton.isEditMode();
-
-//        inflater.inflate(isItemSelected ? R.menu.save_edit_link_menu :
-//                R.menu.menu_main, menu);
-//
-//        Drawable icon = menu.findItem(! isItemSelected ? R.id.action_search : R.id.action_edit).getIcon();
-//        icon.setColorFilter(mMainActivityRef.getResources().getColor(R.color.blue_grey_700),
-//                PorterDuff.Mode.SRC_IN);
-//        menu.findItem(! isItemSelected ? R.id.action_search : R.id.action_edit).setIcon(icon);
-        //LAYOUT MANAGER
-//        if(! isItemSelected) {
-//            menu.findItem(R.id.action_grid)
-//                    .setVisible(mActionbarSingleton
-//                            .isLayoutManagerList());
-//            menu.findItem(R.id.action_list)
-//                    .setVisible(mActionbarSingleton
-//                            .isLayoutManagerGrid());
-//        }
-
         //SEARCH VIEW HANDLER
-        searchViewHandler(menu);
+//        searchViewHandler(menu);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -272,7 +249,7 @@ public class BookmarkListFragment extends Fragment
 //                                    .setSearchMode(true);
                             mRecyclerView.getAdapter().notifyDataSetChanged();
                             int startDelay = 600;
-                            hideClipboardButton(startDelay);
+//                            hideClipboardButton(startDelay);
 //                            mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
 //                            mAdsView.setVisibility(View.GONE);
                             return true;
@@ -285,7 +262,7 @@ public class BookmarkListFragment extends Fragment
 //                                    .setSearchMode(false);
                             rvActionsSingleton.setAdapter();
 //                            mAdsView.setVisibility(View.VISIBLE);
-                            showClipboardButton();
+//                            showClipboardButton();
                             return true;
                         }
                     });
@@ -342,18 +319,6 @@ public class BookmarkListFragment extends Fragment
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.apache.org/licenses/LICENSE-2.0"));
                 startActivity(browserIntent);
                 return true;
-//			case R.id.action_grid:
-//                mRecyclerView.setLayoutManager(new GridLayoutManager(mMainActivityRef, 2));
-//                mRecyclerView.getAdapter().notifyDataSetChanged();
-//                mActionbarSingleton.setLayoutManagerType(LayoutManagerTypeEnum.GRID);
-//                mMainActivityRef.invalidateOptionsMenu();
-//				return true;
-//			case R.id.action_list:
-//                mRecyclerView.setLayoutManager(new LinearLayoutManager(mMainActivityRef));
-//                mRecyclerView.getAdapter().notifyDataSetChanged();
-//                mActionbarSingleton.setLayoutManagerType(LayoutManagerTypeEnum.LIST);
-//                mMainActivityRef.invalidateOptionsMenu();
-//				return true;
         }
         return true;
     }
@@ -387,7 +352,7 @@ public class BookmarkListFragment extends Fragment
                     return;
                 }
 
-                if (!isValidUrl(mUrlEditText.getText().toString())) {
+                if (!Utils.isValidUrl(mUrlEditText.getText().toString())) {
                     Toast.makeText(mMainActivityRef, "no valid url typed in!", Toast.LENGTH_SHORT).show();
                     break;
                 }
@@ -419,29 +384,6 @@ public class BookmarkListFragment extends Fragment
         rvActionsSingleton.undoEditBookmark();
     }
 
-    public void hideClipboardButton(int startDelay) {
-        animateClipboardButton(startDelay, true);
-        mClipboardFloatingButton.setVisibility(View.INVISIBLE);
-    }
-
-    public void hideClipboardButton() {
-        animateClipboardButton(0, true);
-        mClipboardFloatingButton.setVisibility(View.INVISIBLE);
-    }
-
-    public void showClipboardButton() {
-        animateClipboardButton(0, false);
-        mClipboardFloatingButton.setVisibility(View.VISIBLE);
-    }
-
-    private void animateClipboardButton(int startDelay, boolean buttonVisible) {
-        mClipboardFloatingButton.animate().
-                translationY(buttonVisible ? 300 : 0).
-                        setInterpolator(new DecelerateInterpolator(3.f)).
-                setStartDelay(startDelay == -1 ? 200 : 600).
-                start();
-    }
-
     @Override
     public Filter getFilter() {
         return new LinkFilter();
@@ -469,42 +411,6 @@ public class BookmarkListFragment extends Fragment
             return;
         }
 //        mAdsView.setVisibility(View.GONE);
-    }
-
-//    @Override
-    public void onPanelCollapsed(View view) {
-//        mSlidingLayerLayout.addOnLayoutChangeListener(this);
-//        mActionbarSingleton.setPanelExpanded(false);
-//        mActionbarSingleton.hideSoftKeyboard(mUrlEditText);
-        mClipboardFloatingButton.show(true);
-        slidingPanelDoneText.setVisibility(View.GONE);
-//        mAdsView.setVisibility(View.VISIBLE);
-    }
-
-//    @Override
-    public void onPanelExpanded(View view) {
-//        mSlidingLayerLayout.removeOnLayoutChangeListener(this);
-//        mActionbarSingleton.setPanelExpanded(true);
-        mClipboardFloatingButton.hide(true);
-        slidingPanelDoneText.setVisibility(View.VISIBLE);
-        mUrlEditText.setFocusableInTouchMode(true);
-        mUrlEditText.requestFocus();
-        mHttpFormatCheckbox.setOnCheckedChangeListener(this);
-        mUrlEditText.setText(mHttpFormatCheckbox.isChecked() ? "https://" : "http://");
-        mUrlEditText.setSelection(mUrlEditText.getText().length());
-    }
-
-//    @Override
-    public void onPanelAnchored(View view) {
-    }
-
-//    @Override
-    public void onPanelHidden(View view) {
-
-    }
-
-    public void collapseSlidingPanel() {
-//        mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 
     @Override
@@ -577,12 +483,4 @@ public class BookmarkListFragment extends Fragment
         }
     }
 
-    private static boolean isValidUrl(String linkUrl) {
-        Pattern p = Pattern.
-                compile("(@)?(href=')?(HREF=')?(HREF=\")?(href=\")?(http://)?(https://)?(ftp://)?[a-zA-Z_0-9\\-]+(\\.\\w[a-zA-Z_0-9\\-]+)+(/[#&\\n\\-=?\\+\\%/\\.\\w]+)?");
-
-        Matcher m = p.matcher(linkUrl);
-        return ! linkUrl.equals("") &&
-                m.matches();
-    }
 }

@@ -124,7 +124,7 @@ public class RecyclerViewActionsSingleton {
 //        mActionbarSingleton.changeActionbar(false);
 //        ScrollManager.runTranslateAnimation(mAdsView, 0, new DecelerateInterpolator(3));
         mActivityRef.invalidateOptionsMenu();
-        showClipboardLinkButtonWrapper();
+//        showClipboardLinkButtonWrapper();
         showSlidingPanelWrapper();
     }
 
@@ -142,7 +142,7 @@ public class RecyclerViewActionsSingleton {
 
         mAdapter.notifyDataSetChanged();
         mActivityRef.invalidateOptionsMenu();
-        hideClipboardLinkButtonWrapper();
+//        hideClipboardLinkButtonWrapper();
         hideSlidingPanelWrapper();
     }
 
@@ -459,22 +459,22 @@ public class RecyclerViewActionsSingleton {
         return true;
     }
 
-    private void showClipboardLinkButtonWrapper() {
-        try {
-            ((BookmarkListFragment) mFragmentRef).showClipboardButton();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    private void showClipboardLinkButtonWrapper() {
+//        try {
+//            ((BookmarkListFragment) mFragmentRef).showClipboardButton();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    private void hideClipboardLinkButtonWrapper() {
-        try {
-            ((BookmarkListFragment) mFragmentRef).hideClipboardButton();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
+//    private void hideClipboardLinkButtonWrapper() {
+//        try {
+//            ((BookmarkListFragment) mFragmentRef).hideClipboardButton();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     private void hideSlidingPanelWrapper() {
         try {

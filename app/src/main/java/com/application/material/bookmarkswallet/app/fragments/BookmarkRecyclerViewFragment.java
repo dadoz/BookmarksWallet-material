@@ -11,6 +11,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.*;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -121,7 +122,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
             case R.id.addBookmarkFabId:
                 mBookmarkActionSingleton.addBookmarkAction(this);
                 break;
-            case R.id.backgroundLayoutId:
+            default:
                 mBookmarkActionSingleton.handleClickAction(v, mRecyclerView);
                 break;
         }
@@ -161,6 +162,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE) {
             notifyDataChanged();
+            initSingletonInstances();
         }
     }
     /**
@@ -330,6 +332,11 @@ public class BookmarkRecyclerViewFragment extends Fragment
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onTaskCompleted(byte[] data) {
+        return;
     }
 
     /**
