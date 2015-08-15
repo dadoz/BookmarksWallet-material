@@ -12,7 +12,7 @@
 
         <item name="android:windowEnterTransition">@android:transition/slide_top</item>
         <item name="android:windowReturnTransition">@android:transition/slide_bottom</item>
-        <item name="colorControlActivated">@color/blue_grey_500</item>
+        <item name="colorControlActivated">@color/blue_grey_400</item>
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
 
         <item name="actionModeStyle">@style/ActionMode</item>

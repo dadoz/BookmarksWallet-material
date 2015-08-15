@@ -5,72 +5,37 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-    <LinearLayout
-            android:id="@+id/addBookmarkMainContainerLayoutId"
-            android:layout_width="fill_parent"
+    <include layout="@layout/add_bookmark_collapsing_layout"/>
+
+
+    <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/iconSwipeRefreshLayoutId"
+            android:layout_below="@id/addBookmarkMainContainerLayoutId"
             android:layout_height="wrap_content"
-            android:background="@color/blue_grey_700"
-            android:padding="@dimen/medium_padding"
-            android:orientation="vertical">
-            <!--<TextView-->
-                    <!--android:id="@+id/addBookmarkDescriptionTextId"-->
-                    <!--android:layout_width="fill_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:padding="@dimen/large_padding"-->
-                    <!--android:textColor="@color/material_stone_black"-->
-                    <!--android:text="Type in new bookmark url in the field below"/>-->
-            <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/titleEditTextId"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/medium_padding"
-                    android:textColor="@color/grey_100"
-                    android:textColorHint="@color/grey_400"
-                    android:minWidth="250dip"
-                    android:maxLines="1"
-                    android:hint="title...">
-                <requestFocus/>
-            </android.support.v7.widget.AppCompatEditText>
-            <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/urlEditTextId"
-
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/medium_padding"
-                    android:textColor="@color/grey_100"
-                    android:textColorHint="@color/grey_400"
-                    android:minWidth="250dip"
-                    android:maxLines="3"
-                    android:hint="url...">
-                <requestFocus/>
-            </android.support.v7.widget.AppCompatEditText>
-            <Button
-                    android:id="@+id/pasteClipboardButtonId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/height_button"
-                    android:background="@drawable/button_layout"
-                    android:text="CLIPBOARD"
-                    android:textColor="@color/blue_grey_700"/>
-        </LinearLayout>
-
+            android:layout_width="wrap_content">
         <LinearLayout
                 android:id="@+id/iconImageViewId"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:clickable="true"
                 android:background="?@android:attr/selectableItemBackground"
-                android:layout_below="@id/addBookmarkMainContainerLayoutId"
                 android:gravity="center"
                 android:orientation="vertical">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/medium_padding"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_16"
+                    android:textColor="@color/blue_grey_900"
+                    android:text="Tap to set a \ncustom icon!" />
             <ImageView
                     android:layout_width="96dip"
                     android:layout_height="96dip"
-                    android:src="@drawable/ic_bookmark_outline_black_48dp"/>
+                    android:src="@drawable/ic_photo_colorful_48dp"/>
         </LinearLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
     <android.support.design.widget.FloatingActionButton
@@ -82,7 +47,7 @@
             android:layout_below="@id/addBookmarkMainContainerLayoutId"
             android:layout_marginTop="-30dp"
             android:src="@drawable/ic_done_black_48dp"
-            app:backgroundTint="@color/blue_grey_800"
+            app:backgroundTint="@color/yellow_400"
             app:fabSize="normal"/>
 
 </RelativeLayout>

@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,8 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     View mIconImageView;
     @Bind(R.id.pasteClipboardButtonId)
     Button mPasteClipboardButton;
+    @Bind(R.id.iconSwipeRefreshLayoutId)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     private View mView;
     private byte[] mBookmarkBlobIcon;
 
@@ -258,7 +261,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     private void retrieveIconByUrl(String url) {
         try {
             url = "http://" + url;
-            initProgressDialog();
+            mSwipeRefreshLayout.setRefreshing(true);
             new RetrieveIconAsyncTask(this).execute(new URL(url));
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -307,7 +310,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onTaskCompleted(byte[] data) {
-        cancelProgressDialog();
+        mSwipeRefreshLayout.setRefreshing(false);
         if (data == null) {
             showErrorMessage();
             return;

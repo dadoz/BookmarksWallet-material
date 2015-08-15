@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app;
 
 import android.content.Intent;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.*;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

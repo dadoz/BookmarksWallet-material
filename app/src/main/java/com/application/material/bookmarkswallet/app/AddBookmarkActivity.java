@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app;
 
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,8 @@ public class AddBookmarkActivity extends AppCompatActivity
         ButterKnife.bind(this);
         mActionbarSingleton = ActionbarSingleton.getInstance(this);
         mActionbarSingleton.initActionBar(); //must be the last one
+        mActionbarSingleton.setElevation(0.0f);
+
         onInitFragment();
     }
 
@@ -33,30 +36,12 @@ public class AddBookmarkActivity extends AppCompatActivity
      */
     public void onInitFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        int backStackCnt = getSupportFragmentManager().getBackStackEntryCount();
-//        Fragment frag = getSupportFragmentManager().
-//                findFragmentByTag(BookmarkRecyclerViewFragment.FRAG_TAG);
-
-//        if (backStackCnt > 0) {
-//            handleBackStackEntry(transaction);
-//            return;
-//        }
-//
-//        if (backStackCnt == 0 &&
-//                frag != null) {
-//            transaction.replace(R.id.fragmentContainerFrameLayoutId,
-//                    frag, BookmarkRecyclerViewFragment.FRAG_TAG).commit();
-//            return;
-//        }
-
-        //no fragment already adedd
         transaction.add(R.id.fragmentContainerFrameLayoutId,
                 new AddBookmarkFragment(), AddBookmarkFragment.FRAG_TAG).commit();
     }
 
     @Override
     public void changeFragment(Fragment fragment, Bundle bundle, String tag) {
-
     }
 
 }

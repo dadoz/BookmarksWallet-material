@@ -7,7 +7,7 @@
         <shape android:dither="true" android:shape="rectangle">
             <corners android:bottomLeftRadius="@dimen/button_radius" android:bottomRightRadius="@dimen/button_radius" android:topLeftRadius="@dimen/button_radius" android:topRightRadius="@dimen/button_radius" />
 
-            <solid android:color="@color/grey_200" />
+            <solid android:color="@color/blue_grey_900" />
         </shape>
     </item>
     <item android:state_pressed="true"

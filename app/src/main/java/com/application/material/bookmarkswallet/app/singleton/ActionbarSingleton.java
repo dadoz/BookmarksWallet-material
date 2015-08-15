@@ -39,6 +39,19 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
             setActionBar();
             getActionBar().setDisplayShowTitleEnabled(true);
             getActionBar().setDisplayShowCustomEnabled(false);
+            setElevation(10);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param elevation
+     */
+    public void setElevation(float elevation) {
+        try {
+            getActionBar().setElevation(elevation);
         } catch (Exception e) {
             e.printStackTrace();
         }
