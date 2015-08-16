@@ -13,6 +13,7 @@ import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.RealmObject;
 
 import static com.application.material.bookmarkswallet.app.models.Bookmark.Utils.getBookmarkNameWrapper;
@@ -55,7 +56,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         setItemListeners(holder);
 
         boolean isEditMode = getEditModeStatus(position);
-        setIcon(holder.mIconView, null, isEditMode);
+        setIcon(holder.mIconView, bookmark, isEditMode);
         setEditItem(holder.mLayoutView, isEditMode);
     }
 
@@ -105,27 +106,13 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
                 .getDrawable(isSelectedItem ?
                         R.drawable.ic_bookmark_black_48dp :
                         R.drawable.ic_bookmark_outline_black_48dp);
-        setColorFilter(res, R.color.blue_grey_700);
+        int color =  mActivityRef.getResources()
+                .getColor(R.color.blue_grey_700);
+
+        Utils.setColorFilter(res, color);
         iconView.setImageDrawable(res);
-
-        if (bookmark != null) {
-            Bitmap bitmapIcon = Bookmark.Utils.getIconBitmap(bookmark.getBlobIcon());
-            if (bitmapIcon != null &&
-                    !isSelectedItem) {
-                iconView.setImageBitmap(bitmapIcon);
-            }
-        }
-    }
-
-    /**
-     *
-     * @param drawable
-     * @param color
-     */
-    public void setColorFilter(Drawable drawable, int color) {
-        drawable.setColorFilter(mActivityRef.getResources()
-                        .getColor(color),
-                PorterDuff.Mode.SRC_IN);
+        Utils.setIconOnImageView(iconView,
+                bookmark.getBlobIcon(), res, isSelectedItem);
     }
 
     /**

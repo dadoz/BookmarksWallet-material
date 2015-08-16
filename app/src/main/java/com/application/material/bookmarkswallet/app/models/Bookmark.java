@@ -105,14 +105,6 @@ public class Bookmark extends RealmObject {
             return fmt.print(dt);
         }
 
-        public static Bitmap getIconBitmap(byte[] blobIcon) {
-            if(blobIcon == null) {
-                return null;
-            }
-
-            return BitmapFactory.decodeByteArray(blobIcon, 0, blobIcon.length);
-        }
-
         public static long getTodayTimestamp() {
             return DateTime.now().getMillis();
         }

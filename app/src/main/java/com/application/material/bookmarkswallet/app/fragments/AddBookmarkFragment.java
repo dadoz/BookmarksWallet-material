@@ -13,9 +13,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.*;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -57,7 +55,8 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     @Bind(R.id.iconSwipeRefreshLayoutId)
     SwipeRefreshLayout mSwipeRefreshLayout;
     private View mView;
-    private byte[] mBookmarkBlobIcon;
+    private byte[] mBookmarkBlobIcon = null;
+    private String HTTP_PROTOCOL = "http://";
 
     @Override
     public void onAttach(Activity activity) {
@@ -85,6 +84,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.clipboard_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -179,7 +179,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * show error message
      */
     private void showErrorMessage() {
-        Snackbar snackbar = Snackbar.make(mView, "error message", Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(mView, "Ops! Something went wrong on saving bookmark.", Snackbar.LENGTH_LONG);
         snackbar.getView()
                 .setBackgroundColor(mAddActivityRef.getResources().getColor(R.color.red_500));
         snackbar.show();
@@ -208,7 +208,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     private void initProgressDialog() {
         mProgressDialog = new ProgressDialog(mAddActivityRef);
         mProgressDialog.setTitle("Saving ...");
-        mProgressDialog.setMessage("Fetching data for selected bookmark.");
+        mProgressDialog.setMessage("Waiting for saving bookmark!");
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
     }
@@ -239,15 +239,15 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * @return
      */
     public String getBookmarkUrl() {
-        return mUrlEditText.getText().toString();
+        return HTTP_PROTOCOL + mUrlEditText.getText().toString();
     }
 
     /**
      *
-     * @param mBookmarkBlobIcon
+     * @param blobIcon
      */
-    public void setBookmarkBlobIcon(byte[] mBookmarkBlobIcon) {
-        this.mBookmarkBlobIcon = mBookmarkBlobIcon;
+    public void setBookmarkBlobIcon(byte[] blobIcon) {
+        this.mBookmarkBlobIcon = blobIcon;
     }
 
     /**
@@ -287,7 +287,6 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      */
     private void retrieveIconByUrl(String url) {
         try {
-            url = "http://" + url;
             mSwipeRefreshLayout.setRefreshing(true);
             new RetrieveIconAsyncTask(this).execute(new URL(url));
         } catch (MalformedURLException e) {

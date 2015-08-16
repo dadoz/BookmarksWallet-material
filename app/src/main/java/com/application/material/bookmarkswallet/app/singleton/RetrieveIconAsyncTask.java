@@ -25,8 +25,8 @@ public class RetrieveIconAsyncTask extends AsyncTask<URL, Integer, Boolean> {
     private String bookmarkTitle = null;
     private String iconUrl = null;
 
-    public RetrieveIconAsyncTask(OnTaskCompleted list) {
-        listener = list;
+    public RetrieveIconAsyncTask(OnTaskCompleted listen) {
+        listener = listen;
     }
 
     @Override
@@ -34,12 +34,17 @@ public class RetrieveIconAsyncTask extends AsyncTask<URL, Integer, Boolean> {
         bookmarkUrl = linkUrlArray[0].toString();
         Document doc;
         try {
+            boolean isHref = false;
             doc = Jsoup.connect(bookmarkUrl).get();
 //            bookmarkTitle = doc.title();
-//            org.jsoup.nodes.Element elem = doc.head().select("link[href~=.*\\.ico]").first();
+
             org.jsoup.nodes.Element elem = doc.head().select("meta[content~=.*\\.png]").first();
-            Log.e(TAG, "" + doc.head().select("meta[content~=.*\\.png]").first());
-            iconUrl = elem.attr("abs:content");
+            if (elem == null) {
+                isHref = true;
+                elem = doc.head().select("link[href~=.*\\.ico]").first();
+            }
+
+            iconUrl = elem.attr(isHref ? "abs:href" : "abs:content");
             Log.d(TAG, " - " + iconUrl);
         } catch (Exception e) {
             e.printStackTrace();
