@@ -181,8 +181,8 @@ public class BookmarkRecyclerViewFragment extends Fragment
      *
      */
     private void initActionbar() {
-       initTitle();
-        mActionbarSingleton.udpateActionbar(false);
+        mActionbarSingleton.initActionBar();
+        initTitle();
     }
 
     /**
@@ -190,7 +190,6 @@ public class BookmarkRecyclerViewFragment extends Fragment
      */
     private void initTitle() {
         mActionbarSingleton.setTitle(null);
-//        mActionbarSingleton.setDisplayHomeEnabled(false);
     }
 
     /**

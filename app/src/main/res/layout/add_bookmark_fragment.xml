@@ -27,7 +27,7 @@
                     android:padding="@dimen/medium_padding"
                     android:gravity="center"
                     android:textSize="@dimen/text_size_16"
-                    android:textColor="@color/blue_grey_900"
+                    android:textColor="@color/blue_grey_400"
                     android:text="Tap to set a \ncustom icon!" />
             <ImageView
                     android:layout_width="96dip"
@@ -47,6 +47,8 @@
             android:layout_below="@id/addBookmarkMainContainerLayoutId"
             android:layout_marginTop="-30dp"
             android:src="@drawable/ic_done_black_48dp"
+            app:elevation="4dp"
+            app:borderWidth="0dp"
             app:backgroundTint="@color/yellow_400"
             app:fabSize="normal"/>
 

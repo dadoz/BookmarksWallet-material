@@ -5,6 +5,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import butterknife.ButterKnife;
 import com.application.material.bookmarkswallet.app.fragments.AddBookmarkFragment;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkRecyclerViewFragment;
@@ -17,19 +18,15 @@ import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton
 public class AddBookmarkActivity extends AppCompatActivity
         implements OnChangeFragmentWrapperInterface {
 
-    private ActionbarSingleton mActionbarSingleton;
-
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mActionbarSingleton = ActionbarSingleton.getInstance(this);
-        mActionbarSingleton.initActionBar(); //must be the last one
-        mActionbarSingleton.setElevation(0.0f);
 
         onInitFragment();
     }
+
 
     /**
      * init fragment function
@@ -42,6 +39,15 @@ public class AddBookmarkActivity extends AppCompatActivity
 
     @Override
     public void changeFragment(Fragment fragment, Bundle bundle, String tag) {
+    }
+
+    /**
+     * on back handled
+     */
+    @Override
+    public void onBackPressed() {
+        Log.e("TAG", "hey");
+        super.onBackPressed();
     }
 
 }

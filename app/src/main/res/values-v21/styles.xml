@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="android:windowActionBar">false</item>
-        <item name="android:textColorPrimary">@color/blue_grey_800</item>
+        <item name="android:textColorPrimary">@color/blue_grey_900</item>
         <item name="colorPrimaryDark">@color/yellow_600</item>
         <item name="colorPrimary">@color/yellow_400</item>
         <item name="windowActionModeOverlay">true</item>

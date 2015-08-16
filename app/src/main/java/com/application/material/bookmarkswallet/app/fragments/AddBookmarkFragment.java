@@ -3,20 +3,20 @@ package com.application.material.bookmarkswallet.app.fragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.util.Log;
+import android.view.*;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -54,8 +54,6 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     EditText mTitleEditText;
     @Bind(R.id.iconImageViewId)
     View mIconImageView;
-    @Bind(R.id.pasteClipboardButtonId)
-    Button mPasteClipboardButton;
     @Bind(R.id.iconSwipeRefreshLayoutId)
     SwipeRefreshLayout mSwipeRefreshLayout;
     private View mView;
@@ -79,26 +77,57 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         mView = inflater.inflate(R.layout.add_bookmark_fragment, container, false);
         ButterKnife.bind(this, mView);
 
+        setHasOptionsMenu(true);
+        initActionbar();
         onInitView();
         return mView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.clipboard_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.clipboardActionId:
+                pasteClipboard();
+                return true;
+            case R.id.action_terms_and_licences:
+                handleTermsAndLicences();
+                return true;
+        }
+        //home is handled by default (super)
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * handle terms and licences
+     */
+    private void handleTermsAndLicences() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://www.apache.org/licenses/LICENSE-2.0"));
+        startActivity(browserIntent);
     }
 
     /**
      *
      */
     private void onInitView() {
-        initStatusbar();
         mAddBookmarkFab.setOnClickListener(this);
-        mPasteClipboardButton.setOnClickListener(this);
         mIconImageView.setOnClickListener(this);
     }
 
     /**
-     * init title - set
+     * init action bar
      */
-    private void initStatusbar() {
-        mActionbarSingleton.setTitle("Add new", mAddActivityRef.getResources().getColor(R.color.blue_grey_900));
-        mActionbarSingleton.udpateActionbar(false, getActionbarColor(), getToolbarDrawableColor());
+    private void initActionbar() {
+        mActionbarSingleton.initActionBar();
+        mActionbarSingleton.udpateActionbar(true, getActionbarColor(), getToolbarDrawableColor());
+        mActionbarSingleton.setElevation(0.0f);
+        mActionbarSingleton.setTitle("Add new");
     }
 
     /**
@@ -190,8 +219,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     public void addBookmarkCallback() {
         try {
             cancelProgressDialog();
-            //show result
-//            mAddActivityRef.finish();
+            mAddActivityRef.finish();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -252,7 +280,6 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
                 })
                 .grid()
                 .show();
-        //TODO implement
     }
 
     /**
@@ -280,10 +307,14 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * paste clipboard content
      */
     private void pasteClipboard() {
-        ClipboardSingleton clipboardSingleton =
-                ClipboardSingleton.getInstance(mAddActivityRef);
-        String url = clipboardSingleton.getTextFromClipboard();
-        mUrlEditText.setText(url);
+        try {
+            ClipboardSingleton clipboardSingleton =
+                    ClipboardSingleton.getInstance(mAddActivityRef);
+            String url = clipboardSingleton.getTextFromClipboard();
+            mUrlEditText.setText(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -293,9 +324,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
                 Utils.hideKeyboard(mAddActivityRef);
                 addBookmark();
                 break;
-            case R.id.pasteClipboardButtonId:
-                pasteClipboard();
-                break;
+//                pasteClipboard();
             case R.id.iconImageViewId:
                 retrieveIcon();
                 break;
@@ -320,10 +349,13 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         setIconOnUi();
     }
 
+    /**
+     *
+     */
     private void setIconOnUi() {
         try {
             Bitmap icon = BitmapFactory.decodeByteArray(mBookmarkBlobIcon, 0, mBookmarkBlobIcon.length);
-            ((ImageView) ((ViewGroup) mIconImageView).getChildAt(0))
+            ((ImageView) ((ViewGroup) mIconImageView).getChildAt(1))
                     .setImageBitmap(icon);
         } catch (Exception e) {
             e.printStackTrace();

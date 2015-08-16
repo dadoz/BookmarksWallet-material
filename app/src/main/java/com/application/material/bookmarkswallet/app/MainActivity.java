@@ -22,7 +22,6 @@ import hotchemi.android.rate.OnClickButtonListener;
 public class MainActivity extends AppCompatActivity
         implements OnChangeFragmentWrapperInterface {
     private String TAG = "MainActivity";
-    private ActionbarSingleton mActionbarSingleton;
     private BackPressedSingleton mBackPressedSingleton;
     private SharedPrefSingleton mSharedPrefSingleton;
 
@@ -31,7 +30,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initSingletonRef();
-        mActionbarSingleton.initActionBar(); //must be the last one
 
         FlurryAgent.setLogEnabled(true);
         FlurryAgent.init(this, getResources().getString(R.string.FLURRY_API_KEY));
@@ -46,14 +44,12 @@ public class MainActivity extends AppCompatActivity
      * init singleton references
      */
     private void initSingletonRef() {
-        mActionbarSingleton = ActionbarSingleton.getInstance(this);
         mBackPressedSingleton = BackPressedSingleton.getInstance(this);
         mSharedPrefSingleton = SharedPrefSingleton.getInstance(this);
     }
 
     @Override
     public void onResume() {
-//        mActionbarSingleton.setActivtyRef(this);
         super.onResume();
     }
 

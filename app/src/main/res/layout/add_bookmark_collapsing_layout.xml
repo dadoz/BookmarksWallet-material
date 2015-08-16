@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/addBookmarkMainContainerLayoutId"
-              android:elevation="2dp"
+              android:elevation="4dp"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:background="@color/blue_grey_700"
@@ -30,7 +30,8 @@
     </android.support.design.widget.TextInputLayout>
     <android.support.design.widget.TextInputLayout
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content">
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="@dimen/large_padding">
 
         <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/urlEditTextId"
@@ -39,7 +40,6 @@
                 android:focusableInTouchMode="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/medium_padding"
                 android:textColor="@color/blue_grey_200"
                 android:minWidth="250dip"
                 android:maxLines="3"
@@ -47,12 +47,4 @@
         </android.support.v7.widget.AppCompatEditText>
 
     </android.support.design.widget.TextInputLayout>
-    <Button
-            android:id="@+id/pasteClipboardButtonId"
-            android:layout_marginTop="@dimen/medium_padding"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/height_button"
-            android:background="@drawable/button_layout"
-            android:text="CLIPBOARD"
-            android:textColor="@color/blue_grey_200"/>
 </LinearLayout>

@@ -4,26 +4,10 @@
     tools:context=".MainActivity" >
     <item
         android:id="@+id/action_search"
-        android:icon="@drawable/ic_search_black_24dp"
+        android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:title="Search"/>
-    <!--<item android:id="@+id/action_grid"-->
-          <!--android:title="import bookmarks"-->
-          <!--android:orderInCategory="100"-->
-          <!--android:icon="@drawable/ic_dashboard_black_24dp"-->
-          <!--app:showAsAction="ifRoom" />-->
-    <!--<item android:id="@+id/action_list"-->
-          <!--android:visible="false"-->
-          <!--android:title="import bookmarks"-->
-          <!--android:orderInCategory="100"-->
-          <!--android:icon="@drawable/ic_filter_list_black_24dp"-->
-          <!--app:showAsAction="ifRoom" />-->
-    <!--<item android:id="@+id/action_import"-->
-          <!--android:title="import bookmarks"-->
-          <!--android:orderInCategory="100"-->
-          <!--android:icon="@drawable/ic_swap_horiz_black_48dp"-->
-          <!--app:showAsAction="never" />-->
     <item android:id="@+id/action_export"
         android:title="export bookmarks"
         android:orderInCategory="100"
