@@ -1,9 +1,7 @@
 package com.application.material.bookmarkswallet.app.singleton;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 
 /**
  * Created by davide on 23/06/15.

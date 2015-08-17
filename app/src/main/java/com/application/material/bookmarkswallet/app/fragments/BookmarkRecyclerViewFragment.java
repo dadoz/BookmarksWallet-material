@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
+import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,6 +48,8 @@ public class BookmarkRecyclerViewFragment extends Fragment
     RecyclerView mRecyclerView;
     @Bind(R.id.emptyLinkListViewId)
     View mEmptyLinkListView;
+    @Bind(R.id.emptySearchResultLayoutId)
+    View mEmptySearchResultLayout;
 
     private MainActivity mMainActivityRef;
     private Realm mRealm;
@@ -81,7 +84,6 @@ public class BookmarkRecyclerViewFragment extends Fragment
         ButterKnife.bind(this, mView);
         setHasOptionsMenu(true);
         onInitView();
-
         return mView;
     }
 
@@ -99,7 +101,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
-        mSearchHandlerSingleton.handleSearch(menu);
+        mSearchHandlerSingleton.initSearchView(menu);
         MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), this);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -107,12 +109,20 @@ public class BookmarkRecyclerViewFragment extends Fragment
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
         mAddBookmarkFab.setVisibility(View.GONE);
+        mStatusSingleton.setSearchMode(true);
+//                            ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
+//                                    .setSearchMode(true);
+//        mRecyclerView.getAdapter().notifyDataSetChanged();
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         mAddBookmarkFab.setVisibility(View.VISIBLE);
+        mStatusSingleton.unsetStatus();
+//                            ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
+//                                    .setSearchMode(false);
+//        rvActionsSingleton.setAdapter();
         return true;
     }
 
@@ -149,6 +159,8 @@ public class BookmarkRecyclerViewFragment extends Fragment
                 handleSetting();
                 return true;
             case R.id.action_export:
+                Toast.makeText(mMainActivityRef, "Feature will come soon!",
+                        Toast.LENGTH_SHORT).show();
 //                exportBookmarksSingleton.exportAction();
                 return true;
             case R.id.action_terms_and_licences:
@@ -203,6 +215,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mMainActivityRef));
         mRecyclerView.setAdapter(recyclerViewAdapter);
         setRealmAdapter(recyclerViewAdapter);
+        mSearchHandlerSingleton.setAdapter(recyclerViewAdapter);
 
         mRecyclerView.setItemAnimator(null);
         mRecyclerView.setHasFixedSize(true);
@@ -219,8 +232,6 @@ public class BookmarkRecyclerViewFragment extends Fragment
     public void setRealmAdapter(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
         try {
             RealmResults realmResults = mRealm.where(Bookmark.class).findAll();
-            realmResults.sort("timestamp");
-
             RealmModelAdapter realmModelAdapter = new RealmModelAdapter(mMainActivityRef, realmResults, true);
             recyclerViewAdapter
                     .setRealmBaseAdapter(realmModelAdapter);
@@ -315,10 +326,10 @@ public class BookmarkRecyclerViewFragment extends Fragment
     private void initSingletonInstances() {
         mRealm = Realm.getInstance(mMainActivityRef);
         mStatusSingleton = StatusSingleton.getInstance();
-        mSearchHandlerSingleton = SearchHandlerSingleton.getInstance(mMainActivityRef);
         mActionbarSingleton = ActionbarSingleton.getInstance(mMainActivityRef);
         mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(mMainActivityRef);
         mBookmarkProviderSingleton = BookmarkProviderSingleton.getInstance(mMainActivityRef, this);
+        mSearchHandlerSingleton = SearchHandlerSingleton.getInstance(mMainActivityRef, mRealm);
     }
 
     @Override
@@ -344,6 +355,23 @@ public class BookmarkRecyclerViewFragment extends Fragment
     private class EmptyDataObserver extends RecyclerView.AdapterDataObserver {
         @Override
         public void onChanged() {
+            if (mStatusSingleton.isIdleMode()) {
+                handleListView();
+            } else if (mStatusSingleton.isSearchMode()) {
+                handleSearchView();
+            }
+        }
+
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+        }
+
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+        }
+
+        /**
+         * handle empty listview
+         */
+        private void handleListView() {
             boolean isEmptyData = mRecyclerView.getAdapter().getItemCount() == 0;
             mEmptyLinkListView.setVisibility(isEmptyData ? View.VISIBLE : View.GONE);
             mEmptyLinkListView.setOnClickListener(new View.OnClickListener() {
@@ -354,11 +382,15 @@ public class BookmarkRecyclerViewFragment extends Fragment
                 }
             });
         }
-
-        public void onItemRangeInserted(int positionStart, int itemCount) {
+        /**
+         * handle empty listview
+         */
+        private void handleSearchView() {
+            boolean isEmptyData = mRecyclerView.getAdapter().getItemCount() == 0;
+            mEmptySearchResultLayout.setVisibility(isEmptyData ? View.VISIBLE : View.GONE);
+            ((TextView) mEmptySearchResultLayout.findViewById(R.id.searchResultQueryTextId))
+                    .setText(mSearchHandlerSingleton.getFilterString());
         }
 
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-        }
     }
 }

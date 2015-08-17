@@ -25,7 +25,7 @@ import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChang
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
 import com.application.material.bookmarkswallet.app.singleton.ClipboardSingleton;
-import com.application.material.bookmarkswallet.app.singleton.RetrieveIconAsyncTask;
+import com.application.material.bookmarkswallet.app.asyncTask.RetrieveIconAsyncTask;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.cocosw.bottomsheet.BottomSheet;
 import io.realm.Realm;

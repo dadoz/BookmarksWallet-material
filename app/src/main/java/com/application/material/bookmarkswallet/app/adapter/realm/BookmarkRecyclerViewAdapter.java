@@ -15,6 +15,7 @@ import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 
 import static com.application.material.bookmarkswallet.app.models.Bookmark.Utils.getBookmarkNameWrapper;
 

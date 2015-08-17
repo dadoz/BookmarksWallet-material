@@ -27,7 +27,7 @@ public class StatusSingleton {
     /**
      * get current status
      */
-    StatusEnum getmCurrentStatus() {
+    StatusEnum getCurrentStatus() {
         return this.mCurrentStatus;
     }
 
@@ -35,7 +35,7 @@ public class StatusSingleton {
      * get current status
      * @param mCurrentStatus
      */
-    public void setmCurrentStatus(StatusEnum mCurrentStatus) {
+    public void setCurrentStatus(StatusEnum mCurrentStatus) {
         this.mCurrentStatus = mCurrentStatus;
     }
 
@@ -44,6 +44,14 @@ public class StatusSingleton {
      */
     public void unsetStatus() {
         mCurrentStatus = StatusEnum.IDLE;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isIdleMode() {
+        return mCurrentStatus == StatusEnum.IDLE;
     }
 
     /**

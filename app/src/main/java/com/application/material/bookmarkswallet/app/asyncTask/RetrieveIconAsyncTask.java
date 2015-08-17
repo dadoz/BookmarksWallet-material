@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.singleton;
+package com.application.material.bookmarkswallet.app.asyncTask;
 
 import android.os.AsyncTask;
 import android.util.Log;

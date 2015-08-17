@@ -1,15 +1,34 @@
 package com.application.material.bookmarkswallet.app.singleton.search;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Filter;
+import android.widget.Filterable;
+import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 /**
  * Created by davide on 04/08/15.
  */
-public class SearchHandlerSingleton {
-
+public class SearchHandlerSingleton implements Filterable, SearchView.OnQueryTextListener {
     private static SearchHandlerSingleton mInstance;
     private static Activity mActivityRef;
+    private static StatusSingleton mStatusSingleton;
+    private static Realm mRealm;
+    private BookmarkRecyclerViewAdapter mAdapter;
+    private String mFilterString;
 
     public SearchHandlerSingleton() {
     }
@@ -17,77 +36,144 @@ public class SearchHandlerSingleton {
     /**
      *
      * @param activity
-     * @return
+     * @retur
      */
-    public static SearchHandlerSingleton getInstance(Activity activity) {
+    public static SearchHandlerSingleton getInstance(Activity activity, Realm realm) {
         mActivityRef = activity;
+        mRealm = realm;
+//        mStatusSingleton = StatusSingleton.getInstance();
         return mInstance == null ?
                 mInstance = new SearchHandlerSingleton() :
                 mInstance;
     }
-    
+
     /**
-     * TODO refactoring it
+     *
+     */
+    public void setAdapter(BookmarkRecyclerViewAdapter adapter) {
+        mAdapter = adapter;
+    }
+
+    /**
      * @param menu
      */
-    public void handleSearch(Menu menu) {
-//        //SEARCH ITEM
-//        mSearchItem = menu.findItem(R.id.action_search);
-//        SearchManager searchManager = (SearchManager) mActivityRef.getSystemService(Context.SEARCH_SERVICE);
-//
-//        SearchView searchView = null;
-//        if (mSearchItem != null) {
-//            if (mActionbarSingleton.isSearchMode()) {
-//                mSearchItem.expandActionView();
-//            }
-//
-//            searchView = (SearchView) mSearchItem.getActionView();
-//            MenuItemCompat.setOnActionExpandListener(mSearchItem,
-//                    new MenuItemCompat.OnActionExpandListener() {
-//                        @Override
-//                        public boolean onMenuItemActionExpand(MenuItem item) {
-//                            mActionbarSingleton.setSearchMode(true);
-////                            ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
-////                                    .setSearchMode(true);
-//                            mRecyclerView.getAdapter().notifyDataSetChanged();
-//                            int startDelay = 600;
-//                            hideClipboardButton(startDelay);
-////                            mSlidingLayerLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-////                            mAdsView.setVisibility(View.GONE);
-//                            return true;
-//                        }
-//
-//                        @Override
-//                        public boolean onMenuItemActionCollapse(MenuItem item) {
-//                            mActionbarSingleton.setSearchMode(false);
-////                            ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
-////                                    .setSearchMode(false);
-//                            rvActionsSingleton.setAdapter();
-////                            mAdsView.setVisibility(View.VISIBLE);
-//                            showClipboardButton();
-//                            return true;
-//                        }
-//                    });
-//        }
-//
-//        if (searchView != null) {
-//            searchView.setSearchableInfo(searchManager
-//                    .getSearchableInfo(mActivityRef.getComponentName()));
-//            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//                public boolean onQueryTextChange(String newText) {
-//                    if(newText.trim().toLowerCase().equals("")) {
-//                        rvActionsSingleton.setAdapter();
-//                        return true;
-//                    }
-//
-//                    getFilter().filter(newText);
-//                    return true;
-//                }
-//
-//                public boolean onQueryTextSubmit(String query) {
-//                    return false;
-//                }
-//            });
-//        }
+    public void initSearchView(Menu menu) {
+        try {
+            MenuItem searchItem = menu.findItem(R.id.action_search);
+            SearchManager searchManager = (SearchManager) mActivityRef
+                    .getSystemService(Context.SEARCH_SERVICE);
+            SearchView searchView = (SearchView) searchItem.getActionView();
+            searchView.setSearchableInfo(searchManager
+                    .getSearchableInfo(mActivityRef.getComponentName()));
+            searchView.setOnQueryTextListener(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Override
+    public Filter getFilter() {
+        return new LinkFilter();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        getFilter().filter(newText);
+        return true;
+    }
+
+    /**
+     * TODO move on realm class
+     * @param filteredList
+     */
+    private void updateDataSet(RealmResults<Bookmark> filteredList) {
+        mAdapter.getRealmBaseAdapter().updateRealmResults(filteredList);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * TODO move on realm class
+     * @param
+     */
+    private void initDataSet() {
+        RealmResults<Bookmark> result = mRealm.where(Bookmark.class).findAll();
+        result.sort("timestamp", RealmResults.SORT_ORDER_DESCENDING);
+        mAdapter.getRealmBaseAdapter().updateRealmResults(result);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * TODO move in filter class
+     * set empty search result view
+     */
+    private RealmResults getFilteredList(boolean isSearchOnUrl,
+                                                      String filterString,
+                                                      boolean isCaseSensitive) {
+        mFilterString = filterString;
+        if (isSearchOnUrl) {
+            return mRealm.where(Bookmark.class)
+                    .contains("url", filterString, isCaseSensitive)
+                    .or()
+                    .contains("name", filterString, isCaseSensitive)
+                    .findAll();
+        }
+
+        return mRealm.where(Bookmark.class)
+                    .contains("name", filterString, isCaseSensitive)
+                    .findAll();
+    }
+
+    public String getFilterString() {
+        return mFilterString;
+    }
+
+    /**
+     * filter class handled by search
+     */
+    private class LinkFilter extends Filter {
+        private final boolean mSearchOnUrlEnabled;
+        private boolean mCaseSensitive = false;
+
+        public LinkFilter() {
+            mSearchOnUrlEnabled = false;
+        }
+
+        @Override
+        protected FilterResults performFiltering(final CharSequence constraint) {
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = null;
+            filterResults.count = 0;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(final CharSequence constraint, FilterResults results) {
+            mActivityRef.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String searchValue = ((String) constraint).trim().toLowerCase();
+                        if (searchValue.equals("")) {
+                            initDataSet();
+                            return;
+                        }
+
+                        RealmResults filteredList = getFilteredList(mSearchOnUrlEnabled,
+                                searchValue, mCaseSensitive);
+
+//                        if (filteredList.size() == 0) -- handled by DataObserver
+                        updateDataSet(filteredList);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
     }
 }

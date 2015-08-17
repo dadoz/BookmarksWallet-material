@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
-import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.Realm;
@@ -478,7 +477,6 @@ public class RecyclerViewActionsSingleton {
 
     private void hideSlidingPanelWrapper() {
         try {
-            ((BookmarkListFragment) mFragmentRef).hideSlidingPanel();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -486,7 +484,6 @@ public class RecyclerViewActionsSingleton {
 
     private void showSlidingPanelWrapper() {
         try {
-            ((BookmarkListFragment) mFragmentRef).showSlidingPanel();
         } catch (Exception e) {
             e.printStackTrace();
         }

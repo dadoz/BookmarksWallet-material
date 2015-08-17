@@ -60,7 +60,7 @@
                         android:textSize="@dimen/text_size_16"
                         android:ellipsize="end"
                         android:lines="2"
-                        android:textColor="@color/material_yellow_900"/>
+                        android:textColor="@color/yellow_900"/>
             </LinearLayout>
             <!-- DATE -->
             <TextView
