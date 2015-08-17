@@ -15,6 +15,7 @@ import com.application.material.bookmarkswallet.app.adapter.realm.RealmRecyclerV
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 import java.util.UUID;
 
@@ -113,7 +114,7 @@ public class BookmarkActionSingleton {
         BookmarkRecyclerViewAdapter adapter =
                 (BookmarkRecyclerViewAdapter) recyclerView.getAdapter();
         return (Bookmark) adapter
-                .getItem(recyclerView.getChildPosition(v));
+                .getItem(recyclerView.getChildLayoutPosition(v));
     }
     /**
      *
@@ -122,9 +123,7 @@ public class BookmarkActionSingleton {
      * @return
      */
     private int getBookmarkPosByView(View v, RecyclerView recyclerView) {
-        BookmarkRecyclerViewAdapter adapter =
-                (BookmarkRecyclerViewAdapter) recyclerView.getAdapter();
-        return recyclerView.getChildPosition(v);
+        return recyclerView.getChildLayoutPosition(v);
     }
 
     /**
@@ -140,6 +139,15 @@ public class BookmarkActionSingleton {
         adapter.getItem(position).removeFromRealm();
         mRealm.commitTransaction();
         adapter.notifyItemRemoved(position);
+    }
+
+    /**
+     * delete all bookmarks stored
+     */
+    public void deleteAllAction() {
+        mRealm.beginTransaction();
+        mRealm.where(Bookmark.class).findAll().clear();
+        mRealm.commitTransaction();
     }
 
     /**

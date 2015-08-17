@@ -38,7 +38,7 @@
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/material_violet_100"
+                android:textColor="@color/blue_grey_200"
                 android:text="Export your bookmarks as a CSV file in your Download folder."/>
 
         </LinearLayout>

@@ -9,6 +9,8 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
@@ -33,7 +35,7 @@ public class Utils {
     public static final String NO_TITLE_SET = "(no title)";
     private static final String TAG = "Utils";
     private static final int DEFAULT_ICON_SIZE = 96;
-    public static String BOOKMARKS_WALLET_SHAREDPREF = "BOOKMARKS_WALLET_SHAREDPREF";
+    private static int CONST_VALUE = 100;
 
     /**
      * @param url
@@ -139,4 +141,23 @@ public class Utils {
         }
     }
 
+    /**
+     *
+     * @param v
+     */
+    public static void animateFabIn(View v) {
+        v.animate().translationY(v.getHeight() + CONST_VALUE)
+                .setInterpolator(new AccelerateInterpolator(2))
+                .start();
+    }
+
+    /**
+     *
+     * @param v
+     */
+    public static void animateFabOut(View v) {
+        v.animate().translationY(0)
+                .setInterpolator(new DecelerateInterpolator(2))
+                .start();
+    }
 }

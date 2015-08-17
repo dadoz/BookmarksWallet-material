@@ -2,7 +2,7 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:background="@color/material_mustard_yellow"
+        android:background="@color/yellow_400"
         android:layout_height="match_parent">
     <LinearLayout
             android:layout_width="fill_parent"
@@ -19,14 +19,8 @@
                 android:textColor="@color/blue_grey_700"
                 android:gravity="center"
                 android:padding="@dimen/medium_padding"
-                android:text="Press and hold a bookmark url \nif you want to edit or change it."/>
+                android:text="Tap on PLUS button or pin icon to \nadd your bookmarks to the list."/>
 
     </LinearLayout>
-    <ImageView
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:src="@drawable/ic_more_horiz_colorful_step2_48dp"/>
 
 </RelativeLayout>

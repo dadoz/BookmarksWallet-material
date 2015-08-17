@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app;
 
 import android.os.Bundle;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import butterknife.Bind;
@@ -14,6 +15,7 @@ public class TutorialActivity extends AppCompatActivity {
 
     @Bind(R.id.viewPagerId)
     ViewPager mViewPager;
+    private static final int N_PAGES = 3;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -21,10 +23,7 @@ public class TutorialActivity extends AppCompatActivity {
         setContentView(R.layout.tutorial_layout);
         ButterKnife.bind(this);
 
-        mViewPager.setAdapter(new TutorialPagerAdapter(getSupportFragmentManager(), this, 3));
+        ((PagerTitleStrip) findViewById(R.id.titleStripId)).setNonPrimaryAlpha(0);
+        mViewPager.setAdapter(new TutorialPagerAdapter(getSupportFragmentManager(), this, N_PAGES));
     }
-
-
-
-
 }

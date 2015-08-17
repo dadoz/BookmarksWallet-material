@@ -6,7 +6,7 @@
             android:id="@+id/settingsListId"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@color/material_grey_200"
+            android:background="@color/grey_200"
             android:paddingLeft="10dip"
             android:paddingRight="10dip">
 

@@ -9,7 +9,7 @@ public class StatusSingleton {
 
     private enum StatusEnum {EDIT, SYNC, SEARCH, IDLE}
     private int mEditItemPos;
-    private StatusEnum mCurrentStatus;
+    private StatusEnum mCurrentStatus = StatusEnum.IDLE;
 
     public StatusSingleton() {
     }

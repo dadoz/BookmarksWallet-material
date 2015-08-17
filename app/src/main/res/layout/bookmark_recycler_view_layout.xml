@@ -32,6 +32,7 @@
             android:layout_height="wrap_content"
             app:elevation="4dp"
             app:borderWidth="0dp"
+            app:layout_behavior="com.application.material.bookmarkswallet.app.behavior.FloatingActionButtonBehavior"
             android:layout_gravity="bottom|right"
             android:layout_margin="@dimen/large_padding"
             android:src="@drawable/ic_add_white_48dp"

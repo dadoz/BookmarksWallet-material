@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,11 +10,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.*;
-import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -106,7 +106,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-        mAddBookmarkFab.setVisibility(View.GONE);
+        Utils.animateFabIn(mAddBookmarkFab);
         mStatusSingleton.setSearchMode(true);
         return true;
     }
@@ -114,7 +114,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         mEmptySearchResultLayout.setVisibility(View.GONE); //PATCH
-        mAddBookmarkFab.setVisibility(View.VISIBLE);
+        Utils.animateFabOut(mAddBookmarkFab);
         mStatusSingleton.unsetStatus();
         return true;
     }
@@ -180,7 +180,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
         initActionbar();
         initRecyclerView();
         mAddBookmarkFab.setOnClickListener(this);
-        setNotSyncBookmarks();
+//        setNotSyncBookmarks();
     }
 
     /**
@@ -211,7 +211,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
         setRealmAdapter(recyclerViewAdapter);
         mSearchHandlerSingleton.setAdapter(recyclerViewAdapter);
 
-//        mRecyclerView.setItemAnimator(null);
+        mRecyclerView.setItemAnimator(null); //WTF
         mRecyclerView.setHasFixedSize(true);
     }
 
@@ -234,10 +234,6 @@ public class BookmarkRecyclerViewFragment extends Fragment
      * Realm io function to handle adapter and get
      * data from db
      */
-//    public RealmResults<Bookmark> getBookmarksList() {
-//        return mRealm.where(Bookmark.class).findAll();
-//    }
-
     public void setRealmAdapter(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
         try {
             RealmResults realmResults = mRealm.where(Bookmark.class).findAll();
@@ -271,9 +267,6 @@ public class BookmarkRecyclerViewFragment extends Fragment
                         Toast.makeText(mMainActivityRef, "hey", Toast.LENGTH_SHORT).show();
                     }
                 }).show();
-//        if (rvActionsSingleton.getSyncStatus() == CANCELED) {
-//            rvActionsSingleton.setBookmarksNotSyncView(true);
-//        }
     }
 
     /**
@@ -356,5 +349,4 @@ public class BookmarkRecyclerViewFragment extends Fragment
     public void onTaskCompleted(byte[] data) {
         return;
     }
-
 }

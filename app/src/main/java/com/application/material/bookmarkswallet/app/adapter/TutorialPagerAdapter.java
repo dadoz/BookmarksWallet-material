@@ -55,11 +55,11 @@ public class TutorialPagerAdapter extends FragmentPagerAdapter implements OnPage
         Resources res = mMainActivityRef.getResources();
         switch (position) {
             case 0:
-                return res.getString(R.string.links_tab_name);
+                return ".";
             case 1:
-                return res.getString(R.string.import_export_tab_name);
+                return "..";
             case 2:
-                return res.getString(R.string.import_export_tab_name);
+                return "...";
             default:
                 return "generic tab";
         }

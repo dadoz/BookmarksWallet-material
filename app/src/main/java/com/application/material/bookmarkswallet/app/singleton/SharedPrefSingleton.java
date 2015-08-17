@@ -3,8 +3,6 @@ package com.application.material.bookmarkswallet.app.singleton;
 import android.app.Activity;
 import android.content.SharedPreferences;
 
-import static com.application.material.bookmarkswallet.app.singleton.RecyclerViewActionsSingleton.SyncStatusEnum.NOT_SET;
-
 /**
  * Created by davide on 17/07/15.
  */
@@ -27,20 +25,31 @@ public class SharedPrefSingleton {
         return mInstance == null ? mInstance = new SharedPrefSingleton() : mInstance;
     }
 
-
+    /**
+     *
+     * @param key
+     * @param defValue
+     * @return
+     */
     public Object getValue(String key, Object defValue) {
         switch (key) {
             case SEARCH_URL_MODE:
                 return mSharedPref.getBoolean(SEARCH_URL_MODE, (Boolean) defValue);
             case SYNC_STATUS:
                 String syncName = mSharedPref.getString(SYNC_STATUS, (String) defValue);
-                return RecyclerViewActionsSingleton.SyncStatusEnum.valueOf(syncName);
+//                return SyncStatusEnum.valueOf(syncName);
+                return null;
             case TUTORIAL_DONE:
                 return mSharedPref.getBoolean(TUTORIAL_DONE, (boolean) defValue);
         }
         return null;
     }
 
+    /**
+     *
+     * @param key
+     * @param value
+     */
     public void setValue(String key, Object value) {
         switch (key) {
             case SEARCH_URL_MODE:

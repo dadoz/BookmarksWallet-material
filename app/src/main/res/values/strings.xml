@@ -16,7 +16,9 @@
     <string name="main_title">Bookmarks</string>
     <string name="setting_rate_label">Rate and review on Play</string>
     <string name="setting_url_search_label">Search on URL enabled</string>
+    <string name="setting_find_icon_label">Find icon automatically</string>
     <string name="setting_delete_all_label">Delete all bookmarks!</string>
     <string name="setting_feedback_label">Send a feedback</string>
     <string name="setting_build_version_label">Build version</string>
+    <string name="send_feedback_email">tunnus.android@gmail.com</string>
 </resources>

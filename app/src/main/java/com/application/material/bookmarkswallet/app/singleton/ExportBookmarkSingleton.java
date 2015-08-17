@@ -33,7 +33,6 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
     private static ExportBookmarkSingleton  mInstance;
     private static Fragment mListenerRef;
     private static Activity mActivityRef;
-    private static RecyclerViewActionsSingleton mRvActionsSingleton;
     private AlertDialog mExportDialog;
     private RealmResults<Bookmark> mItems;
     private View mExportBookmarksDialogView;
@@ -45,12 +44,12 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
     public static ExportBookmarkSingleton getInstance(Fragment listenerRef, Activity activityRef) {
         mListenerRef = listenerRef;
         mActivityRef = activityRef;
-        mRvActionsSingleton = RecyclerViewActionsSingleton.getInstance(mActivityRef);
         return mInstance == null ? mInstance = new ExportBookmarkSingleton() : mInstance;
     }
 
     public void exportAction() {
-        final RealmResults<Bookmark> list = mRvActionsSingleton.getBookmarksList();
+//        final RealmResults<Bookmark> list = mRvActionsSingleton.getBookmarksList();
+        final RealmResults<Bookmark> list = null;
         if (list == null || list.size() == 0) {
             emptyExportAction();
             return;
@@ -97,7 +96,7 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
             @Override
             protected Boolean doInBackground(Integer... params) {
                 mProgressWheel = (ProgressWheel) mExportBookmarksDialogView.findViewById(R.id.progressWheelId);
-                final RealmResults<Bookmark> list = mRvActionsSingleton.getBookmarksList();
+                final RealmResults<Bookmark> list = null;
                 return CSVExportParser.writeFile(list);
             }
 

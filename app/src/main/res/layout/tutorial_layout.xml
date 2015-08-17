@@ -5,4 +5,15 @@
     android:id="@+id/viewPagerId"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"/>
+    tools:context=".MainActivity">
+    <android.support.v4.view.PagerTitleStrip
+            android:id="@+id/titleStripId"
+            android:textSize="60sp"
+            android:textColor="@color/blue_grey_900"
+            android:layout_gravity="bottom"
+            android:background="@color/yellow_400"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+    </android.support.v4.view.PagerTitleStrip>
+</android.support.v4.view.ViewPager>

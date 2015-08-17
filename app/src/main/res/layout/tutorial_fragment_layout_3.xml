@@ -2,7 +2,7 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:background="@color/material_mustard_yellow"
+        android:background="@color/yellow_400"
         android:layout_height="match_parent">
     <LinearLayout
             android:layout_width="fill_parent"
@@ -20,7 +20,7 @@
                 android:gravity="center"
                 android:padding="@dimen/medium_padding"
                 android:textColor="@color/blue_grey_700"
-                android:text="Now you're ready to start.\nImport your bookmarks from Chrome."/>
+                android:text="Now you're ready to start.\n"/>
 
     </LinearLayout>
     <Button
@@ -31,14 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_layout"
-            android:textColor="@color/blue_grey_700"
+            android:textColor="@color/blue_grey_200"
             android:text="START"/>
-
-    <!--<ImageView-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_width="@dimen/icon_size"-->
-            <!--android:layout_height="@dimen/icon_size"-->
-            <!--android:src="@drawable/ic_more_horiz_white_48dp"/>-->
 
 </RelativeLayout>

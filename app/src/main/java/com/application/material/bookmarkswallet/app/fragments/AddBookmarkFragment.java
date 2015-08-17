@@ -37,7 +37,7 @@ import java.net.URL;
 /**
  * Created by davide on 06/08/15.
  */
-public class AddBookmarkFragment extends Fragment implements View.OnClickListener, OnTaskCompleted {
+public class AddBookmarkFragment extends Fragment implements View.OnClickListener, OnTaskCompleted, SwipeRefreshLayout.OnRefreshListener {
     public static final String FRAG_TAG = "AddBookmarkFragmentTAG";
     private Activity mAddActivityRef;
     private ActionbarSingleton mActionbarSingleton;
@@ -116,6 +116,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * pull to refresh init
      */
     private void initPullToRefresh() {
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout
                 .setColorSchemeResources(R.color.blue_grey_700,
                         R.color.yellow_400);
@@ -317,7 +318,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * get image from gallery
      */
     private void retrieveIconByGallery() {
-        Toast.makeText(mAddActivityRef, "feature will be added soon!", Toast.LENGTH_LONG)
+        Toast.makeText(mAddActivityRef, "feature will come soon!", Toast.LENGTH_LONG)
                 .show();
     }
 
@@ -378,5 +379,10 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }
