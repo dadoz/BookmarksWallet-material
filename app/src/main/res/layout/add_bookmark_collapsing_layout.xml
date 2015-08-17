@@ -23,7 +23,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/medium_padding"
                 android:textColor="@color/blue_grey_200"
-                android:minWidth="250dip"
+                android:minWidth="@dimen/abc_search_view_text_min_width"
+                android:maxWidth="@dimen/edit_text_max_width"
                 android:maxLines="1"
                 android:hint="title...">
         </android.support.v7.widget.AppCompatEditText>
@@ -41,7 +42,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/blue_grey_200"
-                android:minWidth="250dip"
+                android:minWidth="@dimen/abc_search_view_text_min_width"
+                android:maxWidth="@dimen/edit_text_max_width"
                 android:maxLines="3"
                 android:hint="url...">
         </android.support.v7.widget.AppCompatEditText>

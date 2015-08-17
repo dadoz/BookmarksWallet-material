@@ -31,7 +31,9 @@
     <dimen name="medium_icon_size">36dip</dimen>
     <dimen name="sliding_panel_header_height">40dip</dimen>
     <dimen name="small_icon_size">18dip</dimen>
-    <dimen name="large_icon_size">72dip</dimen>
+    <dimen name="large_icon_size">96dip</dimen>
     <dimen name="height_button">40dip</dimen>
     <dimen name="button_radius">3dip</dimen>
+    <dimen name="text_size_10">10sp</dimen>
+    <dimen name="edit_text_max_width">250dip</dimen>
 </resources>

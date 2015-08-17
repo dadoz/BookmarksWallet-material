@@ -2,6 +2,7 @@ package com.application.material.bookmarkswallet.app.singleton;
 
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
+import com.application.material.bookmarkswallet.app.singleton.search.SearchHandlerSingleton;
 
 /**
  * Created by davide on 23/06/15.
@@ -12,6 +13,7 @@ public class BackPressedSingleton {
     private static AppCompatActivity activityRef;
     private static ActionbarSingleton actionbarSingleton;
     private static StatusSingleton statusSingleton;
+    private static SearchHandlerSingleton mSearchHandlerSingleton;
 
     public BackPressedSingleton() {
     }
@@ -31,6 +33,7 @@ public class BackPressedSingleton {
      * init singleton ref
      */
     private static void initSingletonRef() {
+        mSearchHandlerSingleton = SearchHandlerSingleton.getInstance(activityRef, null);
         actionbarSingleton = ActionbarSingleton.getInstance(activityRef);
         statusSingleton = StatusSingleton.getInstance();
     }
@@ -43,13 +46,15 @@ public class BackPressedSingleton {
         boolean isHomeUpEnabled = homeUpEnabled();
         actionbarSingleton.udpateActionbar(isHomeUpEnabled);
 
-        if (! statusSingleton.isSearchMode()) {
-            return false;
+        if (statusSingleton.isSearchMode()) {
+            mSearchHandlerSingleton.collapseSearchView();
+            statusSingleton.unsetStatus();
+            return true;
         }
 
         //handle back
 //        ((BookmarkListFragment) fragment).collapseSearchActionView();
-        return true;
+        return false;
     }
 
     /**

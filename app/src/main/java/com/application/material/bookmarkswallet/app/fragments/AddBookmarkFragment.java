@@ -113,11 +113,32 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     }
 
     /**
+     * pull to refresh init
+     */
+    private void initPullToRefresh() {
+        mSwipeRefreshLayout
+                .setColorSchemeResources(R.color.blue_grey_700,
+                        R.color.yellow_400);
+    }
+
+    /**
      *
      */
     private void onInitView() {
         mAddBookmarkFab.setOnClickListener(this);
         mIconImageView.setOnClickListener(this);
+        initPullToRefresh();
+        setFindIconColor();
+    }
+
+    /**
+     * set color on icon
+     */
+    private void setFindIconColor() {
+        //colorize icon
+        Drawable res = ((ImageView) ((ViewGroup) mIconImageView).getChildAt(0)).getDrawable();
+        Utils.setColorFilter(res, getResources().getColor(R.color.blue_grey_900));
+        ((ImageView) ((ViewGroup) mIconImageView).getChildAt(0)).setImageDrawable(res);
     }
 
     /**
@@ -135,8 +156,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * @return
      */
     public Drawable getToolbarDrawableColor() {
-        return mAddActivityRef
-                .getResources().getDrawable(R.color.blue_grey_700);
+        return getResources().getDrawable(R.color.blue_grey_700);
     }
 
     /**
@@ -144,8 +164,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * @return
      */
     public int getActionbarColor() {
-        return mAddActivityRef.getResources()
-                .getColor(R.color.blue_grey_800);
+        return getResources().getColor(R.color.blue_grey_800);
     }
 
     /**
@@ -179,9 +198,9 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * show error message
      */
     private void showErrorMessage() {
-        Snackbar snackbar = Snackbar.make(mView, "Ops! Something went wrong on saving bookmark.", Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(mView, "Ops! Something went wrong!", Snackbar.LENGTH_LONG);
         snackbar.getView()
-                .setBackgroundColor(mAddActivityRef.getResources().getColor(R.color.red_500));
+                .setBackgroundColor(getResources().getColor(R.color.red_500));
         snackbar.show();
     }
 
@@ -354,7 +373,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     private void setIconOnUi() {
         try {
             Bitmap icon = BitmapFactory.decodeByteArray(mBookmarkBlobIcon, 0, mBookmarkBlobIcon.length);
-            ((ImageView) ((ViewGroup) mIconImageView).getChildAt(1))
+            ((ImageView) ((ViewGroup) mIconImageView).getChildAt(0))
                     .setImageBitmap(icon);
         } catch (Exception e) {
             e.printStackTrace();

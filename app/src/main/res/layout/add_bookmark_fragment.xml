@@ -21,18 +21,17 @@
                 android:background="?@android:attr/selectableItemBackground"
                 android:gravity="center"
                 android:orientation="vertical">
+            <ImageView
+                    android:layout_width="@dimen/large_icon_size"
+                    android:layout_height="@dimen/large_icon_size"
+                    android:src="@drawable/ic_bookmark_outline_black_48dp"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/medium_padding"
                     android:gravity="center"
-                    android:textSize="@dimen/text_size_16"
-                    android:textColor="@color/blue_grey_400"
-                    android:text="Tap to set a \ncustom icon!" />
-            <ImageView
-                    android:layout_width="96dip"
-                    android:layout_height="96dip"
-                    android:src="@drawable/ic_photo_colorful_48dp"/>
+                    android:textSize="@dimen/text_size_14"
+                    android:textColor="@color/blue_grey_200"
+                    android:text="Tap to set the\nbookmark icon!" />
         </LinearLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>

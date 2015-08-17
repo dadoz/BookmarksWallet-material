@@ -33,7 +33,7 @@ public class AddBookmarkActivity extends AppCompatActivity
      */
     public void onInitFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.fragmentContainerFrameLayoutId,
+        transaction.replace(R.id.fragmentContainerFrameLayoutId,
                 new AddBookmarkFragment(), AddBookmarkFragment.FRAG_TAG).commit();
     }
 

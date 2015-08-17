@@ -29,6 +29,7 @@ public class SearchHandlerSingleton implements Filterable, SearchView.OnQueryTex
     private static Realm mRealm;
     private BookmarkRecyclerViewAdapter mAdapter;
     private String mFilterString;
+    private MenuItem mSearchItem;
 
     public SearchHandlerSingleton() {
     }
@@ -59,10 +60,10 @@ public class SearchHandlerSingleton implements Filterable, SearchView.OnQueryTex
      */
     public void initSearchView(Menu menu) {
         try {
-            MenuItem searchItem = menu.findItem(R.id.action_search);
+            mSearchItem = menu.findItem(R.id.action_search);
             SearchManager searchManager = (SearchManager) mActivityRef
                     .getSystemService(Context.SEARCH_SERVICE);
-            SearchView searchView = (SearchView) searchItem.getActionView();
+            SearchView searchView = (SearchView) mSearchItem.getActionView();
             searchView.setSearchableInfo(searchManager
                     .getSearchableInfo(mActivityRef.getComponentName()));
             searchView.setOnQueryTextListener(this);
@@ -70,7 +71,18 @@ public class SearchHandlerSingleton implements Filterable, SearchView.OnQueryTex
             e.printStackTrace();
         }
     }
-    
+
+    /**
+     * collapse search view
+     */
+    public void collapseSearchView() {
+        try {
+            mSearchItem.collapseActionView();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public Filter getFilter() {
         return new LinkFilter();

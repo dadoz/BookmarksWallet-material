@@ -19,14 +19,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.adapter.observer.DataObserver;
 import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
-import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
-import com.application.material.bookmarkswallet.app.singleton.BookmarkProviderSingleton;
-import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
+import com.application.material.bookmarkswallet.app.singleton.*;
 import com.application.material.bookmarkswallet.app.singleton.search.SearchHandlerSingleton;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.Realm;
@@ -110,19 +108,14 @@ public class BookmarkRecyclerViewFragment extends Fragment
     public boolean onMenuItemActionExpand(MenuItem item) {
         mAddBookmarkFab.setVisibility(View.GONE);
         mStatusSingleton.setSearchMode(true);
-//                            ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
-//                                    .setSearchMode(true);
-//        mRecyclerView.getAdapter().notifyDataSetChanged();
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
+        mEmptySearchResultLayout.setVisibility(View.GONE); //PATCH
         mAddBookmarkFab.setVisibility(View.VISIBLE);
         mStatusSingleton.unsetStatus();
-//                            ((BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter())
-//                                    .setSearchMode(false);
-//        rvActionsSingleton.setAdapter();
         return true;
     }
 
@@ -156,6 +149,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
                 shareBookmark();
                 break;
             case R.id.action_settings:
+                mStatusSingleton.unsetStatus();
                 handleSetting();
                 return true;
             case R.id.action_export:
@@ -211,23 +205,38 @@ public class BookmarkRecyclerViewFragment extends Fragment
     private void initRecyclerView() {
         BookmarkRecyclerViewAdapter recyclerViewAdapter =
                 new BookmarkRecyclerViewAdapter(mMainActivityRef, this);
-        recyclerViewAdapter.registerAdapterDataObserver(new EmptyDataObserver());
+        registerDataObserver(recyclerViewAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mMainActivityRef));
         mRecyclerView.setAdapter(recyclerViewAdapter);
         setRealmAdapter(recyclerViewAdapter);
         mSearchHandlerSingleton.setAdapter(recyclerViewAdapter);
 
-        mRecyclerView.setItemAnimator(null);
+//        mRecyclerView.setItemAnimator(null);
         mRecyclerView.setHasFixedSize(true);
+    }
+
+    /**
+     *
+     * @param recyclerViewAdapter
+     */
+    private void registerDataObserver(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
+        recyclerViewAdapter.registerAdapterDataObserver(new DataObserver(
+                mStatusSingleton,
+                mRecyclerView,
+                mEmptyLinkListView,
+                mEmptySearchResultLayout,
+                mSwipeRefreshLayout,
+                mBookmarkProviderSingleton,
+                mSearchHandlerSingleton));
     }
 
     /**
      * Realm io function to handle adapter and get
      * data from db
      */
-    public RealmResults<Bookmark> getBookmarksList() {
-        return mRealm.where(Bookmark.class).findAll();
-    }
+//    public RealmResults<Bookmark> getBookmarksList() {
+//        return mRealm.where(Bookmark.class).findAll();
+//    }
 
     public void setRealmAdapter(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
         try {
@@ -247,9 +256,8 @@ public class BookmarkRecyclerViewFragment extends Fragment
     private void initPullToRefresh() {
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout
-                .setColorSchemeResources(android.R.color.holo_red_light,
-                        android.R.color.holo_orange_light, android.R.color.holo_blue_bright,
-                        android.R.color.holo_green_light);
+                .setColorSchemeResources(R.color.blue_grey_700,
+                        R.color.yellow_400);
     }
 
     /**
@@ -349,48 +357,4 @@ public class BookmarkRecyclerViewFragment extends Fragment
         return;
     }
 
-    /**
-     * set empty view on empty data TODO move
-     */
-    private class EmptyDataObserver extends RecyclerView.AdapterDataObserver {
-        @Override
-        public void onChanged() {
-            if (mStatusSingleton.isIdleMode()) {
-                handleListView();
-            } else if (mStatusSingleton.isSearchMode()) {
-                handleSearchView();
-            }
-        }
-
-        public void onItemRangeInserted(int positionStart, int itemCount) {
-        }
-
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-        }
-
-        /**
-         * handle empty listview
-         */
-        private void handleListView() {
-            boolean isEmptyData = mRecyclerView.getAdapter().getItemCount() == 0;
-            mEmptyLinkListView.setVisibility(isEmptyData ? View.VISIBLE : View.GONE);
-            mEmptyLinkListView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mSwipeRefreshLayout.setRefreshing(true);
-                    mBookmarkProviderSingleton.addByDefaultBrowser();
-                }
-            });
-        }
-        /**
-         * handle empty listview
-         */
-        private void handleSearchView() {
-            boolean isEmptyData = mRecyclerView.getAdapter().getItemCount() == 0;
-            mEmptySearchResultLayout.setVisibility(isEmptyData ? View.VISIBLE : View.GONE);
-            ((TextView) mEmptySearchResultLayout.findViewById(R.id.searchResultQueryTextId))
-                    .setText(mSearchHandlerSingleton.getFilterString());
-        }
-
-    }
 }
