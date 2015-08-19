@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.provider.Browser;
 import android.util.Log;
 import com.application.material.bookmarkswallet.app.fragments.OnTaskCompleted;
-import com.application.material.bookmarkswallet.app.services.BookmarksProviderService;
 import io.realm.Realm;
 
 import java.net.URL;

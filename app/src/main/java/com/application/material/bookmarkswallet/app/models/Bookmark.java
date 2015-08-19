@@ -89,6 +89,11 @@ public class Bookmark extends RealmObject {
     }
 
     public static class Utils {
+        /**
+         *
+         * @param timestamp
+         * @return
+         */
         public static String getParsedTimestamp(long timestamp) {
             DateTime dt = new DateTime(timestamp);
             if(dt.getDayOfMonth() == DateTime.now().getDayOfMonth()) {
@@ -105,10 +110,19 @@ public class Bookmark extends RealmObject {
             return fmt.print(dt);
         }
 
+        /**
+         *
+         * @return
+         */
         public static long getTodayTimestamp() {
             return DateTime.now().getMillis();
         }
 
+        /**
+         *
+         * @param bookmark
+         * @return
+         */
         public static String stringify(Bookmark bookmark) {
             if(bookmark != null) {
                 return "BOOKMARK " + bookmark.getTimestamp() + "\n " + bookmark.getName() + " - " + bookmark.getUrl();
@@ -116,6 +130,11 @@ public class Bookmark extends RealmObject {
             return null;
         }
 
+        /**
+         *
+         * @param name
+         * @return
+         */
         public static String getBookmarkNameWrapper(String name) {
             return name == null || name.trim().equals("") ?
                     "(no title)" : name;

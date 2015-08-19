@@ -56,7 +56,6 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     SwipeRefreshLayout mSwipeRefreshLayout;
     private View mView;
     private byte[] mBookmarkBlobIcon = null;
-    private String HTTP_PROTOCOL = "http://";
 
     @Override
     public void onAttach(Activity activity) {
@@ -259,7 +258,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * @return
      */
     public String getBookmarkUrl() {
-        return HTTP_PROTOCOL + mUrlEditText.getText().toString();
+        return Utils.buildUrl(mUrlEditText.getText().toString());
     }
 
     /**

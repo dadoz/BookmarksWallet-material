@@ -28,14 +28,12 @@ import java.util.regex.Pattern;
  * Created by davide on 17/07/15.
  */
 public class Utils {
-    public static final String SEARCH_URL_MODE = "SEARCH_URL_MODE";
-    public static final String SYNC_STATUS = "SYNC_STATUS";
     public static final String IMPORT_TRIGGER = "IMPORT_TRIGGER";
     public static final int ADD_BOOKMARK_ACTIVITY_REQ_CODE = 99;
-    public static final String NO_TITLE_SET = "(no title)";
     private static final String TAG = "Utils";
     private static final int DEFAULT_ICON_SIZE = 96;
     private static int CONST_VALUE = 100;
+    private static String HTTP_PROTOCOL = "http://";
 
     /**
      * @param url
@@ -43,7 +41,7 @@ public class Utils {
      */
     public static boolean isValidUrl(String url) {
         Pattern p = Pattern.
-                compile("(@)?(href=')?(HREF=')?(HREF=\")?(href=\")?(http://)?(https://)?(ftp://)?[a-zA-Z_0-9\\-]+(\\.\\w[a-zA-Z_0-9\\-]+)+(/[#&\\n\\-=?\\+\\%/\\.\\w]+)?");
+                compile("(@)?(href=')?(HREF=')?(HREF=\")?(href=\")?(http://)?(https://)?(ftp://)?[a-zA-Z_0-9\\-]+(\\.\\w[a-zA-Z_0-9\\-]+)+(/([#&\\n\\-=?\\+\\%/\\.\\w]+)?)?");
 
         Matcher m = p.matcher(url);
         return ! url.equals("") &&
@@ -159,5 +157,14 @@ public class Utils {
         v.animate().translationY(0)
                 .setInterpolator(new DecelerateInterpolator(2))
                 .start();
+    }
+
+    /**check if url contain already http or https protocol otw atttach it
+     *
+     */
+    public static String buildUrl(String url) {
+        return url == null ||
+                url.contains("http://") || url.contains("https://") ?
+                url : HTTP_PROTOCOL + url;
     }
 }
