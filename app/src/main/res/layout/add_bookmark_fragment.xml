@@ -44,7 +44,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/large_padding"
             android:layout_below="@id/addBookmarkMainContainerLayoutId"
-            android:layout_marginTop="-30dp"
+            android:layout_marginTop="@dimen/mini_fab_negative_margin"
             android:src="@drawable/ic_done_black_48dp"
             app:elevation="4dp"
             app:borderWidth="0dp"

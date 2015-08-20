@@ -27,8 +27,8 @@
             <ImageView
                     android:id="@+id/linkIconId"
                     android:contentDescription="link_icon_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
                     android:layout_centerVertical="true"
                     android:layout_margin="@dimen/medium_padding"
                     android:src="@drawable/ic_bookmark_outline_black_48dp"/>
@@ -76,32 +76,6 @@
                     android:textColor="@color/blue_grey_300"/>
         </RelativeLayout>
 
-
-        <ViewFlipper
-                android:visibility="gone"
-                android:id="@+id/linkIconFlipperIconId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-            <ImageView
-                    android:id="@+id/linkIconOpenedIconId"
-                    android:visibility="gone"
-                    android:contentDescription="link_icon_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="@dimen/fab_size_mini"
-                    android:minHeight="@dimen/fab_size_mini"
-                    android:maxWidth="@dimen/fab_size_normal"
-                    android:maxHeight="@dimen/fab_size_normal"
-                    android:layout_marginLeft="@dimen/medium_padding"
-                    android:layout_marginRight="@dimen/medium_padding"
-                    android:layout_marginBottom="@dimen/medium_padding"
-                    android:layout_marginTop="@dimen/medium_padding_custom"
-                    android:src="@drawable/ic_bookmark_outline_black_48dp"/>
-
-            <!--<include layout="@layout/bookmark_item_open" />-->
-
-        </ViewFlipper>
     </LinearLayout>
     </LinearLayout>
 </FrameLayout>

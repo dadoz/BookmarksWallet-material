@@ -16,7 +16,7 @@
 
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/sliding_panel_header_height"
+                        android:paddingBottom="@dimen/fab_margin"
                         android:clipToPadding="false"
                         android:scrollbars="vertical"/>
 
@@ -34,7 +34,7 @@
             app:borderWidth="0dp"
             app:layout_behavior="com.application.material.bookmarkswallet.app.behavior.FloatingActionButtonBehavior"
             android:layout_gravity="bottom|right"
-            android:layout_margin="@dimen/large_padding"
+            android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/ic_add_white_48dp"
             app:backgroundTint="@color/blue_grey_700"
             app:fabSize="normal"/>

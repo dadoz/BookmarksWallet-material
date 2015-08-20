@@ -2,6 +2,7 @@ package com.application.material.bookmarkswallet.app.utlis;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
@@ -13,6 +14,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 
 import java.io.BufferedInputStream;
@@ -31,7 +33,6 @@ public class Utils {
     public static final String IMPORT_TRIGGER = "IMPORT_TRIGGER";
     public static final int ADD_BOOKMARK_ACTIVITY_REQ_CODE = 99;
     private static final String TAG = "Utils";
-    private static final int DEFAULT_ICON_SIZE = 96;
     private static int CONST_VALUE = 100;
     private static String HTTP_PROTOCOL = "http://";
 
@@ -110,7 +111,7 @@ public class Utils {
      */
     public static void setIconOnImageView(ImageView iconView,
                                           byte [] blob, Drawable defaultIcon,
-                                          boolean isSelectedItem) {
+                                          boolean isSelectedItem, Resources resources) {
         try {
             if ((blob == null || blob.length == 0) ||
                     isSelectedItem) {
@@ -118,7 +119,7 @@ public class Utils {
                 return;
             }
 
-            iconView.setImageBitmap(getIconBitmap(blob));
+            iconView.setImageBitmap(getIconBitmap(blob, resources));
         } catch (Exception e) {
             iconView.setImageDrawable(defaultIcon);
         }
@@ -129,10 +130,11 @@ public class Utils {
      * @param blobIcon
      * @return
      */
-    public static Bitmap getIconBitmap(byte[] blobIcon) {
+    public static Bitmap getIconBitmap(byte[] blobIcon, Resources resources) {
         try {
             Bitmap bmp = BitmapFactory.decodeByteArray(blobIcon, 0, blobIcon.length);
-            return Bitmap.createScaledBitmap(bmp, DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE, false);
+            return Bitmap.createScaledBitmap(bmp, (int) resources.getDimension(R.dimen.medium_icon_size),
+                    (int) resources.getDimension(R.dimen.medium_icon_size), false);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -165,6 +167,6 @@ public class Utils {
     public static String buildUrl(String url) {
         return url == null ||
                 url.contains("http://") || url.contains("https://") ?
-                url : HTTP_PROTOCOL + url;
+                url : HTTP_PROTOCOL + url.trim();
     }
 }

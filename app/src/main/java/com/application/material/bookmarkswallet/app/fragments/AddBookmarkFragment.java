@@ -225,7 +225,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * init progress dialog
      */
     private void initProgressDialog() {
-        mProgressDialog = new ProgressDialog(mAddActivityRef);
+        mProgressDialog = new ProgressDialog(mAddActivityRef, R.style.CustomLollipopDialogStyle);
         mProgressDialog.setTitle("Saving ...");
         mProgressDialog.setMessage("Waiting for saving bookmark!");
         mProgressDialog.setCancelable(false);

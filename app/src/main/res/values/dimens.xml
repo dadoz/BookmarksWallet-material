@@ -5,6 +5,7 @@
     <dimen name="action_bar_title_padding">15dp</dimen>
     <dimen name="small_padding">5dp</dimen>
     <dimen name="medium_padding">10dp</dimen>
+    <dimen name="fab_margin">14dp</dimen>
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="large_padding">20dip</dimen>
     <dimen name="fab_margin_top">100dip</dimen>
@@ -36,4 +37,5 @@
     <dimen name="button_radius">3dip</dimen>
     <dimen name="text_size_10">10sp</dimen>
     <dimen name="edit_text_max_width">250dip</dimen>
+    <dimen name="mini_fab_negative_margin">-30dp</dimen>
 </resources>

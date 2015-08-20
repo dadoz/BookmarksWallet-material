@@ -113,7 +113,8 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         Utils.setColorFilter(res, color);
         iconView.setImageDrawable(res);
         Utils.setIconOnImageView(iconView,
-                bookmark.getBlobIcon(), res, isSelectedItem);
+                bookmark.getBlobIcon(), res, isSelectedItem,
+                mActivityRef.getResources());
     }
 
     /**
@@ -121,7 +122,6 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public View mLayoutView;
-        public ImageView mIconOpenedView;
         private ImageView mIconView;
         private TextView mLabelView;
         private TextView mTimestampView;
@@ -131,7 +131,6 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
             super(v);
             mLayoutView = v.findViewById(R.id.backgroundLayoutId);
             mIconView = (ImageView) v.findViewById(R.id.linkIconId);
-            mIconOpenedView = (ImageView) v.findViewById(R.id.linkIconOpenedIconId);
             mLabelView = (TextView) v.findViewById(R.id.linkTitleId);
             mUrlView = (TextView) v.findViewById(R.id.linkUrlId);
             mTimestampView = (TextView) v.findViewById(R.id.linkTimestampId);
