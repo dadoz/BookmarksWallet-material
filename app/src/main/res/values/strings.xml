@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Wasabi Bookmarks</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">Material Bookmark - minimal</string>
     <string name="action_settings">settings</string>
 
     <string name="links_tab_name">bookmarks</string>

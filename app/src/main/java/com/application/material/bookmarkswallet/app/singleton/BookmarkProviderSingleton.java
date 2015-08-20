@@ -9,9 +9,12 @@ import android.os.AsyncTask;
 import android.provider.Browser;
 import android.util.Log;
 import com.application.material.bookmarkswallet.app.fragments.OnTaskCompleted;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
 import io.realm.Realm;
 
 import java.net.URL;
+
+import static android.provider.Browser.BookmarkColumns.*;
 
 /**
  * Created by davide on 10/08/15.
@@ -72,39 +75,28 @@ public class BookmarkProviderSingleton {
      * @throws Exception
      */
     private void addBookmarksByProviderJob(Uri bookmarksUri) throws Exception {
+        int cnt = 0;
         ContentResolver cr = mActivityRef.getContentResolver();
         Realm realm = Realm.getInstance(mActivityRef);
-        String[] projection = {
-                Browser.BookmarkColumns.CREATED,
-                Browser.BookmarkColumns.FAVICON,
-                Browser.BookmarkColumns.TITLE,
-                Browser.BookmarkColumns.URL,
-                Browser.BookmarkColumns.BOOKMARK
-        };
+        String[] projection = Browser.HISTORY_PROJECTION;
 
         Cursor cursor = cr.query(bookmarksUri, projection, null, null, null);
-        int urlId = cursor.getColumnIndex(Browser.BookmarkColumns.URL);
-        int titleId = cursor.getColumnIndex(Browser.BookmarkColumns.TITLE);
-        int faviconId = cursor.getColumnIndex(Browser.BookmarkColumns.FAVICON);
-        int bookmarkId = cursor.getColumnIndex(Browser.BookmarkColumns.BOOKMARK);
-        int cnt = 0;
-
         if (cursor.moveToFirst()) {
             do {
-                if (mAsyncTask.isCancelled()) {
+//                if (mAsyncTask.isCancelled()) {
 //                    setSyncStatus(SyncStatusEnum.CANCELED);
-                    return;
-                }
+//                    return;
+//                }
                 mAsyncTask.doProgress(cnt);
-                Log.e(TAG, "hey " + cursor.getString(urlId) + " # of imported: " + cnt);
                 cnt ++;
 
-                //add item on realm
-                if (cursor.getInt(bookmarkId) == 1) {
-                    byte[] blobIcon = cursor.getBlob(faviconId);
+                if (cursor.getInt(cursor.getColumnIndex(BOOKMARK)) == 1) {
+                    Log.e(TAG, "----- " + cursor.getString(cursor.getColumnIndex(TITLE)));
                     mBookmarkActionSingleton.addOrmObject(realm,
-                            cursor.getString(titleId), null,
-                            blobIcon, cursor.getString(urlId));
+                            cursor.getString(cursor.getColumnIndex(TITLE)),
+                            null,
+                            cursor.getBlob(cursor.getColumnIndex(FAVICON)),
+                            cursor.getString(cursor.getColumnIndex(URL)));
                 }
             } while (cursor.moveToNext());
 
