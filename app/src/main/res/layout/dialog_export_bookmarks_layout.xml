@@ -16,15 +16,15 @@
                 android:layout_marginLeft="@dimen/medium_padding"
                 android:layout_marginRight="@dimen/medium_padding"
                 android:orientation="vertical">
-            <com.pnikosis.materialishprogress.ProgressWheel
-                    android:visibility="gone"
-                    android:id="@+id/progressWheelId"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    wheel:matProg_barColor="@color/blue_grey_700"
-                    wheel:matProg_progressIndeterminate="false" />
+            <!--<com.pnikosis.materialishprogress.ProgressWheel-->
+                    <!--android:visibility="gone"-->
+                    <!--android:id="@+id/progressWheelId"-->
+                    <!--android:layout_width="80dp"-->
+                    <!--android:layout_height="80dp"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--wheel:matProg_barColor="@color/blue_grey_700"-->
+                    <!--wheel:matProg_progressIndeterminate="false" />-->
             <ImageView
                     android:id="@+id/exportSuccessIconId"
                     android:visibility="gone"

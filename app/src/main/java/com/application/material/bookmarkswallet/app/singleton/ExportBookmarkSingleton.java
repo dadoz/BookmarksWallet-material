@@ -4,27 +4,17 @@ import android.app.Activity;
 import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.exportFeature.CSVExportParser;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.pnikosis.materialishprogress.ProgressWheel;
 import io.realm.RealmResults;
-
-import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * Created by davide on 31/03/15.
@@ -36,7 +26,7 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
     private AlertDialog mExportDialog;
     private RealmResults<Bookmark> mItems;
     private View mExportBookmarksDialogView;
-    private ProgressWheel mProgressWheel;
+//    private ProgressWheel mProgressWheel;
 
     public ExportBookmarkSingleton() {
     }
@@ -95,17 +85,17 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
         new AsyncTask<Integer, Integer, Boolean>() {
             @Override
             protected Boolean doInBackground(Integer... params) {
-                mProgressWheel = (ProgressWheel) mExportBookmarksDialogView.findViewById(R.id.progressWheelId);
+//                mProgressWheel = (ProgressWheel) mExportBookmarksDialogView.findViewById(R.id.progressWheelId);
                 final RealmResults<Bookmark> list = null;
                 return CSVExportParser.writeFile(list);
             }
 
             protected void onProgressUpdate(Integer... progress) {
-                mProgressWheel.spin();
+//                mProgressWheel.spin();
             }
 
             protected void onPostExecute(Boolean result) {
-                mProgressWheel.stopSpinning();
+//                mProgressWheel.stopSpinning();
                 if (! result) {
                     setErrorExportView();
                     mExportDialog.dismiss();

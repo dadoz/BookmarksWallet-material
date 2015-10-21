@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.Browser;
+import android.service.media.MediaBrowserService;
 import android.util.Log;
 import com.application.material.bookmarkswallet.app.fragments.OnTaskCompleted;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
@@ -14,7 +15,7 @@ import io.realm.Realm;
 
 import java.net.URL;
 
-import static android.provider.Browser.BookmarkColumns.*;
+//import static android.provider.Browser.BookmarkColumns.*;
 
 /**
  * Created by davide on 10/08/15.
@@ -74,50 +75,50 @@ public class BookmarkProviderSingleton {
      * @param bookmarksUri
      * @throws Exception
      */
-    private void addBookmarksByProviderJob(Uri bookmarksUri) throws Exception {
-        int cnt = 0;
-        ContentResolver cr = mActivityRef.getContentResolver();
-        Realm realm = Realm.getInstance(mActivityRef);
-        String[] projection = Browser.HISTORY_PROJECTION;
-
-        Cursor cursor = cr.query(bookmarksUri, projection, null, null, null);
-        if (cursor.moveToFirst()) {
-            do {
-//                if (mAsyncTask.isCancelled()) {
-//                    setSyncStatus(SyncStatusEnum.CANCELED);
-//                    return;
+//    private void addBookmarksByProviderJob(Uri bookmarksUri) throws Exception {
+//        int cnt = 0;
+//        ContentResolver cr = mActivityRef.getContentResolver();
+//        Realm realm = Realm.getInstance(mActivityRef);
+//        String[] projection = Bookmark.HISTORY_PROJECTION;
+//
+//        Cursor cursor = cr.query(bookmarksUri, projection, null, null, null);
+//        if (cursor.moveToFirst()) {
+//            do {
+////                if (mAsyncTask.isCancelled()) {
+////                    setSyncStatus(SyncStatusEnum.CANCELED);
+////                    return;
+////                }
+//                mAsyncTask.doProgress(cnt);
+//                cnt ++;
+//
+//                if (cursor.getInt(cursor.getColumnIndex(BOOKMARK)) == 1) {
+//                    Log.e(TAG, "----- " + cursor.getString(cursor.getColumnIndex(TITLE)));
+//                    mBookmarkActionSingleton.addOrmObject(realm,
+//                            cursor.getString(cursor.getColumnIndex(TITLE)),
+//                            null,
+//                            cursor.getBlob(cursor.getColumnIndex(FAVICON)),
+//                            cursor.getString(cursor.getColumnIndex(URL)));
 //                }
-                mAsyncTask.doProgress(cnt);
-                cnt ++;
-
-                if (cursor.getInt(cursor.getColumnIndex(BOOKMARK)) == 1) {
-                    Log.e(TAG, "----- " + cursor.getString(cursor.getColumnIndex(TITLE)));
-                    mBookmarkActionSingleton.addOrmObject(realm,
-                            cursor.getString(cursor.getColumnIndex(TITLE)),
-                            null,
-                            cursor.getBlob(cursor.getColumnIndex(FAVICON)),
-                            cursor.getString(cursor.getColumnIndex(URL)));
-                }
-            } while (cursor.moveToNext());
-
-        }
-    }
+//            } while (cursor.moveToNext());
+//
+//        }
+//    }
 
     /**
      * @param browser
      * @return
      */
-    private Uri getBookmarksUriByBrowser(BrowserEnum browser) {
-        if (browser.ordinal() == BrowserEnum.DEFAULT.ordinal()) {
-            return Browser.BOOKMARKS_URI;
-        } else if (browser.ordinal() == BrowserEnum.CHROME.ordinal()) {
-            return getChromeUriBrowser();
-        } else if (browser.ordinal() == BrowserEnum.FIREFOX.ordinal()) {
-            return getFirefoxUriBrowser();
-        }
-
-        return Browser.BOOKMARKS_URI;
-    }
+//    private Uri getBookmarksUriByBrowser(BrowserEnum browser) {
+//        if (browser.ordinal() == BrowserEnum.DEFAULT.ordinal()) {
+//            return Browser.BOOKMARKS_URI;
+//        } else if (browser.ordinal() == BrowserEnum.CHROME.ordinal()) {
+//            return getChromeUriBrowser();
+//        } else if (browser.ordinal() == BrowserEnum.FIREFOX.ordinal()) {
+//            return getFirefoxUriBrowser();
+//        }
+//
+//        return Browser.BOOKMARKS_URI;
+//    }
 
     /**
      *
@@ -177,13 +178,13 @@ public class BookmarkProviderSingleton {
         protected Boolean doInBackground(URL... params) {
 //            setSyncStatus(SyncStatusEnum.RUNNING);
             try {
-                Uri bookmarksUri = getBookmarksUriByBrowser(browserList[0]);
-                addBookmarksByProviderJob(bookmarksUri);
+//                Uri bookmarksUri = getBookmarksUriByBrowser(browserList[0]);
+//                addBookmarksByProviderJob(bookmarksUri);
             } catch (Exception e) {
                 e.printStackTrace();
                 try {
-                    Uri bookmarksUri = getBookmarksUriByBrowser(browserList[1]);
-                    addBookmarksByProviderJob(bookmarksUri);
+//                    Uri bookmarksUri = getBookmarksUriByBrowser(browserList[1]);
+//                    addBookmarksByProviderJob(bookmarksUri);
                     publishProgress();
                 } catch (Exception e1) {
                     e1.printStackTrace();

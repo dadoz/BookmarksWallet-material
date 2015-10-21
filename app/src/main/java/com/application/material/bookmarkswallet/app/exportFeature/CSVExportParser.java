@@ -3,8 +3,6 @@ package com.application.material.bookmarkswallet.app.exportFeature;
 import android.os.Environment;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import io.realm.RealmResults;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -28,9 +26,9 @@ public class CSVExportParser {
             if(file.exists()) {
                 FileOutputStream fos = new FileOutputStream(file);
                 OutputStreamWriter osw = new OutputStreamWriter(fos);
-                CSVPrinter csvPrinter = new CSVPrinter(osw, CSVFormat.DEFAULT);
-                csvPrinter.printRecords(data); //how to parse custom object into csv ?
-                csvPrinter.close();
+//                CSVPrinter csvPrinter = new CSVPrinter(osw, CSVFormat.DEFAULT);
+//                csvPrinter.printRecords(data); //how to parse custom object into csv ?
+//                csvPrinter.close();
                 return true;
             }
         } catch (IOException e) {
