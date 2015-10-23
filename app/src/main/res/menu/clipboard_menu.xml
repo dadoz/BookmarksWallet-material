@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/clipboardActionId"
-          android:title="clipboard"
-          android:icon="@drawable/abc_ic_menu_paste_mtrl_am_alpha"
-          app:showAsAction="always|collapseActionView"/>
+    <!--<item android:id="@+id/clipboardActionId"-->
+          <!--android:title="clipboard"-->
+          <!--android:icon="@drawable/abc_ic_menu_paste_mtrl_am_alpha"-->
+          <!--app:showAsAction="always|collapseActionView"/>-->
     <item android:id="@+id/action_terms_and_licences"
           android:title="@string/terms_and_licences"
           android:orderInCategory="100"

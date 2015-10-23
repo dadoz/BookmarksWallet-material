@@ -14,9 +14,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.*;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,10 +55,16 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     EditText mTitleEditText;
     @Bind(R.id.iconImageViewId)
     View mIconImageView;
-    @Bind(R.id.iconSwipeRefreshLayoutId)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    @Bind(R.id.addBookmarkSwipeRefreshLayoutId)
+    SwipeRefreshLayout mAddBookmarkSwipeRefreshLayout;
+    @Bind(R.id.addInfoBookmarkScrollViewLayoutId)
+    View mAddInfoBookmarkScrollViewLayout;
+    @Bind(R.id.noBookmarkPreviewLayoutId)
+    View mNoBookmarkPreviewLayout;
     private View mView;
     private byte[] mBookmarkBlobIcon = null;
+    @Bind(R.id.pasteClipboardFabId)
+    FloatingActionButton mPasteClipboardFab;
 
     @Override
     public void onAttach(Activity activity) {
@@ -91,9 +100,9 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.clipboardActionId:
-                pasteClipboard();
-                return true;
+//            case R.id.clipboardActionId:
+//                pasteClipboard();
+//                return true;
             case R.id.action_terms_and_licences:
                 handleTermsAndLicences();
                 return true;
@@ -115,10 +124,10 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * pull to refresh init
      */
     private void initPullToRefresh() {
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout
-                .setColorSchemeResources(R.color.blue_grey_700,
-                        R.color.yellow_400);
+//        mSwipeRefreshLayout.setOnRefreshListener(this);
+//        mSwipeRefreshLayout
+//                .setColorSchemeResources(R.color.blue_grey_700,
+//                        R.color.yellow_400);
     }
 
     /**
@@ -126,9 +135,46 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      */
     private void onInitView() {
         mAddBookmarkFab.setOnClickListener(this);
+        mPasteClipboardFab.setOnClickListener(this);
         mIconImageView.setOnClickListener(this);
+        setUrlInputOnTextChangeListener();
         initPullToRefresh();
         setFindIconColor();
+    }
+
+    /**
+     * TODO move out
+     */
+    private void setUrlInputOnTextChangeListener() {
+        mUrlEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //isEmptyString
+                if (s.length() != 0) {
+                    //show paste clipboard fab
+                    mPasteClipboardFab.hide();
+                    mAddBookmarkFab.show();
+                    mAddInfoBookmarkScrollViewLayout.setVisibility(View.VISIBLE);
+                    mNoBookmarkPreviewLayout.setVisibility(View.GONE);
+                    return;
+                }
+                //show add bookmark button
+                mAddInfoBookmarkScrollViewLayout.setVisibility(View.GONE);
+                mNoBookmarkPreviewLayout.setVisibility(View.VISIBLE);
+                mTitleEditText.setText("");
+                mPasteClipboardFab.show();
+                mAddBookmarkFab.hide();
+
+            }
+        });
     }
 
     /**
@@ -136,9 +182,9 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      */
     private void setFindIconColor() {
         //colorize icon
-        Drawable res = ((ImageView) ((ViewGroup) mIconImageView).getChildAt(0)).getDrawable();
+        Drawable res = ((ImageView) mIconImageView).getDrawable();
         Utils.setColorFilter(res, getResources().getColor(R.color.blue_grey_900));
-        ((ImageView) ((ViewGroup) mIconImageView).getChildAt(0)).setImageDrawable(res);
+        ((ImageView) mIconImageView).setImageDrawable(res);
     }
 
     /**
@@ -306,7 +352,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      */
     private void retrieveIconByUrl(String url) {
         try {
-            mSwipeRefreshLayout.setRefreshing(true);
+            mAddBookmarkSwipeRefreshLayout.setRefreshing(true);
             new RetrieveIconAsyncTask(this).execute(new URL(url));
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -342,9 +388,11 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
                 Utils.hideKeyboard(mAddActivityRef);
                 addBookmark();
                 break;
-//                pasteClipboard();
             case R.id.iconImageViewId:
                 retrieveIcon();
+                break;
+            case R.id.pasteClipboardFabId:
+                pasteClipboard();
                 break;
         }
     }
@@ -357,7 +405,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onTaskCompleted(byte[] data) {
-        mSwipeRefreshLayout.setRefreshing(false);
+        mAddBookmarkSwipeRefreshLayout.setRefreshing(false);
         if (data == null) {
             showErrorMessage();
             return;
@@ -373,7 +421,7 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     private void setIconOnUi() {
         try {
             Bitmap icon = BitmapFactory.decodeByteArray(mBookmarkBlobIcon, 0, mBookmarkBlobIcon.length);
-            ((ImageView) ((ViewGroup) mIconImageView).getChildAt(0))
+            ((ImageView) mIconImageView)
                     .setImageBitmap(icon);
         } catch (Exception e) {
             e.printStackTrace();
@@ -382,6 +430,6 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onRefresh() {
-        mSwipeRefreshLayout.setRefreshing(false);
+        mAddBookmarkSwipeRefreshLayout.setRefreshing(false);
     }
 }

@@ -37,5 +37,6 @@
     <dimen name="button_radius">3dip</dimen>
     <dimen name="text_size_10">10sp</dimen>
     <dimen name="edit_text_max_width">250dip</dimen>
+    <dimen name="edit_text_min_width">250dip</dimen>
     <dimen name="mini_fab_negative_margin">-30dp</dimen>
 </resources>

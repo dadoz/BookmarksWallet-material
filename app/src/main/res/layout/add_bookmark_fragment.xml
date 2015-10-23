@@ -1,54 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <include layout="@layout/add_bookmark_collapsing_layout"/>
 
-
     <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/iconSwipeRefreshLayoutId"
-            android:layout_below="@id/addBookmarkMainContainerLayoutId"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content">
+        android:id="@+id/addBookmarkSwipeRefreshLayoutId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <ScrollView
+        android:layout_below="@id/addBookmarkMainContainerLayoutId"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:scrollbarStyle="outsideOverlay">
         <LinearLayout
-                android:id="@+id/iconImageViewId"
-                android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/noBookmarkPreviewLayoutId"
+                android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:clickable="true"
-                android:background="?@android:attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+>
+                <ImageView
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_no_bookmark_colorful_48"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/medium_padding"
+                    android:textSize="@dimen/text_size_14"
+                    android:textColor="@color/blue_grey_400"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Hey still no Bookmark added!" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/addInfoBookmarkScrollViewLayoutId"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_gravity="center"
                 android:orientation="vertical">
-            <ImageView
+                <ImageView
+                    android:id="@+id/iconImageViewId"
+                    android:clickable="true"
+                    android:background="?@android:attr/selectableItemBackground"
                     android:layout_width="@dimen/large_icon_size"
                     android:layout_height="@dimen/large_icon_size"
                     android:src="@drawable/ic_bookmark_outline_black_48dp"/>
-            <TextView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textSize="@dimen/text_size_14"
-                    android:textColor="@color/blue_grey_200"
-                    android:text="Tap to set the\nbookmark icon!" />
+                    android:textColor="@color/blue_grey_400"
+                    android:text="Tap to set Icon" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content">
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/titleEditTextId"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/medium_padding"
+                        android:textColor="@color/blue_grey_900"
+                        android:minWidth="@dimen/abc_search_view_text_min_width"
+                        android:maxWidth="@dimen/edit_text_max_width"
+                        android:maxLines="2"
+                        android:maxLength="50"
+                        android:hint="title...">
+                    </android.support.v7.widget.AppCompatEditText>
+                </android.support.design.widget.TextInputLayout>
+
+
+            </LinearLayout>
         </LinearLayout>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
-
+    </ScrollView>
 
     <android.support.design.widget.FloatingActionButton
-            android:id="@+id/addBookmarkFabId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/large_padding"
-            android:layout_below="@id/addBookmarkMainContainerLayoutId"
-            android:layout_marginTop="@dimen/mini_fab_negative_margin"
-            android:src="@drawable/ic_done_black_48dp"
-            app:elevation="4dp"
-            app:borderWidth="0dp"
-            app:backgroundTint="@color/yellow_400"
-            app:fabSize="normal"/>
+        android:visibility="gone"
+        android:id="@+id/addBookmarkFabId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/large_padding"
+        android:layout_below="@id/addBookmarkMainContainerLayoutId"
+        android:layout_marginTop="@dimen/mini_fab_negative_margin"
+        android:src="@drawable/ic_done_black_48dp"
+        app:elevation="4dp"
+        app:borderWidth="0dp"
+        app:backgroundTint="@color/yellow_500"
+        app:fabSize="normal"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/pasteClipboardFabId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/large_padding"
+        android:layout_below="@id/addBookmarkMainContainerLayoutId"
+        android:layout_marginTop="@dimen/mini_fab_negative_margin"
+        android:src="@drawable/abc_ic_menu_paste_mtrl_am_alpha"
+        app:elevation="4dp"
+        app:borderWidth="0dp"
+        app:backgroundTint="@color/blue_grey_900"
+        app:fabSize="normal"/>
 
 </RelativeLayout>
