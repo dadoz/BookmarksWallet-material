@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/noBookmarkPreviewLayoutId"
+    android:orientation="vertical"
+    android:layout_centerInParent="true"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
+    <ImageView
+        android:id="@+id/iconNoBookmarkId"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_no_bookmark_colorful_48"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="@dimen/medium_padding"
+        android:textSize="@dimen/text_size_14"
+        android:textColor="@color/blue_grey_400"
+        android:text="Hey still no Bookmark added!" />
+
+</LinearLayout>
