@@ -349,4 +349,8 @@ public class BookmarkRecyclerViewFragment extends Fragment
     public void onTaskCompleted(byte[] data) {
         return;
     }
+
+    @Override
+    public void onTaskCompleted(String url) {
+    }
 }

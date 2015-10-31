@@ -6,4 +6,5 @@ package com.application.material.bookmarkswallet.app.fragments;
 public interface OnTaskCompleted {
     void onTaskCompleted(boolean isRefreshEnabled);
     void onTaskCompleted(byte [] data);
+    void onTaskCompleted(String url);
 }

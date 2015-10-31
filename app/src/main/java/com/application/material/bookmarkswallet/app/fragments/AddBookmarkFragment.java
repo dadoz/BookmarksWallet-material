@@ -2,11 +2,11 @@ package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,12 +15,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.*;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,7 +30,9 @@ import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSing
 import com.application.material.bookmarkswallet.app.singleton.ClipboardSingleton;
 import com.application.material.bookmarkswallet.app.asyncTask.RetrieveIconAsyncTask;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
-import com.cocosw.bottomsheet.BottomSheet;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
 import io.realm.Realm;
 
 import java.lang.ref.WeakReference;
@@ -44,7 +43,8 @@ import java.net.URL;
 /**
  * Created by davide on 06/08/15.
  */
-public class AddBookmarkFragment extends Fragment implements View.OnClickListener, OnTaskCompleted, SwipeRefreshLayout.OnRefreshListener {
+public class AddBookmarkFragment extends Fragment implements
+        View.OnClickListener, Callback, OnTaskCompleted, SwipeRefreshLayout.OnRefreshListener {
     public static final String FRAG_TAG = "AddBookmarkFragmentTAG";
     private Activity mAddActivityRef;
     private ActionbarSingleton mActionbarSingleton;
@@ -53,18 +53,21 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
 
     @Bind(R.id.addBookmarkFabId)
     FloatingActionButton mAddBookmarkFab;
+    @Bind(R.id.addBookmarkRefreshLayoutId)
+    SwipeRefreshLayout refreshLayout;
     @Bind(R.id.urlEditTextId)
     EditText mUrlEditText;
     @Bind(R.id.titleEditTextId)
     EditText mTitleEditText;
+    @Bind(R.id.addIconImageFabId)
+    FloatingActionButton addIconImageFab;
     @Bind(R.id.iconImageViewId)
-    View mIconImageView;
-//    @Bind(R.id.addBookmarkSwipeRefreshLayoutId)
-//    SwipeRefreshLayout mAddBookmarkSwipeRefreshLayout;
+    ImageView mIconImageView;
     private View mView;
     private byte[] mBookmarkBlobIcon = null;
     @Bind(R.id.pasteClipboardFabId)
     FloatingActionButton mPasteClipboardFab;
+    private long SAVE_TIMEOUT = 500;
 
     @Override
     public void onAttach(Activity activity) {
@@ -83,7 +86,6 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstance) {
         mView = inflater.inflate(R.layout.add_bookmark_fragment, container, false);
         ButterKnife.bind(this, mView);
-
         setHasOptionsMenu(true);
         initActionbar();
         onInitView();
@@ -100,9 +102,6 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.clipboardActionId:
-//                pasteClipboard();
-//                return true;
             case R.id.action_terms_and_licences:
                 handleTermsAndLicences();
                 return true;
@@ -124,10 +123,11 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * pull to refresh init
      */
     private void initPullToRefresh() {
-//        mAddBookmarkSwipeRefreshLayout.setOnRefreshListener(this);
-//        mAddBookmarkSwipeRefreshLayout
-//                .setColorSchemeResources(R.color.blue_grey_700,
-//                        R.color.yellow_400);
+        refreshLayout.setOnRefreshListener(this);
+        refreshLayout
+                .setColorSchemeResources(R.color.blue_grey_700,
+                        R.color.yellow_400);
+
     }
 
     /**
@@ -136,13 +136,11 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
     private void onInitView() {
         mAddBookmarkFab.setOnClickListener(this);
         mPasteClipboardFab.setOnClickListener(this);
-        mIconImageView.setOnClickListener(this);
+        addIconImageFab.setOnClickListener(this);
         initPullToRefresh();
         setFindIconColor();
         AddBookmarkUrlEditTextPresenter.init(new WeakReference<>(mUrlEditText),
                 new WeakReference<>(mTitleEditText),
-                mAddBookmarkFab,
-                mPasteClipboardFab,
                 AnimatorBuilder.getInstance(new WeakReference<>(getContext())),
                 mView);
     }
@@ -152,9 +150,9 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      */
     private void setFindIconColor() {
         //colorize icon
-        Drawable res = ((ImageView) mIconImageView).getDrawable();
+        Drawable res = mIconImageView.getDrawable();
         Utils.setColorFilter(res, getResources().getColor(R.color.blue_grey_900));
-        ((ImageView) mIconImageView).setImageDrawable(res);
+        mIconImageView.setImageDrawable(res);
     }
 
     /**
@@ -188,8 +186,8 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * add bookmark on orm db
      */
     public void addBookmark() {
-        if (! validateInput()) {
-            showErrorMessage();
+        if (!validateInput()) {
+            showErrorMessage(null);
             return;
         }
 
@@ -207,14 +205,15 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
             public void run() {
                 addBookmarkCallback();
             }
-        }, 3000);
+        }, SAVE_TIMEOUT);
     }
 
     /**
      * show error message
      */
-    private void showErrorMessage() {
-        Snackbar snackbar = Snackbar.make(mView, "Ops! Something went wrong!", Snackbar.LENGTH_LONG);
+    private void showErrorMessage(String message) {
+        message = (message == null) ? "Ops! Something went wrong!" : message;
+        Snackbar snackbar = Snackbar.make(mView, message, Snackbar.LENGTH_LONG);
         snackbar.getView()
                 .setBackgroundColor(getResources().getColor(R.color.red_500));
         snackbar.show();
@@ -290,40 +289,27 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
      * @return
      */
     public byte[] getBookmarkBlobIcon() {
-        //TODO to be implemented
-        return mBookmarkBlobIcon;
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) mIconImageView.getDrawable();
+        return Utils.getBlobFromBitmap(bitmapDrawable.getBitmap());
     }
 
     /**
      * retrieve icon from gallery or url
      */
     private void retrieveIcon() {
-        new BottomSheet.Builder(mAddActivityRef)
-                .sheet(R.menu.gallery_url_menu)
-                .listener(new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case R.id.urlActionId:
-                                retrieveIconByUrl(getBookmarkUrl());
-                                break;
-                            case R.id.galleryActionId:
-                                retrieveIconByGallery();
-                                break;
-                        }
-                    }
-                })
-                .grid()
-                .show();
+        refreshLayout.setRefreshing(true);
+        Utils.hideKeyboard(getActivity());
+        retrieveIconByUrl(getBookmarkUrl());
     }
 
     /**
      * by url - auto detect icon
+     * @param bookmarkUrl
      */
-    private void retrieveIconByUrl(String url) {
+    private void retrieveIconByUrl(String bookmarkUrl) {
         try {
-//            mAddBookmarkSwipeRefreshLayout.setRefreshing(true);
-            new RetrieveIconAsyncTask(this).execute(new URL(url));
+            new RetrieveIconAsyncTask(new WeakReference<OnTaskCompleted>(this))
+                    .execute(new URL(bookmarkUrl));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -358,8 +344,10 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
                 Utils.hideKeyboard(mAddActivityRef);
                 addBookmark();
                 break;
-            case R.id.iconImageViewId:
-                retrieveIcon();
+            case R.id.addIconImageFabId:
+                if (!refreshLayout.isRefreshing()) {
+                    retrieveIcon();
+                }
                 break;
             case R.id.pasteClipboardFabId:
                 pasteClipboard();
@@ -367,39 +355,45 @@ public class AddBookmarkFragment extends Fragment implements View.OnClickListene
         }
     }
 
-
     @Override
     public void onTaskCompleted(boolean isRefreshEnabled) {
-        return;
+
     }
 
     @Override
     public void onTaskCompleted(byte[] data) {
-//        mAddBookmarkSwipeRefreshLayout.setRefreshing(false);
-        if (data == null) {
-            showErrorMessage();
-            return;
-        }
 
-        setBookmarkBlobIcon(data);
-        setIconOnUi();
     }
 
-    /**
-     *
-     */
-    private void setIconOnUi() {
-        try {
-            Bitmap icon = BitmapFactory.decodeByteArray(mBookmarkBlobIcon, 0, mBookmarkBlobIcon.length);
-            ((ImageView) mIconImageView)
-                    .setImageBitmap(icon);
-        } catch (Exception e) {
-            e.printStackTrace();
+    @Override
+    public void onTaskCompleted(String url) {
+        if (url == null) {
+            onError();
+            return;
         }
+        Picasso.with(getActivity().getApplicationContext())
+                .load(url)
+//                .placeholder(R.drawable.dot_loader)
+                .error(R.drawable.ic_bookmark_outline_black_48dp)
+                .into(mIconImageView, this);
+    }
+
+    @Override
+    public void onSuccess() {
+        refreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onError() {
+        //picasso error
+        refreshLayout.setRefreshing(false);
+        mIconImageView.setImageDrawable(getResources()
+                .getDrawable(R.drawable.ic_bookmark_outline_black_48dp));
+        showErrorMessage("Ops! Icon not found for this bookmark!");
     }
 
     @Override
     public void onRefresh() {
-//        mAddBookmarkSwipeRefreshLayout.setRefreshing(false);
+        refreshLayout.setRefreshing(false);
     }
 }

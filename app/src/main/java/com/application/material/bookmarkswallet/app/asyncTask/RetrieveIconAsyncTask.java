@@ -2,55 +2,41 @@ package com.application.material.bookmarkswallet.app.asyncTask;
 
 import android.os.AsyncTask;
 import android.util.Log;
+
 import com.application.material.bookmarkswallet.app.fragments.OnTaskCompleted;
-import com.application.material.bookmarkswallet.app.utlis.Utils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
+import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * Created by davide on 14/08/15.
  */
-public class RetrieveIconAsyncTask extends AsyncTask<URL, Integer, Boolean> {
-    private static final String TAG = "RetrieveIconAsyncTask";
-    private final OnTaskCompleted listener;
-    private String bookmarkUrl = null;
-    private String bookmarkTitle = null;
-    private String iconUrl = null;
+public class RetrieveIconAsyncTask extends AsyncTask<URL, Integer, String> {
+    private final WeakReference<OnTaskCompleted> listener;
+    private final static String HREF_SELECT_PARAM = "link[href~=.*\\.(png|ico)]";
+    private final static String HREF_ATTR_PARAM = "abs:href";
+    private final static String META_SELECT_PARAM = "meta[content~=.*\\.png]";
+    private final static String META_ATTR_PARAM = "abs:content";
 
-    public RetrieveIconAsyncTask(OnTaskCompleted listen) {
-        listener = listen;
+    public RetrieveIconAsyncTask(WeakReference<OnTaskCompleted> listener) {
+        this.listener = listener;
     }
 
     @Override
-    protected Boolean doInBackground(URL... linkUrlArray) {
-        bookmarkUrl = linkUrlArray[0].toString();
-        Document doc;
+    protected String doInBackground(URL... linkUrlArray) {
+        Document doc = null;
         try {
-            boolean isHref = false;
-            doc = Jsoup.connect(bookmarkUrl).get();
-//            bookmarkTitle = doc.title();
-
-            org.jsoup.nodes.Element elem = doc.head().select("meta[content~=.*\\.png]").first();
-            if (elem == null) {
-                isHref = true;
-                elem = doc.head().select("link[href~=.*\\.ico]").first();
-            }
-
-            iconUrl = elem.attr(isHref ? "abs:href" : "abs:content");
-            Log.d(TAG, " - " + iconUrl);
+            doc = Jsoup.connect(linkUrlArray[0].toString()).get();
+            return getUrlByDoc(doc, true);
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            try {
+                return getUrlByDoc(doc, false);
+            } catch (Exception e2) {
+                e2.printStackTrace();
+                return null;
+            }
         }
-        return true;
     }
 
     @Override
@@ -58,41 +44,20 @@ public class RetrieveIconAsyncTask extends AsyncTask<URL, Integer, Boolean> {
     }
 
     @Override
-    protected void onPostExecute(Boolean isBookmarkInfoRetrieved) {
-        try {
-            if (! isBookmarkInfoRetrieved ||
-                    iconUrl == null) {
-                //notify to ui
-                listener.onTaskCompleted(null);
-            }
-
-            getIconByUrl(iconUrl);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+    protected void onPostExecute(String iconUrl) {
+        listener.get().onTaskCompleted(iconUrl);
     }
 
     /**
-     * get image by url
-     * @param iconUrl
-     * @throws MalformedURLException
+     *
+     * @param doc
+     * @param isMetaTag
+     * @return
      */
-    public void getIconByUrl(String iconUrl)
-            throws MalformedURLException {
-        new AsyncTask<URL, Integer, byte[]>() {
-            @Override
-            protected byte[] doInBackground(URL... linkUrlArray) {
-                return Utils.getBytesArrayByUrl(linkUrlArray[0]);
-            }
-
-            @Override
-            protected void onPostExecute(byte[] iconByteArray) {
-//                mSwipeRefreshLayout.setRefreshing(false);
-                //CHECK out what u need
-//                addBookmark(bookmarkUrl, iconByteArray, bookmarkTitle);
-                //notify to ui
-                listener.onTaskCompleted(iconByteArray);
-            }
-        }.execute(new URL(iconUrl));
+    public String getUrlByDoc(Document doc, boolean isMetaTag) {
+        return doc.head()
+                .select(isMetaTag ? META_SELECT_PARAM : HREF_SELECT_PARAM)
+                .first()
+                .attr(isMetaTag ? META_ATTR_PARAM : HREF_ATTR_PARAM);
     }
 }

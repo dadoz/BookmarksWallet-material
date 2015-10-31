@@ -169,4 +169,18 @@ public class Utils {
                 url.contains("http://") || url.contains("https://") ?
                 url : HTTP_PROTOCOL + url.trim();
     }
+
+    /**
+     *
+     * @param bitmap
+     * @return
+     */
+    public static byte[] getBlobFromBitmap(Bitmap bitmap) {
+        if (bitmap == null) {
+            return null;
+        }
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
+    }
 }

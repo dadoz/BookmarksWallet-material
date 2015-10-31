@@ -1,14 +1,13 @@
 package com.application.material.bookmarkswallet.app.presenter;
 
 import android.animation.Animator;
+import android.animation.LayoutTransition;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
@@ -18,52 +17,63 @@ import java.lang.ref.WeakReference;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+
+
+
+
+
 /**
  * Created by davide on 23/10/15.
  */
-public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface, TextWatcher {
+public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface, TextWatcher, LayoutTransition.TransitionListener {
     private final WeakReference<EditText> titleField;
     private final WeakReference<EditText> urlField;
-    private final FloatingActionButton clipboardFab;
-    private final FloatingActionButton addFab;
     private final AnimatorBuilder animatorBuilder;
-    private boolean animate = true;
-    private static int HIDDEN_VIEW_Y;
+
     @Bind(R.id.noBookmarkPreviewLayoutId)
     View noBookmarkPreviewLayout;
     @Bind(R.id.addInfoTitleTextInputId)
     View addInfoTitleTextInput;
-    @Bind(R.id.addInfoIconLayoutId)
-    View addInfoIconLayout;
+    @Bind(R.id.iconImageViewId)
+    View iconImageView;
+    @Bind(R.id.addBookmarkFabId)
+    FloatingActionButton addFab;
+    @Bind(R.id.pasteClipboardFabId)
+    FloatingActionButton clipboardFab;
+    @Bind(R.id.addIconImageFabId)
+    FloatingActionButton addIconImageFab;
+    @Bind(R.id.addBookmarkMainContainerLayoutId)
+    ViewGroup parentView;
+    private boolean alreadyAnimated = false;
 
     /**
      *
      * @param urlField
      * @param titleField
-     * @param addFab
-     * @param clipboardFab
      * @param view
      * @return
      */
     public static AddBookmarkUrlEditTextPresenter init(
             @NonNull WeakReference<EditText> urlField, @NonNull WeakReference<EditText> titleField,
-            @NonNull FloatingActionButton addFab, @NonNull FloatingActionButton clipboardFab,
             @NonNull AnimatorBuilder animatorBuilder, @NonNull View view) {
         return new AddBookmarkUrlEditTextPresenter(urlField, titleField,
-                addFab, clipboardFab, animatorBuilder, view);
+                animatorBuilder, view);
     }
 
+    /**
+     *
+     * @param urlField
+     * @param titleField
+     * @param animatorBuilder
+     * @param view
+     */
     private AddBookmarkUrlEditTextPresenter(WeakReference<EditText> urlField,
                                             WeakReference<EditText> titleField,
-                                            FloatingActionButton addFab,
-                                            FloatingActionButton clipboardFab,
                                             AnimatorBuilder animatorBuilder,
                                             View view) {
         ButterKnife.bind(this, view);
         this.urlField = urlField;
         this.titleField = titleField;
-        this.addFab = addFab;
-        this.clipboardFab = clipboardFab;
         this.animatorBuilder = animatorBuilder;
         initPresenter();
     }
@@ -72,9 +82,8 @@ public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface, Te
      * init field
      */
     public void initPresenter() {
-        HIDDEN_VIEW_Y = -1000; //TODO calculate view height
-        addInfoIconLayout.setTranslationY(HIDDEN_VIEW_Y);
-        addInfoTitleTextInput.setTranslationY(HIDDEN_VIEW_Y);
+        parentView.removeView(addInfoTitleTextInput);
+        parentView.getLayoutTransition().addTransitionListener(this);
         urlField.get().addTextChangedListener(this);
     }
 
@@ -90,26 +99,31 @@ public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface, Te
 
     @Override
     public void afterTextChanged(Editable s) {
-        int iconDelay = 100;
-        if (isEmptyString(s)) {
-            animate = true;
-            showPasteClipboardFab(true);
-            initNoBookmarkPreviewAnimator(true).start();
-            initAddInfoBookmarkAnimator(false, addInfoIconLayout, iconDelay).start();
-            initAddInfoBookmarkAnimator(false, addInfoTitleTextInput, 0).start();
+        boolean emptyString = isEmptyString(s);
+        if (!emptyString &&
+            alreadyAnimated) {
+            return;
+        }
+        alreadyAnimated = !emptyString;
+        initHideShowAnimator(noBookmarkPreviewLayout, !emptyString).start();
+        initHideShowAnimator(iconImageView, emptyString).start();
+        animateOnRemoveView(addInfoTitleTextInput, emptyString);
+        if (emptyString) {
             titleField.get().setText("");
-            return;
         }
+    }
 
-        //animate only once
-        if (!animate) {
+    /**
+     *
+     * @param view
+     * @param removing
+     */
+    private void animateOnRemoveView(View view, boolean removing) {
+        if (removing) {
+            parentView.removeView(view);
             return;
         }
-        showPasteClipboardFab(false);
-        initNoBookmarkPreviewAnimator(false).start();
-        initAddInfoBookmarkAnimator(true, addInfoIconLayout, iconDelay).start();
-        initAddInfoBookmarkAnimator(true, addInfoTitleTextInput, 0).start();
-        animate = false;
+        parentView.addView(view);
     }
 
     /**
@@ -117,36 +131,43 @@ public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface, Te
      * @param emptyString
      * @return
      */
-    private Animator initAddInfoBookmarkAnimator(boolean emptyString, View view, int delay) {
-        return emptyString ?
-                animatorBuilder.getYTranslation(view, HIDDEN_VIEW_Y, 0, delay) :
-                animatorBuilder.getYTranslation(view, 0, HIDDEN_VIEW_Y, 0);
-    }
+//    private Animator initAddInfoBookmarkAnimator(boolean emptyString, View view, int delay) {
+//        return emptyString ?
+//                animatorBuilder.getYTranslation(view, HIDDEN_VIEW_Y, 0, delay) :
+//                animatorBuilder.getYTranslation(view, 0, HIDDEN_VIEW_Y, 0);
+//    }
 
     /**
      *
-     * @param emptyString
+     * @param showing
      * @return
      */
-    private Animator initNoBookmarkPreviewAnimator(boolean emptyString) {
-        return emptyString ?
-                animatorBuilder.buildHideAnimator(noBookmarkPreviewLayout, true) :
-                animatorBuilder.buildShowAnimator(noBookmarkPreviewLayout, false);
+    private Animator initHideShowAnimator(View view, boolean showing) {
+        return showing ?
+                animatorBuilder.buildShowAnimator(view, true) :
+                animatorBuilder.buildHideAnimator(view, true);
     }
 
     /**
      *
-     * @param isShowing
+     * @param showing
      */
-    private void showPasteClipboardFab(boolean isShowing) {
-        if (isShowing) {
+    private void showPasteClipboardFab(boolean showing) {
+        if (showing) {
             clipboardFab.show();
-            addFab.hide();
             return;
         }
-        clipboardFab.hide();
+        addIconImageFab.show();
         addFab.show();
+    }
 
+    /**
+     *
+     */
+    private void hideAllActionFabs() {
+        addIconImageFab.hide();
+        addFab.hide();
+        clipboardFab.hide();
     }
 
     /**
@@ -156,5 +177,23 @@ public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface, Te
      */
     private static boolean isEmptyString(Editable s) {
         return s.length() == 0;
+    }
+
+
+    @Override
+    public void startTransition(LayoutTransition transition, ViewGroup container, View view, int transitionType) {
+        hideAllActionFabs();
+    }
+
+    @Override
+    public void endTransition(LayoutTransition transition, ViewGroup container, View view, int transitionType) {
+        switch (transitionType) {
+            case LayoutTransition.APPEARING:
+                showPasteClipboardFab(false);
+                break;
+            case LayoutTransition.CHANGE_DISAPPEARING:
+                showPasteClipboardFab(true);
+                break;
+        }
     }
 }

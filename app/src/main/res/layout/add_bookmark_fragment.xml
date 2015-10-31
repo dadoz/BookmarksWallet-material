@@ -7,21 +7,30 @@
     android:layout_height="match_parent">
     <include layout="@layout/add_bookmark_collapsing_layout"/>
 
-    <!--<android.support.v4.widget.SwipeRefreshLayout-->
-        <!--android:id="@+id/addBookmarkSwipeRefreshLayoutId"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"/>-->
-
-    <RelativeLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/addBookmarkRefreshLayoutId"
         android:layout_below="@id/addBookmarkMainContainerLayoutId"
+
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-        <include layout="@layout/no_bookmark_preview_layout"/>
-        <include layout="@layout/info_bookmark_layout"/>
-    </RelativeLayout>
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/medium_padding">
+                <include layout="@layout/no_bookmark_preview_layout"/>
+                <include layout="@layout/info_bookmark_layout"/>
+            </RelativeLayout>
+
+        </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:visibility="gone"
+
         android:id="@+id/addBookmarkFabId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,6 +43,22 @@
         app:borderWidth="0dp"
         app:backgroundTint="@color/yellow_500"
         app:fabSize="normal"/>
+    <android.support.design.widget.FloatingActionButton
+        android:visibility="gone"
+
+        android:id="@+id/addIconImageFabId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/large_padding"
+        android:layout_below="@id/addBookmarkFabId"
+        android:layout_marginTop="@dimen/medium_padding"
+        android:src="@drawable/ic_insert_photo_white_48dp"
+        app:elevation="4dp"
+        app:borderWidth="0dp"
+        app:backgroundTint="@color/blue_grey_900"
+        app:fabSize="normal"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/pasteClipboardFabId"
         android:layout_width="wrap_content"

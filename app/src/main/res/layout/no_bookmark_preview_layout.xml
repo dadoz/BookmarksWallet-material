@@ -8,8 +8,8 @@
     android:layout_width="wrap_content">
     <ImageView
         android:id="@+id/iconNoBookmarkId"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
+        android:layout_width="@dimen/large_icon_size"
+        android:layout_height="@dimen/large_icon_size"
         android:layout_gravity="center"
         android:src="@drawable/ic_no_bookmark_colorful_48"/>
     <TextView
