@@ -7,7 +7,7 @@ public class StatusSingleton {
     private static StatusSingleton mInstance;
     public static final int EDIT_POS_NOT_SET = -1;
 
-    private enum StatusEnum {EDIT, SYNC, SEARCH, IDLE}
+    public enum StatusEnum {EDIT, SYNC, SEARCH, IDLE}
     private int mEditItemPos;
     private StatusEnum mCurrentStatus = StatusEnum.IDLE;
 
@@ -27,7 +27,7 @@ public class StatusSingleton {
     /**
      * get current status
      */
-    StatusEnum getCurrentStatus() {
+    public StatusEnum getCurrentStatus() {
         return this.mCurrentStatus;
     }
 
@@ -117,4 +117,5 @@ public class StatusSingleton {
     public void setEditItemPos(int pos) {
         mEditItemPos = pos;
     }
+
 }

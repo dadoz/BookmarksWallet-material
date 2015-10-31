@@ -36,10 +36,6 @@
         </activity>
 
         <activity
-                android:name=".TutorialActivity"
-                android:label="Tutorial Activity">
-        </activity>
-        <activity
                 android:name=".AddBookmarkActivity"
                 android:label="AddBookmark Activity">
             <meta-data

@@ -32,18 +32,11 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No bookmarks here!\nTap to import."
+                    android:text="No bookmarks here!"
                     android:textSize="@dimen/text_size_14"
                     android:gravity="center"
                     android:textColor="@color/blue_grey_200"/>
 
-            <!--<Button-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="IMPORT"-->
-                <!--android:textSize="@dimen/text_size_14"-->
-                <!--android:background="@drawable/button_layout"-->
-                <!--android:textColor="@color/grey_200"/>-->
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

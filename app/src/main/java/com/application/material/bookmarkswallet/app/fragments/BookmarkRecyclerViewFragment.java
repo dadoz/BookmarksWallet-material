@@ -1,7 +1,6 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
@@ -55,7 +53,6 @@ public class BookmarkRecyclerViewFragment extends Fragment
     private ActionbarSingleton mActionbarSingleton;
     private BookmarkActionSingleton mBookmarkActionSingleton;
     private View mView;
-    private BookmarkProviderSingleton mBookmarkProviderSingleton;
     private StatusSingleton mStatusSingleton;
 
     @Override
@@ -220,14 +217,13 @@ public class BookmarkRecyclerViewFragment extends Fragment
      * @param recyclerViewAdapter
      */
     private void registerDataObserver(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
-        recyclerViewAdapter.registerAdapterDataObserver(new DataObserver(
-                mStatusSingleton,
+        DataObserver observer = new DataObserver(
                 mRecyclerView,
                 mEmptyLinkListView,
                 mEmptySearchResultLayout,
                 mSwipeRefreshLayout,
-                mBookmarkProviderSingleton,
-                mSearchHandlerSingleton));
+                mSearchHandlerSingleton);
+        recyclerViewAdapter.registerAdapterDataObserver(observer);
     }
 
     /**
@@ -273,7 +269,8 @@ public class BookmarkRecyclerViewFragment extends Fragment
      * handle terms and licences
      */
     private void handleTermsAndLicences() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.apache.org/licenses/LICENSE-2.0"));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://www.apache.org/licenses/LICENSE-2.0"));
         startActivity(browserIntent);
     }
 
@@ -329,7 +326,6 @@ public class BookmarkRecyclerViewFragment extends Fragment
         mStatusSingleton = StatusSingleton.getInstance();
         mActionbarSingleton = ActionbarSingleton.getInstance(mMainActivityRef);
         mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(mMainActivityRef);
-        mBookmarkProviderSingleton = BookmarkProviderSingleton.getInstance(mMainActivityRef, this);
         mSearchHandlerSingleton = SearchHandlerSingleton.getInstance(mMainActivityRef, mRealm);
     }
 

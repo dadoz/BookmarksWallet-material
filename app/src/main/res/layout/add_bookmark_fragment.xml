@@ -20,7 +20,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/medium_padding">
+                android:minHeight="@dimen/min_height_scrollview">
                 <include layout="@layout/no_bookmark_preview_layout"/>
                 <include layout="@layout/info_bookmark_layout"/>
             </RelativeLayout>

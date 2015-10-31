@@ -133,12 +133,13 @@ public class BookmarkActionSingleton {
      */
     public void deleteAction(View v, RecyclerView recyclerView) {
         int position = getBookmarkPosByView(v, recyclerView);
-        RealmRecyclerViewAdapter adapter = (RealmRecyclerViewAdapter) recyclerView.getAdapter();
+        BookmarkRecyclerViewAdapter adapter = (BookmarkRecyclerViewAdapter) recyclerView.getAdapter();
 
         mRealm.beginTransaction();
         adapter.getItem(position).removeFromRealm();
         mRealm.commitTransaction();
         adapter.notifyItemRemoved(position);
+        adapter.notifyDataSetChanged();
     }
 
     /**

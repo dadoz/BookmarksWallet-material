@@ -1,7 +1,5 @@
 package com.application.material.bookmarkswallet.app;
 
-import android.content.Intent;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.*;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,11 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkRecyclerViewFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.services.BookmarksProviderService;
-import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.BackPressedSingleton;
-import com.application.material.bookmarkswallet.app.singleton.SharedPrefSingleton;
 import com.flurry.android.FlurryAgent;
 import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
@@ -23,7 +17,6 @@ public class MainActivity extends AppCompatActivity
         implements OnChangeFragmentWrapperInterface {
     private String TAG = "MainActivity";
     private BackPressedSingleton mBackPressedSingleton;
-    private SharedPrefSingleton mSharedPrefSingleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +27,6 @@ public class MainActivity extends AppCompatActivity
         FlurryAgent.setLogEnabled(true);
         FlurryAgent.init(this, getResources().getString(R.string.FLURRY_API_KEY));
 
-        handleTutorial();
-
         onInitAppRate();
         onInitFragment();
     }
@@ -45,7 +36,6 @@ public class MainActivity extends AppCompatActivity
      */
     private void initSingletonRef() {
         mBackPressedSingleton = BackPressedSingleton.getInstance(this);
-        mSharedPrefSingleton = SharedPrefSingleton.getInstance(this);
     }
 
     @Override
@@ -162,17 +152,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-    }
-
-    /**
-     * private method
-     */
-    private void handleTutorial() {
-        boolean tutorialDone = (boolean) mSharedPrefSingleton.getValue(SharedPrefSingleton.TUTORIAL_DONE, false);
-        if (! tutorialDone) {
-            startActivity(new Intent(this, TutorialActivity.class));
-            finish(); //this end activity
-        }
     }
 
 }

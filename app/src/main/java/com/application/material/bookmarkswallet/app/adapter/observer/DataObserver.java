@@ -5,8 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.singleton.BookmarkProviderSingleton;
 import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
+import com.application.material.bookmarkswallet.app.singleton.StatusSingleton.StatusEnum;
 import com.application.material.bookmarkswallet.app.singleton.search.SearchHandlerSingleton;
 
 /**
@@ -19,31 +19,28 @@ public class DataObserver extends RecyclerView.AdapterDataObserver {
     private View mEmptyLinkListView;
     private View mEmptySearchResultLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private BookmarkProviderSingleton mBookmarkProviderSingleton;
     private SearchHandlerSingleton mSearchHandlerSingleton;
 
-    public DataObserver(StatusSingleton statusSingleton,
-                        RecyclerView recyclerView,
+    public DataObserver(RecyclerView recyclerView,
                         View emptyLinkListView,
                         View emptySearchResultLayout,
                         SwipeRefreshLayout swipeRefreshLayout,
-                        BookmarkProviderSingleton bookmarkProviderSingleton,
                         SearchHandlerSingleton searchHandlerSingleton) {
 
-        this.mStatusSingleton = statusSingleton;
+        this.mStatusSingleton = StatusSingleton.getInstance();
         this.mRecyclerView = recyclerView;
         this.mEmptyLinkListView = emptyLinkListView;
         this.mEmptySearchResultLayout = emptySearchResultLayout;
         this.mSwipeRefreshLayout = swipeRefreshLayout;
-        this.mBookmarkProviderSingleton = bookmarkProviderSingleton;
         this.mSearchHandlerSingleton = searchHandlerSingleton;
     }
 
     @Override
     public void onChanged() {
-        if (mStatusSingleton.isIdleMode()) {
+        StatusEnum status = mStatusSingleton.getCurrentStatus();
+        if (status == StatusEnum.IDLE || status == StatusEnum.EDIT) {
             handleListView();
-        } else if (mStatusSingleton.isSearchMode()) {
+        } else if (status == StatusEnum.SEARCH) {
             handleSearchView();
         }
     }
@@ -58,25 +55,23 @@ public class DataObserver extends RecyclerView.AdapterDataObserver {
      * handle empty listview
      */
     private void handleListView() {
-        boolean isEmptyData = mRecyclerView.getAdapter().getItemCount() == 0;
-        mEmptyLinkListView.setVisibility(isEmptyData ? View.VISIBLE : View.GONE);
-        mEmptyLinkListView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSwipeRefreshLayout.setRefreshing(true);
-                mBookmarkProviderSingleton.addByDefaultBrowser();
-            }
-        });
+        mEmptyLinkListView.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
     }
 
     /**
      * handle empty listview
      */
     private void handleSearchView() {
-        boolean isEmptyData = mRecyclerView.getAdapter().getItemCount() == 0;
-        mEmptySearchResultLayout.setVisibility(isEmptyData ? View.VISIBLE : View.GONE);
+        mEmptySearchResultLayout.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
         ((TextView) mEmptySearchResultLayout.findViewById(R.id.searchResultQueryTextId))
                 .setText(mSearchHandlerSingleton.getFilterString());
     }
 
+    /**
+     *
+     * @return
+     */
+    private boolean isEmptyData() {
+        return mRecyclerView.getAdapter().getItemCount() == 0;
+    }
 }
