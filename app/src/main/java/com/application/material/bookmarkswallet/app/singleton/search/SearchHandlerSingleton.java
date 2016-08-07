@@ -15,9 +15,12 @@ import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecycl
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
+
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by davide on 04/08/15.
@@ -104,7 +107,7 @@ public class SearchHandlerSingleton implements Filterable, SearchView.OnQueryTex
      * @param filteredList
      */
     private void updateDataSet(RealmResults<Bookmark> filteredList) {
-        mAdapter.getRealmBaseAdapter().updateRealmResults(filteredList);
+        mAdapter.getRealmBaseAdapter().updateData(filteredList);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -114,8 +117,8 @@ public class SearchHandlerSingleton implements Filterable, SearchView.OnQueryTex
      */
     private void initDataSet() {
         RealmResults<Bookmark> result = mRealm.where(Bookmark.class).findAll();
-        result.sort("timestamp", RealmResults.SORT_ORDER_DESCENDING);
-        mAdapter.getRealmBaseAdapter().updateRealmResults(result);
+        result.sort("timestamp", Sort.DESCENDING);
+        mAdapter.getRealmBaseAdapter().updateData(result);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -129,14 +132,17 @@ public class SearchHandlerSingleton implements Filterable, SearchView.OnQueryTex
         mFilterString = filterString;
         if (isSearchOnUrl) {
             return mRealm.where(Bookmark.class)
-                    .contains("url", filterString, isCaseSensitive)
+                    .contains("url", filterString, isCaseSensitive?
+                            Case.SENSITIVE : Case.INSENSITIVE)
                     .or()
-                    .contains("name", filterString, isCaseSensitive)
+                    .contains("name", filterString, isCaseSensitive?
+                            Case.SENSITIVE : Case.INSENSITIVE)
                     .findAll();
         }
 
         return mRealm.where(Bookmark.class)
-                    .contains("name", filterString, isCaseSensitive)
+                    .contains("name", filterString, isCaseSensitive?
+                            Case.SENSITIVE : Case.INSENSITIVE)
                     .findAll();
     }
 

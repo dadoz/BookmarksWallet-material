@@ -26,6 +26,7 @@ import com.application.material.bookmarkswallet.app.singleton.*;
 import com.application.material.bookmarkswallet.app.singleton.search.SearchHandlerSingleton;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 /**
@@ -233,7 +234,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
     public void setRealmAdapter(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
         try {
             RealmResults realmResults = mRealm.where(Bookmark.class).findAll();
-            RealmModelAdapter realmModelAdapter = new RealmModelAdapter(mMainActivityRef, realmResults, true);
+            RealmModelAdapter realmModelAdapter = new RealmModelAdapter(mMainActivityRef, realmResults);
             recyclerViewAdapter
                     .setRealmBaseAdapter(realmModelAdapter);
             recyclerViewAdapter.notifyDataSetChanged();
@@ -322,7 +323,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
      * init singleton instances
      */
     private void initSingletonInstances() {
-        mRealm = Realm.getInstance(mMainActivityRef);
+        mRealm = Realm.getInstance(new RealmConfiguration.Builder(mMainActivityRef).build());
         mStatusSingleton = StatusSingleton.getInstance();
         mActionbarSingleton = ActionbarSingleton.getInstance(mMainActivityRef);
         mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(mMainActivityRef);

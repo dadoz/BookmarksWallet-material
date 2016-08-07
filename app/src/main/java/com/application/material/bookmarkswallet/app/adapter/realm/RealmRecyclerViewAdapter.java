@@ -1,16 +1,8 @@
 package com.application.material.bookmarkswallet.app.adapter.realm;
-
-import android.database.ContentObserver;
 import android.support.v7.widget.RecyclerView;
-
-import com.application.material.bookmarkswallet.app.adapter.observer.DataObserver;
-
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmObject;
 
-/**
- * Created by davide on 21/04/15.
- */
 public abstract class RealmRecyclerViewAdapter<T extends RealmObject> extends RecyclerView.Adapter {
     private RealmModelAdapter<T> realmBaseAdapter;
 

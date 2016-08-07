@@ -15,6 +15,7 @@ import com.application.material.bookmarkswallet.app.adapter.realm.RealmRecyclerV
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 import java.util.UUID;
@@ -39,7 +40,7 @@ public class BookmarkActionSingleton {
      */
     public static BookmarkActionSingleton getInstance(Activity activity) {
         mActivityRef = activity;
-        mRealm = Realm.getInstance(mActivityRef);
+        mRealm = Realm.getInstance(new RealmConfiguration.Builder(activity).build());
         mStatusSingleton = StatusSingleton.getInstance();
         return mInstance == null ?
                 mInstance = new BookmarkActionSingleton() :
@@ -136,7 +137,7 @@ public class BookmarkActionSingleton {
         BookmarkRecyclerViewAdapter adapter = (BookmarkRecyclerViewAdapter) recyclerView.getAdapter();
 
         mRealm.beginTransaction();
-        adapter.getItem(position).removeFromRealm();
+        adapter.getItem(position).deleteFromRealm();
         mRealm.commitTransaction();
         adapter.notifyItemRemoved(position);
         adapter.notifyDataSetChanged();

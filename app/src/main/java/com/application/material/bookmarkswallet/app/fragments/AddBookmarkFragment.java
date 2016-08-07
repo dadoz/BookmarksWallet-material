@@ -34,6 +34,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
@@ -194,7 +195,7 @@ public class AddBookmarkFragment extends Fragment implements
         initProgressDialog();
         //do job
         mBookmarkActionSingleton.addOrmObject(
-                Realm.getInstance(mAddActivityRef),
+                Realm.getInstance(new RealmConfiguration.Builder(mAddActivityRef).build()),
                 getBookmarkTitle(),
                 null,
                 getBookmarkBlobIcon(),
