@@ -1,16 +1,13 @@
 package com.application.material.bookmarkswallet.app;
 
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import butterknife.ButterKnife;
 import com.application.material.bookmarkswallet.app.fragments.AddBookmarkFragment;
-import com.application.material.bookmarkswallet.app.fragments.BookmarkRecyclerViewFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 
 /**
  * Created by davide on 05/08/15.
@@ -23,7 +20,6 @@ public class AddBookmarkActivity extends AppCompatActivity
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         onInitFragment();
     }
 

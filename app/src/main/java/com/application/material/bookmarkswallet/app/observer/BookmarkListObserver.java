@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.adapter.observer;
+package com.application.material.bookmarkswallet.app.observer;
 
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +12,7 @@ import com.application.material.bookmarkswallet.app.singleton.search.SearchHandl
 /**
  * set empty view on empty data TODO move
  */
-public class DataObserver extends RecyclerView.AdapterDataObserver {
+public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
 
     private StatusSingleton mStatusSingleton;
     private RecyclerView mRecyclerView;
@@ -21,11 +21,11 @@ public class DataObserver extends RecyclerView.AdapterDataObserver {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private SearchHandlerSingleton mSearchHandlerSingleton;
 
-    public DataObserver(RecyclerView recyclerView,
-                        View emptyLinkListView,
-                        View emptySearchResultLayout,
-                        SwipeRefreshLayout swipeRefreshLayout,
-                        SearchHandlerSingleton searchHandlerSingleton) {
+    public BookmarkListObserver(RecyclerView recyclerView,
+                                View emptyLinkListView,
+                                View emptySearchResultLayout,
+                                SwipeRefreshLayout swipeRefreshLayout,
+                                SearchHandlerSingleton searchHandlerSingleton) {
 
         this.mStatusSingleton = StatusSingleton.getInstance();
         this.mRecyclerView = recyclerView;

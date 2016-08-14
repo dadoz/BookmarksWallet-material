@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +18,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.observer.DataObserver;
 import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
@@ -25,6 +25,7 @@ import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.singleton.*;
 import com.application.material.bookmarkswallet.app.singleton.search.SearchHandlerSingleton;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
+import com.application.material.bookmarkswallet.app.observer.BookmarkListObserver;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
@@ -32,7 +33,7 @@ import io.realm.RealmResults;
 /**
  * Created by davide on 04/08/15.
  */
-public class BookmarkRecyclerViewFragment extends Fragment
+public class BookmarkListFragment extends Fragment
         implements View.OnClickListener, View.OnLongClickListener,
         SwipeRefreshLayout.OnRefreshListener,
         MenuItemCompat.OnActionExpandListener, OnTaskCompleted {
@@ -57,13 +58,13 @@ public class BookmarkRecyclerViewFragment extends Fragment
     private StatusSingleton mStatusSingleton;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (!(activity instanceof OnChangeFragmentWrapperInterface)) {
-            throw new ClassCastException(activity.toString()
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (!(context instanceof OnChangeFragmentWrapperInterface)) {
+            throw new ClassCastException(context.toString()
                     + " must implement OnLoadViewHandlerInterface");
         }
-        mMainActivityRef =  (MainActivity) activity;
+        mMainActivityRef =  (MainActivity) context;
         initSingletonInstances();
     }
 
@@ -75,7 +76,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstance) {
-        mView = inflater.inflate(R.layout.bookmark_recycler_view_layout,
+        mView = inflater.inflate(R.layout.fragment_bookmark_list_layout,
                 container, false);
         ButterKnife.bind(this, mView);
         setHasOptionsMenu(true);
@@ -218,7 +219,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
      * @param recyclerViewAdapter
      */
     private void registerDataObserver(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
-        DataObserver observer = new DataObserver(
+        BookmarkListObserver observer = new BookmarkListObserver(
                 mRecyclerView,
                 mEmptyLinkListView,
                 mEmptySearchResultLayout,
@@ -279,7 +280,7 @@ public class BookmarkRecyclerViewFragment extends Fragment
      * handle setting option - open up a new activity with all preferences available
      */
     private void handleSetting() {
-        mActionbarSingleton.udpateActionbar(true);
+        mActionbarSingleton.updateActionBar(true);
         mMainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
     }
 

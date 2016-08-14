@@ -53,10 +53,10 @@ public class Utils {
     /**
      * hide Keyboard
      */
-    public static void hideKeyboard(Activity activity) {
+    public static void hideKeyboard(Context context) {
         try {
-            View view = activity.getCurrentFocus();
-            ((InputMethodManager) activity
+            View view = ((Activity) context).getCurrentFocus();
+            ((InputMethodManager) context
                     .getSystemService(Context.INPUT_METHOD_SERVICE))
                     .hideSoftInputFromWindow(view.getWindowToken(), 0);
         } catch (Exception e) {
@@ -111,7 +111,7 @@ public class Utils {
      */
     public static void setIconOnImageView(ImageView iconView,
                                           byte [] blob, Drawable defaultIcon,
-                                          boolean isSelectedItem, Resources resources) {
+                                          boolean isSelectedItem, int size) {
         try {
             if ((blob == null || blob.length == 0) ||
                     isSelectedItem) {
@@ -119,7 +119,9 @@ public class Utils {
                 return;
             }
 
-            iconView.setImageBitmap(getIconBitmap(blob, resources));
+            //TODO fix it
+            iconView.setImageDrawable(defaultIcon);
+//            iconView.setImageBitmap(getIconBitmap(blob, size));
         } catch (Exception e) {
             iconView.setImageDrawable(defaultIcon);
         }
@@ -130,11 +132,10 @@ public class Utils {
      * @param blobIcon
      * @return
      */
-    public static Bitmap getIconBitmap(byte[] blobIcon, Resources resources) {
+    public static Bitmap getIconBitmap(byte[] blobIcon, int size) {
         try {
             Bitmap bmp = BitmapFactory.decodeByteArray(blobIcon, 0, blobIcon.length);
-            return Bitmap.createScaledBitmap(bmp, (int) resources.getDimension(R.dimen.medium_icon_size),
-                    (int) resources.getDimension(R.dimen.medium_icon_size), false);
+            return Bitmap.createScaledBitmap(bmp,size, size, false);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

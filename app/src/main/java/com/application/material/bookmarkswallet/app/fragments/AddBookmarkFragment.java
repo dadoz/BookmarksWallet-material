@@ -2,10 +2,8 @@ package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -14,6 +12,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.*;
 import android.widget.EditText;
@@ -47,7 +46,6 @@ import java.net.URL;
 public class AddBookmarkFragment extends Fragment implements
         View.OnClickListener, Callback, OnTaskCompleted, SwipeRefreshLayout.OnRefreshListener {
     public static final String FRAG_TAG = "AddBookmarkFragmentTAG";
-    private Activity mAddActivityRef;
     private ActionbarSingleton mActionbarSingleton;
     private ProgressDialog mProgressDialog;
     private BookmarkActionSingleton mBookmarkActionSingleton;
@@ -68,24 +66,23 @@ public class AddBookmarkFragment extends Fragment implements
     private byte[] mBookmarkBlobIcon = null;
     @Bind(R.id.pasteClipboardFabId)
     FloatingActionButton mPasteClipboardFab;
-    private long SAVE_TIMEOUT = 500;
+    private static final long SAVE_TIMEOUT = 500;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (!(activity instanceof OnChangeFragmentWrapperInterface)) {
-            throw new ClassCastException(activity.toString()
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (!(context instanceof OnChangeFragmentWrapperInterface)) {
+            throw new ClassCastException(context.toString()
                     + " must implement OnChangeFragmentWrapperInterface");
         }
-        mAddActivityRef = activity;
-        mActionbarSingleton = ActionbarSingleton.getInstance(mAddActivityRef);
-        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(mAddActivityRef);
+        mActionbarSingleton = ActionbarSingleton.getInstance((Activity) context);
+        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance((Activity) context);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstance) {
-        mView = inflater.inflate(R.layout.add_bookmark_fragment, container, false);
+        mView = inflater.inflate(R.layout.fragment_add_bookmark_layout, container, false);
         ButterKnife.bind(this, mView);
         setHasOptionsMenu(true);
         initActionbar();
@@ -125,10 +122,8 @@ public class AddBookmarkFragment extends Fragment implements
      */
     private void initPullToRefresh() {
         refreshLayout.setOnRefreshListener(this);
-        refreshLayout
-                .setColorSchemeResources(R.color.blue_grey_700,
+        refreshLayout.setColorSchemeResources(R.color.blue_grey_700,
                         R.color.yellow_400);
-
     }
 
     /**
@@ -161,7 +156,7 @@ public class AddBookmarkFragment extends Fragment implements
      */
     private void initActionbar() {
         mActionbarSingleton.initActionBar();
-        mActionbarSingleton.udpateActionbar(true, getActionbarColor(), getToolbarDrawableColor());
+        mActionbarSingleton.updateActionBar(true); //, getActionbarColor(), getToolbarDrawableColor());
         mActionbarSingleton.setElevation(0.0f);
         mActionbarSingleton.setTitle("Add new");
     }
@@ -171,7 +166,7 @@ public class AddBookmarkFragment extends Fragment implements
      * @return
      */
     public Drawable getToolbarDrawableColor() {
-        return getResources().getDrawable(R.color.blue_grey_700);
+        return ContextCompat.getDrawable(getContext(), R.color.blue_grey_700);
     }
 
     /**
@@ -179,7 +174,7 @@ public class AddBookmarkFragment extends Fragment implements
      * @return
      */
     public int getActionbarColor() {
-        return getResources().getColor(R.color.blue_grey_800);
+        return ContextCompat.getColor(getContext(), R.color.blue_grey_800);
     }
 
     /**
@@ -195,7 +190,7 @@ public class AddBookmarkFragment extends Fragment implements
         initProgressDialog();
         //do job
         mBookmarkActionSingleton.addOrmObject(
-                Realm.getInstance(new RealmConfiguration.Builder(mAddActivityRef).build()),
+                Realm.getInstance(new RealmConfiguration.Builder(getContext()).build()),
                 getBookmarkTitle(),
                 null,
                 getBookmarkBlobIcon(),
@@ -241,7 +236,7 @@ public class AddBookmarkFragment extends Fragment implements
      * init progress dialog
      */
     private void initProgressDialog() {
-        mProgressDialog = new ProgressDialog(mAddActivityRef, R.style.CustomLollipopDialogStyle);
+        mProgressDialog = new ProgressDialog(getContext(), R.style.CustomLollipopDialogStyle);
         mProgressDialog.setTitle("Saving ...");
         mProgressDialog.setMessage("Waiting for saving bookmark!");
         mProgressDialog.setCancelable(false);
@@ -254,7 +249,7 @@ public class AddBookmarkFragment extends Fragment implements
     public void addBookmarkCallback() {
         try {
             cancelProgressDialog();
-            mAddActivityRef.finish();
+            getActivity().finish();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -320,7 +315,7 @@ public class AddBookmarkFragment extends Fragment implements
      * get image from gallery
      */
     private void retrieveIconByGallery() {
-        Toast.makeText(mAddActivityRef, "feature will come soon!", Toast.LENGTH_LONG)
+        Toast.makeText(getContext(), "feature will come soon!", Toast.LENGTH_LONG)
                 .show();
     }
 
@@ -330,7 +325,7 @@ public class AddBookmarkFragment extends Fragment implements
     private void pasteClipboard() {
         try {
             ClipboardSingleton clipboardSingleton =
-                    ClipboardSingleton.getInstance(mAddActivityRef);
+                    ClipboardSingleton.getInstance(getContext());
             String url = clipboardSingleton.getTextFromClipboard();
             mUrlEditText.setText(url);
         } catch (Exception e) {
@@ -342,7 +337,7 @@ public class AddBookmarkFragment extends Fragment implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addBookmarkFabId:
-                Utils.hideKeyboard(mAddActivityRef);
+                Utils.hideKeyboard(getContext());
                 addBookmark();
                 break;
             case R.id.addIconImageFabId:
@@ -354,16 +349,6 @@ public class AddBookmarkFragment extends Fragment implements
                 pasteClipboard();
                 break;
         }
-    }
-
-    @Override
-    public void onTaskCompleted(boolean isRefreshEnabled) {
-
-    }
-
-    @Override
-    public void onTaskCompleted(byte[] data) {
-
     }
 
     @Override
@@ -380,6 +365,14 @@ public class AddBookmarkFragment extends Fragment implements
     }
 
     @Override
+    public void onTaskCompleted(boolean isRefreshEnabled) {
+    }
+
+    @Override
+    public void onTaskCompleted(byte[] data) {
+    }
+
+    @Override
     public void onSuccess() {
         refreshLayout.setRefreshing(false);
     }
@@ -388,8 +381,8 @@ public class AddBookmarkFragment extends Fragment implements
     public void onError() {
         //picasso error
         refreshLayout.setRefreshing(false);
-        mIconImageView.setImageDrawable(getResources()
-                .getDrawable(R.drawable.ic_bookmark_outline_black_48dp));
+        mIconImageView.setImageDrawable(ContextCompat.getDrawable(getContext(),
+                R.drawable.ic_bookmark_outline_black_48dp));
         showErrorMessage("Ops! Icon not found for this bookmark!");
     }
 

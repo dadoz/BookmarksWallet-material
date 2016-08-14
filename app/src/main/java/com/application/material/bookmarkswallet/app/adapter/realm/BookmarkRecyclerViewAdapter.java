@@ -1,22 +1,20 @@
 package com.application.material.bookmarkswallet.app.adapter.realm;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.*;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.observer.DataObserver;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.RealmObject;
-import io.realm.RealmResults;
+import io.realm.internal.Context;
 
 import static com.application.material.bookmarkswallet.app.models.Bookmark.Utils.getBookmarkNameWrapper;
 
@@ -35,7 +33,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         mActivityRef = activity;
         mListener = listener;
         mStatusSingleton = StatusSingleton.getInstance();
-        mDarkGrey = mActivityRef.getResources().getColor(R.color.grey_300);
+        mDarkGrey = ContextCompat.getColor(mActivityRef.getApplicationContext(), R.color.indigo_50);
         mLightGrey = Color.TRANSPARENT;
     }
 
@@ -97,25 +95,23 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
     }
 
     /**
-     *
+     * TODO refactor
      * @param iconView
      * @param bookmark
      * @param isSelectedItem
      */
     private void setIcon(ImageView iconView, Bookmark bookmark, boolean isSelectedItem) {
-        Drawable res = mActivityRef
-                .getResources()
-                .getDrawable(isSelectedItem ?
-                        R.drawable.ic_bookmark_black_48dp :
-                        R.drawable.ic_bookmark_outline_black_48dp);
-        int color =  mActivityRef.getResources()
-                .getColor(R.color.blue_grey_700);
+        Drawable res = ContextCompat.getDrawable(mActivityRef.getApplicationContext(),
+                R.drawable.ic_bookmark_black_48dp);
+//                isSelectedItem ? R.drawable.ic_bookmark_black_48dp :
+//                        R.drawable.ic_bookmark_outline_black_48dp);
 
-        Utils.setColorFilter(res, color);
-        iconView.setImageDrawable(res);
+        Utils.setColorFilter(res, ContextCompat.getColor(mActivityRef.getApplicationContext(),
+                R.color.indigo_600));
+//        iconView.setImageDrawable(res);
         Utils.setIconOnImageView(iconView,
                 bookmark.getBlobIcon(), res, isSelectedItem,
-                mActivityRef.getResources());
+                (int) mActivityRef.getResources().getDimension(R.dimen.medium_icon_size));
     }
 
     /**

@@ -5,10 +5,10 @@
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="android:windowActionBar">false</item>
-        <item name="android:textColorPrimary">@color/blue_grey_900</item>
+        <item name="android:textColorPrimary">@color/indigo_600</item>
         <item name="android:textColor">@color/blue_grey_900</item>
         <item name="colorPrimary">@color/yellow_400</item>
-        <item name="colorControlActivated">@color/blue_grey_500</item>
+        <item name="colorControlActivated">@color/indigo_400</item>
         <item name="actionModeStyle">@style/ActionMode</item>
 
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>

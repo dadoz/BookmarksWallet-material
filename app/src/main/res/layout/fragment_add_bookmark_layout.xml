@@ -6,11 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/add_bookmark_collapsing_layout"/>
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/addBookmarkRefreshLayoutId"
         android:layout_below="@id/addBookmarkMainContainerLayoutId"
-
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
         <ScrollView
@@ -24,13 +22,11 @@
                 <include layout="@layout/no_bookmark_preview_layout"/>
                 <include layout="@layout/info_bookmark_layout"/>
             </RelativeLayout>
-
         </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:visibility="gone"
-
         android:id="@+id/addBookmarkFabId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,7 +41,6 @@
         app:fabSize="normal"/>
     <android.support.design.widget.FloatingActionButton
         android:visibility="gone"
-
         android:id="@+id/addIconImageFabId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,7 +53,6 @@
         app:borderWidth="0dp"
         app:backgroundTint="@color/blue_grey_900"
         app:fabSize="normal"/>
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/pasteClipboardFabId"
         android:layout_width="wrap_content"
@@ -72,5 +66,4 @@
         app:borderWidth="0dp"
         app:backgroundTint="@color/blue_grey_900"
         app:fabSize="normal"/>
-
 </RelativeLayout>

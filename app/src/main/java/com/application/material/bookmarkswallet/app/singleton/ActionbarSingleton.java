@@ -98,7 +98,7 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
      * @param isHomeUpEnabled
      */
     @Override
-    public void udpateActionbar(boolean isHomeUpEnabled) {
+    public void updateActionBar(boolean isHomeUpEnabled) {
         try {
             setDisplayHomeEnabled(isHomeUpEnabled);
             setStatusbarColor(getDefaultActionbarColor());
@@ -115,7 +115,7 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
      * @param toolbarColor
      */
     @Override
-    public void udpateActionbar(boolean isHomeUpEnabled,
+    public void updateActionBar(boolean isHomeUpEnabled,
                                 int actionbarColor, Drawable toolbarColor) {
         try {
             setDisplayHomeEnabled(isHomeUpEnabled);

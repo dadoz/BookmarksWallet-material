@@ -44,7 +44,7 @@ public class BackPressedSingleton {
      */
     public boolean isBackPressedHandled() {
         boolean isHomeUpEnabled = homeUpEnabled();
-        actionbarSingleton.udpateActionbar(isHomeUpEnabled);
+        actionbarSingleton.updateActionBar(isHomeUpEnabled);
 
         if (statusSingleton.isSearchMode()) {
             mSearchHandlerSingleton.collapseSearchView();

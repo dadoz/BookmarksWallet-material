@@ -1,81 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_height="wrap_content"
-             android:layout_width="fill_parent">
-    <LinearLayout
-            android:background="?android:selectableItemBackground"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-    <LinearLayout
-            android:id="@+id/backgroundLayoutId"
-            android:paddingTop="@dimen/medium_padding"
-            android:paddingBottom="@dimen/medium_padding"
-            android:baselineAligned="false"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        <RelativeLayout
-                android:id="@+id/linkLayoutId"
-                android:baselineAligned="false"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/small_padding"
-                android:paddingBottom="@dimen/small_padding">
-
-            <ImageView
-                    android:id="@+id/linkIconId"
-                    android:contentDescription="link_icon_id"
-                    android:layout_width="@dimen/icon_size"
-                    android:layout_height="@dimen/icon_size"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="@dimen/medium_padding"
-                    android:src="@drawable/ic_bookmark_outline_black_48dp"/>
-
-
-            <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/linkIconId"
-                    android:layout_marginRight="@dimen/row_timestamp_width"
-                    android:orientation="vertical">
-                <TextView
-                        android:id="@+id/linkTitleId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="bookmark namedsf"
-                        android:textSize="@dimen/text_size_24"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textColor="@color/blue_grey_700"/>
-                <TextView
-                        android:id="@+id/linkUrlId"
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:text="http://www.google.it"
-                        android:textSize="@dimen/text_size_16"
-                        android:ellipsize="end"
-                        android:lines="2"
-                        android:textColor="@color/yellow_900"/>
-            </LinearLayout>
-            <!-- DATE -->
-            <TextView
-                    android:id="@+id/linkTimestampId"
-                    android:layout_width="wrap_content"
-                    android:maxWidth="@dimen/row_timestamp_width"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:paddingTop="@dimen/medium_padding"
-                    android:paddingRight="@dimen/medium_padding"
-                    android:textSize="@dimen/text_size_14"
-                    android:text=" date "
-                    android:textColor="@color/blue_grey_300"/>
-        </RelativeLayout>
-
-    </LinearLayout>
-    </LinearLayout>
-</FrameLayout>
+<RelativeLayout
+    android:id="@+id/backgroundLayoutId"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="@dimen/padding_16"
+    android:baselineAligned="false"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground">
+    <TextView
+        android:id="@+id/linkTimestampId"
+        android:layout_width="wrap_content"
+        android:maxWidth="@dimen/row_timestamp_width"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textSize="@dimen/text_size_14"
+        android:text=" date "
+        android:textColor="@color/grey_400"/>
+    <ImageView
+        android:id="@+id/linkIconId"
+        android:contentDescription="link_icon_id"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:layout_centerVertical="true"/>
+    <TextView
+        android:id="@+id/linkTitleId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/linkIconId"
+        android:layout_toLeftOf="@id/linkTimestampId"
+        android:text="bookmark namedsf"
+        android:layout_marginLeft="@dimen/padding_16"
+        android:textSize="@dimen/text_size_24"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/indigo_600"/>
+    <TextView
+        android:id="@+id/linkUrlId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_16"
+        android:layout_toRightOf="@id/linkIconId"
+        android:layout_toLeftOf="@id/linkTimestampId"
+        android:layout_below="@id/linkTitleId"
+        android:text="http://www.google.it"
+        android:textSize="@dimen/text_size_14"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/blue_grey_900"/>
+</RelativeLayout>

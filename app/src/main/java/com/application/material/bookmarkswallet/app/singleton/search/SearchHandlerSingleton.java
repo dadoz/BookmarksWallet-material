@@ -184,7 +184,7 @@ public class SearchHandlerSingleton implements Filterable, SearchView.OnQueryTex
                         RealmResults filteredList = getFilteredList(mSearchOnUrlEnabled,
                                 searchValue, mCaseSensitive);
 
-//                        if (filteredList.size() == 0) -- handled by DataObserver
+//                        if (filteredList.size() == 0) -- handled by BookmarkListObserver
                         updateDataSet(filteredList);
                     } catch (Exception e) {
                         e.printStackTrace();

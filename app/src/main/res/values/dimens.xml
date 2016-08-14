@@ -40,4 +40,5 @@
     <dimen name="edit_text_min_width">250dip</dimen>
     <dimen name="mini_fab_negative_margin">-30dp</dimen>
     <dimen name="min_height_scrollview">250dp</dimen>
+    <dimen name="padding_16">16dp</dimen>
 </resources>

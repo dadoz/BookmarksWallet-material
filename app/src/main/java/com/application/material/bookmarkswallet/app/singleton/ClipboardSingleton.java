@@ -23,11 +23,11 @@ public class ClipboardSingleton {
 
     /**
      *
-     * @param activityRef
+     * @param contextRef
      * @return
      */
-    public static ClipboardSingleton getInstance(Activity activityRef) {
-        clipboardService = (ClipboardManager) activityRef.
+    public static ClipboardSingleton getInstance(Context contextRef) {
+        clipboardService = (ClipboardManager) contextRef.
                 getSystemService(Context.CLIPBOARD_SERVICE);
         return instance == null ? instance = new ClipboardSingleton() : instance;
     }

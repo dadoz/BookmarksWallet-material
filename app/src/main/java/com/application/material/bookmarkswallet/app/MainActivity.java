@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.application.material.bookmarkswallet.app.fragments.BookmarkRecyclerViewFragment;
+import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.singleton.BackPressedSingleton;
 import com.flurry.android.FlurryAgent;
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         int backStackCnt = getSupportFragmentManager().getBackStackEntryCount();
         Fragment frag = getSupportFragmentManager().
-                findFragmentByTag(BookmarkRecyclerViewFragment.FRAG_TAG);
+                findFragmentByTag(BookmarkListFragment.FRAG_TAG);
 
         if (backStackCnt > 0) {
             handleBackStackEntry(transaction);
@@ -65,13 +65,13 @@ public class MainActivity extends AppCompatActivity
         if (backStackCnt == 0 &&
                 frag != null) {
             transaction.replace(R.id.fragmentContainerFrameLayoutId,
-                    frag, BookmarkRecyclerViewFragment.FRAG_TAG).commit();
+                    frag, BookmarkListFragment.FRAG_TAG).commit();
             return;
         }
 
         //no fragment already adedd
         transaction.add(R.id.fragmentContainerFrameLayoutId,
-                new BookmarkRecyclerViewFragment(), BookmarkRecyclerViewFragment.FRAG_TAG).commit();
+                new BookmarkListFragment(), BookmarkListFragment.FRAG_TAG).commit();
     }
 
     /**
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity
                 beginTransaction();
 
         transaction.replace(R.id.fragmentContainerFrameLayoutId, fragment, tag);
-        if (! tag.equals(BookmarkRecyclerViewFragment.FRAG_TAG)) {
+        if (! tag.equals(BookmarkListFragment.FRAG_TAG)) {
             transaction.addToBackStack(tag);
         }
         transaction.commit();
