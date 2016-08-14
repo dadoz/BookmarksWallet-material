@@ -20,4 +20,5 @@
     <string name="setting_feedback_label">Send a feedback</string>
     <string name="setting_build_version_label">Build version</string>
     <string name="send_feedback_email">tunnus.android@gmail.com</string>
+    <string name="bookmark_list_title">List</string>
 </resources>

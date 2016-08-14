@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.adapter.realm;
+package com.application.material.bookmarkswallet.app.adapter;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.adapter.realm.RealmRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
@@ -108,7 +109,6 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 
         Utils.setColorFilter(res, ContextCompat.getColor(mActivityRef.getApplicationContext(),
                 R.color.indigo_600));
-//        iconView.setImageDrawable(res);
         Utils.setIconOnImageView(iconView,
                 bookmark.getBlobIcon(), res, isSelectedItem,
                 (int) mActivityRef.getResources().getDimension(R.dimen.medium_icon_size));

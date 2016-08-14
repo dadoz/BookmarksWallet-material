@@ -10,13 +10,11 @@ import android.view.*;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionMode;
-import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.adapter.realm.RealmRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmResults;
 
 import java.util.UUID;
 

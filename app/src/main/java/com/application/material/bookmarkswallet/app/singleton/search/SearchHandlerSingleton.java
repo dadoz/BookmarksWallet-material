@@ -3,22 +3,18 @@ package com.application.material.bookmarkswallet.app.singleton.search;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Filter;
 import android.widget.Filterable;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
+import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
 
 import io.realm.Case;
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 

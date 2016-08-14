@@ -1,6 +1,5 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,7 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.realm.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
@@ -194,7 +193,7 @@ public class BookmarkListFragment extends Fragment
      * init title - set
      */
     private void initTitle() {
-        mActionbarSingleton.setTitle(null);
+        mActionbarSingleton.setTitle(getString(R.string.bookmark_list_title));
     }
 
     /**
@@ -250,8 +249,7 @@ public class BookmarkListFragment extends Fragment
     private void initPullToRefresh() {
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout
-                .setColorSchemeResources(R.color.blue_grey_700,
-                        R.color.yellow_400);
+                .setColorSchemeResources(R.color.indigo_600);
     }
 
     /**
