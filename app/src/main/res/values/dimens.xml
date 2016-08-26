@@ -41,4 +41,7 @@
     <dimen name="mini_fab_negative_margin">-30dp</dimen>
     <dimen name="min_height_scrollview">250dp</dimen>
     <dimen name="padding_16">16dp</dimen>
+    <dimen name="toolbar_bottom_margin">100dp</dimen>
+    <dimen name="webview_height">200dp</dimen>
+    <dimen name="padding_32">32dp</dimen>
 </resources>

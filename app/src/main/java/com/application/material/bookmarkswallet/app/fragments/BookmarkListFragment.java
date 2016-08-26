@@ -35,7 +35,7 @@ import io.realm.RealmResults;
 public class BookmarkListFragment extends Fragment
         implements View.OnClickListener, View.OnLongClickListener,
         SwipeRefreshLayout.OnRefreshListener,
-        MenuItemCompat.OnActionExpandListener, OnTaskCompleted {
+        MenuItemCompat.OnActionExpandListener {
     public static final String FRAG_TAG = "LinksListFragment";
     @Bind(R.id.addBookmarkFabId)
     FloatingActionButton mAddBookmarkFab;
@@ -329,24 +329,24 @@ public class BookmarkListFragment extends Fragment
         mSearchHandlerSingleton = SearchHandlerSingleton.getInstance(mMainActivityRef, mRealm);
     }
 
-    @Override
-    public void onTaskCompleted(boolean isRefreshEnabled) {
-        try {
-            mRecyclerView.getAdapter().notifyDataSetChanged();
-            if (! isRefreshEnabled) {
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onTaskCompleted(byte[] data) {
-        return;
-    }
-
-    @Override
-    public void onTaskCompleted(String url) {
-    }
+//    @Override
+//    public void onTaskCompleted(boolean isRefreshEnabled) {
+//        try {
+//            mRecyclerView.getAdapter().notifyDataSetChanged();
+//            if (! isRefreshEnabled) {
+//                mSwipeRefreshLayout.setRefreshing(false);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Override
+//    public void onTaskCompleted(byte[] data) {
+//        return;
+//    }
+//
+//    @Override
+//    public void onTaskCompleted(String url) {
+//    }
 }

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 
 /**
  * Created by davide on 06/01/15.
@@ -26,8 +27,8 @@ public class ClipboardSingleton {
      * @param contextRef
      * @return
      */
-    public static ClipboardSingleton getInstance(Context contextRef) {
-        clipboardService = (ClipboardManager) contextRef.
+    public static ClipboardSingleton getInstance(WeakReference<Context> contextRef) {
+        clipboardService = (ClipboardManager) contextRef.get().
                 getSystemService(Context.CLIPBOARD_SERVICE);
         return instance == null ? instance = new ClipboardSingleton() : instance;
     }

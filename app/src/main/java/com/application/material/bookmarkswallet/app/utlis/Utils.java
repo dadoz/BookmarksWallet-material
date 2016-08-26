@@ -35,6 +35,7 @@ public class Utils {
     private static final String TAG = "Utils";
     private static int CONST_VALUE = 100;
     private static String HTTP_PROTOCOL = "http://";
+    private static String HTTPS_PROTOCOL = "https://";
 
     /**
      * @param url
@@ -165,10 +166,10 @@ public class Utils {
     /**check if url contain already http or https protocol otw atttach it
      *
      */
-    public static String buildUrl(String url) {
+    public static String buildUrl(String url, boolean isHttps) {
         return url == null ||
                 url.contains("http://") || url.contains("https://") ?
-                url : HTTP_PROTOCOL + url.trim();
+                url : isHttps ? HTTP_PROTOCOL : HTTPS_PROTOCOL + url.trim();
     }
 
     /**
@@ -184,4 +185,8 @@ public class Utils {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
+
+    public static void setError() {
+    }
+
 }

@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity
         FlurryAgent.setLogEnabled(true);
         FlurryAgent.init(this, getResources().getString(R.string.FLURRY_API_KEY));
 
-        onInitAppRate();
         onInitFragment();
     }
 
@@ -120,30 +119,9 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
-    /**
-     * init app rate dialog
-     */
-    private void onInitAppRate() {
-        AppRate.with(this)
-                .setInstallDays(2)
-                .setLaunchTimes(10)
-                .setRemindInterval(1)
-                .setShowNeutralButton(true)
-                .setDebug(false)
-                .setOnClickButtonListener(new OnClickButtonListener() { // callback listener.
-                    @Override
-                    public void onClickButton(int which) {
-                        Log.d(MainActivity.class.getName(), Integer.toString(which));
-                    }
-                })
-                .monitor();
-        // Show a dialog if meets conditions
-        AppRate.showRateDialogIfMeetsConditions(this);
-    }
-
     @Override
     public void onBackPressed() {
-        if (mBackPressedSingleton.isBackPressedHandled()) {
+        if (!mBackPressedSingleton.isBackPressedHandled()) {
             return;
         }
         super.onBackPressed();

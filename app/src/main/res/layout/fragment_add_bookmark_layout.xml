@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/grey_200"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/add_bookmark_collapsing_layout"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_bottom_margin"
+        android:background="@color/yellow_400"/>
     <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/addBookmarkRefreshLayoutId"
         android:layout_below="@id/addBookmarkMainContainerLayoutId"
         android:layout_width="fill_parent"
@@ -14,56 +20,24 @@
         <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:minHeight="@dimen/min_height_scrollview">
-                <include layout="@layout/no_bookmark_preview_layout"/>
-                <include layout="@layout/info_bookmark_layout"/>
-            </RelativeLayout>
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <include layout="@layout/add_bookmark_main_layout"/>
+                <include layout="@layout/add_bookmark_result_layout"/>
+            </FrameLayout>
         </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:visibility="gone"
-        android:id="@+id/addBookmarkFabId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/large_padding"
-        android:layout_below="@id/addBookmarkMainContainerLayoutId"
-        android:layout_marginTop="@dimen/mini_fab_negative_margin"
-        android:src="@drawable/ic_done_black_48dp"
-        app:elevation="4dp"
-        app:borderWidth="0dp"
-        app:backgroundTint="@color/yellow_500"
-        app:fabSize="normal"/>
-    <android.support.design.widget.FloatingActionButton
-        android:visibility="gone"
-        android:id="@+id/addIconImageFabId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/large_padding"
-        android:layout_below="@id/addBookmarkFabId"
-        android:layout_marginTop="@dimen/medium_padding"
-        android:src="@drawable/ic_insert_photo_white_48dp"
-        app:elevation="4dp"
-        app:borderWidth="0dp"
-        app:backgroundTint="@color/blue_grey_900"
-        app:fabSize="normal"/>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/pasteClipboardFabId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/large_padding"
-        android:layout_below="@id/addBookmarkMainContainerLayoutId"
-        android:layout_marginTop="@dimen/mini_fab_negative_margin"
+        android:layout_marginRight="32dp"
         android:src="@drawable/abc_ic_menu_paste_mtrl_am_alpha"
         app:elevation="4dp"
         app:borderWidth="0dp"
         app:backgroundTint="@color/blue_grey_900"
-        app:fabSize="normal"/>
+        app:fabSize="mini"/>
 </RelativeLayout>

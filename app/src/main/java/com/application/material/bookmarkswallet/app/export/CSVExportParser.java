@@ -1,11 +1,10 @@
-package com.application.material.bookmarkswallet.app.exportFeature;
+package com.application.material.bookmarkswallet.app.export;
 
 import android.os.Environment;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import io.realm.RealmResults;
 
 import java.io.*;
-import java.util.ArrayList;
 
 /**
  * Created by davide on 26/01/15.

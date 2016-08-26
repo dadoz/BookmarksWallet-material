@@ -17,31 +17,22 @@ import java.lang.ref.WeakReference;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-
-
-
-
-
-/**
- * Created by davide on 23/10/15.
- */
-public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface, TextWatcher, LayoutTransition.TransitionListener {
+public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface,
+        TextWatcher, LayoutTransition.TransitionListener {
     private final WeakReference<EditText> titleField;
     private final WeakReference<EditText> urlField;
     private final AnimatorBuilder animatorBuilder;
 
     @Bind(R.id.noBookmarkPreviewLayoutId)
     View noBookmarkPreviewLayout;
-    @Bind(R.id.addInfoTitleTextInputId)
-    View addInfoTitleTextInput;
+//    @Bind(R.id.addInfoTitleTextInputId)
+//    View addInfoTitleTextInput;
     @Bind(R.id.iconImageViewId)
     View iconImageView;
     @Bind(R.id.addBookmarkFabId)
     FloatingActionButton addFab;
     @Bind(R.id.pasteClipboardFabId)
     FloatingActionButton clipboardFab;
-    @Bind(R.id.addIconImageFabId)
-    FloatingActionButton addIconImageFab;
     @Bind(R.id.addBookmarkMainContainerLayoutId)
     ViewGroup parentView;
     private boolean alreadyAnimated = false;
@@ -82,7 +73,7 @@ public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface, Te
      * init field
      */
     public void initPresenter() {
-        parentView.removeView(addInfoTitleTextInput);
+//        parentView.removeView(addInfoTitleTextInput);
         parentView.getLayoutTransition().addTransitionListener(this);
         urlField.get().addTextChangedListener(this);
     }
@@ -107,7 +98,7 @@ public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface, Te
         alreadyAnimated = !emptyString;
         initHideShowAnimator(noBookmarkPreviewLayout, !emptyString).start();
         initHideShowAnimator(iconImageView, emptyString).start();
-        animateOnRemoveView(addInfoTitleTextInput, emptyString);
+//        animateOnRemoveView(addInfoTitleTextInput, emptyString);
         if (emptyString) {
             titleField.get().setText("");
         }
@@ -157,7 +148,7 @@ public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface, Te
             clipboardFab.show();
             return;
         }
-        addIconImageFab.show();
+//        addIconImageFab.show();
         addFab.show();
     }
 
@@ -165,7 +156,7 @@ public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface, Te
      *
      */
     private void hideAllActionFabs() {
-        addIconImageFab.hide();
+//        addIconImageFab.hide();
         addFab.hide();
         clipboardFab.hide();
     }

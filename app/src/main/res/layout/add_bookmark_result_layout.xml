@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/addBookmarkResultLayoutId"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:visibility="gone"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/addBookmarkCardLayoutId"
+        android:layout_margin="@dimen/padding_16"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        <RelativeLayout
+            android:id="@+id/addBookmarkMainContainerLayoutId"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/padding_16">
+            <TextView
+                android:id="@+id/urlTextViewId"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/indigo_600"
+                android:textSize="@dimen/text_size_24"
+                android:maxLines="3"
+                android:text="url bla bla">
+            </TextView>
+            <TextView
+                android:id="@+id/titleTextViewId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/urlTextViewId"
+                android:layout_marginBottom="@dimen/medium_padding"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:textSize="@dimen/text_size_18"
+                android:text="www.googe.it"
+                android:maxLength="50"
+                android:maxLines="2"
+                android:textColor="@color/blue_grey_900"/>
+
+            <ImageView
+                android:id="@+id/addBookmarkIconImageId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_bookmark_black_48dp"/>
+            <FrameLayout
+                android:id="@+id/addBookmarkDivisorLineId"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:layout_below="@id/addBookmarkIconImageId"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_300"/>
+            <ImageView
+                android:id="@+id/addBookmarkToggleWebViewButtonId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/addBookmarkUrlTextInputId"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_keyboard_arrow_down_black_24dp"/>
+
+            <WebView
+                android:id="@+id/addBookmarkWebViewId"
+                android:layout_below="@id/addBookmarkDivisorLineId"
+                android:layout_marginBottom="@dimen/padding_16"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/webview_height"/>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+    <Button
+        android:id="@+id/addBookmarkDoneButtonId"
+        android:layout_below="@id/addBookmarkCardLayoutId"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_32"
+        android:backgroundTint="@color/yellow_500"
+        android:textColor="@color/indigo_600"
+        android:text="DONE"/>
+</RelativeLayout>

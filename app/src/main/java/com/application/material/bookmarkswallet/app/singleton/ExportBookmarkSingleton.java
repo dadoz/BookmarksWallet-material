@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.exportFeature.CSVExportParser;
+import com.application.material.bookmarkswallet.app.export.CSVExportParser;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import io.realm.RealmResults;
 

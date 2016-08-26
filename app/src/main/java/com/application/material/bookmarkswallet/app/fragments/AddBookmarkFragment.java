@@ -4,33 +4,37 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.*;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.bookmarkswallet.app.presenter.AddBookmarkUrlEditTextPresenter;
+import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
+import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
 import com.application.material.bookmarkswallet.app.singleton.ClipboardSingleton;
-import com.application.material.bookmarkswallet.app.asyncTask.RetrieveIconAsyncTask;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -39,34 +43,44 @@ import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-
-/**
- * Created by davide on 06/08/15.
- */
 public class AddBookmarkFragment extends Fragment implements
-        View.OnClickListener, Callback, OnTaskCompleted, SwipeRefreshLayout.OnRefreshListener {
+        View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, RetrieveIconHelper.OnRetrieveIconInterface {
     public static final String FRAG_TAG = "AddBookmarkFragmentTAG";
+    private static final String TAG = "AddBookmarkFragment";
     private ActionbarSingleton mActionbarSingleton;
     private ProgressDialog mProgressDialog;
     private BookmarkActionSingleton mBookmarkActionSingleton;
 
-    @Bind(R.id.addBookmarkFabId)
-    FloatingActionButton mAddBookmarkFab;
     @Bind(R.id.addBookmarkRefreshLayoutId)
     SwipeRefreshLayout refreshLayout;
     @Bind(R.id.urlEditTextId)
     EditText mUrlEditText;
     @Bind(R.id.titleEditTextId)
     EditText mTitleEditText;
-    @Bind(R.id.addIconImageFabId)
-    FloatingActionButton addIconImageFab;
-    @Bind(R.id.iconImageViewId)
-    ImageView mIconImageView;
-    private View mView;
-    private byte[] mBookmarkBlobIcon = null;
+    @Bind(R.id.addBookmarkHttpsCheckboxId)
+    CheckBox addBookmarkHttpsCheckbox;
+    @Bind(R.id.toggleNameButtonId)
+    View toggleNameButton;
+    @Bind(R.id.addBookmarkTitleTextInputId)
+    TextInputLayout addBookmarkTitleTextInput;
     @Bind(R.id.pasteClipboardFabId)
     FloatingActionButton mPasteClipboardFab;
+    @Bind(R.id.addBookmarkSearchButtonId)
+    Button addBookmarkSearchButton;
+    @Bind(R.id.addBookmarkWebViewId)
+    WebView addBookmarkWebView;
+    @Bind(R.id.addBookmarkResultLayoutId)
+    View addBookmarkResultLayout;
+    @Bind(R.id.addBookmarkMainLayoutId)
+    View addBookmarkMainLayout;
+    @Bind(R.id.addBookmarkDoneButtonId)
+    Button addBookmarkDoneButton;
+    @Bind(R.id.addBookmarkToggleWebViewButtonId)
+    ImageView addBookmarkToggleWebViewButton;
     private static final long SAVE_TIMEOUT = 500;
+    private View mainView;
+    private String bookmarkUrl;
+    private String bookmarkTitle;
 
     @Override
     public void onAttach(Context context) {
@@ -82,12 +96,12 @@ public class AddBookmarkFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstance) {
-        mView = inflater.inflate(R.layout.fragment_add_bookmark_layout, container, false);
-        ButterKnife.bind(this, mView);
+        mainView = inflater.inflate(R.layout.fragment_add_bookmark_layout, container, false);
+        ButterKnife.bind(this, mainView);
         setHasOptionsMenu(true);
         initActionbar();
         onInitView();
-        return mView;
+        return mainView;
     }
 
     @Override
@@ -130,25 +144,38 @@ public class AddBookmarkFragment extends Fragment implements
      *
      */
     private void onInitView() {
-        mAddBookmarkFab.setOnClickListener(this);
         mPasteClipboardFab.setOnClickListener(this);
-        addIconImageFab.setOnClickListener(this);
+        addBookmarkSearchButton.setOnClickListener(this);
+        addBookmarkDoneButton.setOnClickListener(this);
         initPullToRefresh();
-        setFindIconColor();
-        AddBookmarkUrlEditTextPresenter.init(new WeakReference<>(mUrlEditText),
-                new WeakReference<>(mTitleEditText),
-                AnimatorBuilder.getInstance(new WeakReference<>(getContext())),
-                mView);
+        initToggleButton();
     }
 
     /**
-     * set color on icon
+     * @param url
      */
-    private void setFindIconColor() {
-        //colorize icon
-        Drawable res = mIconImageView.getDrawable();
-        Utils.setColorFilter(res, getResources().getColor(R.color.blue_grey_900));
-        mIconImageView.setImageDrawable(res);
+    private void initWebView(String url) {
+        url = Utils.buildUrl(url, true);
+        addBookmarkWebView.loadUrl(url);
+        addBookmarkWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
+
+    }
+
+    private void initToggleButton() {
+        toggleNameButton.setOnClickListener(this);
+    }
+
+    private void toggleTitleVisibility() {
+        int visibility = addBookmarkTitleTextInput.getVisibility() == View.VISIBLE ?
+                View.GONE : View.VISIBLE;
+        addBookmarkHttpsCheckbox.setVisibility(visibility);
+        addBookmarkTitleTextInput.setVisibility(visibility);
     }
 
     /**
@@ -159,6 +186,160 @@ public class AddBookmarkFragment extends Fragment implements
         mActionbarSingleton.updateActionBar(true); //, getActionbarColor(), getToolbarDrawableColor());
         mActionbarSingleton.setElevation(0.0f);
         mActionbarSingleton.setTitle("Add new");
+    }
+
+    /**
+     * add bookmark on orm db
+     */
+    public void addBookmark() {
+        mBookmarkActionSingleton.addOrmObject(
+                Realm.getInstance(new RealmConfiguration.Builder(getContext()).build()),
+                bookmarkTitle,
+                null,
+                null,
+                bookmarkUrl);
+        addBookmarkCallback();
+    }
+
+    /**
+     * show error message
+     */
+    private void showErrorMessage(String message) {
+        message = (message == null) ? "Ops! Something went wrong!" : message;
+        Snackbar snackbar = Snackbar.make(mainView, message, Snackbar.LENGTH_LONG);
+        snackbar.getView()
+                .setBackgroundColor(ContextCompat.getColor(getContext(), R.color.red_500));
+        snackbar.show();
+    }
+
+    /**
+     * exec the job result
+     */
+    public void addBookmarkCallback() {
+        if (getActivity() != null) {
+            getActivity().finish();
+        }
+    }
+
+    /**
+     * paste clipboard content
+     */
+    private void pasteClipboard() {
+        try {
+            String url = ClipboardSingleton.getInstance(new WeakReference<>(getContext()))
+                    .getTextFromClipboard();
+            mUrlEditText.setText(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.addBookmarkFabId:
+                Utils.hideKeyboard(getContext());
+                addBookmark();
+                break;
+            case R.id.pasteClipboardFabId:
+                pasteClipboard();
+                break;
+            case R.id.toggleNameButtonId:
+                toggleTitleVisibility();
+                break;
+            case R.id.addBookmarkSearchButtonId:
+                setUrlAndTextResultFromSearch();
+                searchAction();
+                break;
+            case R.id.addBookmarkDoneButtonId:
+                addBookmark();
+                break;
+        }
+    }
+
+    /**
+     *
+     */
+    private void setUrlAndTextResultFromSearch() {
+        bookmarkUrl = mUrlEditText.getText().toString();
+        bookmarkTitle = mTitleEditText.getText().toString();
+    }
+
+    /**
+     *
+     */
+    private void searchAction() {
+        if (!SearchManager.search(new WeakReference<>(getActivity().getApplicationContext()), bookmarkUrl)) {
+            showErrorMessage("Error - not found");
+            return;
+        }
+        onSearchSuccess(bookmarkUrl);
+    }
+
+
+    /**
+     *
+     * @param url
+     */
+    private void onSearchSuccess(String url) {
+        addBookmarkResultLayout.setVisibility(View.VISIBLE);
+        addBookmarkMainLayout.setVisibility(View.GONE);
+        toggleBackgroundOnResultMode(true);
+        retrieveIcon();
+        initWebView(url);
+    }
+
+    /**
+     * TODO implement it
+     * @param isResult
+     */
+    private void toggleBackgroundOnResultMode(boolean isResult) {
+    }
+
+    /**
+     * retrieve icon from gallery or url
+     */
+    private void retrieveIcon() {
+        refreshLayout.setRefreshing(true);
+        Utils.hideKeyboard(getActivity());
+        RetrieveIconHelper.getInstance(new WeakReference<RetrieveIconHelper.OnRetrieveIconInterface>(this))
+                .retrieveIcon(bookmarkUrl);
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void onRetrieveIconSuccess(String url) {
+        Log.e(TAG, "this is url ------" + url);
+        refreshLayout.setRefreshing(false);
+        Picasso.with(getActivity().getApplicationContext())
+                .load(url)
+                .error(R.drawable.ic_bookmark_black_48dp)
+                .into(addBookmarkToggleWebViewButton);
+    }
+
+    @Override
+    public void onRetrieveIconFailure(String error) {
+        refreshLayout.setRefreshing(false);
+        showErrorMessage("Ops! Icon not found for this bookmark!");
+    }
+
+    @Override
+    public void onRefresh() {
+        refreshLayout.setRefreshing(false);
+    }
+
+
+
+    /**
+     * set color on icon
+     */
+    private void setFindIconColor() {
+        //colorize icon
+//        Drawable res = mIconImageView.getDrawable();
+//        Utils.setColorFilter(res, getResources().getColor(R.color.blue_grey_900));
+//        mIconImageView.setImageDrawable(res);
     }
 
     /**
@@ -177,51 +358,15 @@ public class AddBookmarkFragment extends Fragment implements
         return ContextCompat.getColor(getContext(), R.color.blue_grey_800);
     }
 
-    /**
-     * //TODO let's do it async :)
-     * add bookmark on orm db
-     */
-    public void addBookmark() {
-        if (!validateInput()) {
-            showErrorMessage(null);
-            return;
-        }
 
-        initProgressDialog();
-        //do job
-        mBookmarkActionSingleton.addOrmObject(
-                Realm.getInstance(new RealmConfiguration.Builder(getContext()).build()),
-                getBookmarkTitle(),
-                null,
-                getBookmarkBlobIcon(),
-                getBookmarkUrl());
-        //post result
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                addBookmarkCallback();
-            }
-        }, SAVE_TIMEOUT);
-    }
-
-    /**
-     * show error message
-     */
-    private void showErrorMessage(String message) {
-        message = (message == null) ? "Ops! Something went wrong!" : message;
-        Snackbar snackbar = Snackbar.make(mView, message, Snackbar.LENGTH_LONG);
-        snackbar.getView()
-                .setBackgroundColor(getResources().getColor(R.color.red_500));
-        snackbar.show();
-    }
 
     /**
      * validate input (url and/or title)
      * @return
      */
     private boolean validateInput() {
-        return ! getBookmarkUrl().trim().equals("") &&
-                Utils.isValidUrl(getBookmarkUrl());
+        return !bookmarkUrl.trim().equals("") &&
+                Utils.isValidUrl(bookmarkUrl);
     }
 
     /**
@@ -244,40 +389,11 @@ public class AddBookmarkFragment extends Fragment implements
     }
 
     /**
-     * exec the job result
-     */
-    public void addBookmarkCallback() {
-        try {
-            cancelProgressDialog();
-            getActivity().finish();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     *
-     * @return
-     */
-    public String getBookmarkTitle() {
-        //TODO implement if title == not_set -> retrieve it from jsoup
-        return mTitleEditText.getText().toString();
-    }
-
-    /**
-     *
-     * @return
-     */
-    public String getBookmarkUrl() {
-        return Utils.buildUrl(mUrlEditText.getText().toString());
-    }
-
-    /**
      *
      * @param blobIcon
      */
     public void setBookmarkBlobIcon(byte[] blobIcon) {
-        this.mBookmarkBlobIcon = blobIcon;
+//        this.mBookmarkBlobIcon = blobIcon;
     }
 
     /**
@@ -285,30 +401,9 @@ public class AddBookmarkFragment extends Fragment implements
      * @return
      */
     public byte[] getBookmarkBlobIcon() {
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) mIconImageView.getDrawable();
-        return Utils.getBlobFromBitmap(bitmapDrawable.getBitmap());
-    }
-
-    /**
-     * retrieve icon from gallery or url
-     */
-    private void retrieveIcon() {
-        refreshLayout.setRefreshing(true);
-        Utils.hideKeyboard(getActivity());
-        retrieveIconByUrl(getBookmarkUrl());
-    }
-
-    /**
-     * by url - auto detect icon
-     * @param bookmarkUrl
-     */
-    private void retrieveIconByUrl(String bookmarkUrl) {
-        try {
-            new RetrieveIconAsyncTask(new WeakReference<OnTaskCompleted>(this))
-                    .execute(new URL(bookmarkUrl));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+//        BitmapDrawable bitmapDrawable = (BitmapDrawable) mIconImageView.getDrawable();
+//        return Utils.getBlobFromBitmap(bitmapDrawable.getBitmap());
+        return null;
     }
 
     /**
@@ -319,75 +414,4 @@ public class AddBookmarkFragment extends Fragment implements
                 .show();
     }
 
-    /**
-     * paste clipboard content
-     */
-    private void pasteClipboard() {
-        try {
-            ClipboardSingleton clipboardSingleton =
-                    ClipboardSingleton.getInstance(getContext());
-            String url = clipboardSingleton.getTextFromClipboard();
-            mUrlEditText.setText(url);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.addBookmarkFabId:
-                Utils.hideKeyboard(getContext());
-                addBookmark();
-                break;
-            case R.id.addIconImageFabId:
-                if (!refreshLayout.isRefreshing()) {
-                    retrieveIcon();
-                }
-                break;
-            case R.id.pasteClipboardFabId:
-                pasteClipboard();
-                break;
-        }
-    }
-
-    @Override
-    public void onTaskCompleted(String url) {
-        if (url == null) {
-            onError();
-            return;
-        }
-        Picasso.with(getActivity().getApplicationContext())
-                .load(url)
-//                .placeholder(R.drawable.dot_loader)
-                .error(R.drawable.ic_bookmark_outline_black_48dp)
-                .into(mIconImageView, this);
-    }
-
-    @Override
-    public void onTaskCompleted(boolean isRefreshEnabled) {
-    }
-
-    @Override
-    public void onTaskCompleted(byte[] data) {
-    }
-
-    @Override
-    public void onSuccess() {
-        refreshLayout.setRefreshing(false);
-    }
-
-    @Override
-    public void onError() {
-        //picasso error
-        refreshLayout.setRefreshing(false);
-        mIconImageView.setImageDrawable(ContextCompat.getDrawable(getContext(),
-                R.drawable.ic_bookmark_outline_black_48dp));
-        showErrorMessage("Ops! Icon not found for this bookmark!");
-    }
-
-    @Override
-    public void onRefresh() {
-        refreshLayout.setRefreshing(false);
-    }
 }
