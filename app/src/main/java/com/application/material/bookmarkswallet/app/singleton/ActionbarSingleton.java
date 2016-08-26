@@ -80,18 +80,18 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
      * @param color
      * @return
      */
-    @Override
-    public boolean setTitle(String title, int color) {
-        try {
-            setTitle(title);
-            Toolbar toolbar = (Toolbar) activityRef.findViewById(R.id.toolbarId);
-            toolbar.setTitleTextColor(color);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
+//    @Override
+//    public boolean setTitle(String title, int color) {
+//        try {
+//            setTitle(title);
+//            Toolbar toolbar = (Toolbar) activityRef.findViewById(R.id.toolbarId);
+//            toolbar.setTitleTextColor(color);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//        return true;
+//    }
 
     /**
      *
@@ -114,17 +114,17 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
      * @param actionbarColor
      * @param toolbarColor
      */
-    @Override
-    public void updateActionBar(boolean isHomeUpEnabled,
-                                int actionbarColor, Drawable toolbarColor) {
-        try {
-            setDisplayHomeEnabled(isHomeUpEnabled);
-            setStatusbarColor(actionbarColor);
-            setToolbarColor(toolbarColor);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @Override
+//    public void updateActionBar(boolean isHomeUpEnabled,
+//                                int actionbarColor, Drawable toolbarColor) {
+//        try {
+//            setDisplayHomeEnabled(isHomeUpEnabled);
+//            setStatusbarColor(actionbarColor);
+//            setToolbarColor(toolbarColor);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     /**
      * set toolbar color

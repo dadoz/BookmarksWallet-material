@@ -1,25 +1,19 @@
-package com.application.material.bookmarkswallet.app.singleton;
+package com.application.material.bookmarkswallet.app.manager;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipDescription;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 
-/**
- * Created by davide on 06/01/15.
- */
-public class ClipboardSingleton {
-    private static final String TAG = "ClipboardSingleton";
-    private static ClipboardSingleton instance;
-    private static ClipboardManager clipboardService;
+public class ClipboardManager {
+    private static final String TAG = "ClipboardManager";
+    private static ClipboardManager instance;
+    private static android.content.ClipboardManager clipboardService;
 
-    private ClipboardSingleton() {
+    private ClipboardManager() {
     }
 
     /**
@@ -27,10 +21,10 @@ public class ClipboardSingleton {
      * @param contextRef
      * @return
      */
-    public static ClipboardSingleton getInstance(WeakReference<Context> contextRef) {
-        clipboardService = (ClipboardManager) contextRef.get().
+    public static ClipboardManager getInstance(WeakReference<Context> contextRef) {
+        clipboardService = (android.content.ClipboardManager) contextRef.get().
                 getSystemService(Context.CLIPBOARD_SERVICE);
-        return instance == null ? instance = new ClipboardSingleton() : instance;
+        return instance == null ? instance = new ClipboardManager() : instance;
     }
 
     /**

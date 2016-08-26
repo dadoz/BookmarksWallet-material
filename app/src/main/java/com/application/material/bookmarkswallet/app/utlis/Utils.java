@@ -2,20 +2,16 @@ package com.application.material.bookmarkswallet.app.utlis;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.models.Bookmark;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -56,7 +52,7 @@ public class Utils {
      */
     public static void hideKeyboard(Context context) {
         try {
-            View view = ((Activity) context).getCurrentFocus();
+            View view = ((Activity) context).getWindow().getDecorView().getRootView();
             ((InputMethodManager) context
                     .getSystemService(Context.INPUT_METHOD_SERVICE))
                     .hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -168,25 +164,23 @@ public class Utils {
      */
     public static String buildUrl(String url, boolean isHttps) {
         return url == null ||
-                url.contains("http://") || url.contains("https://") ?
-                url : isHttps ? HTTP_PROTOCOL : HTTPS_PROTOCOL + url.trim();
+                url.contains("http://") ||
+                url.contains("https://") ?
+                url : (isHttps ? HTTP_PROTOCOL : HTTPS_PROTOCOL) + url.trim();
     }
+
 
     /**
      *
-     * @param bitmap
+     * @param bmp
      * @return
      */
-    public static byte[] getBlobFromBitmap(Bitmap bitmap) {
-        if (bitmap == null) {
-            return null;
+    public static byte[] convertBitmapToByteArray(Bitmap bmp) {
+        if (bmp != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            return stream.toByteArray();
         }
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
+        return null;
     }
-
-    public static void setError() {
-    }
-
 }

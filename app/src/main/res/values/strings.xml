@@ -22,4 +22,5 @@
     <string name="send_feedback_email">tunnus.android@gmail.com</string>
     <string name="bookmark_list_title">List</string>
     <string name="https_checkbox_label">HTTPS</string>
+    <string name="search_label">SEARCH</string>
 </resources>

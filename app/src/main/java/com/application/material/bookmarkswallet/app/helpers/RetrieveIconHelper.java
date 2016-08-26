@@ -1,8 +1,13 @@
 package com.application.material.bookmarkswallet.app.helpers;
 
+import android.support.annotation.Nullable;
+import android.util.Log;
+
+import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.lang.ref.WeakReference;
@@ -11,9 +16,9 @@ public class RetrieveIconHelper {
 
     private static RetrieveIconHelper instance;
     private static WeakReference<OnRetrieveIconInterface> listener;
+    private enum JobTypeEnum {BOOKMARK_ICON_URL, BOOKMARK_TITLE};
 
     public static RetrieveIconHelper getInstance(WeakReference<OnRetrieveIconInterface> lst) {
-        //new WeakReference<OnTaskCompleted>(this))
         listener = lst;
         return instance == null ? instance = new RetrieveIconHelper() : instance;
     }
@@ -23,54 +28,78 @@ public class RetrieveIconHelper {
      * @param bookmarkUrl
      */
     public void retrieveIcon(String bookmarkUrl) {
-        new RetrieveIconThread(bookmarkUrl).start();
-//        try {
-//            new RetrieveIconAsyncTask(null)
-//                    .execute(new URL(bookmarkUrl));
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
+        bookmarkUrl = Utils.buildUrl(bookmarkUrl, true);
+        new RetrieveIconThread(bookmarkUrl, JobTypeEnum.BOOKMARK_ICON_URL).start();
+    }
 
+    /**
+     *
+     * @param bookmarkUrl
+     */
+    public void retrieveTitle(String bookmarkUrl) {
+        bookmarkUrl = Utils.buildUrl(bookmarkUrl, true);
+        new RetrieveIconThread(bookmarkUrl, JobTypeEnum.BOOKMARK_TITLE).start();
     }
 
     /**
      *
      */
     public class RetrieveIconThread extends Thread {
-        private final static String HREF_SELECT_PARAM = "link[href~=.*\\.(png|ico)]";
-        private final static String HREF_ATTR_PARAM = "abs:href";
+        private final static String LINK_SELECT_PARAM = "link[href~=.*\\.(png|ico)]";
+        private final static String LINK_ATTR_PARAM = "abs:href";
         private final static String META_SELECT_PARAM = "meta[content~=.*\\.png]";
         private final static String META_ATTR_PARAM = "abs:content";
         private final String bookmarkUrl;
+        private final JobTypeEnum jobType;
+        private String TITLE_SELECT_PARAM = "title";
 
-        public RetrieveIconThread(String bookmarkUrlString) {
+        public RetrieveIconThread(String bookmarkUrlString, JobTypeEnum type) {
+            jobType = type;
             bookmarkUrl = bookmarkUrlString;
         }
 
         @Override
         public void run() {
-            String iconUrl = doJob(bookmarkUrl);
-            if (iconUrl == null) {
-                listener.get().onRetrieveIconFailure("icon url not found!");
+            Log.e("TAG", "----" + bookmarkUrl);
+            String jobResult = doJob(bookmarkUrl, jobType);
+            if (jobResult != null) {
+                if (jobType == JobTypeEnum.BOOKMARK_ICON_URL) {
+                    listener.get().onRetrieveIconSuccess(jobResult);
+                } else if (jobType == JobTypeEnum.BOOKMARK_TITLE) {
+                    listener.get().onRetrieveTitleSuccess(jobResult);
+                }
                 return;
             }
 
-            listener.get().onRetrieveIconSuccess(iconUrl);
+            listener.get().onRetrieveIconFailure("icon url not found!");
         }
-
 
         /**
          *
          * @param bookmarkUrl
          * @return
          */
-        private String doJob(String bookmarkUrl) {
+        @Nullable
+        private synchronized String doJob(String bookmarkUrl, JobTypeEnum jobType) {
             try {
-                return getUrlByDoc(Jsoup.connect(bookmarkUrl).get());
+                if (jobType == JobTypeEnum.BOOKMARK_ICON_URL) {
+                    return getUrlByDoc(Jsoup.connect(bookmarkUrl).get());
+                } else if (jobType == JobTypeEnum.BOOKMARK_TITLE) {
+                    return getTitleByDoc(Jsoup.connect(bookmarkUrl).get());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        /**
+         *
+         * @param doc
+         * @return
+         */
+        public String getTitleByDoc(Document doc) {
+            return doc.head().select(TITLE_SELECT_PARAM).text();
         }
 
         /**
@@ -84,14 +113,18 @@ public class RetrieveIconHelper {
             elem = doc.head().select(META_SELECT_PARAM);
 
             //find on href (header)
-            if (elem == null) {
-                attrParam = HREF_ATTR_PARAM;
-                elem = doc.head().select(HREF_SELECT_PARAM);
+            if (elem == null ||
+                    elem.first() == null) {
+                attrParam = LINK_ATTR_PARAM;
+                elem = doc.head().select(LINK_SELECT_PARAM);
             }
 
-            return elem == null ?
-                getImageUrlByDoc(doc)
-                : elem.first().attr(attrParam);
+            String result = elem == null ||
+                    elem.first() == null?
+                    getImageUrlByDoc(doc)
+                    : elem.first().attr(attrParam);
+            Log.e("TAG", result);
+            return result;
         }
 
         /**
@@ -104,7 +137,7 @@ public class RetrieveIconHelper {
                 String url = elemArray.first().attr("src");
                 return (url.split("/")[1]).compareTo("") != 0 ?
                         bookmarkUrl + url :
-                        "http:" + url;
+                        url.contains("http") || url.contains("https") ? url : "http:" + url;
             }
             return null;
         }
@@ -113,62 +146,10 @@ public class RetrieveIconHelper {
     /**
      *
      */
-//    public class RetrieveIconAsyncTask extends AsyncTask<URL, Integer, String> {
-//        private final WeakReference<OnRetrieveIconInterface> listener;
-//        private final static String HREF_SELECT_PARAM = "link[href~=.*\\.(png|ico)]";
-//        private final static String HREF_ATTR_PARAM = "abs:href";
-//        private final static String META_SELECT_PARAM = "meta[content~=.*\\.png]";
-//        private final static String META_ATTR_PARAM = "abs:content";
-//
-//        public RetrieveIconAsyncTask(WeakReference<OnRetrieveIconInterface> listener) {
-//            this.listener = listener;
-//        }
-//
-//        @Override
-//        protected String doInBackground(URL... linkUrlArray) {
-//            try {
-//                return getUrlByDoc(Jsoup.connect(linkUrlArray[0].toString()).get());
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        @Override
-//        protected void onProgressUpdate(Integer... values) {
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String iconUrl) {
-//            listener.get().onTaskCompleted(iconUrl);
-//        }
-//
-//        /**
-//         *
-//         * @param doc
-//         * @return
-//         */
-//        public String getUrlByDoc(Document doc) {
-//            Elements header;
-//            String selector = META_SELECT_PARAM;
-//            if ((header = doc.head()
-//                    .select(selector)) == null) {
-//                selector = HREF_SELECT_PARAM;
-//                header = doc.head()
-//                        .select(selector);
-//            }
-//
-//            return header == null ? null : header.first().attr(selector);
-//        }
-//    }
-
-
-    /**
-     *
-     */
     public interface OnRetrieveIconInterface {
-        void onRetrieveIconSuccess(String bookmarkUrl);
+        void onRetrieveIconSuccess(String iconUrl);
+        void onRetrieveTitleSuccess(String title);
         void onRetrieveIconFailure(String error);
-//        void onTaskCompleted(byte [] data);
     }
 
 }

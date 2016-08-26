@@ -67,6 +67,7 @@
         </RelativeLayout>
     </android.support.v7.widget.CardView>
     <Button
+        android:visibility="gone"
         android:id="@+id/addBookmarkSearchButtonId"
         android:layout_below="@id/addBookmarkCardLayoutId"
         android:layout_centerHorizontal="true"
@@ -74,6 +75,6 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/yellow_500"
         android:textColor="@color/indigo_600"
-        android:text="SEARCH"/>
+        android:text="@string/search_label"/>
 
 </RelativeLayout>
