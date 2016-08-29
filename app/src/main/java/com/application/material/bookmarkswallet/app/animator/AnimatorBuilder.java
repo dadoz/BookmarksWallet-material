@@ -1,7 +1,9 @@
 package com.application.material.bookmarkswallet.app.animator;
 
 import android.animation.Animator;
+import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -29,21 +31,6 @@ public class AnimatorBuilder {
 
     private AnimatorBuilder(int duration) {
         this.duration = duration;
-    }
-
-    /**
-     *
-     * @param view
-     * @param endY
-     * @param startY
-     * @param isDelaySet
-     * @return
-     */
-    public Animator getYTranslation(@NonNull View view, float startY, float endY, boolean isDelaySet) {
-        Animator animator = ObjectAnimator.ofFloat(view, TRANSLATION_Y, startY, endY);
-        animator.setDuration(duration);
-        animator.setStartDelay(isDelaySet ? START_DELAY : 0);
-        return animator;
     }
 
     /**
@@ -121,6 +108,25 @@ public class AnimatorBuilder {
     private Animator buildAlphaAnimator(@NonNull View view, float endAlpha, float startAlpha) {
         Animator animator = ObjectAnimator.ofFloat(view, ALPHA, startAlpha, endAlpha);
         animator.setDuration(duration);
+        return animator;
+    }
+
+    /**
+     *
+     * @param view
+     * @param colorFrom
+     * @param colorTo
+     * @return
+     */
+    public ValueAnimator buildColorAnimator(@NonNull final View view, int colorFrom, int colorTo) {
+        ValueAnimator animator = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        animator.setDuration(duration);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                view.setBackgroundColor((int) valueAnimator.getAnimatedValue());
+            }
+        });
         return animator;
     }
 }

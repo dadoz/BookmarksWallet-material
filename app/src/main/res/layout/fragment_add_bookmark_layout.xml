@@ -3,6 +3,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/addBookmarkRelativeLayoutId"
     android:background="@color/grey_200"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -11,23 +12,25 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_bottom_margin"
         android:background="@color/yellow_400"/>
+
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/addBookmarkRefreshLayoutId"
         android:layout_below="@id/addBookmarkMainContainerLayoutId"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
         <ScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <include layout="@layout/add_bookmark_main_layout"/>
-                <include layout="@layout/add_bookmark_result_layout"/>
-            </FrameLayout>
-        </ScrollView>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/add_bookmark_main_layout"/>
+        <include layout="@layout/add_bookmark_result_layout"/>
+            <!--android:visibility="gone"/>-->
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/pasteClipboardFabId"

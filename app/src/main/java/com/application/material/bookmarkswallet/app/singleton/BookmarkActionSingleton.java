@@ -175,7 +175,6 @@ public class BookmarkActionSingleton {
      * TODO move into realm class
      */
     public boolean addOrmObject(Realm realm, String title, String iconPath, byte[] blobIcon, String url) {
-        boolean result = false;
         try {
             if (url == null) {
                 return false;
@@ -193,14 +192,13 @@ public class BookmarkActionSingleton {
             bookmark.setUrl(url);
             bookmark.setTimestamp(Bookmark.Utils.getTodayTimestamp());
             bookmark.setLastUpdate(Bookmark.Utils.getTodayTimestamp());
-            result = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            result = false;
-        } finally {
             realm.commitTransaction();
+            return true;
+        } catch (Exception e) {
+            realm.cancelTransaction();
+            e.printStackTrace();
         }
-        return result;
+        return false;
     }
 
 }

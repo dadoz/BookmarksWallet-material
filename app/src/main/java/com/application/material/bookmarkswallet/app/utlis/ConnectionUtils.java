@@ -9,6 +9,7 @@ public class ConnectionUtils {
     public static boolean isConnected(Context context) {
         NetworkInfo networkInfo = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE))
                 .getActiveNetworkInfo();
-        return networkInfo.isConnected();
+        return networkInfo != null &&
+                networkInfo.isConnected();
     }
 }

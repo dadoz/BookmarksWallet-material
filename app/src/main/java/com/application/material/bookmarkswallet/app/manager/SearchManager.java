@@ -14,9 +14,9 @@ public class SearchManager {
      * @return
      */
     public static boolean search(WeakReference<Context> context, String query) {
-        return ConnectionUtils.isConnected(context.get()) &&
-            (Utils.isValidUrl(query));
+//        return ConnectionUtils.isConnected(context.get()) &&
 //        && pingUrl(query);
+            return (Utils.isValidUrl(query));
     }
 
     /**

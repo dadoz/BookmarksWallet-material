@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.*;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,6 +30,7 @@ import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
 import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.presenter.SearchBookmarkPresenter;
+import com.application.material.bookmarkswallet.app.presenter.SearchResultPresenter;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
@@ -64,7 +64,7 @@ public class AddBookmarkFragment extends Fragment implements
     @Bind(R.id.pasteClipboardFabId)
     FloatingActionButton mPasteClipboardFab;
     @Bind(R.id.addBookmarkSearchButtonId)
-    Button addBookmarkSearchButton;
+    View addBookmarkSearchButton;
     @Bind(R.id.addBookmarkWebViewId)
     WebView addBookmarkWebView;
     @Bind(R.id.addBookmarkResultLayoutId)
@@ -72,7 +72,7 @@ public class AddBookmarkFragment extends Fragment implements
     @Bind(R.id.addBookmarkMainLayoutId)
     View addBookmarkMainLayout;
     @Bind(R.id.addBookmarkDoneButtonId)
-    Button addBookmarkDoneButton;
+    View addBookmarkDoneButton;
     @Bind(R.id.addBookmarkToggleWebViewButtonId)
     ImageView addBookmarkToggleWebViewButton;
     @Bind(R.id.addBookmarkIconImageId)
@@ -81,12 +81,15 @@ public class AddBookmarkFragment extends Fragment implements
     TextView titleTextView;
     @Bind(R.id.urlTextViewId)
     TextView urlTextView;
+    @Bind(R.id.addBookmarkRelativeLayoutId)
+    View addBookmarkRelativeLayout;
     private View mainView;
     private String bookmarkUrl;
     private String bookmarkTitle;
     private SearchBookmarkPresenter searchBookmarkPresenter;
     private int MIN_ICON_SIZE = 96;
     private RetrieveIconHelper retrieveIconHelper;
+    private SearchResultPresenter searchResultPresenter;
 
     @Override
     public void onAttach(Context context) {
@@ -95,6 +98,7 @@ public class AddBookmarkFragment extends Fragment implements
         mBookmarkActionSingleton = BookmarkActionSingleton.getInstance((Activity) context);
         searchBookmarkPresenter = SearchBookmarkPresenter.getInstance();
         retrieveIconHelper = RetrieveIconHelper.getInstance(new WeakReference<RetrieveIconHelper.OnRetrieveIconInterface>(this));
+        searchResultPresenter = new SearchResultPresenter(new WeakReference<>(getContext()));
     }
 
     @Override
@@ -102,7 +106,7 @@ public class AddBookmarkFragment extends Fragment implements
                              Bundle savedInstance) {
         mainView = inflater.inflate(R.layout.fragment_add_bookmark_layout, container, false);
         ButterKnife.bind(this, mainView);
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
         initActionbar();
         onInitView();
         return mainView;
@@ -136,15 +140,6 @@ public class AddBookmarkFragment extends Fragment implements
     }
 
     /**
-     * pull to refresh init
-     */
-    private void initPullToRefresh() {
-        refreshLayout.setOnRefreshListener(this);
-        refreshLayout.setColorSchemeResources(R.color.blue_grey_700,
-                        R.color.yellow_400);
-    }
-
-    /**
      *
      */
     private void onInitView() {
@@ -155,6 +150,18 @@ public class AddBookmarkFragment extends Fragment implements
         initToggleButton();
         searchBookmarkPresenter.init(new View[] { urlEditText, mPasteClipboardFab,
                 addBookmarkSearchButton, addBookmarkUrlTextInput });
+        searchResultPresenter.init(new View[] {addBookmarkMainLayout, addBookmarkResultLayout,
+                addBookmarkRelativeLayout});
+
+    }
+
+    /**
+     * pull to refresh init
+     */
+    private void initPullToRefresh() {
+        refreshLayout.setOnRefreshListener(this);
+        refreshLayout.setColorSchemeResources(R.color.indigo_600,
+                R.color.yellow_400);
     }
 
     /**
@@ -162,6 +169,7 @@ public class AddBookmarkFragment extends Fragment implements
      */
     private void initWebView() {
         String url = Utils.buildUrl(bookmarkUrl, true);
+//        String url = "http://www.google.com/bookmarks";
         Log.e(TAG, "webview " + url);
         addBookmarkWebView.loadUrl(url);
         addBookmarkWebView.setWebViewClient(new WebViewClient() {
@@ -207,7 +215,9 @@ public class AddBookmarkFragment extends Fragment implements
         mBookmarkActionSingleton.addOrmObject(Realm.getInstance(new RealmConfiguration.Builder(getContext()).build()),
                 bookmarkTitle, null, Utils.convertBitmapToByteArray(((BitmapDrawable) addBookmarkIconImage
                         .getDrawable()).getBitmap()), bookmarkUrl);
-        addBookmarkCallback();
+        if (getActivity() != null) {
+            getActivity().finish();
+        }
     }
 
     /**
@@ -219,15 +229,6 @@ public class AddBookmarkFragment extends Fragment implements
         snackbar.getView()
                 .setBackgroundColor(ContextCompat.getColor(getContext(), R.color.red_500));
         snackbar.show();
-    }
-
-    /**
-     * exec the job result
-     */
-    public void addBookmarkCallback() {
-        if (getActivity() != null) {
-            getActivity().finish();
-        }
     }
 
     /**
@@ -290,11 +291,10 @@ public class AddBookmarkFragment extends Fragment implements
      *
      */
     private void onSearchSuccess() {
+        searchResultPresenter.showResultView();
         Utils.hideKeyboard(getActivity());
-        addBookmarkResultLayout.setVisibility(View.VISIBLE);
-        addBookmarkMainLayout.setVisibility(View.GONE);
+        //init result view -- TODO move in callback
         urlTextView.setText(bookmarkUrl);
-        toggleBackgroundOnResultMode(true);
         setBookmarkTitle();
         retrieveIcon();
         initWebView();
@@ -312,14 +312,6 @@ public class AddBookmarkFragment extends Fragment implements
     }
 
     /**
-     * TODO implement it
-     * @param isResult
-     */
-    private void toggleBackgroundOnResultMode(boolean isResult) {
-
-    }
-
-    /**
      * retrieve icon from gallery or url
      */
     private void retrieveIcon() {
@@ -332,9 +324,14 @@ public class AddBookmarkFragment extends Fragment implements
      */
     @Override
     public void onRetrieveIconSuccess(final String url) {
+        if (getActivity() == null) {
+            return;
+        }
+
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                searchResultPresenter.slideToTopResultLayout(false).start();
                 refreshLayout.setRefreshing(false);
                 Picasso.with(getActivity().getApplicationContext())
                         .load(url)
@@ -347,6 +344,10 @@ public class AddBookmarkFragment extends Fragment implements
 
     @Override
     public void onRetrieveTitleSuccess(final String title) {
+        if (getActivity() == null) {
+            return;
+        }
+
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -358,9 +359,14 @@ public class AddBookmarkFragment extends Fragment implements
 
     @Override
     public void onRetrieveIconFailure(final String error) {
+        if (getActivity() == null) {
+            return;
+        }
+
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                searchResultPresenter.slideToTopResultLayout(false).start();
                 refreshLayout.setRefreshing(false);
                 showErrorMessage(error); //"Ops! Icon not found for this bookmark!"
             }
