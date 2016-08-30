@@ -55,7 +55,7 @@ public class SearchResultPresenter {
             return;
         }
 
-        animatorSet.playSequentially(animator2, animator3, animator1);
+        animatorSet.playSequentially(animator2, animator1, animator3);
         animatorSet.start();
     }
 

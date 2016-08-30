@@ -30,11 +30,11 @@
                         android:focusableInTouchMode="true"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/indigo_400"
+                        android:textColor="@color/indigo_800"
                         android:inputType="textUri"
                         android:imeOptions="actionSend"
                         android:maxLines="3"
-                        android:hint="url...">
+                        android:hint="@string/url_hint">
                     </android.support.v7.widget.AppCompatEditText>
                 </android.support.design.widget.TextInputLayout>
 
@@ -68,10 +68,10 @@
                         android:layout_height="wrap_content"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
-                        android:hint="title..."
+                        android:hint="@string/title_hint"
                         android:maxLength="50"
                         android:maxLines="2"
-                        android:textColor="@color/indigo_400"/>
+                        android:textColor="@color/indigo_800"/>
                 </android.support.design.widget.TextInputLayout>
                 <CheckBox
                     android:visibility="gone"

@@ -370,7 +370,6 @@ public class AddBookmarkFragment extends Fragment implements
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                searchResultPresenter.slideToTopResultLayout(false).start();
                 refreshLayout.setRefreshing(false);
                 Picasso.with(getActivity().getApplicationContext())
                         .load(url)
@@ -405,9 +404,8 @@ public class AddBookmarkFragment extends Fragment implements
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                searchResultPresenter.slideToTopResultLayout(false).start();
                 refreshLayout.setRefreshing(false);
-                showErrorMessage(error); //"Ops! Icon not found for this bookmark!"
+                showErrorMessage(error);
             }
         });
     }

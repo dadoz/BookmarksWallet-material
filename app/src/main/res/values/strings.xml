@@ -23,4 +23,7 @@
     <string name="bookmark_list_title">List</string>
     <string name="https_checkbox_label">HTTPS</string>
     <string name="search_label">SEARCH</string>
+    <string name="save_new_bookmark">SAVE BOOKMARK</string>
+    <string name="url_hint">url...</string>
+    <string name="title_hint">title...</string>
 </resources>

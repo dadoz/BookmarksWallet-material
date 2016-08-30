@@ -60,7 +60,7 @@ public class RetrieveIconHelper {
 
         @Override
         public void run() {
-            Log.e("TAG", "----" + bookmarkUrl);
+//            Log.e("TAG", "----" + bookmarkUrl);
             String jobResult = doJob(bookmarkUrl, jobType);
             if (jobResult != null) {
                 if (jobType == JobTypeEnum.BOOKMARK_ICON_URL) {
@@ -99,7 +99,9 @@ public class RetrieveIconHelper {
          * @return
          */
         public String getTitleByDoc(Document doc) {
-            return doc.head().select(TITLE_SELECT_PARAM).text();
+            String temp = doc.head().select(TITLE_SELECT_PARAM).text();
+            Log.e("TAG", "++++++" + temp);
+            return temp;
         }
 
         /**
@@ -135,9 +137,7 @@ public class RetrieveIconHelper {
             Elements elemArray = doc.select("img[src$=.png]");
             if (elemArray != null) {
                 String url = elemArray.first().attr("src");
-                return (url.split("/")[1]).compareTo("") != 0 ?
-                        bookmarkUrl + url :
-                        url.contains("http") || url.contains("https") ? url : "http:" + url;
+                return Utils.buildUrlToSearchIcon(url, bookmarkUrl);
             }
             return null;
         }

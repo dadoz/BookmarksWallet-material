@@ -22,16 +22,12 @@ import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by davide on 17/07/15.
- */
 public class Utils {
-    public static final String IMPORT_TRIGGER = "IMPORT_TRIGGER";
     public static final int ADD_BOOKMARK_ACTIVITY_REQ_CODE = 99;
     private static final String TAG = "Utils";
-    private static int CONST_VALUE = 100;
-    private static String HTTP_PROTOCOL = "http://";
-    private static String HTTPS_PROTOCOL = "https://";
+    private static final int CONST_VALUE = 100;
+    private static final String HTTP_PROTOCOL = "http://";
+    private static final String HTTPS_PROTOCOL = "https://";
 
     /**
      * @param url
@@ -160,6 +156,7 @@ public class Utils {
      *
      */
     public static String buildUrl(String url, boolean isHttps) {
+        Log.e(TAG, "......." + url);
         return url == null ||
                 url.contains("http://") ||
                 url.contains("https://") ?
@@ -179,5 +176,17 @@ public class Utils {
             return stream.toByteArray();
         }
         return null;
+    }
+
+    /**
+     *
+     * @param url
+     * @param bookmarkUrl
+     * @return
+     */
+    public static String buildUrlToSearchIcon(String url, String bookmarkUrl) {
+        return (url.split("/")[1]).compareTo("") != 0 ?
+                bookmarkUrl + url :
+                url.contains("http") || url.contains("https") ? url : "http:" + url;
     }
 }
