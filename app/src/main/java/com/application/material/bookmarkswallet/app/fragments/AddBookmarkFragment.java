@@ -170,6 +170,14 @@ public class AddBookmarkFragment extends Fragment implements
         searchResultPresenter.init(new View[] {addBookmarkMainLayout, addBookmarkResultLayout,
                 addBookmarkRelativeLayout});
 
+        urlEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                setUrlAndTextResultFromSearch();
+                searchAction();
+                return true;
+            }
+        });
     }
 
     /**

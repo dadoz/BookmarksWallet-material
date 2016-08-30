@@ -115,10 +115,7 @@ public class Utils {
                 iconView.setImageDrawable(defaultIcon);
                 return;
             }
-
-            //TODO fix it
             iconView.setImageDrawable(defaultIcon);
-//            iconView.setImageBitmap(getIconBitmap(blob, size));
         } catch (Exception e) {
             iconView.setImageDrawable(defaultIcon);
         }
