@@ -39,7 +39,6 @@ public class SearchResultPresenter {
      *
      */
     public void hideResultView() {
-        mainLayout.findViewById(R.id.addBookmarkSearchButtonId).setVisibility(View.VISIBLE);
         animateViews(false);
     }
 
