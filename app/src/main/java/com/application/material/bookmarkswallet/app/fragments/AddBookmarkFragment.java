@@ -23,6 +23,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
+import android.widget.ViewSwitcher;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.bookmarkswallet.app.R;
@@ -55,11 +58,11 @@ public class AddBookmarkFragment extends Fragment implements
     @Bind(R.id.addBookmarkUrlTextInputId)
     TextInputLayout addBookmarkUrlTextInput;
     @Bind(R.id.titleEditTextId)
-    EditText mTitleEditText;
+    EditText addBookmarkTitleEditText;
     @Bind(R.id.addBookmarkHttpsCheckboxId)
     CheckBox addBookmarkHttpsCheckbox;
-    @Bind(R.id.toggleNameButtonId)
-    View toggleNameButton;
+    @Bind(R.id.toggleNameViewSwitcherId)
+    ViewSwitcher toggleNameViewSwitcher;
     @Bind(R.id.addBookmarkTitleTextInputId)
     TextInputLayout addBookmarkTitleTextInput;
     @Bind(R.id.pasteClipboardFabId)
@@ -182,7 +185,8 @@ public class AddBookmarkFragment extends Fragment implements
      *
      */
     private void initWebView() {
-        String url = Utils.buildUrl(bookmarkUrl, true);
+        boolean isHttps = addBookmarkHttpsCheckbox.isChecked();
+        String url = Utils.buildUrl(bookmarkUrl, isHttps);
 //        String url = "http://www.google.com/bookmarks";
         Log.e(TAG, "webview " + url);
         addBookmarkWebView.loadUrl(url);
@@ -199,17 +203,29 @@ public class AddBookmarkFragment extends Fragment implements
      *
      */
     private void initToggleButton() {
-        toggleNameButton.setOnClickListener(this);
+        toggleNameViewSwitcher.setOnClickListener(this);
     }
 
     /**
      *
      */
     private void toggleTitleVisibility() {
-        int visibility = addBookmarkTitleTextInput.getVisibility() == View.VISIBLE ?
-                View.GONE : View.VISIBLE;
+        boolean isVisible = addBookmarkTitleTextInput.getVisibility() == View.VISIBLE;
+        int visibility = isVisible ? View.GONE : View.VISIBLE;
         addBookmarkHttpsCheckbox.setVisibility(visibility);
         addBookmarkTitleTextInput.setVisibility(visibility);
+
+        toggleNameViewSwitcher.getCurrentView().setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        toggleNameViewSwitcher.getNextView().setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        resetTitleView();
+    }
+
+    /**
+     * 
+     */
+    private void resetTitleView() {
+        addBookmarkHttpsCheckbox.setChecked(false);
+        addBookmarkTitleEditText.setText("");
     }
 
     /**
@@ -268,7 +284,7 @@ public class AddBookmarkFragment extends Fragment implements
             case R.id.pasteClipboardFabId:
                 pasteClipboard();
                 break;
-            case R.id.toggleNameButtonId:
+            case R.id.toggleNameViewSwitcherId:
                 toggleTitleVisibility();
                 break;
             case R.id.addBookmarkSearchButtonId:
@@ -286,7 +302,7 @@ public class AddBookmarkFragment extends Fragment implements
      */
     private void setUrlAndTextResultFromSearch() {
         bookmarkUrl = urlEditText.getText().toString();
-        bookmarkTitle = mTitleEditText.getText().toString();
+        bookmarkTitle = addBookmarkTitleEditText.getText().toString();
     }
 
     /**

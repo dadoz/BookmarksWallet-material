@@ -5,10 +5,8 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.RelativeLayout;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
@@ -97,7 +95,8 @@ public class SearchResultPresenter {
     private Animator slideToBottomMainLayout(boolean isSlidingBottom) {
         int startY = isSlidingBottom ? 0 : viewHeight;
         int endY = isSlidingBottom ? viewHeight : 0;
-        return AnimatorBuilder.getInstance(context).getYTranslation(mainLayout.findViewById(R.id.addBookmarkCardLayoutId), startY, endY, 0);
+        return AnimatorBuilder.getInstance(context)
+                .getYTranslation(mainLayout.findViewById(R.id.addBookmarkCardLayoutId), startY, endY, 0);
     }
 
     /**
@@ -109,15 +108,6 @@ public class SearchResultPresenter {
         int endY = slideToTop? 0 : viewHeight;
         return AnimatorBuilder.getInstance(context).getYTranslation(resultLayout, startY, endY, 0);
 
-    }
-
-    /**
-     *
-     */
-    void setInitialMarginTop(View view, int margin) {
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) resultLayout.getLayoutParams();
-        params.topMargin = margin;
-        view.setLayoutParams(params);
     }
 
     /**

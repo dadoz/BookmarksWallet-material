@@ -166,7 +166,7 @@ public class Utils {
         return url == null ||
                 url.contains("http://") ||
                 url.contains("https://") ?
-                url : (isHttps ? HTTP_PROTOCOL : HTTPS_PROTOCOL) + url.trim();
+                url : (isHttps ? HTTPS_PROTOCOL : HTTP_PROTOCOL) + url.trim();
     }
 
 

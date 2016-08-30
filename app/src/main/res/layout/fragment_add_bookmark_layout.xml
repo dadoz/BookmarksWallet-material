@@ -29,7 +29,6 @@
         android:layout_height="wrap_content">
         <include layout="@layout/add_bookmark_main_layout"/>
         <include layout="@layout/add_bookmark_result_layout"/>
-            <!--android:visibility="gone"/>-->
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
