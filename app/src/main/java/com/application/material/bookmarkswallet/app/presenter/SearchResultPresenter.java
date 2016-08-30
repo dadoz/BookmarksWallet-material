@@ -5,7 +5,9 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
 import com.application.material.bookmarkswallet.app.R;
@@ -18,7 +20,7 @@ public class SearchResultPresenter {
     private static View mainLayout;
     private static View frameLayout;
     private static WeakReference<Context> context;
-    private int viewHeight;
+    private int viewHeight = 0;
 
     public SearchResultPresenter(WeakReference<Context> ctx) {
         context = ctx;
@@ -29,24 +31,35 @@ public class SearchResultPresenter {
      */
     public void showResultView() {
         mainLayout.findViewById(R.id.addBookmarkSearchButtonId).setVisibility(View.GONE);
+        animateViews(true);
 
-        Animator animator1 = slideToBottomMainLayout(true);
-        Animator animator2 = slideToTopResultLayout(true);
-        ValueAnimator animator3 = setBackgroundColorToFrameLayout(true);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playSequentially(animator3, animator1, animator2);
-        animatorSet.start();
     }
-
-
 
     /**
      *
-     * @param views
      */
-    public void hideResultView(View[] views) {
-        init(views);
+    public void hideResultView() {
+        mainLayout.findViewById(R.id.addBookmarkSearchButtonId).setVisibility(View.VISIBLE);
+        animateViews(false);
+    }
+
+    /**
+     *
+     */
+    private void animateViews(boolean isShowing) {
+        Animator animator1 = slideToBottomMainLayout(isShowing);
+        Animator animator2 = slideToTopResultLayout(isShowing);
+        ValueAnimator animator3 = setBackgroundColorToFrameLayout(isShowing);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        if (isShowing) {
+            animatorSet.playSequentially(animator3, animator1, animator2);
+            animatorSet.start();
+            return;
+        }
+
+        animatorSet.playSequentially(animator2, animator3, animator1);
+        animatorSet.start();
     }
 
     /**
@@ -54,12 +67,27 @@ public class SearchResultPresenter {
      * @param views
      */
     public void init(View[] views) {
-        //mv on init
         mainLayout = views[0];
         resultLayout = views[1];
         frameLayout = views[2];
-        viewHeight = 1500;//frameLayout.getHeight();
-        setInitialPosition(resultLayout, viewHeight);
+        setMinHeight();
+    }
+
+    /**
+     *
+     */
+    private void setMinHeight() {
+        final ViewTreeObserver.OnGlobalLayoutListener victim = new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (viewHeight == 0 ||
+                        viewHeight < frameLayout.getMeasuredHeight()) {
+                    viewHeight = frameLayout.getMeasuredHeight();
+                    setInitialPosition(resultLayout, viewHeight);
+                }
+            }
+        };
+        frameLayout.getViewTreeObserver().addOnGlobalLayoutListener(victim);
     }
 
     /**
@@ -75,11 +103,11 @@ public class SearchResultPresenter {
 
     /**
      *
-     * @param isMarginSet
+     * @param slideToTop
      */
-    public Animator slideToTopResultLayout(boolean isMarginSet) {
-        int startY = isMarginSet ? viewHeight : 200;
-        int endY = isMarginSet ? 200 : 0;
+    public Animator slideToTopResultLayout(boolean slideToTop) {
+        int startY = slideToTop ? viewHeight : 0;
+        int endY = slideToTop? 0 : viewHeight;
         return AnimatorBuilder.getInstance(context).getYTranslation(resultLayout, startY, endY, 0);
 
     }

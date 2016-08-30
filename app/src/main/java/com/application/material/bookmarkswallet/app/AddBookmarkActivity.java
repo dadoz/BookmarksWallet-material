@@ -5,13 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
+
 import butterknife.ButterKnife;
 import com.application.material.bookmarkswallet.app.fragments.AddBookmarkFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 
-/**
- * Created by davide on 05/08/15.
- */
 public class AddBookmarkActivity extends AppCompatActivity
         implements OnChangeFragmentWrapperInterface {
 

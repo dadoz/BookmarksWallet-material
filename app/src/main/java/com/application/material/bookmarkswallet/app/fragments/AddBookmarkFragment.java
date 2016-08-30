@@ -29,6 +29,7 @@ import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
 import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
+import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.presenter.SearchBookmarkPresenter;
 import com.application.material.bookmarkswallet.app.presenter.SearchResultPresenter;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
@@ -90,6 +91,7 @@ public class AddBookmarkFragment extends Fragment implements
     private int MIN_ICON_SIZE = 96;
     private RetrieveIconHelper retrieveIconHelper;
     private SearchResultPresenter searchResultPresenter;
+    private StatusManager statusManager;
 
     @Override
     public void onAttach(Context context) {
@@ -99,6 +101,7 @@ public class AddBookmarkFragment extends Fragment implements
         searchBookmarkPresenter = SearchBookmarkPresenter.getInstance();
         retrieveIconHelper = RetrieveIconHelper.getInstance(new WeakReference<RetrieveIconHelper.OnRetrieveIconInterface>(this));
         searchResultPresenter = new SearchResultPresenter(new WeakReference<>(getContext()));
+        statusManager = StatusManager.getInstance();
     }
 
     @Override
@@ -106,11 +109,17 @@ public class AddBookmarkFragment extends Fragment implements
                              Bundle savedInstance) {
         mainView = inflater.inflate(R.layout.fragment_add_bookmark_layout, container, false);
         ButterKnife.bind(this, mainView);
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
         initActionbar();
-        onInitView();
         return mainView;
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        onInitView();
+    }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -125,8 +134,13 @@ public class AddBookmarkFragment extends Fragment implements
             case R.id.action_terms_and_licences:
                 handleTermsAndLicences();
                 return true;
+            case android.R.id.home:
+                if (statusManager.isOnResultMode()) {
+                    searchResultPresenter.hideResultView();
+                    statusManager.setOnSearchMode();
+                    return true;
+                }
         }
-        //home is handled by default (super)
         return super.onOptionsItemSelected(item);
     }
 
@@ -291,6 +305,7 @@ public class AddBookmarkFragment extends Fragment implements
      *
      */
     private void onSearchSuccess() {
+        statusManager.setOnResultMode();
         searchResultPresenter.showResultView();
         Utils.hideKeyboard(getActivity());
         //init result view -- TODO move in callback
@@ -331,7 +346,7 @@ public class AddBookmarkFragment extends Fragment implements
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                searchResultPresenter.slideToTopResultLayout(false).start();
+//                searchResultPresenter.slideToTopResultLayout(false).start();
                 refreshLayout.setRefreshing(false);
                 Picasso.with(getActivity().getApplicationContext())
                         .load(url)
