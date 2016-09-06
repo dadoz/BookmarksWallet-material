@@ -18,6 +18,7 @@ import com.application.material.bookmarkswallet.app.utlis.Utils;
 import java.lang.ref.WeakReference;
 
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 
 import static com.application.material.bookmarkswallet.app.models.Bookmark.Utils.getBookmarkNameWrapper;
 
@@ -107,6 +108,11 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         Utils.setIconOnImageView(iconView,
                 bookmark.getBlobIcon(), res, isSelectedItem,
                 (int) mActivityRef.getResources().getDimension(R.dimen.medium_icon_size));
+    }
+
+    @Override
+    public void updateData(RealmResults<Bookmark> filteredList) {
+        getRealmBaseAdapter().updateData(filteredList);
     }
 
 

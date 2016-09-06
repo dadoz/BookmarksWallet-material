@@ -212,7 +212,7 @@ public class BookmarkListFragment extends Fragment
         registerDataObserver(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(recyclerViewAdapter);
-        setRealmAdapter(recyclerViewAdapter, getRealResults());
+        setRealmAdapter(recyclerViewAdapter, searchManager.getRealResults());
         searchManager.setAdapter(recyclerViewAdapter); //TODO what???
     }
 
@@ -339,16 +339,6 @@ public class BookmarkListFragment extends Fragment
         searchManager = SearchManager.getInstance(new WeakReference<>(getContext()), mRealm);
     }
 
-    /**
-     *
-     * @return
-     */
-    public RealmResults getRealResults() {
-        return mRealm
-                .where(Bookmark.class)
-                .findAll()
-                .sort(Bookmark.timestampField, Sort.DESCENDING);
-    }
 
     @Override
     public boolean onLongItemClick(View view, int position) {

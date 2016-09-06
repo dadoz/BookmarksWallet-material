@@ -5,6 +5,7 @@ import com.application.material.bookmarkswallet.app.models.Bookmark;
 
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 
 public abstract class RealmRecyclerViewAdapter<T extends RealmObject> extends RecyclerView.Adapter {
     private RealmModelAdapter<T> realmBaseAdapter;
@@ -20,4 +21,6 @@ public abstract class RealmRecyclerViewAdapter<T extends RealmObject> extends Re
     public Bookmark getItem(int position) {
         return (Bookmark) realmBaseAdapter.getItem(position);
     }
+
+    public abstract void updateData(RealmResults<Bookmark> filteredList);
 }

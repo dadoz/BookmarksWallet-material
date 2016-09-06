@@ -104,10 +104,8 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
      * collapse search view
      */
     public void collapseSearchView() {
-        try {
+        if (searchItem != null) {
             searchItem.collapseActionView();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -129,23 +127,24 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
 
     /**
      * TODO move on realm class
-     * @param filteredList
+     * @param list
      */
-    private void updateDataSet(RealmResults<Bookmark> filteredList) {
-        adapter.getRealmBaseAdapter().updateData(filteredList);
+    private void updateDataSet(RealmResults<Bookmark> list) {
+        adapter.updateData(list);
         adapter.notifyDataSetChanged();
     }
 
     /**
-     * TODO move on realm class
-     * @param
+     *
+     * @return
      */
-    private void initDataSet() {
-        RealmResults<Bookmark> result = mRealm.where(Bookmark.class).findAll();
-        result.sort(Bookmark.timestampField, Sort.DESCENDING);
-        adapter.getRealmBaseAdapter().updateData(result);
-        adapter.notifyDataSetChanged();
+    public RealmResults getRealResults() {
+        return mRealm
+                .where(Bookmark.class)
+                .findAll()
+                .sort(Bookmark.timestampField, Sort.DESCENDING);
     }
+
 
     /**
      * TODO move in filter class
@@ -156,14 +155,12 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
                                          boolean isCaseSensitive) {
         mFilterString = filterString;
         RealmQuery<Bookmark> query = mRealm.where(Bookmark.class);
-        isSearchOnUrl = true;
         if (isSearchOnUrl) {
             query
                     .contains(Bookmark.urlField, filterString, isCaseSensitive?
                             Case.SENSITIVE : Case.INSENSITIVE)
                     .or();
         }
-
         return query
                 .contains(Bookmark.nameField, filterString, isCaseSensitive?
                         Case.SENSITIVE : Case.INSENSITIVE)
@@ -205,16 +202,10 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
                 public void run() {
                     try {
                         String searchValue = ((String) constraint).trim().toLowerCase();
-                        if (searchValue.equals("")) {
-                            initDataSet();
-                            return;
-                        }
-
-                        RealmResults filteredList = getFilteredList(mSearchOnUrlEnabled,
+                        RealmResults list = searchValue.equals("") ?
+                                getRealResults() : getFilteredList(mSearchOnUrlEnabled,
                                 searchValue, mCaseSensitive);
-
-//                        if (filteredList.size() == 0) -- handled by BookmarkListObserver
-                        updateDataSet(filteredList);
+                        updateDataSet(list);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
