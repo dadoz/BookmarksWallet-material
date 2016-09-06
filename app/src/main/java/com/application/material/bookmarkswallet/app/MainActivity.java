@@ -1,5 +1,6 @@
 package com.application.material.bookmarkswallet.app;
 
+import android.content.Context;
 import android.support.v4.app.*;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,9 @@ import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragme
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.singleton.BackPressedSingleton;
 import com.flurry.android.FlurryAgent;
+
+import java.lang.ref.WeakReference;
+
 import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
 
@@ -34,7 +38,7 @@ public class MainActivity extends AppCompatActivity
      * init singleton references
      */
     private void initSingletonRef() {
-        mBackPressedSingleton = BackPressedSingleton.getInstance(this);
+        mBackPressedSingleton = BackPressedSingleton.getInstance(new WeakReference<Context>(this));
     }
 
     @Override

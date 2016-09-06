@@ -1,6 +1,5 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,7 +12,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.*;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -24,9 +22,9 @@ import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActio
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
+import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.singleton.*;
-import com.application.material.bookmarkswallet.app.singleton.search.SearchHandlerSingleton;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.observer.BookmarkListObserver;
 
@@ -54,7 +52,7 @@ public class BookmarkListFragment extends Fragment
     View mEmptySearchResultLayout;
 
     private Realm mRealm;
-    private SearchHandlerSingleton mSearchHandlerSingleton;
+    private SearchManager searchManager;
     private ActionbarSingleton mActionbarSingleton;
     private BookmarkActionSingleton mBookmarkActionSingleton;
     private View mView;
@@ -99,7 +97,7 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
-        mSearchHandlerSingleton.initSearchView(menu);
+        searchManager.initSearchView(menu);
         MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), this);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -215,7 +213,7 @@ public class BookmarkListFragment extends Fragment
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(recyclerViewAdapter);
         setRealmAdapter(recyclerViewAdapter, getRealResults());
-        mSearchHandlerSingleton.setAdapter(recyclerViewAdapter); //TODO what???
+        searchManager.setAdapter(recyclerViewAdapter); //TODO what???
     }
 
     /**
@@ -238,7 +236,7 @@ public class BookmarkListFragment extends Fragment
                 mEmptyLinkListView,
                 mEmptySearchResultLayout,
                 mSwipeRefreshLayout,
-                mSearchHandlerSingleton);
+                searchManager);
         recyclerViewAdapter.registerAdapterDataObserver(observer);
     }
 
@@ -336,9 +334,9 @@ public class BookmarkListFragment extends Fragment
     private void initSingletonInstances() {
         mRealm = Realm.getInstance(new RealmConfiguration.Builder(getContext()).build());
         statusHelper = StatusSingleton.getInstance();
-        mActionbarSingleton = ActionbarSingleton.getInstance(getActivity());
+        mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(getContext()));
         mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(new WeakReference<>(getContext()));
-        mSearchHandlerSingleton = SearchHandlerSingleton.getInstance(getActivity(), mRealm);
+        searchManager = SearchManager.getInstance(new WeakReference<>(getContext()), mRealm);
     }
 
     /**

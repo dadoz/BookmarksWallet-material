@@ -5,9 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
 import com.application.material.bookmarkswallet.app.singleton.StatusSingleton.StatusEnum;
-import com.application.material.bookmarkswallet.app.singleton.search.SearchHandlerSingleton;
 
 /**
  * set empty view on empty data TODO move
@@ -19,20 +19,20 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
     private View mEmptyLinkListView;
     private View mEmptySearchResultLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private SearchHandlerSingleton mSearchHandlerSingleton;
+    private SearchManager searchManager;
 
     public BookmarkListObserver(RecyclerView recyclerView,
                                 View emptyLinkListView,
                                 View emptySearchResultLayout,
                                 SwipeRefreshLayout swipeRefreshLayout,
-                                SearchHandlerSingleton searchHandlerSingleton) {
+                                SearchManager searchHandlerSingleton) {
 
         this.mStatusSingleton = StatusSingleton.getInstance();
         this.mRecyclerView = recyclerView;
         this.mEmptyLinkListView = emptyLinkListView;
         this.mEmptySearchResultLayout = emptySearchResultLayout;
         this.mSwipeRefreshLayout = swipeRefreshLayout;
-        this.mSearchHandlerSingleton = searchHandlerSingleton;
+        this.searchManager = searchHandlerSingleton;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
     private void handleSearchView() {
         mEmptySearchResultLayout.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
         ((TextView) mEmptySearchResultLayout.findViewById(R.id.searchResultQueryTextId))
-                .setText(mSearchHandlerSingleton.getFilterString());
+                .setText(searchManager.getFilterString());
     }
 
     /**

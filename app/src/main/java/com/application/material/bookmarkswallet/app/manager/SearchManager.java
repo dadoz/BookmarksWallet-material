@@ -1,13 +1,52 @@
 package com.application.material.bookmarkswallet.app.manager;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Filter;
+import android.widget.Filterable;
 
+import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import java.lang.ref.WeakReference;
 
-public class SearchManager {
+import io.realm.Case;
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+import io.realm.Sort;
+
+public class SearchManager implements Filterable, SearchView.OnQueryTextListener {
+    private static WeakReference<Context> context;
+    private static Realm mRealm;
+    private static SearchManager instance;
+    private String mFilterString;
+    private MenuItem searchItem;
+    private BookmarkRecyclerViewAdapter adapter;
+
+    public SearchManager() {
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @param realm
+     * @return
+     */
+    public static SearchManager getInstance(WeakReference<Context> ctx, Realm realm) {
+        context = ctx;
+        mRealm = realm;
+        return instance == null ?
+                instance = new SearchManager() :
+                instance;
+    }
+
     /**
      *
      * @param query
@@ -35,5 +74,154 @@ public class SearchManager {
         return false;
     }
 
+
+    /**
+     *
+     * @param adpt
+     */
+    public void setAdapter(BookmarkRecyclerViewAdapter adpt) {
+        adapter = adpt;
+    }
+
+    /**
+     * @param menu
+     */
+    public void initSearchView(Menu menu) {
+        try {
+            searchItem = menu.findItem(R.id.action_search);
+            android.app.SearchManager searchManager = (android.app.SearchManager) context.get()
+                    .getSystemService(Context.SEARCH_SERVICE);
+            SearchView searchView = (SearchView) searchItem.getActionView();
+            searchView.setSearchableInfo(searchManager
+                    .getSearchableInfo(((Activity) context.get()).getComponentName()));
+            searchView.setOnQueryTextListener(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * collapse search view
+     */
+    public void collapseSearchView() {
+        try {
+            searchItem.collapseActionView();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new LinkFilter();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        getFilter().filter(newText);
+        return true;
+    }
+
+    /**
+     * TODO move on realm class
+     * @param filteredList
+     */
+    private void updateDataSet(RealmResults<Bookmark> filteredList) {
+        adapter.getRealmBaseAdapter().updateData(filteredList);
+        adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * TODO move on realm class
+     * @param
+     */
+    private void initDataSet() {
+        RealmResults<Bookmark> result = mRealm.where(Bookmark.class).findAll();
+        result.sort(Bookmark.timestampField, Sort.DESCENDING);
+        adapter.getRealmBaseAdapter().updateData(result);
+        adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * TODO move in filter class
+     * set empty search result view
+     */
+    private RealmResults getFilteredList(boolean isSearchOnUrl,
+                                         String filterString,
+                                         boolean isCaseSensitive) {
+        mFilterString = filterString;
+        RealmQuery<Bookmark> query = mRealm.where(Bookmark.class);
+        isSearchOnUrl = true;
+        if (isSearchOnUrl) {
+            query
+                    .contains(Bookmark.urlField, filterString, isCaseSensitive?
+                            Case.SENSITIVE : Case.INSENSITIVE)
+                    .or();
+        }
+
+        return query
+                .contains(Bookmark.nameField, filterString, isCaseSensitive?
+                        Case.SENSITIVE : Case.INSENSITIVE)
+                .findAll();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getFilterString() {
+        return mFilterString;
+    }
+
+    /**
+     * filter class handled by search
+     */
+    private class LinkFilter extends Filter {
+        private final boolean mSearchOnUrlEnabled;
+        private boolean mCaseSensitive = false;
+
+        public LinkFilter() {
+            mSearchOnUrlEnabled = false;
+        }
+
+        @Override
+        protected FilterResults performFiltering(final CharSequence constraint) {
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = null;
+            filterResults.count = 0;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(final CharSequence constraint, FilterResults results) {
+            //TODO add callback
+            ((Activity) context.get()).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String searchValue = ((String) constraint).trim().toLowerCase();
+                        if (searchValue.equals("")) {
+                            initDataSet();
+                            return;
+                        }
+
+                        RealmResults filteredList = getFilteredList(mSearchOnUrlEnabled,
+                                searchValue, mCaseSensitive);
+
+//                        if (filteredList.size() == 0) -- handled by BookmarkListObserver
+                        updateDataSet(filteredList);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
+    }
 
 }

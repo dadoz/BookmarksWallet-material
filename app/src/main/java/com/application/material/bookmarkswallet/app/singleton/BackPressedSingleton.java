@@ -1,8 +1,12 @@
 package com.application.material.bookmarkswallet.app.singleton;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
-import com.application.material.bookmarkswallet.app.singleton.search.SearchHandlerSingleton;
+
+import com.application.material.bookmarkswallet.app.manager.SearchManager;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by davide on 23/06/15.
@@ -10,31 +14,32 @@ import com.application.material.bookmarkswallet.app.singleton.search.SearchHandl
 public class BackPressedSingleton {
 
     private static BackPressedSingleton instanceRef;
-    private static AppCompatActivity activityRef;
     private static ActionbarSingleton actionbarSingleton;
     private static StatusSingleton statusSingleton;
-    private static SearchHandlerSingleton mSearchHandlerSingleton;
+    private static SearchManager searchManager;
+    private static WeakReference<Context> context;
 
     public BackPressedSingleton() {
     }
 
     /**
      *
-     * @param activity
+     * @param ctx
      * @return BackPressedSingleton
      */
-    public static BackPressedSingleton getInstance(Activity activity) {
-        activityRef = (AppCompatActivity) activity;
+    public static BackPressedSingleton getInstance(WeakReference<Context> ctx) {
+        context = ctx;
         initSingletonRef();
-        return instanceRef == null ? instanceRef = new BackPressedSingleton() : instanceRef;
+        return instanceRef == null ?
+                instanceRef = new BackPressedSingleton() : instanceRef;
     }
 
     /**
      * init singleton ref
      */
     private static void initSingletonRef() {
-        mSearchHandlerSingleton = SearchHandlerSingleton.getInstance(activityRef, null);
-        actionbarSingleton = ActionbarSingleton.getInstance(activityRef);
+        searchManager = SearchManager.getInstance(context, null);
+        actionbarSingleton = ActionbarSingleton.getInstance(context);
         statusSingleton = StatusSingleton.getInstance();
     }
 
@@ -47,7 +52,7 @@ public class BackPressedSingleton {
         actionbarSingleton.updateActionBar(isHomeUpEnabled);
 
         if (statusSingleton.isSearchMode()) {
-            mSearchHandlerSingleton.collapseSearchView();
+            searchManager.collapseSearchView();
             statusSingleton.unsetStatus();
             return true;
         }
@@ -62,7 +67,7 @@ public class BackPressedSingleton {
      * @return
      */
     private boolean homeUpEnabled() {
-        return activityRef.getSupportFragmentManager()
+        return ((AppCompatActivity) context.get()).getSupportFragmentManager()
                 .getBackStackEntryCount() >= 2;
     }
 

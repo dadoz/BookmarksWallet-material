@@ -38,15 +38,15 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
     private boolean mFindIconAuto = false;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (! (activity instanceof OnChangeFragmentWrapperInterface)) {
-            throw new ClassCastException(activity.toString()
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (! (context instanceof OnChangeFragmentWrapperInterface)) {
+            throw new ClassCastException(context.toString()
                     + " must implement OnChangeFragmentWrapperInterface");
         }
 
-        mActivityRef = activity;
-        mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
+        mActivityRef = (Activity) context;
+        mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(getContext()));
         mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(new WeakReference<>(getContext()));
     }
 

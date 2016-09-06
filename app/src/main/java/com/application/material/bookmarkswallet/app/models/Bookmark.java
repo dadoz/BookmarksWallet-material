@@ -24,6 +24,10 @@ public class Bookmark extends RealmObject {
     private String name;
     private byte[] blobIcon;
     @Ignore
+    public static String nameField = "name";
+    @Ignore
+    public static String urlField = "url";
+    @Ignore
     private static final String NO_TITLE_STRING = "(no title)";
     @Ignore
     public static final String timestampField = "timestamp";

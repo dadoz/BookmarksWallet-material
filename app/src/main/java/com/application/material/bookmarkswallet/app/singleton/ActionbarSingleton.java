@@ -1,15 +1,19 @@
 package com.application.material.bookmarkswallet.app.singleton;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
+
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
+
+import java.lang.ref.WeakReference;
 
 
 /**
@@ -18,14 +22,14 @@ import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitA
 public class ActionbarSingleton implements OnInitActionBarInterface {
 
     private static final String TAG = "ActionbarSingleton";
-    public static Activity activityRef;
     private static ActionbarSingleton instanceRef;
+    private static WeakReference<Context> context;
 
     private ActionbarSingleton() {
     }
 
-    public static ActionbarSingleton getInstance(Activity activity) {
-        activityRef = activity;
+    public static ActionbarSingleton getInstance(WeakReference<Context> ctx) {
+        context = ctx;
         return instanceRef == null ?
                 instanceRef = new ActionbarSingleton() : instanceRef;
     }
@@ -65,7 +69,7 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
     @Override
     public boolean setTitle(String title) {
         try {
-            String mainTitle = activityRef.getResources().getString(R.string.main_title);
+            String mainTitle = context.get().getResources().getString(R.string.main_title);
             getActionBar().setTitle(title == null ? mainTitle : title);
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,7 +152,7 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
      */
     private void setStatusbarColor(int color) {
         if (Build.VERSION.SDK_INT >= 21) {
-            Window window = activityRef.getWindow();
+            Window window = ((Activity) context.get()).getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(color);
@@ -159,8 +163,8 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
      * set toolbar
      */
     private void setActionBar() {
-        Toolbar toolbar = (Toolbar) activityRef.findViewById(R.id.toolbarId);
-        ((AppCompatActivity) activityRef).setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) ((Activity) context.get()).findViewById(R.id.toolbarId);
+        ((AppCompatActivity) context.get()).setSupportActionBar(toolbar);
     }
 
     /**
@@ -168,7 +172,7 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
      * @return
      */
     private android.support.v7.app.ActionBar getActionBar() {
-        return ((AppCompatActivity) activityRef).getSupportActionBar();
+        return ((AppCompatActivity) context.get()).getSupportActionBar();
     }
 
     /**
@@ -176,8 +180,8 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
      * @return
      */
     private Drawable getDefaultToolbarDrawableColor() {
-        return activityRef.getResources()
-                .getDrawable(R.color.yellow_400);
+        return ContextCompat
+                .getDrawable(context.get(), R.color.yellow_400);
     }
 
     /**
@@ -185,7 +189,8 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
      * @return
      */
     private int getDefaultActionbarColor() {
-        return activityRef.getResources().getColor(R.color.yellow_600);
+        return ContextCompat
+                .getColor(context.get(), R.color.yellow_600);
     }
 
 }
