@@ -1,29 +1,28 @@
 package com.application.material.bookmarkswallet.app.singleton;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
-import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionMode;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
+import java.lang.ref.WeakReference;
 import java.util.UUID;
 
-/**
- * Created by davide on 04/08/15.
- */
 public class BookmarkActionSingleton {
     private static BookmarkActionSingleton mInstance;
-    private static Activity mActivityRef;
+    private static WeakReference<Context> context;
     private static Realm mRealm;
     private static StatusSingleton mStatusSingleton;
     private String TAG = "BookmarkActionSingleton";
@@ -33,12 +32,12 @@ public class BookmarkActionSingleton {
 
     /**
      *
-     * @param activity
+     * @param ctx
      * @return
      */
-    public static BookmarkActionSingleton getInstance(Activity activity) {
-        mActivityRef = activity;
-        mRealm = Realm.getInstance(new RealmConfiguration.Builder(activity).build());
+    public static BookmarkActionSingleton getInstance(WeakReference<Context> ctx) {
+        context = ctx;
+        mRealm = Realm.getInstance(new RealmConfiguration.Builder(ctx.get()).build());
         mStatusSingleton = StatusSingleton.getInstance();
         return mInstance == null ?
                 mInstance = new BookmarkActionSingleton() :
@@ -52,17 +51,17 @@ public class BookmarkActionSingleton {
     public void openLinkOnBrowser(String linkUrl) {
         try {
             if (! checkURL(linkUrl)) {
-                Toast.makeText(mActivityRef, "your URL is wrong "
-                        + linkUrl, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context.get(), "your URL is wrong " + linkUrl,
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
 
             Intent browserIntent = new Intent(Intent.ACTION_VIEW,
                     Uri.parse(linkUrl));
-            mActivityRef.startActivity(browserIntent);
+            context.get().startActivity(browserIntent);
         } catch(Exception e) {
             Log.e(TAG, "error - " + e);
-            Toast.makeText(mActivityRef, "I cant load your URL "
+            Toast.makeText(context.get(), "I cant load your URL "
                     + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -81,27 +80,27 @@ public class BookmarkActionSingleton {
      * @param fragment
      */
     public void addBookmarkAction(Fragment fragment) {
-        Intent intent = new Intent(mActivityRef, AddBookmarkActivity.class);
+        Intent intent = new Intent(context.get(), AddBookmarkActivity.class);
         fragment.startActivityForResult(intent, Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE);
     }
 
-    /**
-     * handle click on recycler view
-     */
-    public void handleClickAction(View v, RecyclerView recyclerView) {
-        Bookmark bookmark = getBookmarkByView(v, recyclerView);
-        openLinkOnBrowser(bookmark.getUrl());
-    }
-
-    /**
-     * handle click on recycler view
-     */
-    public void handleLongClickAction(final View v, final RecyclerView recyclerView) {
-        int pos = getBookmarkPosByView(v, recyclerView);
-        mActivityRef.startActionMode(new EditBookmarkActionMode(mActivityRef, v, recyclerView));
-        mStatusSingleton.setEditMode(pos);
-        recyclerView.getAdapter().notifyItemChanged(pos);
-    }
+//    /**
+//     * handle click on recycler view
+//     */
+//    public void handleClickAction(View v, RecyclerView recyclerView) {
+//        Bookmark bookmark = getBookmarkByView(v, recyclerView);
+//        openLinkOnBrowser(bookmark.getUrl());
+//    }
+//
+//    /**
+//     * handle click on recycler view
+//     */
+//    public void handleLongClickAction(final View view, final RecyclerView recyclerView) {
+//        int pos = getBookmarkPosByView(view, recyclerView);
+//        ((Activity) context.get()).startActionMode(new EditBookmarkActionMode(context, view, recyclerView));
+//        mStatusSingleton.setEditMode(pos);
+//        recyclerView.getAdapter().notifyItemChanged(pos);
+//    }
 
     /**
      *
@@ -127,12 +126,13 @@ public class BookmarkActionSingleton {
 
     /**
      *
-     * @param v
-     * @param recyclerView
+     * @param position
+     * @param adapter
      */
-    public void deleteAction(View v, RecyclerView recyclerView) {
-        int position = getBookmarkPosByView(v, recyclerView);
-        BookmarkRecyclerViewAdapter adapter = (BookmarkRecyclerViewAdapter) recyclerView.getAdapter();
+    public void deleteAction(BookmarkRecyclerViewAdapter adapter, int position) {
+//        int position = getBookmarkPosByView(v, recyclerView);
+//        Log.e("TAG", "" + position);
+//        BookmarkRecyclerViewAdapter adapter = (BookmarkRecyclerViewAdapter) recyclerView.getAdapter();
 
         mRealm.beginTransaction();
         adapter.getItem(position).deleteFromRealm();
@@ -165,10 +165,9 @@ public class BookmarkActionSingleton {
     /**
      *
      */
-    public void shareAction(View v, RecyclerView recyclerView) {
-        final Bookmark bookmark = getBookmarkByView(v, recyclerView);
+    public void shareAction(Bookmark bookmark) {
         Intent intent = getIntentForEditBookmark(bookmark);
-        mActivityRef.startActivity(Intent.createChooser(intent, "share bookmark to..."));
+        context.get().startActivity(Intent.createChooser(intent, "share bookmark to..."));
     }
 
     /**

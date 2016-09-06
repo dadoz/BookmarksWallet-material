@@ -25,6 +25,8 @@ public class Bookmark extends RealmObject {
     private byte[] blobIcon;
     @Ignore
     private static final String NO_TITLE_STRING = "(no title)";
+    @Ignore
+    public static final String timestampField = "timestamp";
 
     public int getUserId() {
         return this.userId;

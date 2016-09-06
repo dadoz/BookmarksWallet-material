@@ -103,7 +103,7 @@ public class AddBookmarkFragment extends Fragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
         mActionbarSingleton = ActionbarSingleton.getInstance((Activity) context);
-        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance((Activity) context);
+        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(new WeakReference<>(context));
         searchBookmarkPresenter = SearchBookmarkPresenter.getInstance();
         retrieveIconHelper = RetrieveIconHelper.getInstance(new WeakReference<RetrieveIconHelper.OnRetrieveIconInterface>(this));
         searchResultPresenter = new SearchResultPresenter(new WeakReference<>(getContext()));

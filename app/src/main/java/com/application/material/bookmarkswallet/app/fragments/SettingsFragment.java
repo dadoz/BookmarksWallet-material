@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v7.app.AlertDialog;
 import android.app.Dialog;
@@ -22,6 +23,7 @@ import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton
 import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
 import com.willowtreeapps.saguaro.android.Saguaro;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class SettingsFragment extends Fragment implements AdapterView.OnItemClickListener,
@@ -45,7 +47,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 
         mActivityRef = activity;
         mActionbarSingleton = ActionbarSingleton.getInstance(mActivityRef);
-        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(mActivityRef);
+        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(new WeakReference<>(getContext()));
     }
 
     @Override

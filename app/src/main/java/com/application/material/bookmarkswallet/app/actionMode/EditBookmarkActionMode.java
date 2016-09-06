@@ -1,32 +1,33 @@
 package com.application.material.bookmarkswallet.app.actionMode;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
 import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
 
-/**
- * Created by davide on 07/08/15.
- */
+import java.lang.ref.WeakReference;
+
 public class EditBookmarkActionMode implements ActionMode.Callback {
 
-    private final RecyclerView mRecyclerView;
-    private final View mItemView;
     private final StatusSingleton mStatusSingleton;
     private BookmarkActionSingleton mBookmarkActionSingleton;
+    private int position;
+    private BookmarkRecyclerViewAdapter adapter;
 
     /**
      *
-     * @param activity
-     * @param v
-     * @param recyclerView
+     * @param
      */
-    public EditBookmarkActionMode(Activity activity, final View v, final RecyclerView recyclerView) {
-        mItemView = v;
-        mRecyclerView = recyclerView;
-        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(activity);
+    public EditBookmarkActionMode(WeakReference<Context> context, int pos,
+                                  BookmarkRecyclerViewAdapter adp) {
+        adapter = adp;
+        position = pos;
+        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(context);
         mStatusSingleton = StatusSingleton.getInstance();
     }
 
@@ -47,11 +48,11 @@ public class EditBookmarkActionMode implements ActionMode.Callback {
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.shareActionId:
-                mBookmarkActionSingleton.shareAction(mItemView, mRecyclerView);
+                mBookmarkActionSingleton.shareAction(adapter.getItem(position));
                 mode.finish();
                 return true;
             case R.id.deleteActionId:
-                mBookmarkActionSingleton.deleteAction(mItemView, mRecyclerView);
+                mBookmarkActionSingleton.deleteAction(adapter, position);
                 mode.finish();
                 return true;
         }
@@ -64,7 +65,7 @@ public class EditBookmarkActionMode implements ActionMode.Callback {
     public void unsetEditItem() {
         int pos = mStatusSingleton.getEditItemPos();
         if (pos != StatusSingleton.EDIT_POS_NOT_SET) {
-            mRecyclerView.getAdapter().notifyItemChanged(pos);
+            adapter.notifyItemChanged(pos);
             mStatusSingleton.unsetStatus();
         }
     }

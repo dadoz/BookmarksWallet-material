@@ -1,9 +1,11 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -11,12 +13,14 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.*;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.application.material.bookmarkswallet.app.MainActivity;
+
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionMode;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
@@ -25,36 +29,36 @@ import com.application.material.bookmarkswallet.app.singleton.*;
 import com.application.material.bookmarkswallet.app.singleton.search.SearchHandlerSingleton;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.observer.BookmarkListObserver;
+
+import java.lang.ref.WeakReference;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
-/**
- * Created by davide on 04/08/15.
- */
 public class BookmarkListFragment extends Fragment
-        implements View.OnClickListener, View.OnLongClickListener,
+        implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener,
-        MenuItemCompat.OnActionExpandListener {
+        MenuItemCompat.OnActionExpandListener, BookmarkRecyclerViewAdapter.OnActionListenerInterface {
     public static final String FRAG_TAG = "LinksListFragment";
     @Bind(R.id.addBookmarkFabId)
     FloatingActionButton mAddBookmarkFab;
     @Bind(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @Bind(R.id.linksListId)
-    RecyclerView mRecyclerView;
+    RecyclerView recyclerView;
     @Bind(R.id.emptyLinkListViewId)
     View mEmptyLinkListView;
     @Bind(R.id.emptySearchResultLayoutId)
     View mEmptySearchResultLayout;
 
-    private MainActivity mMainActivityRef;
     private Realm mRealm;
     private SearchHandlerSingleton mSearchHandlerSingleton;
     private ActionbarSingleton mActionbarSingleton;
     private BookmarkActionSingleton mBookmarkActionSingleton;
     private View mView;
-    private StatusSingleton mStatusSingleton;
+    private StatusSingleton statusHelper;
 
     @Override
     public void onAttach(Context context) {
@@ -63,7 +67,6 @@ public class BookmarkListFragment extends Fragment
             throw new ClassCastException(context.toString()
                     + " must implement OnLoadViewHandlerInterface");
         }
-        mMainActivityRef =  (MainActivity) context;
         initSingletonInstances();
     }
 
@@ -91,7 +94,6 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onStop() {
         super.onStop();
-//        rvActionsSingleton.cancelAsyncTask();
     }
 
     @Override
@@ -105,7 +107,7 @@ public class BookmarkListFragment extends Fragment
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
         Utils.animateFabIn(mAddBookmarkFab);
-        mStatusSingleton.setSearchMode(true);
+        statusHelper.setSearchMode(true);
         return true;
     }
 
@@ -113,7 +115,7 @@ public class BookmarkListFragment extends Fragment
     public boolean onMenuItemActionCollapse(MenuItem item) {
         mEmptySearchResultLayout.setVisibility(View.GONE); //PATCH
         Utils.animateFabOut(mAddBookmarkFab);
-        mStatusSingleton.unsetStatus();
+        statusHelper.unsetStatus();
         return true;
     }
 
@@ -123,17 +125,9 @@ public class BookmarkListFragment extends Fragment
             case R.id.addBookmarkFabId:
                 mBookmarkActionSingleton.addBookmarkAction(this);
                 break;
-            default:
-                mBookmarkActionSingleton.handleClickAction(v, mRecyclerView);
-                break;
         }
     }
 
-    @Override
-    public boolean onLongClick(View v) {
-        mBookmarkActionSingleton.handleLongClickAction(v, mRecyclerView);
-        return true;
-    }
 
     @Override
     public void onRefresh() {
@@ -147,11 +141,11 @@ public class BookmarkListFragment extends Fragment
                 shareBookmark();
                 break;
             case R.id.action_settings:
-                mStatusSingleton.unsetStatus();
+                statusHelper.unsetStatus();
                 handleSetting();
                 return true;
             case R.id.action_export:
-                Toast.makeText(mMainActivityRef, "Feature will come soon!",
+                Toast.makeText(getActivity(), "Feature will come soon!",
                         Toast.LENGTH_SHORT).show();
 //                exportBookmarksSingleton.exportAction();
                 return true;
@@ -165,10 +159,24 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE) {
-            notifyDataChanged();
             initSingletonInstances();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    notifyDataChanged();
+                    updateRecyclerView();
+                }
+            }, 500);
         }
     }
+
+    /**
+     * notify data changed
+     */
+    public void notifyDataChanged() {
+        recyclerView.getAdapter().notifyDataSetChanged(); //TODO mv to inserted 0 only on insertion
+    }
+
     /**
      * init view on recyclerView - setup adapter and other stuff
      * connected to main fragment app
@@ -202,15 +210,21 @@ public class BookmarkListFragment extends Fragment
      */
     private void initRecyclerView() {
         BookmarkRecyclerViewAdapter recyclerViewAdapter =
-                new BookmarkRecyclerViewAdapter(mMainActivityRef, this);
+                new BookmarkRecyclerViewAdapter(getActivity(), new WeakReference<BookmarkRecyclerViewAdapter.OnActionListenerInterface>(this));
         registerDataObserver(recyclerViewAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mMainActivityRef));
-        mRecyclerView.setAdapter(recyclerViewAdapter);
-        setRealmAdapter(recyclerViewAdapter);
-        mSearchHandlerSingleton.setAdapter(recyclerViewAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(recyclerViewAdapter);
+        setRealmAdapter(recyclerViewAdapter, getRealResults());
+        mSearchHandlerSingleton.setAdapter(recyclerViewAdapter); //TODO what???
+    }
 
-        mRecyclerView.setItemAnimator(null); //WTF
-        mRecyclerView.setHasFixedSize(true);
+    /**
+     *
+     */
+    private void updateRecyclerView() {
+        if (recyclerView != null) {
+            recyclerView.smoothScrollToPosition(0);
+        }
     }
 
     /**
@@ -218,8 +232,9 @@ public class BookmarkListFragment extends Fragment
      * @param recyclerViewAdapter
      */
     private void registerDataObserver(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
+        //TODO leak
         BookmarkListObserver observer = new BookmarkListObserver(
-                mRecyclerView,
+                recyclerView,
                 mEmptyLinkListView,
                 mEmptySearchResultLayout,
                 mSwipeRefreshLayout,
@@ -228,13 +243,15 @@ public class BookmarkListFragment extends Fragment
     }
 
     /**
+     * @param realmResults
+     * @param recyclerViewAdapter
      * Realm io function to handle adapter and get
      * data from db
      */
-    public void setRealmAdapter(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
+    public void setRealmAdapter(BookmarkRecyclerViewAdapter recyclerViewAdapter,
+                                RealmResults realmResults) {
         try {
-            RealmResults realmResults = mRealm.where(Bookmark.class).findAll();
-            RealmModelAdapter realmModelAdapter = new RealmModelAdapter(mMainActivityRef, realmResults);
+            RealmModelAdapter realmModelAdapter = new RealmModelAdapter(getActivity(), realmResults);
             recyclerViewAdapter
                     .setRealmBaseAdapter(realmModelAdapter);
             recyclerViewAdapter.notifyDataSetChanged();
@@ -260,7 +277,7 @@ public class BookmarkListFragment extends Fragment
                 .setAction("SYNC", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(mMainActivityRef, "hey", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "hey", Toast.LENGTH_SHORT).show();
                     }
                 }).show();
     }
@@ -279,7 +296,8 @@ public class BookmarkListFragment extends Fragment
      */
     private void handleSetting() {
         mActionbarSingleton.updateActionBar(true);
-        mMainActivityRef.changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
+        ((OnChangeFragmentWrapperInterface) getActivity())
+                .changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
     }
 
     /**
@@ -287,7 +305,7 @@ public class BookmarkListFragment extends Fragment
      */
     private void shareBookmark() {
         Intent intent = getIntentForEditBookmark(getSelectedItem());
-        mMainActivityRef.startActivity(Intent.createChooser(intent, "share bookmark to..."));
+        getActivity().startActivity(Intent.createChooser(intent, "share bookmark to..."));
     }
 
     /**
@@ -295,9 +313,8 @@ public class BookmarkListFragment extends Fragment
      * @return
      */
     public Bookmark getSelectedItem() {
-        BookmarkRecyclerViewAdapter adapter =
-                (BookmarkRecyclerViewAdapter) mRecyclerView.getAdapter();
-        return ((Bookmark) adapter.getItem(mStatusSingleton.getEditItemPos()));
+        return ((Bookmark) ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
+                .getItem(statusHelper.getEditItemPos()));
     }
 
     /**
@@ -312,27 +329,50 @@ public class BookmarkListFragment extends Fragment
         return shareIntent;
     }
 
-    /**
-     * notify data changed
-     */
-    public void notifyDataChanged() {
-        mRecyclerView.getAdapter().notifyDataSetChanged();
-    }
+
     /**
      * init singleton instances
      */
     private void initSingletonInstances() {
-        mRealm = Realm.getInstance(new RealmConfiguration.Builder(mMainActivityRef).build());
-        mStatusSingleton = StatusSingleton.getInstance();
-        mActionbarSingleton = ActionbarSingleton.getInstance(mMainActivityRef);
-        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(mMainActivityRef);
-        mSearchHandlerSingleton = SearchHandlerSingleton.getInstance(mMainActivityRef, mRealm);
+        mRealm = Realm.getInstance(new RealmConfiguration.Builder(getContext()).build());
+        statusHelper = StatusSingleton.getInstance();
+        mActionbarSingleton = ActionbarSingleton.getInstance(getActivity());
+        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(new WeakReference<>(getContext()));
+        mSearchHandlerSingleton = SearchHandlerSingleton.getInstance(getActivity(), mRealm);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public RealmResults getRealResults() {
+        return mRealm
+                .where(Bookmark.class)
+                .findAll()
+                .sort(Bookmark.timestampField, Sort.DESCENDING);
+    }
+
+    @Override
+    public boolean onLongItemClick(View view, int position) {
+        EditBookmarkActionMode editActionMode = new EditBookmarkActionMode(new WeakReference<>(getContext()),
+                position, ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()));
+
+        getActivity().startActionMode(editActionMode);
+        statusHelper.setEditMode(position);
+        recyclerView.getAdapter().notifyItemChanged(position);
+        return true;
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Bookmark bookmark = ((BookmarkRecyclerViewAdapter)recyclerView.getAdapter()).getItem(position);
+        mBookmarkActionSingleton.openLinkOnBrowser(bookmark.getUrl());
     }
 
 //    @Override
 //    public void onTaskCompleted(boolean isRefreshEnabled) {
 //        try {
-//            mRecyclerView.getAdapter().notifyDataSetChanged();
+//            recyclerView.getAdapter().notifyDataSetChanged();
 //            if (! isRefreshEnabled) {
 //                mSwipeRefreshLayout.setRefreshing(false);
 //            }

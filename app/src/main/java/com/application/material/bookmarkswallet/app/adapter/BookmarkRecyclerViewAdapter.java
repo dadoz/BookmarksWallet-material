@@ -14,25 +14,24 @@ import com.application.material.bookmarkswallet.app.adapter.realm.RealmRecyclerV
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
+
+import java.lang.ref.WeakReference;
+
 import io.realm.RealmObject;
-import io.realm.internal.Context;
 
 import static com.application.material.bookmarkswallet.app.models.Bookmark.Utils.getBookmarkNameWrapper;
 
-/**
- * Created by davide on 21/04/15.
- */
 public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
-        RealmRecyclerViewAdapter<Bookmark> {
+        RealmRecyclerViewAdapter<Bookmark>{
     private final Activity mActivityRef;
-    private final Object mListener;
+    private final WeakReference<OnActionListenerInterface> listener;
     private final StatusSingleton mStatusSingleton;
     private final int mDarkGrey;
     private final int mLightGrey;
 
-    public BookmarkRecyclerViewAdapter(Activity activity, Object listener) {
+    public BookmarkRecyclerViewAdapter(Activity activity, WeakReference<OnActionListenerInterface> lst) {
         mActivityRef = activity;
-        mListener = listener;
+        listener = lst;
         mStatusSingleton = StatusSingleton.getInstance();
         mDarkGrey = ContextCompat.getColor(mActivityRef.getApplicationContext(), R.color.indigo_50);
         mLightGrey = Color.TRANSPARENT;
@@ -40,8 +39,8 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.bookmark_item, parent, false);
-        return new ViewHolder(v);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bookmark_item, parent, false);
+        return new ViewHolder(view, listener);
     }
 
     @Override
@@ -54,8 +53,13 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         holder.mTimestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark
                 .getTimestamp()));
 
-        setItemListeners(holder);
+        setEditMode(holder, bookmark, position);
+    }
 
+    /**
+     * 
+     */
+    private void setEditMode(ViewHolder holder, Bookmark bookmark, int position) {
         boolean isEditMode = getEditModeStatus(position);
         setIcon(holder.mIconView, bookmark, isEditMode);
         setEditItem(holder.mLayoutView, isEditMode);
@@ -85,15 +89,6 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         return getRealmBaseAdapter() == null ? 0 : getRealmBaseAdapter().getCount();
     }
 
-    /**
-     *
-     * @param holder
-     */
-    private void setItemListeners(ViewHolder holder) {
-        holder.itemView.setEnabled(true);
-        holder.itemView.setOnClickListener((View.OnClickListener) mListener);
-        holder.itemView.setOnLongClickListener((View.OnLongClickListener) mListener);
-    }
 
     /**
      * TODO refactor
@@ -114,24 +109,48 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
                 (int) mActivityRef.getResources().getDimension(R.dimen.medium_icon_size));
     }
 
+
     /**
      * ViewHolder def
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder
+            implements View.OnLongClickListener, View.OnClickListener {
+        private final WeakReference<OnActionListenerInterface> listener;
         public View mLayoutView;
         private ImageView mIconView;
         private TextView mLabelView;
         private TextView mTimestampView;
         private TextView mUrlView;
 
-        public ViewHolder(View v) {
+        public ViewHolder(View v, WeakReference<OnActionListenerInterface> lst) {
             super(v);
+            listener = lst;
             mLayoutView = v.findViewById(R.id.backgroundLayoutId);
             mIconView = (ImageView) v.findViewById(R.id.linkIconId);
             mLabelView = (TextView) v.findViewById(R.id.linkTitleId);
             mUrlView = (TextView) v.findViewById(R.id.linkUrlId);
             mTimestampView = (TextView) v.findViewById(R.id.linkTimestampId);
+            itemView.setOnLongClickListener(this);
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public boolean onLongClick(View view) {
+            return listener.get().onLongItemClick(view, getAdapterPosition());
+        }
+
+        @Override
+        public void onClick(View view) {
+            listener.get().onItemClick(view, getAdapterPosition());
+        }
+
     }
 
+    /**
+     *
+     */
+    public interface OnActionListenerInterface {
+        boolean onLongItemClick(View view, int position);
+        void onItemClick(View view, int position);
+    }
 }
