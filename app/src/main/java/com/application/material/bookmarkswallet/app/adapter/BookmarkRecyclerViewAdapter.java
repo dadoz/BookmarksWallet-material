@@ -16,6 +16,7 @@ import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import io.realm.RealmObject;
 import io.realm.RealmResults;
@@ -47,7 +48,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder rvh, int position) {
         final ViewHolder holder = (ViewHolder) rvh;
-        final Bookmark bookmark = (Bookmark) getItem(position);
+        final Bookmark bookmark = getItem(position);
 
         holder.mLabelView.setText(getBookmarkNameWrapper(bookmark.getName()));
         holder.mUrlView.setText(bookmark.getUrl());
@@ -89,7 +90,6 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
     public int getItemCount() {
         return getRealmBaseAdapter() == null ? 0 : getRealmBaseAdapter().getCount();
     }
-
 
     /**
      * TODO refactor

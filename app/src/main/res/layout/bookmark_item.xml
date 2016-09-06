@@ -18,7 +18,7 @@
             android:layout_alignParentRight="true"
             android:textSize="@dimen/text_size_14"
             android:text=" date "
-            android:textColor="@color/grey_400"/>
+            android:textColor="@color/indigo_900"/>
         <ImageView
             android:id="@+id/linkIconId"
             android:contentDescription="link_icon_id"

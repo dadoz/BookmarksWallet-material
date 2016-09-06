@@ -129,7 +129,14 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onRefresh() {
-        mSwipeRefreshLayout.setRefreshing(false);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
+                        .updateData(searchManager.getRealResults());
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }, 2000);
     }
 
     @Override
@@ -207,8 +214,8 @@ public class BookmarkListFragment extends Fragment
      * connected to main fragment app
      */
     private void initRecyclerView() {
-        BookmarkRecyclerViewAdapter recyclerViewAdapter =
-                new BookmarkRecyclerViewAdapter(getActivity(), new WeakReference<BookmarkRecyclerViewAdapter.OnActionListenerInterface>(this));
+        BookmarkRecyclerViewAdapter recyclerViewAdapter = new BookmarkRecyclerViewAdapter(getActivity(),
+                new WeakReference<BookmarkRecyclerViewAdapter.OnActionListenerInterface>(this));
         registerDataObserver(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -250,8 +257,7 @@ public class BookmarkListFragment extends Fragment
                                 RealmResults realmResults) {
         try {
             RealmModelAdapter realmModelAdapter = new RealmModelAdapter(getActivity(), realmResults);
-            recyclerViewAdapter
-                    .setRealmBaseAdapter(realmModelAdapter);
+            recyclerViewAdapter.setRealmBaseAdapter(realmModelAdapter);
             recyclerViewAdapter.notifyDataSetChanged();
         } catch (Exception e) {
             e.printStackTrace();
@@ -311,7 +317,7 @@ public class BookmarkListFragment extends Fragment
      * @return
      */
     public Bookmark getSelectedItem() {
-        return ((Bookmark) ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
+        return (((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
                 .getItem(statusHelper.getEditItemPos()));
     }
 
