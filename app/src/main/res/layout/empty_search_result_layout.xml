@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/emptySearchResultLayoutId"
-              android:visibility="gone"
-              android:padding="@dimen/medium_padding"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:gravity="top|center"
-              android:orientation="horizontal">
-
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/emptySearchResultLayoutId"
+    android:visibility="gone"
+    android:padding="@dimen/medium_padding"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="top|center">
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No result found for:"
-            android:textSize="@dimen/text_size_14"
-            android:textColor="@color/blue_grey_700"/>
+        android:id="@+id/noResultLabelTextId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/medium_padding"
+        android:text="not found:"
+        android:textSize="@dimen/text_size_14"
+        android:textColor="@color/blue_grey_900"/>
     <TextView
-            android:id="@+id/searchResultQueryTextId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/medium_padding"
-            android:text=" - "
-            android:textSize="@dimen/text_size_18"
-            android:textColor="@color/yellow_900"/>
+        android:id="@+id/searchResultQueryTextId"
+        android:layout_toRightOf="@id/noResultLabelTextId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignBaseline="@id/noResultLabelTextId"
+        android:text="no result found"
+        android:textSize="@dimen/text_size_24"
+        android:textColor="@color/indigo_600"/>
 
-</LinearLayout>
+</RelativeLayout>
