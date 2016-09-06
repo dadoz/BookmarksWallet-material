@@ -121,9 +121,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (!mBackPressedSingleton.isBackPressedHandled()) {
-            return;
-        }
+//        if (!mBackPressedSingleton.isBackPressedHandled()) {
+//            return;
+//        }
         super.onBackPressed();
     }
 

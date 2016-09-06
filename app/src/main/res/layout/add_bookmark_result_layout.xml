@@ -81,7 +81,6 @@
         android:layout_height="wrap_content"
         android:textColor="@color/grey_50"
         android:backgroundTint="@color/indigo_600"
-        android:layout_marginTop="@dimen/padding_16"
         android:text="@string/save_new_bookmark"/>
 
 </RelativeLayout>

@@ -11,7 +11,7 @@
         android:layout_width="@dimen/large_icon_size"
         android:layout_height="@dimen/large_icon_size"
         android:layout_gravity="center"
-        android:src="@drawable/ic_no_bookmark_colorful_48"/>
+        android:src="@drawable/ic_delete_black_48dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

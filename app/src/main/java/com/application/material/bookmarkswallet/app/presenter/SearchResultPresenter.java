@@ -14,6 +14,7 @@ import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
 import java.lang.ref.WeakReference;
 
 public class SearchResultPresenter {
+    private static final long MIN_DELAY = 1000;
     private static View resultLayout;
     private static View mainLayout;
     private static View frameLayout;
@@ -106,8 +107,9 @@ public class SearchResultPresenter {
     public Animator slideToTopResultLayout(boolean slideToTop) {
         int startY = slideToTop ? viewHeight : 0;
         int endY = slideToTop? 0 : viewHeight;
-        return AnimatorBuilder.getInstance(context).getYTranslation(resultLayout, startY, endY, 0);
-
+        Animator animator = AnimatorBuilder.getInstance(context).getYTranslation(resultLayout, startY, endY, 0);
+        animator.setStartDelay(slideToTop ? MIN_DELAY : 0);
+        return animator;
     }
 
     /**

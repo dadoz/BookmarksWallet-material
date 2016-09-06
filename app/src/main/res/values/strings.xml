@@ -26,4 +26,6 @@
     <string name="save_new_bookmark">SAVE BOOKMARK</string>
     <string name="url_hint">url...</string>
     <string name="title_hint">title...</string>
+    <string name="no_network_connection">Oh Snap! No network available!</string>
+    <string name="no_item_found">Oh Snap! We did\'nt find anything!</string>
 </resources>

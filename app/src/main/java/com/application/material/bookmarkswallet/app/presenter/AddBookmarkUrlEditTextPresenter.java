@@ -25,8 +25,6 @@ public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface,
 
     @Bind(R.id.noBookmarkPreviewLayoutId)
     View noBookmarkPreviewLayout;
-//    @Bind(R.id.addInfoTitleTextInputId)
-//    View addInfoTitleTextInput;
     @Bind(R.id.iconImageViewId)
     View iconImageView;
     @Bind(R.id.addBookmarkFabId)

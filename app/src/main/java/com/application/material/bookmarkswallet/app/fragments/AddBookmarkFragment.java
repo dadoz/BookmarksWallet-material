@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -37,6 +39,7 @@ import com.application.material.bookmarkswallet.app.presenter.SearchBookmarkPres
 import com.application.material.bookmarkswallet.app.presenter.SearchResultPresenter;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
+import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.squareup.picasso.Picasso;
 import io.realm.Realm;
@@ -317,11 +320,18 @@ public class AddBookmarkFragment extends Fragment implements
      *
      */
     private void searchAction() {
-        if (!SearchManager.search(new WeakReference<>(getActivity().getApplicationContext()), bookmarkUrl)) {
+//        if (!ConnectionUtils.isConnected(getContext())) {
+//            showErrorMessage(getString(R.string.no_network_connection));
+//            return;
+//        }
+
+        if (!SearchManager.search(new WeakReference<>(getActivity().getApplicationContext()),
+                bookmarkUrl)) {
             searchBookmarkPresenter.showErrorOnUrlEditText(true);
-            showErrorMessage("Error - not found");
+            showErrorMessage(getString(R.string.no_item_found));
             return;
         }
+
         onSearchSuccess();
     }
 
@@ -404,7 +414,12 @@ public class AddBookmarkFragment extends Fragment implements
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                refreshLayout.setRefreshing(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.setRefreshing(false);
+                    }
+                }, 1000);
                 showErrorMessage(error);
             }
         });

@@ -1,11 +1,18 @@
 package com.application.material.bookmarkswallet.app.presenter;
 
+import android.animation.Animator;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+
+import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
+
+import java.lang.ref.WeakReference;
 
 public class SearchBookmarkPresenter implements TextWatcher {
     private static SearchBookmarkPresenter instance;

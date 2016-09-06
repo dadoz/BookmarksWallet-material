@@ -1,6 +1,5 @@
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:wheel="http://schemas.android.com/apk/res-auto"
         android:id="@+id/exportFrameLayoutId"
         android:layout_width="wrap_content"
         android:maxWidth="@dimen/export_bookmarks_framelayout_width"
@@ -16,22 +15,13 @@
                 android:layout_marginLeft="@dimen/medium_padding"
                 android:layout_marginRight="@dimen/medium_padding"
                 android:orientation="vertical">
-            <!--<com.pnikosis.materialishprogress.ProgressWheel-->
-                    <!--android:visibility="gone"-->
-                    <!--android:id="@+id/progressWheelId"-->
-                    <!--android:layout_width="80dp"-->
-                    <!--android:layout_height="80dp"-->
-                    <!--android:layout_centerHorizontal="true"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--wheel:matProg_barColor="@color/blue_grey_700"-->
-                    <!--wheel:matProg_progressIndeterminate="false" />-->
             <ImageView
                     android:id="@+id/exportSuccessIconId"
                     android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_check_circle_black_48dp"/>
+                    android:src="@drawable/ic_done_black_48dp"/>
 
             <TextView
                 android:id="@+id/exportInfoTextId"
