@@ -12,6 +12,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.*;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -133,7 +134,7 @@ public class BookmarkListFragment extends Fragment
             @Override
             public void run() {
                 ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
-                        .updateData(searchManager.getRealResults());
+                        .updateData(searchManager.getRealResults(mRealm));
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         }, 2000);
@@ -199,13 +200,6 @@ public class BookmarkListFragment extends Fragment
      */
     private void initActionbar() {
         mActionbarSingleton.initActionBar();
-        initTitle();
-    }
-
-    /**
-     * init title - set
-     */
-    private void initTitle() {
         mActionbarSingleton.setTitle(getString(R.string.bookmark_list_title));
     }
 
@@ -219,7 +213,7 @@ public class BookmarkListFragment extends Fragment
         registerDataObserver(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(recyclerViewAdapter);
-        setRealmAdapter(recyclerViewAdapter, searchManager.getRealResults());
+        setRealmAdapter(recyclerViewAdapter, searchManager.getRealResults(mRealm));
         searchManager.setAdapter(recyclerViewAdapter); //TODO what???
     }
 

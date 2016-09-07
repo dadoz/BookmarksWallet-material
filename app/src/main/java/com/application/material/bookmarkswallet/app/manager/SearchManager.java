@@ -10,6 +10,7 @@ import android.widget.Filterable;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
@@ -138,8 +139,11 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
      *
      * @return
      */
-    public RealmResults getRealResults() {
-        return mRealm
+    public RealmResults getRealResults(Realm realm) {
+        if (realm == null) {
+            return null;
+        }
+        return realm
                 .where(Bookmark.class)
                 .findAll()
                 .sort(Bookmark.timestampField, Sort.DESCENDING);
@@ -150,12 +154,13 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
      * TODO move in filter class
      * set empty search result view
      */
-    private RealmResults getFilteredList(boolean isSearchOnUrl,
-                                         String filterString,
+    private RealmResults getFilteredList(String filterString,
                                          boolean isCaseSensitive) {
+        boolean isSearchOnUrlEnabled = Utils.getSearchOnUrlEnabledFromSharedPref(context);
+
         mFilterString = filterString;
         RealmQuery<Bookmark> query = mRealm.where(Bookmark.class);
-        if (isSearchOnUrl) {
+        if (isSearchOnUrlEnabled) {
             query
                     .contains(Bookmark.urlField, filterString, isCaseSensitive?
                             Case.SENSITIVE : Case.INSENSITIVE)
@@ -179,11 +184,9 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
      * filter class handled by search
      */
     private class LinkFilter extends Filter {
-        private final boolean mSearchOnUrlEnabled;
         private boolean mCaseSensitive = false;
 
         public LinkFilter() {
-            mSearchOnUrlEnabled = false;
         }
 
         @Override
@@ -203,8 +206,7 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
                     try {
                         String searchValue = ((String) constraint).trim().toLowerCase();
                         RealmResults list = searchValue.equals("") ?
-                                getRealResults() : getFilteredList(mSearchOnUrlEnabled,
-                                searchValue, mCaseSensitive);
+                                getRealResults(mRealm) : getFilteredList(searchValue, mCaseSensitive);
                         updateDataSet(list);
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -1,34 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/medium_padding">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding_16">
     <android.support.v7.widget.SwitchCompat
-            android:id="@+id/settingSwitchId"
-            android:visibility="gone"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/medium_padding"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@id/settingSwitchId"
-            android:orientation="vertical">
-        <TextView
-                android:id="@+id/settingLabelTextId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/blue_grey_700"
-                android:textSize="@dimen/text_size_16"/>
-        <TextView
-                android:id="@+id/settingDescriptionTextId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/blue_grey_400"
-                android:textSize="@dimen/text_size_14"/>
-    </LinearLayout>
+        android:id="@+id/settingSwitchId"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/settingLabelTextId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/indigo_600"
+        android:text="sasdfa sdfasdf"
+        android:textSize="@dimen/text_size_16"/>
+    <TextView
+        android:id="@+id/settingDescriptionTextId"
+        android:layout_below="@id/settingLabelTextId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue_grey_900"
+        android:text="sdfasdfa sdf asd"
+        android:textSize="@dimen/text_size_14"/>
 </RelativeLayout>

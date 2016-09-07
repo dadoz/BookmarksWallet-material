@@ -28,4 +28,6 @@
     <string name="title_hint">title...</string>
     <string name="no_network_connection">Oh Snap! No network available!</string>
     <string name="no_item_found">Oh Snap! We did\'nt find anything!</string>
+    <string name="setting_url_search_description">extend search on bookmark URL and title.</string>
+    <string name="setting_delete_all_description" >clear all your stored bookmarks.</string>
 </resources>

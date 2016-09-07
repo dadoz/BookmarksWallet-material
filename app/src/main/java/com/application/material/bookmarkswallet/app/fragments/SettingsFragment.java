@@ -1,6 +1,5 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v7.app.AlertDialog;
@@ -21,21 +20,22 @@ import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChang
 import com.application.material.bookmarkswallet.app.models.Setting;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
+import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.willowtreeapps.saguaro.android.Saguaro;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE;
+
 public class SettingsFragment extends Fragment implements AdapterView.OnItemClickListener,
         CompoundButton.OnCheckedChangeListener {
     public static String FRAG_TAG = "SettingsFragment_FRAG";
     public static String SETTINGS_TITLE = "Settings";
-    private Activity mActivityRef;
     private ActionbarSingleton mActionbarSingleton;
     private BookmarkActionSingleton mBookmarkActionSingleton;
     private View mSettingsView;
-    private boolean mSearchOnUrlEnabled = false;
-    private boolean mFindIconAuto = false;
 
     @Override
     public void onAttach(Context context) {
@@ -45,7 +45,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
                     + " must implement OnChangeFragmentWrapperInterface");
         }
 
-        mActivityRef = (Activity) context;
         mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(getContext()));
         mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(new WeakReference<>(getContext()));
     }
@@ -70,7 +69,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
     private void onInitView() {
         ArrayAdapter<Setting> adapter = new SettingListAdapter(getActivity().getBaseContext(),
                 R.layout.setting_item, getSettingList(), this);
-
         ListView listView = (ListView) mSettingsView.findViewById(R.id.settingsListId);
         listView.setOnItemClickListener(this);
         listView.setAdapter(adapter);
@@ -90,18 +88,20 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
             case 0:
                 goToMarket();
                 break;
-            case 3:
+            case 2:
                 deleteAllBookmarksDialog();
                 break;
-            case 4:
-                startActivity(Saguaro.getSendFeedbackIntent(mActivityRef));
+            case 3:
+                startActivity(Saguaro.getSendFeedbackIntent(getActivity()));
                 break;
         }
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Toast.makeText(mActivityRef, "Feature will come soon!", Toast.LENGTH_SHORT).show();
+        //TODO no case since I've only one toggle button
+        SharedPrefHelper.getInstance(new WeakReference<>(getActivity().getApplicationContext()))
+                .setValue(SEARCH_URL_MODE, isChecked);
     }
 
     /**
@@ -111,7 +111,8 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
     public String getVersionName() {
         String versionName = "0.0";
         try {
-            versionName = mActivityRef.getPackageManager().getPackageInfo(mActivityRef.getPackageName(), 0).versionName;
+            versionName = getActivity().getPackageManager()
+                    .getPackageInfo(getActivity().getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -125,9 +126,13 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
     public ArrayList<Setting> getSettingList() {
         ArrayList<Setting> settingList = new ArrayList<>();
         settingList.add(new Setting(getResources().getString(R.string.setting_rate_label), null, View.GONE, false));
-        settingList.add(new Setting(getResources().getString(R.string.setting_url_search_label), "extend bookmark search by URL string even that only search by title.", View.VISIBLE, mSearchOnUrlEnabled));
-        settingList.add(new Setting(getResources().getString(R.string.setting_find_icon_label), "find bookmark's icon automatically.", View.VISIBLE, mFindIconAuto));
-        settingList.add(new Setting(getResources().getString(R.string.setting_delete_all_label), "clear all your stored bookmarks.", View.GONE, true));
+        settingList.add(new Setting(getResources().getString(R.string.setting_url_search_label),
+                getResources().getString(R.string.setting_url_search_description),
+                View.VISIBLE, Utils.getSearchOnUrlEnabledFromSharedPref(new WeakReference<>(getActivity().getApplicationContext()))));
+//        settingList.add(new Setting(getResources().getString(R.string.setting_find_icon_label),
+//                "find bookmark's icon automatically.", View.VISIBLE, mFindIconAuto));
+        settingList.add(new Setting(getResources().getString(R.string.setting_delete_all_label),
+                getResources().getString(R.string.setting_delete_all_description), View.GONE, true));
         settingList.add(new Setting(getResources().getString(R.string.setting_feedback_label), null, View.GONE, false));
         settingList.add(new Setting(getResources().getString(R.string.setting_build_version_label), getVersionName(), View.GONE, false));
 
@@ -140,11 +145,11 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
     private void goToMarket() {
         try {
             Intent goToMarket = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("market://details?id=" + mActivityRef.getPackageName()));
+                    Uri.parse("market://details?id=" + getActivity().getPackageName()));
             startActivity(goToMarket);
         } catch (ActivityNotFoundException e) {
             startActivity(new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("http://play.google.com/store/apps/details?id=" + mActivityRef.getPackageName())));
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + getActivity().getPackageName())));
         }
     }
 
@@ -162,14 +167,14 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
      */
     private void deleteAllBookmarksDialog() {
         Dialog dialog = new AlertDialog
-                .Builder(mActivityRef, R.style.CustomLollipopDialogStyle)
+                .Builder(getContext(), R.style.CustomLollipopDialogStyle)
                 .setTitle("Delete bookmarks!")
                 .setMessage("Are you sure you want to delete all your bookmarks?")
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteAllBookmarks();
-                        Toast.makeText(mActivityRef,
+                        Toast.makeText(getContext(),
                                 "All your bookmarks has been deleted with success", Toast.LENGTH_SHORT).show();
                     }
                 })

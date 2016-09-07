@@ -1,15 +1,6 @@
-<FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-    <ListView
-            android:id="@+id/settingsListId"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@color/grey_200"
-            android:paddingLeft="10dip"
-            android:paddingRight="10dip">
-
-    </ListView>
-</FrameLayout>
-
+<ListView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/settingsListId"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/grey_50"/>

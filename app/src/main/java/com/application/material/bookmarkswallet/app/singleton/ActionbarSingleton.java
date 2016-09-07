@@ -41,6 +41,7 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
     public void initActionBar() {
         try {
             setActionBar();
+            getActionBar().setDisplayHomeAsUpEnabled(false);
             getActionBar().setDisplayShowTitleEnabled(true);
             getActionBar().setDisplayShowCustomEnabled(false);
             setElevation(10);
@@ -142,8 +143,10 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
      * @param isHomeUpEnabled
      */
     public void setDisplayHomeEnabled(boolean isHomeUpEnabled) {
-        getActionBar().setDisplayHomeAsUpEnabled(isHomeUpEnabled);
-        getActionBar().setDisplayShowHomeEnabled(isHomeUpEnabled);
+        if (getActionBar() != null) {
+            getActionBar().setDisplayHomeAsUpEnabled(isHomeUpEnabled);
+            getActionBar().setDisplayShowHomeEnabled(isHomeUpEnabled);
+        }
     }
 
     /**

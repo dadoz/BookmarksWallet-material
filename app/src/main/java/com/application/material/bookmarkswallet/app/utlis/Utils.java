@@ -13,10 +13,13 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
+import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.regex.Matcher;
@@ -188,5 +191,15 @@ public class Utils {
         return (url.split("/")[1]).compareTo("") != 0 ?
                 bookmarkUrl + url :
                 url.contains("http") || url.contains("https") ? url : "http:" + url;
+    }
+
+    /**
+     *
+     * @param context
+     * @return
+     */
+    public static boolean getSearchOnUrlEnabledFromSharedPref(WeakReference<Context> context) {
+        return (boolean) SharedPrefHelper.getInstance(context)
+                .getValue(SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE, false);
     }
 }
