@@ -1,26 +1,23 @@
-package com.application.material.bookmarkswallet.app.singleton;
+package com.application.material.bookmarkswallet.app.helpers;
 
-/**
- * Created by davide on 04/08/15.
- */
-public class StatusSingleton {
-    private static StatusSingleton mInstance;
+public class StatusHelper {
+    private static StatusHelper mInstance;
     public static final int EDIT_POS_NOT_SET = -1;
 
     public enum StatusEnum {EDIT, SYNC, SEARCH, IDLE}
     private int mEditItemPos;
     private StatusEnum mCurrentStatus = StatusEnum.IDLE;
 
-    public StatusSingleton() {
+    public StatusHelper() {
     }
 
     /**
      *
      * @return
      */
-    public static StatusSingleton getInstance() {
+    public static StatusHelper getInstance() {
         return mInstance == null ?
-                mInstance = new StatusSingleton() :
+                mInstance = new StatusHelper() :
                 mInstance;
     }
 

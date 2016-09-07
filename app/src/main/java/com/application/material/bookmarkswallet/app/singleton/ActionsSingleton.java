@@ -1,6 +1,5 @@
 package com.application.material.bookmarkswallet.app.singleton;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,10 +7,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.Realm;
@@ -20,14 +19,14 @@ import io.realm.RealmConfiguration;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 
-public class BookmarkActionSingleton {
-    private static BookmarkActionSingleton mInstance;
+public class ActionsSingleton {
+    private static ActionsSingleton mInstance;
     private static WeakReference<Context> context;
     private static Realm mRealm;
-    private static StatusSingleton mStatusSingleton;
-    private String TAG = "BookmarkActionSingleton";
+    private static StatusHelper mStatusSingleton;
+    private String TAG = "ActionsSingleton";
 
-    public BookmarkActionSingleton() {
+    public ActionsSingleton() {
     }
 
     /**
@@ -35,12 +34,12 @@ public class BookmarkActionSingleton {
      * @param ctx
      * @return
      */
-    public static BookmarkActionSingleton getInstance(WeakReference<Context> ctx) {
+    public static ActionsSingleton getInstance(WeakReference<Context> ctx) {
         context = ctx;
         mRealm = Realm.getInstance(new RealmConfiguration.Builder(ctx.get()).build());
-        mStatusSingleton = StatusSingleton.getInstance();
+        mStatusSingleton = StatusHelper.getInstance();
         return mInstance == null ?
-                mInstance = new BookmarkActionSingleton() :
+                mInstance = new ActionsSingleton() :
                 mInstance;
     }
 

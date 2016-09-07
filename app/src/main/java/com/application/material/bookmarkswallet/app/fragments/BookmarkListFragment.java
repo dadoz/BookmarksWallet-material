@@ -12,7 +12,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.*;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -23,6 +22,7 @@ import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActio
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
+import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.singleton.*;
@@ -34,7 +34,6 @@ import java.lang.ref.WeakReference;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 public class BookmarkListFragment extends Fragment
         implements View.OnClickListener,
@@ -55,9 +54,9 @@ public class BookmarkListFragment extends Fragment
     private Realm mRealm;
     private SearchManager searchManager;
     private ActionbarSingleton mActionbarSingleton;
-    private BookmarkActionSingleton mBookmarkActionSingleton;
+    private ActionsSingleton mBookmarkActionSingleton;
     private View mView;
-    private StatusSingleton statusHelper;
+    private StatusHelper statusHelper;
 
     @Override
     public void onAttach(Context context) {
@@ -333,9 +332,9 @@ public class BookmarkListFragment extends Fragment
      */
     private void initSingletonInstances() {
         mRealm = Realm.getInstance(new RealmConfiguration.Builder(getContext()).build());
-        statusHelper = StatusSingleton.getInstance();
+        statusHelper = StatusHelper.getInstance();
         mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(getContext()));
-        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(new WeakReference<>(getContext()));
+        mBookmarkActionSingleton = ActionsSingleton.getInstance(new WeakReference<>(getContext()));
         searchManager = SearchManager.getInstance(new WeakReference<>(getContext()), mRealm);
     }
 

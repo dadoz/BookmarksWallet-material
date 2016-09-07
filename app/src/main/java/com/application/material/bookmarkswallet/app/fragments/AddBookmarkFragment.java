@@ -1,12 +1,10 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,7 +23,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 import android.widget.ViewSwitcher;
 
 import butterknife.Bind;
@@ -38,8 +35,7 @@ import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.presenter.SearchBookmarkPresenter;
 import com.application.material.bookmarkswallet.app.presenter.SearchResultPresenter;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
-import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
-import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
+import com.application.material.bookmarkswallet.app.singleton.ActionsSingleton;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.squareup.picasso.Picasso;
 import io.realm.Realm;
@@ -52,7 +48,7 @@ public class AddBookmarkFragment extends Fragment implements
     private static final String TAG = "AddBookmarkFragment";
     private ActionbarSingleton mActionbarSingleton;
     private ProgressDialog mProgressDialog;
-    private BookmarkActionSingleton mBookmarkActionSingleton;
+    private ActionsSingleton mBookmarkActionSingleton;
 
     @Bind(R.id.addBookmarkRefreshLayoutId)
     SwipeRefreshLayout refreshLayout;
@@ -103,7 +99,7 @@ public class AddBookmarkFragment extends Fragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
         mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(context));
-        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(new WeakReference<>(context));
+        mBookmarkActionSingleton = ActionsSingleton.getInstance(new WeakReference<>(context));
         searchBookmarkPresenter = SearchBookmarkPresenter.getInstance();
         retrieveIconHelper = RetrieveIconHelper.getInstance(new WeakReference<RetrieveIconHelper.OnRetrieveIconInterface>(this));
         searchResultPresenter = new SearchResultPresenter(new WeakReference<>(getContext()));

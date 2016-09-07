@@ -12,11 +12,10 @@ import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
+import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 import io.realm.RealmObject;
 import io.realm.RealmResults;
@@ -27,14 +26,14 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         RealmRecyclerViewAdapter<Bookmark>{
     private final Activity mActivityRef;
     private final WeakReference<OnActionListenerInterface> listener;
-    private final StatusSingleton mStatusSingleton;
+    private final StatusHelper mStatusSingleton;
     private final int mDarkGrey;
     private final int mLightGrey;
 
     public BookmarkRecyclerViewAdapter(Activity activity, WeakReference<OnActionListenerInterface> lst) {
         mActivityRef = activity;
         listener = lst;
-        mStatusSingleton = StatusSingleton.getInstance();
+        mStatusSingleton = StatusHelper.getInstance();
         mDarkGrey = ContextCompat.getColor(mActivityRef.getApplicationContext(), R.color.indigo_50);
         mLightGrey = Color.TRANSPARENT;
     }

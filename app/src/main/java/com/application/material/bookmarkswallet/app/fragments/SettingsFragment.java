@@ -19,7 +19,7 @@ import com.application.material.bookmarkswallet.app.adapter.SettingListAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Setting;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
-import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
+import com.application.material.bookmarkswallet.app.singleton.ActionsSingleton;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.willowtreeapps.saguaro.android.Saguaro;
@@ -34,7 +34,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
     public static String FRAG_TAG = "SettingsFragment_FRAG";
     public static String SETTINGS_TITLE = "Settings";
     private ActionbarSingleton mActionbarSingleton;
-    private BookmarkActionSingleton mBookmarkActionSingleton;
+    private ActionsSingleton mBookmarkActionSingleton;
     private View mSettingsView;
 
     @Override
@@ -46,7 +46,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
         }
 
         mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(getContext()));
-        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(new WeakReference<>(getContext()));
+        mBookmarkActionSingleton = ActionsSingleton.getInstance(new WeakReference<>(getContext()));
     }
 
     @Override

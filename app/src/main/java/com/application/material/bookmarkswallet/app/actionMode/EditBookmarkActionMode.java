@@ -1,21 +1,18 @@
 package com.application.material.bookmarkswallet.app.actionMode;
 
-import android.app.Activity;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.singleton.BookmarkActionSingleton;
-import com.application.material.bookmarkswallet.app.singleton.StatusSingleton;
+import com.application.material.bookmarkswallet.app.singleton.ActionsSingleton;
+import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
 
 import java.lang.ref.WeakReference;
 
 public class EditBookmarkActionMode implements ActionMode.Callback {
 
-    private final StatusSingleton mStatusSingleton;
-    private BookmarkActionSingleton mBookmarkActionSingleton;
+    private final StatusHelper mStatusSingleton;
+    private ActionsSingleton mBookmarkActionSingleton;
     private int position;
     private BookmarkRecyclerViewAdapter adapter;
 
@@ -27,8 +24,8 @@ public class EditBookmarkActionMode implements ActionMode.Callback {
                                   BookmarkRecyclerViewAdapter adp) {
         adapter = adp;
         position = pos;
-        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(context);
-        mStatusSingleton = StatusSingleton.getInstance();
+        mBookmarkActionSingleton = ActionsSingleton.getInstance(context);
+        mStatusSingleton = StatusHelper.getInstance();
     }
 
     @Override
@@ -64,7 +61,7 @@ public class EditBookmarkActionMode implements ActionMode.Callback {
      */
     public void unsetEditItem() {
         int pos = mStatusSingleton.getEditItemPos();
-        if (pos != StatusSingleton.EDIT_POS_NOT_SET) {
+        if (pos != StatusHelper.EDIT_POS_NOT_SET) {
             adapter.notifyItemChanged(pos);
             mStatusSingleton.unsetStatus();
         }

@@ -15,7 +15,7 @@
 //    private static OnTaskCompleted mListener;
 //    private String TAG = "BookmarksProviderSingleton";
 //    private static Activity mActivityRef;
-//    private static BookmarkActionSingleton mBookmarkActionSingleton;
+//    private static ActionsSingleton mBookmarkActionSingleton;
 //
 //    public enum BrowserEnum { DEFAULT, CHROME, FIREFOX }
 //
@@ -24,7 +24,7 @@
 //
 //    public static BookmarkProviderSingleton getInstance(Activity activity, OnTaskCompleted listener) {
 //        mActivityRef = activity;
-//        mBookmarkActionSingleton = BookmarkActionSingleton.getInstance(mActivityRef);
+//        mBookmarkActionSingleton = ActionsSingleton.getInstance(mActivityRef);
 //        mListener = listener;
 //        return mInstance == null ?
 //                mInstance = new BookmarkProviderSingleton() :
