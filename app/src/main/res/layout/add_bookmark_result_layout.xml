@@ -80,7 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/grey_50"
-        android:backgroundTint="@color/indigo_600"
+        style="@style/customMaterialButtonIndigoStyle"
         android:text="@string/save_new_bookmark"/>
 
 </RelativeLayout>

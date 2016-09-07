@@ -1,8 +1,6 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:textColorPrimary">@color/indigo_600</item>
@@ -10,42 +8,45 @@
         <item name="android:textColor">@color/blue_grey_900</item>
         <item name="colorPrimary">@color/yellow_400</item>
         <item name="colorControlActivated">@color/indigo_400</item>
-        <item name="actionModeStyle">@style/ActionMode</item>
+        <item name="windowActionModeOverlay">true</item>
 
+        <item name="actionModeStyle">@style/ActionMode</item>
+        <item name="android:itemTextAppearance">@style/customMenuTextAppearance</item>
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
     </style>
 
+    <!-- BUTTON STYLE-->
+    <style name="customMaterialButtonIndigoStyle" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="backgroundTint">@color/indigo_600</item>
+    </style>
+
+    <!-- BUTTON STYLE-->
+    <style name="customMaterialButtonYellowStyle" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="backgroundTint">@color/yellow_500</item>
+    </style>
+
+    <!-- MENU TEXT APPEARANCE-->
+    <style name="customMenuTextAppearance">
+        <item name="android:textColor">@color/blue_grey_900</item>
+    </style>
+
+    <!-- ACTION MODE-->
     <style name="ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-        <item name="background">@color/blue_grey_500</item>
+        <item name="background">@color/yellow_200</item>
     </style>
 
+    <!-- COLOR CONTROL LIGHT-->
     <style name="colorControlLightTheme">
-        <item name="colorControlActivated">@color/blue_grey_500</item>
+        <item name="colorControlActivated">@color/indigo_600</item>
     </style>
 
+    <!-- DIALOG STYLE-->
     <style name="CustomLollipopDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- Used for the buttons -->
-        <item name="colorAccent">@color/blue_grey_500</item>
+        <item name="colorAccent">@color/indigo_600</item>
         <!-- Used for the title and text -->
-        <item name="android:textColorPrimary">@color/blue_grey_500</item>
+        <item name="android:textColorPrimary">@color/blue_grey_900</item>
         <!-- Used for the background -->
         <!--<item name="android:background">#4CAF50</item>-->
     </style>
-    <style name="CustomButtonBarStyle" parent="Widget.AppCompat.ButtonBar.AlertDialog">
-        <!-- Making sure, the button bar uses parent width and is not restricted in height -->
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:height">@null</item>
-        <item name="android:minHeight">@null</item>
-    </style>
-
-    <style name="CustomButtonBarButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <!-- Setting the weight as follows should result in equally wide buttons filling the alert dialog width,
-            but instead they span further out of the dialog, breaking in multiple lines though -->
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">1</item>
-        <!-- TODO: setting a fixed width as follows results in narrow buttons with line breaks, but of course this is not a solution -->
-        <item name="android:width">100dp</item>
-    </style>
-
 </resources>

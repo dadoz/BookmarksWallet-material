@@ -13,39 +13,43 @@
         <item name="android:windowReturnTransition">@android:transition/slide_bottom</item>
         <item name="colorControlActivated">@color/indigo_600</item>
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
+        <item name="android:itemTextAppearance">@style/customMenuTextAppearance</item>
 
         <item name="actionModeStyle">@style/ActionMode</item>
     </style>
 
+    <!-- MENU APPEARANCE-->
+    <style name="customMenuTextAppearance">
+        <item name="android:textColor">@color/blue_grey_900</item>
+    </style>
+
+    <!-- ACTION MODE-->
     <style name="ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@color/yellow_200</item>
     </style>
 
+    <!-- COLOR CONTROL LIGHT-->
     <style name="colorControlLightTheme">
-        <item name="colorControlActivated">@color/indigo_400</item>
+        <item name="colorControlActivated">@color/indigo_600</item>
     </style>
 
+    <!-- DIALOG STYLE-->
     <style name="CustomLollipopDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- Used for the buttons -->
-        <item name="android:colorAccent">@color/blue_grey_800</item>
+        <item name="colorAccent">@color/indigo_600</item>
         <!-- Used for the title and text -->
-        <item name="android:textColorPrimary">@color/blue_grey_800</item>
+        <item name="android:textColorPrimary">@color/blue_grey_900</item>
         <!-- Used for the background -->
-        <item name="android:buttonBarButtonStyle">@style/CustomButtonBarButtonStyle</item>
-        <item name="android:buttonBarStyle">@style/CustomButtonBarStyle</item>
     </style>
 
-    <style name="CustomButtonBarStyle" parent="Widget.AppCompat.ButtonBar.AlertDialog">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:height">@null</item>
-        <item name="android:minHeight">@null</item>
+    <!-- BUTTON STYLE-->
+    <style name="customMaterialButtonIndigoStyle" parent="@style/Base.Widget.AppCompat.Button">
+        <item name="android:backgroundTint">@color/indigo_600</item>
     </style>
 
-    <style name="CustomButtonBarButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">1</item>
-        <!-- TODO: setting a fixed width as follows results in narrow buttons with line breaks, but of course this is not a solution -->
-        <item name="android:width">100dp</item>
+    <!-- BUTTON STYLE-->
+    <style name="customMaterialButtonYellowStyle" parent="@style/Base.Widget.AppCompat.Button">
+        <item name="android:backgroundTint">@color/yellow_500</item>
     </style>
+
 </resources>

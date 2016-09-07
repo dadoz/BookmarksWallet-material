@@ -13,10 +13,10 @@
     <string name="ANDROID_FEEDBACK_KEY">AF-EB325C27D659-03</string>
     <string name="banner_ad_unit_id">ca-app-pub-3777798024824179/7880605447</string>
     <string name="main_title">Bookmarks</string>
-    <string name="setting_rate_label">Rate and review on Play</string>
+    <string name="setting_rate_label">Rate us on Play Store</string>
     <string name="setting_url_search_label">Search on URL enabled</string>
     <string name="setting_find_icon_label">Find icon automatically</string>
-    <string name="setting_delete_all_label">Delete all bookmarks!</string>
+    <string name="setting_delete_all_label">Delete all bookmarks</string>
     <string name="setting_feedback_label">Send a feedback</string>
     <string name="setting_build_version_label">Build version</string>
     <string name="send_feedback_email">tunnus.android@gmail.com</string>
@@ -30,4 +30,8 @@
     <string name="no_item_found">Oh Snap! We did\'nt find anything!</string>
     <string name="setting_url_search_description">extend search on bookmark URL and title.</string>
     <string name="setting_delete_all_description" >clear all your stored bookmarks.</string>
+    <string name="not_implemented_yet">Sorry. Feature not implemented yet.</string>
+    <string name="import_export_menu_label">import/export</string>
+    <string name="deleted_menu_label">delete</string>
+    <string name="share_menu_label">share</string>
 </resources>

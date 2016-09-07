@@ -150,8 +150,8 @@ public class BookmarkListFragment extends Fragment
                 statusHelper.unsetStatus();
                 handleSetting();
                 return true;
-            case R.id.action_export:
-                Toast.makeText(getActivity(), "Feature will come soon!",
+            case R.id.action_import_export:
+                Toast.makeText(getActivity(), getString(R.string.not_implemented_yet),
                         Toast.LENGTH_SHORT).show();
 //                exportBookmarksSingleton.exportAction();
                 return true;

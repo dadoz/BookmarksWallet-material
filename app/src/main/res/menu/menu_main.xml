@@ -8,8 +8,8 @@
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:title="Search"/>
-    <item android:id="@+id/action_export"
-        android:title="export bookmarks"
+    <item android:id="@+id/action_import_export"
+        android:title="@string/import_export_menu_label"
         android:orderInCategory="100"
         app:showAsAction="never" />
     <item android:id="@+id/action_settings"
