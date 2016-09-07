@@ -249,9 +249,12 @@ public class AddBookmarkFragment extends Fragment implements
      * add bookmark on orm db
      */
     public void addBookmark() {
-        mBookmarkActionSingleton.addOrmObject(Realm.getInstance(new RealmConfiguration.Builder(getContext()).build()),
-                bookmarkTitle, null, Utils.convertBitmapToByteArray(((BitmapDrawable) addBookmarkIconImage
-                        .getDrawable()).getBitmap()), bookmarkUrl);
+        statusManager.setOnSearchMode();
+        mBookmarkActionSingleton
+                .addOrmObject(Realm.getInstance(new RealmConfiguration.Builder(getContext()).build()),
+                        bookmarkTitle, null,
+                        Utils.convertBitmapToByteArray(((BitmapDrawable) addBookmarkIconImage
+                                .getDrawable()).getBitmap()), bookmarkUrl);
         if (getActivity() != null) {
             getActivity().finish();
         }
