@@ -116,8 +116,8 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
         exportInfoText.setText("All bookmarks exported with Success!\nCheckout DOWNLOAD folder.");
         mExportDialog.getButton(AlertDialog.BUTTON_POSITIVE).setVisibility(View.GONE);
         exportSuccessIcon.setVisibility(View.VISIBLE);
-        Animation animation = AnimationUtils.loadAnimation(mActivityRef, R.anim.card_flip_left_out);
-        exportSuccessIcon.startAnimation(animation);
+//        Animation animation = AnimationUtils.loadAnimation(mActivityRef, R.anim.card_flip_left_out);
+//        exportSuccessIcon.startAnimation(animation);
     }
 
     @Override

@@ -14,7 +14,7 @@
     <dimen name="cardview_min_height">100dip</dimen>
     <dimen name="link_row_height">100dip</dimen>
     <dimen name="big_padding">30dip</dimen>
-    <dimen name="row_timestamp_width">70dip</dimen>
+    <dimen name="row_timestamp_width">60dip</dimen>
     <dimen name="icon_size">48dp</dimen>
     <dimen name="text_size_30">30sp</dimen>
     <dimen name="text_size_24">24sp</dimen>
@@ -44,4 +44,5 @@
     <dimen name="toolbar_bottom_margin">100dp</dimen>
     <dimen name="webview_height">200dp</dimen>
     <dimen name="padding_32">32dp</dimen>
+    <dimen name="text_size_12">12sp</dimen>
 </resources>

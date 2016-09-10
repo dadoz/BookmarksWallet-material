@@ -16,9 +16,10 @@
             android:maxWidth="@dimen/row_timestamp_width"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:textSize="@dimen/text_size_14"
-            android:text=" date "
-            android:textColor="@color/indigo_900"/>
+            android:textSize="@dimen/text_size_12"
+            android:text=" - "
+            android:gravity="right"
+            android:textColor="@color/grey_400"/>
         <ImageView
             android:id="@+id/linkIconId"
             android:contentDescription="link_icon_id"
@@ -33,6 +34,7 @@
             android:layout_toLeftOf="@id/linkTimestampId"
             android:text="bookmark namedsf"
             android:layout_marginLeft="@dimen/padding_16"
+            android:layout_marginRight="@dimen/padding_16"
             android:textSize="@dimen/text_size_24"
             android:ellipsize="end"
             android:maxLines="1"
@@ -42,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/padding_16"
+            android:layout_marginRight="@dimen/padding_16"
             android:layout_toRightOf="@id/linkIconId"
             android:layout_toLeftOf="@id/linkTimestampId"
             android:layout_below="@id/linkTitleId"
