@@ -130,10 +130,13 @@ public class Bookmark extends RealmObject {
          * @return
          */
         public static String stringify(Bookmark bookmark) {
-            if(bookmark != null) {
-                return "BOOKMARK " + bookmark.getTimestamp() + "\n " + bookmark.getName() + " - " + bookmark.getUrl();
+            if (bookmark == null) {
+                return null;
             }
-            return null;
+
+            return bookmark.getName() == null || bookmark.getName().compareTo("") == 0 ?
+                    bookmark.getUrl() :
+                    bookmark.getName() + " -\n" + bookmark.getUrl();
         }
 
         /**

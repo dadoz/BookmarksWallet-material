@@ -34,4 +34,5 @@
     <string name="import_export_menu_label">import/export</string>
     <string name="deleted_menu_label">delete</string>
     <string name="share_menu_label">share</string>
+    <string name="share_to">share bookmark to...</string>
 </resources>

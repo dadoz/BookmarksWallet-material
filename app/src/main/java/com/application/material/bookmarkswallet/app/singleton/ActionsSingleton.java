@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
+import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
@@ -166,7 +167,7 @@ public class ActionsSingleton {
      */
     public void shareAction(Bookmark bookmark) {
         Intent intent = getIntentForEditBookmark(bookmark);
-        context.get().startActivity(Intent.createChooser(intent, "share bookmark to..."));
+        context.get().startActivity(Intent.createChooser(intent, context.get().getString(R.string.share_to)));
     }
 
     /**
