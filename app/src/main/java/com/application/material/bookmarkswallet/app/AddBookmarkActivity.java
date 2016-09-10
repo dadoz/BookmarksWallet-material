@@ -11,8 +11,7 @@ import butterknife.ButterKnife;
 import com.application.material.bookmarkswallet.app.fragments.AddBookmarkFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 
-public class AddBookmarkActivity extends AppCompatActivity
-        implements OnChangeFragmentWrapperInterface {
+public class AddBookmarkActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -28,12 +27,11 @@ public class AddBookmarkActivity extends AppCompatActivity
      */
     public void onInitFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentContainerFrameLayoutId,
-                new AddBookmarkFragment(), AddBookmarkFragment.FRAG_TAG).commit();
-    }
-
-    @Override
-    public void changeFragment(Fragment fragment, Bundle bundle, String tag) {
+        if (getSupportFragmentManager().findFragmentByTag(AddBookmarkFragment.FRAG_TAG) == null) {
+            transaction.replace(R.id.fragmentContainerFrameLayoutId,
+                    new AddBookmarkFragment(), AddBookmarkFragment.FRAG_TAG).commit();
+            Log.e("TAG", "on init fragment");
+        }
     }
 
     /**
@@ -42,7 +40,17 @@ public class AddBookmarkActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         Log.e("TAG", "hey");
+        if (((OnHandleBackPressed) getSupportFragmentManager()
+                .findFragmentByTag(AddBookmarkFragment.FRAG_TAG)).handleBackPressed()) {
+            return;
+        }
         super.onBackPressed();
     }
 
+    /**
+     *
+     */
+    public interface OnHandleBackPressed {
+        boolean handleBackPressed();
+    }
 }

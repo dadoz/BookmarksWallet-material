@@ -2,10 +2,16 @@ package com.application.material.bookmarkswallet.app.presenter;
 
 import android.animation.Animator;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -16,7 +22,7 @@ import java.lang.ref.WeakReference;
 
 public class SearchBookmarkPresenter implements TextWatcher {
     private static SearchBookmarkPresenter instance;
-    private EditText urlEditTextView;
+    private AppCompatEditText urlEditTextView;
     private View clipboardFabButton;
     private View searchButton;
     private TextInputLayout urlTextInputLayoutView;
@@ -26,15 +32,16 @@ public class SearchBookmarkPresenter implements TextWatcher {
      * @return
      */
     public static SearchBookmarkPresenter getInstance() {
-        return instance == null ? instance = new SearchBookmarkPresenter() : instance;
+        return instance == null ?
+                instance = new SearchBookmarkPresenter() : instance;
     }
 
     /**
      *
      * @param viewArray
      */
-    public void init(@NonNull  View[] viewArray) {
-        urlEditTextView = (EditText) viewArray[0];
+    public void init(@NonNull View[] viewArray) {
+        urlEditTextView = (AppCompatEditText) viewArray[0];
         urlTextInputLayoutView = (TextInputLayout) viewArray[3];
         clipboardFabButton = viewArray[1];
         searchButton = viewArray[2];
@@ -67,4 +74,16 @@ public class SearchBookmarkPresenter implements TextWatcher {
             urlTextInputLayoutView.setError("wrong error");
         }
     }
+
+    /**
+     *
+     * @param restoredQuery
+     */
+//    private synchronized void restoreUrlEditTextContent(String restoredQuery) {
+//        Log.e("TAG", "--------" + restoredQuery);
+//        if (restoredQuery != null) {
+//            urlEditTextView.setText("ggggg");
+//        }
+//    }
+
 }

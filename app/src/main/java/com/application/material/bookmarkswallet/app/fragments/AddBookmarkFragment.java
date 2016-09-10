@@ -1,13 +1,16 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -27,6 +30,8 @@ import android.widget.ViewSwitcher;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
 import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
@@ -38,16 +43,19 @@ import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton
 import com.application.material.bookmarkswallet.app.singleton.ActionsSingleton;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.squareup.picasso.Picasso;
+
+import icepick.Icepick;
+import icepick.State;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.lang.ref.WeakReference;
 
 public class AddBookmarkFragment extends Fragment implements
-        View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, RetrieveIconHelper.OnRetrieveIconInterface {
+        View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
+        RetrieveIconHelper.OnRetrieveIconInterface, AddBookmarkActivity.OnHandleBackPressed {
     public static final String FRAG_TAG = "AddBookmarkFragmentTAG";
     private static final String TAG = "AddBookmarkFragment";
     private ActionbarSingleton mActionbarSingleton;
-    private ProgressDialog mProgressDialog;
     private ActionsSingleton mBookmarkActionSingleton;
 
     @Bind(R.id.addBookmarkRefreshLayoutId)
@@ -87,13 +95,30 @@ public class AddBookmarkFragment extends Fragment implements
     @Bind(R.id.addBookmarkRelativeLayoutId)
     View addBookmarkRelativeLayout;
     private View mainView;
-    private String bookmarkUrl;
-    private String bookmarkTitle;
     private SearchBookmarkPresenter searchBookmarkPresenter;
     private int MIN_ICON_SIZE = 96;
     private RetrieveIconHelper retrieveIconHelper;
     private SearchResultPresenter searchResultPresenter;
     private StatusManager statusManager;
+
+    @State
+    public String bookmarkUrl;
+    @State
+    public String bookmarkTitle;
+    @State
+    public boolean isTitleViewVisible;
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstance) {
+        super.onSaveInstanceState(savedInstance);
+        Icepick.saveInstanceState(this, savedInstance);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstance) {
+        super.onCreate(savedInstance);
+        Icepick.restoreInstanceState(this, savedInstance);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -119,7 +144,7 @@ public class AddBookmarkFragment extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        onInitView();
+        onInitView(savedInstanceState);
     }
 
 
@@ -157,8 +182,9 @@ public class AddBookmarkFragment extends Fragment implements
 
     /**
      *
+     * @param savedInstanceState
      */
-    private void onInitView() {
+    private void onInitView(Bundle savedInstanceState) {
         mPasteClipboardFab.setOnClickListener(this);
         addBookmarkSearchButton.setOnClickListener(this);
         addBookmarkDoneButton.setOnClickListener(this);
@@ -177,6 +203,10 @@ public class AddBookmarkFragment extends Fragment implements
                 return true;
             }
         });
+
+        if (savedInstanceState != null) {
+            initResultViewOnConfigChanged();
+        }
     }
 
     /**
@@ -217,13 +247,8 @@ public class AddBookmarkFragment extends Fragment implements
      *
      */
     private void toggleTitleVisibility() {
-        boolean isVisible = addBookmarkTitleTextInput.getVisibility() == View.VISIBLE;
-        int visibility = isVisible ? View.GONE : View.VISIBLE;
-        addBookmarkHttpsCheckbox.setVisibility(visibility);
-        addBookmarkTitleTextInput.setVisibility(visibility);
-
-        toggleNameViewSwitcher.getCurrentView().setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        toggleNameViewSwitcher.getNextView().setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        isTitleViewVisible = addBookmarkTitleTextInput.getVisibility() == View.VISIBLE;
+        initSearchTitleView(!isTitleViewVisible);
         resetTitleView();
     }
 
@@ -337,6 +362,27 @@ public class AddBookmarkFragment extends Fragment implements
     /**
      *
      */
+    private void initResultViewOnConfigChanged() {
+        Log.e("TAG", "onConfigChanged");
+        setBookmarkTitle();
+        initWebView();
+        initSearchTitleView(!isTitleViewVisible);
+    }
+
+    /**
+     *
+     * @param isVisible
+     */
+    private void initSearchTitleView(boolean isVisible) {
+        addBookmarkHttpsCheckbox.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        addBookmarkTitleTextInput.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        toggleNameViewSwitcher.getCurrentView().setVisibility(!isVisible ? View.VISIBLE : View.GONE);
+        toggleNameViewSwitcher.getNextView().setVisibility(!isVisible ? View.GONE : View.VISIBLE);
+    }
+
+    /**
+     *
+     */
     private void onSearchSuccess() {
         statusManager.setOnResultMode();
         searchResultPresenter.showResultView();
@@ -352,11 +398,13 @@ public class AddBookmarkFragment extends Fragment implements
      *
      */
     private void setBookmarkTitle() {
-        if (bookmarkTitle.compareTo("") == 0) {
-            retrieveIconHelper.retrieveTitle(bookmarkUrl);
-            return;
+        if (bookmarkTitle != null) {
+            if (bookmarkTitle.compareTo("") == 0) {
+                retrieveIconHelper.retrieveTitle(bookmarkUrl);
+                return;
+            }
+            titleTextView.setText(bookmarkTitle);
         }
-        titleTextView.setText(bookmarkTitle);
     }
 
     /**
@@ -429,88 +477,13 @@ public class AddBookmarkFragment extends Fragment implements
         refreshLayout.setRefreshing(false);
     }
 
-
-
-    /**
-     * set color on icon
-     */
-    private void setFindIconColor() {
-        //colorize icon
-//        Drawable res = mIconImageView.getDrawable();
-//        Utils.setColorFilter(res, getResources().getColor(R.color.blue_grey_900));
-//        mIconImageView.setImageDrawable(res);
+    @Override
+    public boolean handleBackPressed() {
+        if (statusManager.isOnResultMode()) {
+            searchResultPresenter.hideResultView();
+            statusManager.setOnSearchMode();
+            return true;
+        }
+        return false;
     }
-
-    /**
-     *
-     * @return
-     */
-    public Drawable getToolbarDrawableColor() {
-        return ContextCompat.getDrawable(getContext(), R.color.blue_grey_700);
-    }
-
-    /**
-     *
-     * @return
-     */
-    public int getActionbarColor() {
-        return ContextCompat.getColor(getContext(), R.color.blue_grey_800);
-    }
-
-
-
-    /**
-     * validate input (url and/or title)
-     * @return
-     */
-    private boolean validateInput() {
-        return !bookmarkUrl.trim().equals("") &&
-                Utils.isValidUrl(bookmarkUrl);
-    }
-
-    /**
-     * dismiss progress dialog
-     */
-
-    private void cancelProgressDialog() {
-        mProgressDialog.cancel();
-    }
-
-    /**
-     * init progress dialog
-     */
-    private void initProgressDialog() {
-        mProgressDialog = new ProgressDialog(getContext(), R.style.CustomLollipopDialogStyle);
-        mProgressDialog.setTitle("Saving ...");
-        mProgressDialog.setMessage("Waiting for saving bookmark!");
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
-    }
-
-    /**
-     *
-     * @param blobIcon
-     */
-    public void setBookmarkBlobIcon(byte[] blobIcon) {
-//        this.mBookmarkBlobIcon = blobIcon;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public byte[] getBookmarkBlobIcon() {
-//        BitmapDrawable bitmapDrawable = (BitmapDrawable) mIconImageView.getDrawable();
-//        return Utils.getBlobFromBitmap(bitmapDrawable.getBitmap());
-        return null;
-    }
-
-    /**
-     * get image from gallery
-     */
-    private void retrieveIconByGallery() {
-        Toast.makeText(getContext(), "feature will come soon!", Toast.LENGTH_LONG)
-                .show();
-    }
-
 }
