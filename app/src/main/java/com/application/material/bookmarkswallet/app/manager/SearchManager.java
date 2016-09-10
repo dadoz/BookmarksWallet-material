@@ -54,8 +54,7 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
      * @return
      */
     public static boolean search(String query) {
-            return pingUrl(query) &&
-                    (Utils.isValidUrl(query));
+            return (Utils.isValidUrl(query)); //&& pingUrl(query);
     }
 
     /**
