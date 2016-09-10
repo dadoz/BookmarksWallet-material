@@ -106,7 +106,7 @@ public class AddBookmarkFragment extends Fragment implements
     @State
     public String bookmarkTitle;
     @State
-    public boolean isTitleViewVisible;
+    public boolean isTitleViewVisible = false;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstance) {
@@ -247,9 +247,16 @@ public class AddBookmarkFragment extends Fragment implements
      *
      */
     private void toggleTitleVisibility() {
-        isTitleViewVisible = addBookmarkTitleTextInput.getVisibility() == View.VISIBLE;
         initSearchTitleView(!isTitleViewVisible);
         resetTitleView();
+        setIsTitleViewVisible();
+    }
+
+    /**
+     *
+     */
+    private void setIsTitleViewVisible() {
+        isTitleViewVisible = addBookmarkTitleTextInput.getVisibility() == View.VISIBLE;
     }
 
     /**
@@ -265,7 +272,7 @@ public class AddBookmarkFragment extends Fragment implements
      */
     private void initActionbar() {
         mActionbarSingleton.initActionBar();
-        mActionbarSingleton.updateActionBar(true); //, getActionbarColor(), getToolbarDrawableColor());
+        mActionbarSingleton.updateActionBar(true);
         mActionbarSingleton.setElevation(0.0f);
         mActionbarSingleton.setTitle("Add new");
     }
@@ -363,10 +370,12 @@ public class AddBookmarkFragment extends Fragment implements
      *
      */
     private void initResultViewOnConfigChanged() {
-        Log.e("TAG", "onConfigChanged");
-        setBookmarkTitle();
-        initWebView();
-        initSearchTitleView(!isTitleViewVisible);
+        if (statusManager.isOnResultMode()) {
+            setBookmarkTitle();
+            initWebView();
+        }
+
+        initSearchTitleView(isTitleViewVisible);
     }
 
     /**

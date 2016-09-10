@@ -74,16 +74,4 @@ public class SearchBookmarkPresenter implements TextWatcher {
             urlTextInputLayoutView.setError("wrong error");
         }
     }
-
-    /**
-     *
-     * @param restoredQuery
-     */
-//    private synchronized void restoreUrlEditTextContent(String restoredQuery) {
-//        Log.e("TAG", "--------" + restoredQuery);
-//        if (restoredQuery != null) {
-//            urlEditTextView.setText("ggggg");
-//        }
-//    }
-
 }

@@ -27,7 +27,6 @@ public class SearchResultPresenter implements ViewTreeObserver.OnGlobalLayoutLis
     private int viewHeight = 0;
     private View searchCardViewLayout;
     private View searchButton;
-    private View urlEditTextLayout;
 
     public SearchResultPresenter(WeakReference<Context> ctx) {
         context = ctx;
@@ -48,7 +47,7 @@ public class SearchResultPresenter implements ViewTreeObserver.OnGlobalLayoutLis
      *
      */
     public void hideResultView() {
-        enableEditText(true);
+        showSearchView(true);
         animateViews(false);
     }
 
@@ -81,7 +80,6 @@ public class SearchResultPresenter implements ViewTreeObserver.OnGlobalLayoutLis
         frameLayout = views[2];
         searchCardViewLayout = mainLayout.findViewById(R.id.addBookmarkCardLayoutId);
         searchButton = mainLayout.findViewById(R.id.addBookmarkSearchButtonId);
-        urlEditTextLayout = mainLayout.findViewById(R.id.urlEditTextId);
         setMinHeight();
     }
 
@@ -158,14 +156,14 @@ public class SearchResultPresenter implements ViewTreeObserver.OnGlobalLayoutLis
         setInitialPosition(resultLayout, 0);
         frameLayout.setBackgroundColor(yellow);
         searchButton.setVisibility(View.GONE);
-        enableEditText(false);
+        showSearchView(false);
     }
 
     /**
      *
-     * @param isEnabled
+     * @param isVisible
      */
-    private void enableEditText(boolean isEnabled) {
-        searchCardViewLayout.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
+    private void showSearchView(boolean isVisible) {
+        searchCardViewLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 }
