@@ -4,13 +4,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <Button
+        android:id="@+id/addBookmarkDoneButtonId"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey_50"
+        style="@style/customMaterialButtonIndigoStyle"
+        android:layout_marginBottom="@dimen/padding_16"
+        android:text="@string/save_new_bookmark"/>
 
     <android.support.v7.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/addBookmarkCardLayoutId"
         android:layout_margin="@dimen/padding_16"
+        android:layout_above="@id/addBookmarkDoneButtonId"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="match_parent" >
         <RelativeLayout
             android:id="@+id/addBookmarkMainContainerLayoutId"
             android:layout_width="match_parent"
@@ -70,17 +81,7 @@
                 android:layout_marginTop="@dimen/padding_32"
                 android:layout_marginBottom="@dimen/padding_16"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/webview_height"/>
+                android:layout_height="match_parent"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
-    <Button
-        android:id="@+id/addBookmarkDoneButtonId"
-        android:layout_below="@id/addBookmarkCardLayoutId"
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/grey_50"
-        style="@style/customMaterialButtonIndigoStyle"
-        android:text="@string/save_new_bookmark"/>
-
 </RelativeLayout>
