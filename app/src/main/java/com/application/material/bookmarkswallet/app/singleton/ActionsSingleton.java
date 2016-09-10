@@ -50,15 +50,16 @@ public class ActionsSingleton {
 
     /**y
      * open browser by intent (opening on bookmark url)
-     * @param linkUrl
+     * @param url
      */
-    public void openLinkOnBrowser(String linkUrl) {
+    public void openLinkOnBrowser(String url) {
         try {
-            if (!Utils.isValidUrl(linkUrl)) {
+            if (!Utils.isValidUrl(url)) {
                 showErrorMessage(context.get().getString(R.string.wrong_url));
                 return;
             }
-            context.get().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(linkUrl)));
+            context.get().startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(Utils.buildUrl(url, true))));
         } catch (Exception e) {
             showErrorMessage(context.get().getString(R.string.cannot_load_url));
         }
@@ -194,7 +195,8 @@ public class ActionsSingleton {
      * @param message
      */
     private void showErrorMessage(String message) {
-        View mainView = ((Activity) context.get()).getWindow().getDecorView().getRootView().findViewById(R.id.mainContainerViewId);
+        View mainView = ((Activity) context.get()).getWindow().getDecorView()
+                .getRootView().findViewById(R.id.mainContainerViewId);
         if (mainView != null) {
             message = (message == null) ? "Ops! Something went wrong!" : message;
             Snackbar snackbar = Snackbar.make(mainView, message, Snackbar.LENGTH_LONG);

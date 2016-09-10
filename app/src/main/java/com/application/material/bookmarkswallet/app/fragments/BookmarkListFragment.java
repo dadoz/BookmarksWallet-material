@@ -231,12 +231,8 @@ public class BookmarkListFragment extends Fragment
      */
     private void registerDataObserver(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
         //TODO leak
-        BookmarkListObserver observer = new BookmarkListObserver(
-                recyclerView,
-                mEmptyLinkListView,
-                mEmptySearchResultLayout,
-                mSwipeRefreshLayout,
-                searchManager);
+        BookmarkListObserver observer = new BookmarkListObserver(recyclerView, mEmptyLinkListView,
+                mEmptySearchResultLayout, mSwipeRefreshLayout, searchManager);
         recyclerViewAdapter.registerAdapterDataObserver(observer);
     }
 
@@ -355,25 +351,4 @@ public class BookmarkListFragment extends Fragment
         Bookmark bookmark = ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).getItem(position);
         mBookmarkActionSingleton.openLinkOnBrowser(bookmark.getUrl());
     }
-
-//    @Override
-//    public void onTaskCompleted(boolean isRefreshEnabled) {
-//        try {
-//            recyclerView.getAdapter().notifyDataSetChanged();
-//            if (! isRefreshEnabled) {
-//                mSwipeRefreshLayout.setRefreshing(false);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Override
-//    public void onTaskCompleted(byte[] data) {
-//        return;
-//    }
-//
-//    @Override
-//    public void onTaskCompleted(String url) {
-//    }
 }

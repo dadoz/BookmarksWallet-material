@@ -53,10 +53,9 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
      * @param query
      * @return
      */
-    public static boolean search(WeakReference<Context> context, String query) {
-//        return ConnectionUtils.isConnected(context.get()) &&
-//        && pingUrl(query);
-            return (Utils.isValidUrl(query));
+    public static boolean search(String query) {
+            return pingUrl(query) &&
+                    (Utils.isValidUrl(query));
     }
 
     /**

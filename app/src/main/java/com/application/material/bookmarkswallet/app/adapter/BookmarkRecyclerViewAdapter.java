@@ -97,15 +97,9 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
      * @param isSelectedItem
      */
     private void setIcon(ImageView iconView, Bookmark bookmark, boolean isSelectedItem) {
-        Drawable res = ContextCompat.getDrawable(mActivityRef.getApplicationContext(),
+        Drawable defaultIcon = ContextCompat.getDrawable(mActivityRef.getApplicationContext(),
                 R.drawable.ic_bookmark_black_48dp);
-//                isSelectedItem ? R.drawable.ic_bookmark_black_48dp :
-//                        R.drawable.ic_bookmark_outline_black_48dp);
-
-        Utils.setColorFilter(res, ContextCompat.getColor(mActivityRef.getApplicationContext(),
-                R.color.indigo_600));
-        Utils.setIconOnImageView(iconView,
-                bookmark.getBlobIcon(), res, isSelectedItem,
+        Utils.setIconOnImageView(iconView, bookmark.getBlobIcon(), defaultIcon, isSelectedItem,
                 (int) mActivityRef.getResources().getDimension(R.dimen.medium_icon_size));
     }
 

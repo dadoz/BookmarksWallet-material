@@ -41,6 +41,7 @@ import com.application.material.bookmarkswallet.app.presenter.SearchBookmarkPres
 import com.application.material.bookmarkswallet.app.presenter.SearchResultPresenter;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.singleton.ActionsSingleton;
+import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -222,10 +223,9 @@ public class AddBookmarkFragment extends Fragment implements
      *
      */
     private void initWebView() {
+//        String url = "http://www.google.com/bookmarks";
         boolean isHttps = addBookmarkHttpsCheckbox.isChecked();
         String url = Utils.buildUrl(bookmarkUrl, isHttps);
-//        String url = "http://www.google.com/bookmarks";
-        Log.e(TAG, "webview " + url);
         addBookmarkWebView.loadUrl(url);
         addBookmarkWebView.setWebViewClient(new WebViewClient() {
             @Override
@@ -282,11 +282,11 @@ public class AddBookmarkFragment extends Fragment implements
      */
     public void addBookmark() {
         statusManager.setOnSearchMode();
-        mBookmarkActionSingleton
-                .addOrmObject(Realm.getInstance(new RealmConfiguration.Builder(getContext()).build()),
-                        bookmarkTitle, null,
-                        Utils.convertBitmapToByteArray(((BitmapDrawable) addBookmarkIconImage
-                                .getDrawable()).getBitmap()), bookmarkUrl);
+        Realm realmInstance = Realm.getInstance(new RealmConfiguration
+                .Builder(getContext()).build());
+        mBookmarkActionSingleton.addOrmObject(realmInstance, bookmarkTitle, null,
+                Utils.convertBitmapToByteArray(((BitmapDrawable) addBookmarkIconImage
+                        .getDrawable()).getBitmap()), bookmarkUrl);
         if (getActivity() != null) {
             getActivity().finish();
         }
@@ -351,13 +351,12 @@ public class AddBookmarkFragment extends Fragment implements
      *
      */
     private void searchAction() {
-//        if (!ConnectionUtils.isConnected(getContext())) {
-//            showErrorMessage(getString(R.string.no_network_connection));
-//            return;
-//        }
+        if (!ConnectionUtils.isConnected(getContext())) {
+            showErrorMessage(getString(R.string.no_network_connection));
+            return;
+        }
 
-        if (!SearchManager.search(new WeakReference<>(getActivity().getApplicationContext()),
-                bookmarkUrl)) {
+        if (!SearchManager.search(bookmarkUrl)) {
             searchBookmarkPresenter.showErrorOnUrlEditText(true);
             showErrorMessage(getString(R.string.no_item_found));
             return;

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
@@ -114,7 +115,7 @@ public class Utils {
                 iconView.setImageDrawable(defaultIcon);
                 return;
             }
-            iconView.setImageDrawable(defaultIcon);
+            iconView.setImageBitmap(getIconBitmap(blob, size));
         } catch (Exception e) {
             iconView.setImageDrawable(defaultIcon);
         }
