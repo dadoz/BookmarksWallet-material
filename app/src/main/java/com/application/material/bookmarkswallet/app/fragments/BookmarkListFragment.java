@@ -352,7 +352,7 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onItemClick(View view, int position) {
-        Bookmark bookmark = ((BookmarkRecyclerViewAdapter)recyclerView.getAdapter()).getItem(position);
+        Bookmark bookmark = ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).getItem(position);
         mBookmarkActionSingleton.openLinkOnBrowser(bookmark.getUrl());
     }
 

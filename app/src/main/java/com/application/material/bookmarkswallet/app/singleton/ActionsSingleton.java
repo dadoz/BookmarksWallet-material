@@ -1,9 +1,12 @@
 package com.application.material.bookmarkswallet.app.singleton;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
@@ -16,6 +19,7 @@ import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.internal.Util;
 
 import java.lang.ref.WeakReference;
 import java.util.UUID;
@@ -50,29 +54,14 @@ public class ActionsSingleton {
      */
     public void openLinkOnBrowser(String linkUrl) {
         try {
-            if (! checkURL(linkUrl)) {
-                Toast.makeText(context.get(), "your URL is wrong " + linkUrl,
-                        Toast.LENGTH_SHORT).show();
+            if (!Utils.isValidUrl(linkUrl)) {
+                showErrorMessage(context.get().getString(R.string.wrong_url));
                 return;
             }
-
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse(linkUrl));
-            context.get().startActivity(browserIntent);
-        } catch(Exception e) {
-            Log.e(TAG, "error - " + e);
-            Toast.makeText(context.get(), "I cant load your URL "
-                    + e.getMessage(), Toast.LENGTH_SHORT).show();
+            context.get().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(linkUrl)));
+        } catch (Exception e) {
+            showErrorMessage(context.get().getString(R.string.cannot_load_url));
         }
-    }
-
-    /**
-     * url check - by regex
-     * @param linkUrl
-     * @return
-     */
-    private boolean checkURL(String linkUrl) {
-        return true;
     }
 
     /**
@@ -198,6 +187,21 @@ public class ActionsSingleton {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     *
+     * @param message
+     */
+    private void showErrorMessage(String message) {
+        View mainView = ((Activity) context.get()).getWindow().getDecorView().getRootView().findViewById(R.id.mainContainerViewId);
+        if (mainView != null) {
+            message = (message == null) ? "Ops! Something went wrong!" : message;
+            Snackbar snackbar = Snackbar.make(mainView, message, Snackbar.LENGTH_LONG);
+            snackbar.getView()
+                    .setBackgroundColor(ContextCompat.getColor(context.get(), R.color.red_500));
+            snackbar.show();
+        }
     }
 
 }
