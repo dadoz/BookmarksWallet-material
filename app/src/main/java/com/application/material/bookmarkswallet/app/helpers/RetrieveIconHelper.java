@@ -82,10 +82,14 @@ public class RetrieveIconHelper {
         @Nullable
         private synchronized String doJob(String bookmarkUrl, JobTypeEnum jobType) {
             try {
+                Document doc = Jsoup.connect(bookmarkUrl)
+                        .userAgent("Mozilla/5.0 (Windows NT 6.2; WOW64; rv:29.0) Gecko/20100101 Firefox/29.0")
+                        .execute().parse();
                 if (jobType == JobTypeEnum.BOOKMARK_ICON_URL) {
-                    return getUrlByDoc(Jsoup.connect(bookmarkUrl).get());
+//                    return getIconUrlByGoogleService(bookmarkUrl);
+                    return getIconUrlByDoc(doc);
                 } else if (jobType == JobTypeEnum.BOOKMARK_TITLE) {
-                    return getTitleByDoc(Jsoup.connect(bookmarkUrl).get());
+                    return getTitleByDoc(doc);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -109,7 +113,7 @@ public class RetrieveIconHelper {
          * @param doc
          * @return
          */
-        public String getUrlByDoc(Document doc) {
+        public String getIconUrlByDoc(Document doc) {
             Elements elem;
             String attrParam = META_ATTR_PARAM;
             elem = doc.head().select(META_SELECT_PARAM);
@@ -121,25 +125,40 @@ public class RetrieveIconHelper {
                 elem = doc.head().select(LINK_SELECT_PARAM);
             }
 
-            String result = elem == null ||
-                    elem.first() == null?
-                    getImageUrlByDoc(doc)
-                    : elem.first().attr(attrParam);
-            Log.e("TAG", result);
-            return result;
+            if (elem == null ||
+                    elem.first() == null) {
+                Elements elemArray = doc.select("img[src$=.png]");
+                if (elemArray != null) {
+                    String url = elemArray.first().attr("src");
+                    return Utils.buildUrlToSearchIcon(url, bookmarkUrl);
+                }
+            }
+            return elem.first().attr(attrParam);
+//            Log.e("TAG", result);
+//            return result;
         }
 
         /**
          *
          * @param doc
          */
-        private String getImageUrlByDoc(Document doc) {
+        private String getFirstImageByDoc(Document doc) {
             Elements elemArray = doc.select("img[src$=.png]");
             if (elemArray != null) {
                 String url = elemArray.first().attr("src");
                 return Utils.buildUrlToSearchIcon(url, bookmarkUrl);
             }
             return null;
+        }
+
+        /**
+         *
+         * @param url
+         * @return
+         */
+        public String getIconUrlByGoogleService(String url) {
+            Log.e("TAG", url);
+            return "https://www.google.com/s2/favicons?domain=" + url;
         }
     }
 

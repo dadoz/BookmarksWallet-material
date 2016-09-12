@@ -97,7 +97,7 @@ public class AddBookmarkFragment extends Fragment implements
     View addBookmarkRelativeLayout;
     private View mainView;
     private SearchBookmarkPresenter searchBookmarkPresenter;
-    private int MIN_ICON_SIZE = 96;
+    private int MIN_ICON_SIZE = 64;
     private RetrieveIconHelper retrieveIconHelper;
     private SearchResultPresenter searchResultPresenter;
     private StatusManager statusManager;
