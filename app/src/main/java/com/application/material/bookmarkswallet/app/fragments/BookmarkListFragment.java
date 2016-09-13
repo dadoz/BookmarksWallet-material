@@ -441,8 +441,7 @@ public class BookmarkListFragment extends Fragment
      * init singleton instances
      */
     private void initSingletonInstances() {
-        mRealm = Realm
-                .getInstance(((BookmarksWalletApplication) getActivity().getApplication()).getRealmInstance());
+        mRealm = Realm.getDefaultInstance();
         statusHelper = StatusHelper.getInstance();
         mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(getContext()));
         mBookmarkActionSingleton = ActionsSingleton.getInstance(new WeakReference<>(getContext()));

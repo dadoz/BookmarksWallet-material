@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.application.BookmarksWalletApplication;
 import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
@@ -41,7 +42,7 @@ public class ActionsSingleton {
      */
     public static ActionsSingleton getInstance(WeakReference<Context> ctx) {
         context = ctx;
-        mRealm = Realm.getInstance(new RealmConfiguration.Builder(ctx.get()).build());
+        mRealm = Realm.getDefaultInstance();
         mStatusSingleton = StatusHelper.getInstance();
         return mInstance == null ?
                 mInstance = new ActionsSingleton() :

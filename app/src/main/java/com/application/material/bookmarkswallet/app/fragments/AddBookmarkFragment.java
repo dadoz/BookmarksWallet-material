@@ -283,8 +283,7 @@ public class AddBookmarkFragment extends Fragment implements
      */
     public void addBookmark() {
         statusManager.setOnSearchMode();
-        Realm realmInstance = Realm
-                .getInstance(((BookmarksWalletApplication) getActivity().getApplication()).getRealmInstance());
+        Realm realmInstance = Realm.getDefaultInstance();
         mBookmarkActionSingleton.addOrmObject(realmInstance, bookmarkTitle, null,
                 Utils.convertBitmapToByteArray(((BitmapDrawable) addBookmarkIconImage
                         .getDrawable()).getBitmap()), bookmarkUrl);
