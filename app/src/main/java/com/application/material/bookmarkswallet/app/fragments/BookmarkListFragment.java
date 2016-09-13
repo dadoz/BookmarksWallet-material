@@ -287,7 +287,7 @@ public class BookmarkListFragment extends Fragment
         initActionbar();
         initRecyclerView();
         mAddBookmarkFab.setOnClickListener(this);
-        initImportViews();
+//        initImportViews();
 //        setNotSyncBookmarks();
     }
 

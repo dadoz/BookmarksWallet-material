@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/export_cardviews_layout"
-        android:id="@+id/importCardviewsLayoutId"/>
+        android:id="@+id/importCardviewsLayoutId"
+        android:visibility="gone"/>
     <android.support.v4.widget.SwipeRefreshLayout
-        android:layout_below="@+id/importCardviewsLayoutId"
         android:id="@+id/mainContainerViewId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
