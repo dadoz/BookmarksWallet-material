@@ -136,7 +136,7 @@ public class ActionsSingleton {
      */
     public void deleteAllAction() {
         mRealm.beginTransaction();
-        mRealm.where(Bookmark.class).findAll().clear();
+        mRealm.where(Bookmark.class).findAll().deleteAllFromRealm();
         mRealm.commitTransaction();
     }
 

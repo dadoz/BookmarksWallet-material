@@ -2,6 +2,8 @@ package com.application.material.bookmarkswallet.app.fragments;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -10,6 +12,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,11 +43,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (! (context instanceof OnChangeFragmentWrapperInterface)) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnChangeFragmentWrapperInterface");
-        }
-
         mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(getContext()));
         mBookmarkActionSingleton = ActionsSingleton.getInstance(new WeakReference<>(getContext()));
     }
@@ -125,16 +123,18 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
      */
     public ArrayList<Setting> getSettingList() {
         ArrayList<Setting> settingList = new ArrayList<>();
-        settingList.add(new Setting(getResources().getString(R.string.setting_rate_label), null, View.GONE, false));
+        settingList.add(new Setting(getResources().getString(R.string.setting_rate_label), null,
+                View.GONE, false));
         settingList.add(new Setting(getResources().getString(R.string.setting_url_search_label),
                 getResources().getString(R.string.setting_url_search_description),
-                View.VISIBLE, Utils.getSearchOnUrlEnabledFromSharedPref(new WeakReference<>(getActivity().getApplicationContext()))));
-//        settingList.add(new Setting(getResources().getString(R.string.setting_find_icon_label),
-//                "find bookmark's icon automatically.", View.VISIBLE, mFindIconAuto));
+                View.VISIBLE, Utils.getSearchOnUrlEnabledFromSharedPref(new WeakReference<>(getActivity()
+                .getApplicationContext()))));
         settingList.add(new Setting(getResources().getString(R.string.setting_delete_all_label),
                 getResources().getString(R.string.setting_delete_all_description), View.GONE, true));
-        settingList.add(new Setting(getResources().getString(R.string.setting_feedback_label), null, View.GONE, false));
-        settingList.add(new Setting(getResources().getString(R.string.setting_build_version_label), getVersionName(), View.GONE, false));
+        settingList.add(new Setting(getResources().getString(R.string.setting_feedback_label),
+                null, View.GONE, false));
+        settingList.add(new Setting(getResources().getString(R.string.setting_build_version_label),
+                getVersionName(), View.GONE, false));
 
         return settingList;
     }
@@ -149,7 +149,8 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
             startActivity(goToMarket);
         } catch (ActivityNotFoundException e) {
             startActivity(new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("http://play.google.com/store/apps/details?id=" + getActivity().getPackageName())));
+                    Uri.parse("http://play.google.com/store/apps/details?id=" +
+                            getActivity().getPackageName())));
         }
     }
 
@@ -166,25 +167,41 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
      * TODO refactor
      */
     private void deleteAllBookmarksDialog() {
-        Dialog dialog = new AlertDialog
+        AlertDialog dialog = new AlertDialog
                 .Builder(getContext(), R.style.CustomLollipopDialogStyle)
-                .setTitle("Delete bookmarks!")
-                .setMessage("Are you sure you want to delete all your bookmarks?")
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                .setTitle(getString(R.string.delete_dialog_label))
+                .setMessage(getString(R.string.are_you_sure_you_want_to_delete))
+                .setPositiveButton(getString(R.string.delete_button_label), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Log.e("TAG", "---" + which);
                         deleteAllBookmarks();
-                        Toast.makeText(getContext(),
-                                "All your bookmarks has been deleted with success", Toast.LENGTH_SHORT).show();
+                        showErrorMessage();
                     }
                 })
-                .setNegativeButton("dismiss", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dismiss_label), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Log.e("TAG", "---" + which);
                         dialog.dismiss();
                     }
                 })
                 .create();
         dialog.show();
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+                .setTextColor(ContextCompat.getColor(getContext(), R.color.red_400));
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+                .setTextColor(ContextCompat.getColor(getContext(), R.color.blue_grey_900));
+    }
+
+    /**
+     *
+     */
+    private void showErrorMessage() {
+        Snackbar snackbar = Snackbar.make(mSettingsView,
+                getString(R.string.settings_all_bookmarks_has_been_deleted), Snackbar.LENGTH_SHORT);
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.teal_400));
+        snackbar.show();
+
     }
 }
