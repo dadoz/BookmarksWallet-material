@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.realm.RealmRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.realm.adapter.RealmRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
 import com.application.material.bookmarkswallet.app.utlis.Utils;

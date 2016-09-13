@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.adapter.realm;
+package com.application.material.bookmarkswallet.app.realm.adapter;
 import android.support.v7.widget.RecyclerView;
 
 import com.application.material.bookmarkswallet.app.models.Bookmark;

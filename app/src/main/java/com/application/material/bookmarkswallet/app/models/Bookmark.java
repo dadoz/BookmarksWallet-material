@@ -2,10 +2,14 @@ package com.application.material.bookmarkswallet.app.models;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
+import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -18,10 +22,14 @@ public class Bookmark extends RealmObject {
     private long id;
     private long timestamp;
     private long lastUpdate;
+    @Nullable
     private String iconPath;
+    @Required
     private String url;
     private int userId;
+    @Required
     private String name;
+    @Nullable
     private byte[] blobIcon;
     @Ignore
     public static String nameField = "name";

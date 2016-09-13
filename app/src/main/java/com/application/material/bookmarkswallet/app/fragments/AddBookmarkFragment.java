@@ -33,6 +33,7 @@ import butterknife.ButterKnife;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.application.BookmarksWalletApplication;
 import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
 import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
@@ -282,8 +283,8 @@ public class AddBookmarkFragment extends Fragment implements
      */
     public void addBookmark() {
         statusManager.setOnSearchMode();
-        Realm realmInstance = Realm.getInstance(new RealmConfiguration
-                .Builder(getContext()).build());
+        Realm realmInstance = Realm
+                .getInstance(((BookmarksWalletApplication) getActivity().getApplication()).getRealmInstance());
         mBookmarkActionSingleton.addOrmObject(realmInstance, bookmarkTitle, null,
                 Utils.convertBitmapToByteArray(((BitmapDrawable) addBookmarkIconImage
                         .getDrawable()).getBitmap()), bookmarkUrl);

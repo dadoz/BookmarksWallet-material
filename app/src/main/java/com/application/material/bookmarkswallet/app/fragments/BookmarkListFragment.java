@@ -13,7 +13,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.*;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -22,7 +21,8 @@ import butterknife.ButterKnife;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionMode;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
+import com.application.material.bookmarkswallet.app.application.BookmarksWalletApplication;
+import com.application.material.bookmarkswallet.app.realm.adapter.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
@@ -42,7 +42,6 @@ import io.realm.RealmResults;
 
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.IMPORT_ACCOUNT_NOTIFIED;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.IMPORT_KEEP_NOTIFIED;
-import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE;
 
 public class BookmarkListFragment extends Fragment
         implements View.OnClickListener,
@@ -442,7 +441,8 @@ public class BookmarkListFragment extends Fragment
      * init singleton instances
      */
     private void initSingletonInstances() {
-        mRealm = Realm.getInstance(new RealmConfiguration.Builder(getContext()).build());
+        mRealm = Realm
+                .getInstance(((BookmarksWalletApplication) getActivity().getApplication()).getRealmInstance());
         statusHelper = StatusHelper.getInstance();
         mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(getContext()));
         mBookmarkActionSingleton = ActionsSingleton.getInstance(new WeakReference<>(getContext()));

@@ -36,7 +36,7 @@
     <string name="share_menu_label">share</string>
     <string name="share_to">share bookmark to...</string>
     <string name="wrong_url">Oh snap! Wrong url typed:</string>
-    <string name="cannot_load_url">Oh Snap! I can't load current Url.</string>
+    <string name="cannot_load_url">Oh Snap! I can\'t load current Url.</string>
     <string name="import_from_google_keep">Import from Google Keep</string>
     <string name="subscribe">SUBSCRIBE</string>
     <string name="import_from_your_account">Import from your account</string>

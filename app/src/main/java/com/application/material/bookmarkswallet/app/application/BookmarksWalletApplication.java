@@ -3,9 +3,14 @@ package com.application.material.bookmarkswallet.app.application;
 import android.app.Application;
 
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.realm.migrations.BookmarkRealmMigration;
 import com.flurry.android.FlurryAgent;
 
+import io.realm.RealmConfiguration;
+
 public class BookmarksWalletApplication extends Application {
+
+    private RealmConfiguration realmConfig;
 
     @Override
     public void onCreate() {
@@ -16,4 +21,17 @@ public class BookmarksWalletApplication extends Application {
                 .build(this, getString(R.string.FLURRY_API_KEY));
     }
 
+    /**
+     *
+     * @return
+     */
+    public RealmConfiguration getRealmInstance() {
+        if (realmConfig == null) {
+            realmConfig = new RealmConfiguration.Builder(getApplicationContext())
+                    .schemaVersion(BookmarkRealmMigration.BOOKMARK_SCHEMA_VERSION) // Must be bumped when the schema changes
+                    .migration(new BookmarkRealmMigration()) // Migration to run instead of throwing an exception
+                    .build();
+        }
+        return realmConfig;
+    }
 }
