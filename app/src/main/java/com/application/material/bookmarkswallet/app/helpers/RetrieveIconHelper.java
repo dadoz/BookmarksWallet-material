@@ -104,7 +104,6 @@ public class RetrieveIconHelper {
          */
         public String getTitleByDoc(Document doc) {
             String temp = doc.head().select(TITLE_SELECT_PARAM).text();
-            Log.e("TAG", "++++++" + temp);
             return temp;
         }
 
@@ -157,7 +156,6 @@ public class RetrieveIconHelper {
          * @return
          */
         public String getIconUrlByGoogleService(String url) {
-            Log.e("TAG", url);
             return "https://www.google.com/s2/favicons?domain=" + url;
         }
     }

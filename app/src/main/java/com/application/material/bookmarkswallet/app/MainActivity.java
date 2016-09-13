@@ -14,9 +14,6 @@ import com.flurry.android.FlurryAgent;
 
 import java.lang.ref.WeakReference;
 
-import hotchemi.android.rate.AppRate;
-import hotchemi.android.rate.OnClickButtonListener;
-
 public class MainActivity extends AppCompatActivity
         implements OnChangeFragmentWrapperInterface {
     private String TAG = "MainActivity";
@@ -26,11 +23,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FlurryAgent.onStartSession(this);
+
         initSingletonRef();
-
-        FlurryAgent.setLogEnabled(true);
-        FlurryAgent.init(this, getResources().getString(R.string.FLURRY_API_KEY));
-
         onInitFragment();
     }
 

@@ -93,7 +93,7 @@ public class AnimatorBuilder {
      * @param isDelaySet
      */
     public Animator buildHideAnimator(@NonNull View view, boolean isDelaySet) {
-        Animator animator = buildAlphaAnimator(view, 1f, 0f);
+        Animator animator = buildAlphaAnimator(view, 1f, 0.1f);
         animator.setStartDelay(isDelaySet ? START_DELAY : 0);
         return animator;
     }

@@ -71,7 +71,6 @@ public class Bookmark extends RealmObject {
     }
 
     public byte[] getBlobIcon() {
-        Log.e("TAG", blobIcon == null ? "null" : blobIcon.length + "");
         return blobIcon;
     }
 

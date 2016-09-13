@@ -37,4 +37,10 @@
     <string name="share_to">share bookmark to...</string>
     <string name="wrong_url">Oh snap! Wrong url typed:</string>
     <string name="cannot_load_url">Oh Snap! I cant load current Url.</string>
+    <string name="import_from_google_keep">Import from Google Keep</string>
+    <string name="subscribe">SUBSCRIBE</string>
+    <string name="import_from_your_account">Import from your account</string>
+    <string name="dismiss_label">DISMISS</string>
+    <string name="notify_label">NOTIFY</string>
+    <string name="youll_be_notified">You\'ll be notified as soon as this feature will be up!</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.*;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -21,19 +23,26 @@ import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionMode;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.realm.RealmModelAdapter;
+import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
+import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.singleton.*;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.observer.BookmarkListObserver;
+import com.flurry.android.FlurryAgent;
 
 import java.lang.ref.WeakReference;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+
+import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.IMPORT_ACCOUNT_NOTIFIED;
+import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.IMPORT_KEEP_NOTIFIED;
+import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE;
 
 public class BookmarkListFragment extends Fragment
         implements View.OnClickListener,
@@ -50,12 +59,24 @@ public class BookmarkListFragment extends Fragment
     View mEmptyLinkListView;
     @Bind(R.id.emptySearchResultLayoutId)
     View mEmptySearchResultLayout;
+    @Bind(R.id.importFromAccountButtonId)
+    View importFromAccountButton;
+    @Bind(R.id.importFromKeepButtonId)
+    View importFromKeepButton;
+    @Bind(R.id.importFromAccountDismissButtonId)
+    View importFromAccountDismissButton;
+    @Bind(R.id.importFromKeepDismissButtonId)
+    View importFromKeepDismissButton;
+    @Bind(R.id.importFromAccountCardviewLayoutId)
+    View importFromAccountCardviewLayout;
+    @Bind(R.id.importFromKeepCardviewLayoutId)
+    View importFromKeepCardviewLayout;
 
     private Realm mRealm;
     private SearchManager searchManager;
     private ActionbarSingleton mActionbarSingleton;
     private ActionsSingleton mBookmarkActionSingleton;
-    private View mView;
+    private View mainView;
     private StatusHelper statusHelper;
 
     @Override
@@ -76,12 +97,12 @@ public class BookmarkListFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstance) {
-        mView = inflater.inflate(R.layout.fragment_bookmark_list_layout,
+        mainView = inflater.inflate(R.layout.fragment_bookmark_list_layout,
                 container, false);
-        ButterKnife.bind(this, mView);
+        ButterKnife.bind(this, mainView);
         setHasOptionsMenu(true);
         onInitView();
-        return mView;
+        return mainView;
     }
 
     @Override
@@ -123,7 +144,82 @@ public class BookmarkListFragment extends Fragment
             case R.id.addBookmarkFabId:
                 mBookmarkActionSingleton.addBookmarkAction(this);
                 break;
+            case R.id.importFromKeepButtonId:
+                FlurryAgent.logEvent("importFromKeep", true);
+                dismissCardview(v);
+                break;
+            case R.id.importFromAccountButtonId:
+                FlurryAgent.logEvent("importFromAccount", true);
+                dismissCardview(v);
+                break;
+            case R.id.importFromAccountDismissButtonId:
+            case R.id.importFromKeepDismissButtonId:
+                dismissCardview(v);
+                break;
         }
+    }
+
+    /**
+     *
+     * @param v
+     */
+    private void dismissCardview(View v) {
+        switch (v.getId()) {
+            case R.id.importFromKeepButtonId:
+            case R.id.importFromKeepDismissButtonId:
+                SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
+                        .setValue(IMPORT_KEEP_NOTIFIED, true);
+                hideViewAnimator(importFromKeepCardviewLayout);
+                recyclerView.scrollToPosition(0);
+                importNotificationToUser();
+                break;
+            case R.id.importFromAccountButtonId:
+            case R.id.importFromAccountDismissButtonId:
+                SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
+                        .setValue(IMPORT_ACCOUNT_NOTIFIED, true);
+                hideViewAnimator(importFromAccountCardviewLayout);
+                recyclerView.scrollToPosition(0);
+                importNotificationToUser();
+                break;
+        }
+    }
+
+    /**
+     *
+     */
+    private void importNotificationToUser() {
+        Toast.makeText(getContext(), R.string.youll_be_notified, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     *
+     * @param view
+     */
+    private void hideViewAnimator(final View view) {
+        Animator animator = AnimatorBuilder.getInstance(new WeakReference<>(getContext()))
+                .getYTranslation(view, 0, -view.getMeasuredHeight(), 0);
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                view.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        animator.start();
     }
 
 
@@ -191,7 +287,26 @@ public class BookmarkListFragment extends Fragment
         initActionbar();
         initRecyclerView();
         mAddBookmarkFab.setOnClickListener(this);
+        initImportViews();
 //        setNotSyncBookmarks();
+    }
+
+    /**
+     *
+     */
+    private void initImportViews() {
+        importFromKeepButton.setOnClickListener(this);
+        importFromKeepDismissButton.setOnClickListener(this);
+        importFromAccountButton.setOnClickListener(this);
+        importFromAccountDismissButton.setOnClickListener(this);
+        if ((boolean) SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
+                .getValue(IMPORT_KEEP_NOTIFIED, false)) {
+            importFromKeepCardviewLayout.setVisibility(View.GONE);
+        }
+        if ((boolean) SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
+                .getValue(IMPORT_ACCOUNT_NOTIFIED, false)) {
+            importFromAccountCardviewLayout.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -266,7 +381,7 @@ public class BookmarkListFragment extends Fragment
      * set not fully sync bookmarks
      */
     private void setNotSyncBookmarks() {
-        Snackbar.make(mView, "hey snack", Snackbar.LENGTH_LONG)
+        Snackbar.make(mainView, "hey snack", Snackbar.LENGTH_LONG)
                 .setAction("SYNC", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
