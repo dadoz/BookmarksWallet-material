@@ -9,7 +9,7 @@ import io.realm.RealmSchema;
 
 public class BookmarkRealmMigration implements RealmMigration {
     private static final String BOOKMARK_SCHEMA = "Bookmark";
-    public static long BOOKMARK_SCHEMA_VERSION = 4;
+    public static long BOOKMARK_SCHEMA_VERSION = 0;
 
     @Override
     public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
@@ -17,11 +17,11 @@ public class BookmarkRealmMigration implements RealmMigration {
         RealmSchema schema = realm.getSchema();
         Log.e("TAG", "hey migrationg ----- " + oldVersion);
         Log.e("TAG", schema.get(BOOKMARK_SCHEMA).getFieldNames().toArray().length + "");
-        if (oldVersion == 3) {
-            schema.get(BOOKMARK_SCHEMA);
-//                    .addIndex("id")
-//                    .setNullable("iconPath", true)
-//                    .setNullable("blobIcon", true);
+        if (oldVersion == 0) {
+            schema.get(BOOKMARK_SCHEMA)
+                    .addIndex("id")
+                    .setNullable("iconPath", true)
+                    .setNullable("blobIcon", true);
 
         }
     }
