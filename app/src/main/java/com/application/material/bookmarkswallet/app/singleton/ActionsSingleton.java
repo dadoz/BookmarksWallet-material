@@ -121,10 +121,6 @@ public class ActionsSingleton {
      * @param adapter
      */
     public void deleteAction(BookmarkRecyclerViewAdapter adapter, int position) {
-//        int position = getBookmarkPosByView(v, recyclerView);
-//        Log.e("TAG", "" + position);
-//        BookmarkRecyclerViewAdapter adapter = (BookmarkRecyclerViewAdapter) recyclerView.getAdapter();
-
         mRealm.beginTransaction();
         adapter.getItem(position).deleteFromRealm();
         mRealm.commitTransaction();

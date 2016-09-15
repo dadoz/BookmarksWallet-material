@@ -60,7 +60,6 @@ public class RetrieveIconHelper {
 
         @Override
         public void run() {
-//            Log.e("TAG", "----" + bookmarkUrl);
             String jobResult = doJob(bookmarkUrl, jobType);
             if (jobResult != null) {
                 if (jobType == JobTypeEnum.BOOKMARK_ICON_URL) {
@@ -133,8 +132,6 @@ public class RetrieveIconHelper {
                 }
             }
             return elem.first().attr(attrParam);
-//            Log.e("TAG", result);
-//            return result;
         }
 
         /**

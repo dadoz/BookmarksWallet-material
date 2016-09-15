@@ -160,7 +160,6 @@ public class Utils {
      *
      */
     public static String buildUrl(String url, boolean isHttps) {
-        Log.e(TAG, "......." + url);
         return url == null ||
                 url.contains("http://") ||
                 url.contains("https://") ?

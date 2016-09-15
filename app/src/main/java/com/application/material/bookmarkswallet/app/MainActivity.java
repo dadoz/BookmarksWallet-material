@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void changeFragment(Fragment fragment, Bundle bundle, String tag) {
         if (fragment == null) {
-            Log.e(TAG, "null fragment injected");
             return;
         }
         fragment.setArguments(bundle);

@@ -272,11 +272,8 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     dismissRight = mVelocityTracker.getXVelocity() > 0;
                 }
 
-//                Log.e("TAG", "dismiss " + (dismiss ? "true" : "false"));
 
                 if (dismiss && mDownPosition != ListView.INVALID_POSITION) {
-//                    Log.e("TAG", "dismiss");
-                    // dismiss
                     final View downView = mDownView; // mDownView gets null'd before animation ends
                     final int downPosition = mDownPosition;
                     ++mDismissAnimationRefCount;

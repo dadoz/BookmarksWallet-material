@@ -48,7 +48,6 @@ public class ClipboardManager {
             return pasteData.toString();
         }
 
-        Log.e(TAG, "Clipboard contains an invalid data type");
         return null;
     }
 

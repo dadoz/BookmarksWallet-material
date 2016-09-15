@@ -174,7 +174,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
                 .setPositiveButton(getString(R.string.delete_button_label), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.e("TAG", "---" + which);
                         deleteAllBookmarks();
                         showErrorMessage();
                     }
@@ -182,7 +181,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
                 .setNegativeButton(getString(R.string.dismiss_label), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.e("TAG", "---" + which);
                         dialog.dismiss();
                     }
                 })

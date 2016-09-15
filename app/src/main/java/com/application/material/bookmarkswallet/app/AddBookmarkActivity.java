@@ -30,7 +30,6 @@ public class AddBookmarkActivity extends AppCompatActivity {
         if (getSupportFragmentManager().findFragmentByTag(AddBookmarkFragment.FRAG_TAG) == null) {
             transaction.replace(R.id.fragmentContainerFrameLayoutId,
                     new AddBookmarkFragment(), AddBookmarkFragment.FRAG_TAG).commit();
-            Log.e("TAG", "on init fragment");
         }
     }
 
@@ -39,7 +38,6 @@ public class AddBookmarkActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        Log.e("TAG", "hey");
         if (((OnHandleBackPressed) getSupportFragmentManager()
                 .findFragmentByTag(AddBookmarkFragment.FRAG_TAG)).handleBackPressed()) {
             return;
