@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionMode;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.application.BookmarksWalletApplication;
+import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.realm.adapter.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
@@ -30,6 +30,7 @@ import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.singleton.*;
+import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.observer.BookmarkListObserver;
 import com.flurry.android.FlurryAgent;
@@ -37,7 +38,6 @@ import com.flurry.android.FlurryAgent;
 import java.lang.ref.WeakReference;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.IMPORT_ACCOUNT_NOTIFIED;
@@ -228,7 +228,7 @@ public class BookmarkListFragment extends Fragment
             @Override
             public void run() {
                 ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
-                        .updateData(searchManager.getRealResults(mRealm));
+                        .updateData(RealmUtils.getResults(mRealm));
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         }, 2000);
@@ -245,9 +245,9 @@ public class BookmarkListFragment extends Fragment
                 handleSetting();
                 return true;
             case R.id.action_import_export:
-                Toast.makeText(getActivity(), getString(R.string.not_implemented_yet),
-                        Toast.LENGTH_SHORT).show();
-//                exportBookmarksSingleton.exportAction();
+                ExportStrategy
+                        .buildInstance(new WeakReference<>(getContext()), mainView)
+                        .checkAndRequestPermission();
                 return true;
             case R.id.action_terms_and_licences:
                 handleTermsAndLicences();
@@ -326,7 +326,7 @@ public class BookmarkListFragment extends Fragment
         registerDataObserver(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(recyclerViewAdapter);
-        setRealmAdapter(recyclerViewAdapter, searchManager.getRealResults(mRealm));
+        setRealmAdapter(recyclerViewAdapter, RealmUtils.getResults(mRealm));
         searchManager.setAdapter(recyclerViewAdapter); //TODO what???
     }
 

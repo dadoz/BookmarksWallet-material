@@ -6,19 +6,13 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.export.CSVExportParser;
+import com.application.material.bookmarkswallet.app.helpers.CSVExportHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import io.realm.RealmResults;
 
-/**
- * Created by davide on 31/03/15.
- */
 public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
     private static ExportBookmarkSingleton  mInstance;
     private static Fragment mListenerRef;
@@ -86,8 +80,7 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
             @Override
             protected Boolean doInBackground(Integer... params) {
 //                mProgressWheel = (ProgressWheel) mExportBookmarksDialogView.findViewById(R.id.progressWheelId);
-                final RealmResults<Bookmark> list = null;
-                return CSVExportParser.writeFile(list);
+                return new CSVExportHelper(null, null).createFile(null);
             }
 
             protected void onProgressUpdate(Integer... progress) {
@@ -112,8 +105,8 @@ public class ExportBookmarkSingleton implements DialogInterface.OnShowListener {
 
     private void setSuccessExportView() {
         View exportSuccessIcon = mExportBookmarksDialogView.findViewById(R.id.exportSuccessIconId);
-        TextView exportInfoText = (TextView) mExportBookmarksDialogView.findViewById(R.id.exportInfoTextId);
-        exportInfoText.setText("All bookmarks exported with Success!\nCheckout DOWNLOAD folder.");
+//        TextView exportInfoText = (TextView) mExportBookmarksDialogView.findViewById(R.id.exportInfoTextId);
+//        exportInfoText.setText("All bookmarks exported with Success!\nCheckout DOWNLOAD folder.");
         mExportDialog.getButton(AlertDialog.BUTTON_POSITIVE).setVisibility(View.GONE);
         exportSuccessIcon.setVisibility(View.VISIBLE);
 //        Animation animation = AnimationUtils.loadAnimation(mActivityRef, R.anim.card_flip_left_out);

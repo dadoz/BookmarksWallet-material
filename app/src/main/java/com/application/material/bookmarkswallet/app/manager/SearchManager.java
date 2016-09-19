@@ -13,6 +13,7 @@ import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerView
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
+import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import java.lang.ref.WeakReference;
@@ -134,21 +135,6 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
     }
 
     /**
-     *
-     * @return
-     */
-    public RealmResults getRealResults(Realm realm) {
-        if (realm == null) {
-            return null;
-        }
-        return realm
-                .where(Bookmark.class)
-                .findAll()
-                .sort(Bookmark.timestampField, Sort.DESCENDING);
-    }
-
-
-    /**
      * TODO move in filter class
      * set empty search result view
      */
@@ -204,7 +190,7 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
                     try {
                         String searchValue = ((String) constraint).trim().toLowerCase();
                         RealmResults list = searchValue.equals("") ?
-                                getRealResults(mRealm) : getFilteredList(searchValue, mCaseSensitive);
+                                RealmUtils.getResults(mRealm) : getFilteredList(searchValue, mCaseSensitive);
                         updateDataSet(list);
                     } catch (Exception e) {
                         e.printStackTrace();

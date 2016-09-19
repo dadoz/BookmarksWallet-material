@@ -5,8 +5,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -14,6 +15,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
+import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 
 import java.io.BufferedInputStream;
@@ -201,5 +203,17 @@ public class Utils {
     public static boolean getSearchOnUrlEnabledFromSharedPref(WeakReference<Context> context) {
         return (boolean) SharedPrefHelper.getInstance(context)
                 .getValue(SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE, false);
+    }
+
+    /**
+     *  @param view
+     * @param ctx
+     * @param message
+     * @param isError
+     */
+    public static void setSnackbar(View view, WeakReference<Context> ctx, String message, boolean isError) {
+        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(ctx.get(), isError ? R.color.red_400 : R.color.teal_400));
+        snackbar.show();
     }
 }

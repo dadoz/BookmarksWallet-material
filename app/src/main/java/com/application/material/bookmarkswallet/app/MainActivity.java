@@ -1,18 +1,24 @@
 package com.application.material.bookmarkswallet.app;
 
 import android.content.Context;
-import android.support.v4.app.*;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.singleton.BackPressedSingleton;
 import com.flurry.android.FlurryAgent;
 
 import java.lang.ref.WeakReference;
+
+import static com.application.material.bookmarkswallet.app.helpers.ExportHelper.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity
         implements OnChangeFragmentWrapperInterface {
@@ -128,6 +134,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions,
+                                           @NonNull final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                ExportStrategy.getInstance(new WeakReference<>(getApplicationContext()))
+                    .handleRequestPermissionSuccess();
+                return;
+            }
+
+            ExportStrategy.getInstance(new WeakReference<>(getApplicationContext()))
+                .handleRequestPermissionDeny();
+        }
     }
 
 }

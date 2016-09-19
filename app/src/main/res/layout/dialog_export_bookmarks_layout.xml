@@ -1,36 +1,48 @@
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/exportFrameLayoutId"
     android:layout_width="wrap_content"
     android:maxWidth="@dimen/export_bookmarks_framelayout_width"
     android:padding="@dimen/small_padding"
     android:layout_height="wrap_content">
-    <LinearLayout
+    <ImageView
+        android:id="@+id/exportSuccessIconId"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:paddingTop="@dimen/large_padding"
-        android:paddingBottom="@dimen/large_padding"
-        android:layout_marginLeft="@dimen/medium_padding"
-        android:layout_marginRight="@dimen/medium_padding"
-        android:orientation="vertical">
-        <ImageView
-            android:id="@+id/exportSuccessIconId"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_done_black_48dp"/>
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_done_black_48dp"/>
 
-        <TextView
-            android:id="@+id/exportInfoTextId"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/blue_grey_200"
-            android:text="Export your bookmarks as a CSV file in your Download folder."/>
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/exportHTMLCheckboxId"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"/>
+    <TextView
+        android:id="@+id/exportHTMLTextViewId"
+        android:layout_toRightOf="@id/exportHTMLCheckboxId"
+        android:layout_alignBaseline="@id/exportHTMLCheckboxId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue_grey_900"
+        android:text="HTML"/>
 
-    </LinearLayout>
+    <android.support.v7.widget.AppCompatCheckBox
+        android:layout_below="@id/exportHTMLCheckboxId"
+        android:id="@+id/exportCSVCheckboxId"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"/>
+    <TextView
+        android:layout_below="@id/exportHTMLCheckboxId"
+        android:id="@+id/exportCSVTextViewId"
+        android:layout_alignBaseline="@id/exportCSVCheckboxId"
+        android:layout_toRightOf="@id/exportCSVCheckboxId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue_grey_900"
+        android:text="CSV"/>
 
-</FrameLayout>
+</RelativeLayout>
