@@ -52,7 +52,7 @@ public class BookmarkListFragment extends Fragment
     FloatingActionButton mAddBookmarkFab;
     @Bind(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    @Bind(R.id.linksListId)
+    @Bind(R.id.bookmarkRecyclerViewId)
     RecyclerView recyclerView;
     @Bind(R.id.emptyLinkListViewId)
     View mEmptyLinkListView;

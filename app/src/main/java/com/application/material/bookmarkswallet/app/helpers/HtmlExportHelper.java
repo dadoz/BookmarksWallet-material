@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,15 +35,16 @@ public class HtmlExportHelper extends ExportHelper {
                 OutputStreamWriter osw = new OutputStreamWriter(fos);
                 osw.write("<!DOCTYPE NETSCAPE-Bookmark-file-1>\n" +
                         "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=UTF-8\">\n" +
-                        "<TITLE>Bookmarks</TITLE>\n" +
+                        "<TITLE>Material Bookmarks - minimal EXPORT</TITLE>\n" +
                         "<H1>Bookmarks</H1>\n" +
                         "<DL><p>\n" +
-                        "<DT><H3 ADD_DATE=\"1472893318090001\">Senza etichetta</H3>\n" +
+                        "<DT><H3 ADD_DATE=\"1472893318090001\">Bookmark list</H3>\n" +
                         "<DL><p>\n");
 
                 for (Bookmark bookmark : list) {
-                    osw.write("<DT><A HREF=" + bookmark.getUrl() + " ADD_DATE=" +
-                            bookmark.getTimestamp() +">" + bookmark.getName() + "</A>\n");
+                    String title = bookmark.getName().equals("") ? bookmark.getUrl() : bookmark.getName();
+                    osw.write("<DT><A HREF=" + Utils.buildUrl(bookmark.getUrl(), false) + " ADD_DATE=" +
+                            bookmark.getTimestamp() +">" + title + "</A>\n");
                 }
 
                 osw.write("</DL><p>\n" +

@@ -34,7 +34,7 @@ public class CSVExportHelper  extends ExportHelper {
                 FileOutputStream fos = new FileOutputStream(file);
                 OutputStreamWriter osw = new OutputStreamWriter(fos);
                 CSVPrinter csvPrinter = new CSVPrinter(osw, CSVFormat.DEFAULT);
-                csvPrinter.printRecords(list);
+                csvPrinter.printRecord(list.get(0));
                 csvPrinter.close();
                 return true;
             }

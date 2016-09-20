@@ -1,17 +1,24 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    <android.support.v7.widget.Toolbar
-        android:background="?attr/colorPrimary"
-        android:id="@+id/toolbarId"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"/>
+    android:id="@+id/coordinatorLayoutId"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <FrameLayout
         android:layout_marginTop="?attr/actionBarSize"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/grey_50"
         android:id="@+id/fragmentContainerFrameLayoutId"/>
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbarLayoutId"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <android.support.v7.widget.Toolbar
+            android:background="?attr/colorPrimary"
+            android:id="@+id/toolbarId"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"/>
+    </android.support.design.widget.AppBarLayout>
 
 </android.support.design.widget.CoordinatorLayout>
