@@ -17,8 +17,10 @@ import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  *
@@ -50,6 +52,36 @@ public abstract class ExportHelper {
 
     /**
      *
+     * @param listener
+     */
+    protected void createFileAsync(final WeakReference<OnExportResultCallback> listener) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<Bookmark> list = new ArrayList<>(RealmUtils.getResults(Realm.getDefaultInstance()));
+                doJob(list, listener);
+            }
+        }).start();
+    }
+
+    /**
+     *
+     * @param list
+     * @param listener
+     */
+    private void doJob(final ArrayList<Bookmark> list,
+                       final WeakReference<OnExportResultCallback> listener) {
+        if (listener.get() != null) {
+            if (createFile(list)) {
+                listener.get().onExportResultSuccess("EXPORT with success");
+                return;
+            }
+            listener.get().onExportResultError("ERROR - get new message");
+        }
+    }
+
+    /**
+     *
      */
     public void checkAndRequestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
@@ -65,8 +97,7 @@ public abstract class ExportHelper {
             }
         }
 
-        //implement request
-        export(RealmUtils.getResultsList(Realm.getDefaultInstance()));
+        openExportDialog();
     }
 
     /**
@@ -75,7 +106,7 @@ public abstract class ExportHelper {
     public void handleRequestPermissionSuccess() {
         Toast.makeText(context.get(), context.get().getString(R.string.accept),
                 Toast.LENGTH_SHORT).show();
-        export(RealmUtils.getResultsList(Realm.getDefaultInstance()));
+        openExportDialog();
     }
 
     /**
@@ -89,11 +120,10 @@ public abstract class ExportHelper {
 
     /**
      *
-     * @param list
      * @return
      */
-    public boolean export(ArrayList<Bookmark> list) {
-        new ExportDialog(context, view, list).dialogHandler();
-        return false;
+    public void openExportDialog() {
+        new ExportDialog(context, view).dialogHandler();
     }
+
 }

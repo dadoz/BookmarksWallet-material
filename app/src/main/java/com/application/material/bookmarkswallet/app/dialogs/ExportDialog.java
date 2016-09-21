@@ -10,6 +10,9 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.helpers.CSVExportHelper;
+import com.application.material.bookmarkswallet.app.helpers.HtmlExportHelper;
+import com.application.material.bookmarkswallet.app.helpers.OnExportResultCallback;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
@@ -17,16 +20,15 @@ import com.application.material.bookmarkswallet.app.utlis.Utils;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class ExportDialog implements DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class ExportDialog implements DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener, OnExportResultCallback {
     private final WeakReference<Context> ctx;
-    private final ArrayList<Bookmark> exportBookmarkList;
     private final View view;
     private CheckBox htmlCheckbox;
     private CheckBox csvCheckbox;
 
-    public ExportDialog(WeakReference<Context> context, View v, ArrayList<Bookmark> list) {
+    public ExportDialog(WeakReference<Context> context, View v) {
         ctx = context;
-        exportBookmarkList = list;
+//        exportBookmarkList = list;
         view = v;
     }
 
@@ -46,6 +48,10 @@ public class ExportDialog implements DialogInterface.OnClickListener, CompoundBu
         initDialogListeners(dialog);
     }
 
+    /**
+     *
+     * @param dialog
+     */
     private void initDialogListeners(AlertDialog dialog) {
         dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
                 .setTextColor(ContextCompat.getColor(ctx.get(), R.color.grey_400));
@@ -70,19 +76,18 @@ public class ExportDialog implements DialogInterface.OnClickListener, CompoundBu
     }
 
     /**
-     *
+     * TODO async
      */
     private void handlePositiveButton() {
-        boolean result = ExportStrategy
-                .setExportStrategy(csvCheckbox.isChecked() ?
-                        ExportStrategy.ExportTypeEnum.CSV : ExportStrategy.ExportTypeEnum.HTML)
-                .createFile(exportBookmarkList);
-
-        if (result) {
-            successUI();
+        if (csvCheckbox.isChecked()) {
+            ((CSVExportHelper) ExportStrategy
+                    .setExportStrategy(ExportStrategy.ExportTypeEnum.CSV))
+                    .createFileAsync(new WeakReference<OnExportResultCallback>(this));
             return;
         }
-        errorUI();
+        ((HtmlExportHelper) ExportStrategy
+                .setExportStrategy(ExportStrategy.ExportTypeEnum.HTML))
+                .createFileAsync(new WeakReference<OnExportResultCallback>(this));
     }
 
     /**
@@ -109,5 +114,15 @@ public class ExportDialog implements DialogInterface.OnClickListener, CompoundBu
         if (compoundButton.getId() == R.id.exportHTMLCheckboxId) {
             csvCheckbox.setChecked(!active);
         }
+    }
+
+    @Override
+    public void onExportResultSuccess(String message) {
+        successUI();
+    }
+
+    @Override
+    public void onExportResultError(String message) {
+        errorUI();
     }
 }

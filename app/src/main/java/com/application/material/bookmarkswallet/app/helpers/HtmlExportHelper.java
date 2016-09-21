@@ -22,6 +22,11 @@ public class HtmlExportHelper extends ExportHelper {
     }
 
     @Override
+    public void createFileAsync(final WeakReference<OnExportResultCallback> listener) {
+        super.createFileAsync(listener);
+    }
+
+    @Override
     public boolean createFile(ArrayList<Bookmark> list) {
         try {
             File path = Environment

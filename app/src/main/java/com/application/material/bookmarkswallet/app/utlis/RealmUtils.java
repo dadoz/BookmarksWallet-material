@@ -9,9 +9,6 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-/**
- * Created by davide on 19/09/16.
- */
 public class RealmUtils {
     /**
      *

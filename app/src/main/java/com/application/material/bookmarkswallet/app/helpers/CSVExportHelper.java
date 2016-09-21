@@ -20,6 +20,11 @@ public class CSVExportHelper  extends ExportHelper {
         super(ctx, view);
     }
 
+    @Override
+    public void createFileAsync(final WeakReference<OnExportResultCallback> listener) {
+        super.createFileAsync(listener);
+    }
+
     /**
      * @return
      */
@@ -45,7 +50,6 @@ public class CSVExportHelper  extends ExportHelper {
 
         return false;
     }
-
 
     /**
      *
