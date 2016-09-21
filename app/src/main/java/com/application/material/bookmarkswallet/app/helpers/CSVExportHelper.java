@@ -28,7 +28,7 @@ public class CSVExportHelper  extends ExportHelper {
         try {
             File path = Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File file = new File(path, EXPORT_FILE_NAME);
+            File file = new File(path, EXPORT_FILE_NAME + CSV_EXTENSION);
             path.mkdir();
             file.createNewFile();
             if (file.exists()) {

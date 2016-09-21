@@ -25,7 +25,9 @@ import io.realm.Realm;
  */
 public abstract class ExportHelper {
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 99;
-    public static final String EXPORT_FILE_NAME = "materialBookmarks_export_date.csv";
+    public static final String EXPORT_FILE_NAME = "materialBookmarks_export_date";
+    public static final String CSV_EXTENSION = ".csv";
+    public static final String HTML_EXTENSION = ".html";
 
     private final WeakReference<Context> context;
     private final View view;

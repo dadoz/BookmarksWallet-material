@@ -26,7 +26,7 @@ public class HtmlExportHelper extends ExportHelper {
         try {
             File path = Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File file = new File(path, EXPORT_FILE_NAME);
+            File file = new File(path, EXPORT_FILE_NAME + HTML_EXTENSION);
             path.mkdir();
             file.createNewFile();
 
