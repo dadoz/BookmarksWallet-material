@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.view.View;
 
 import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -34,7 +35,7 @@ public class CSVExportHelper  extends ExportHelper {
                 FileOutputStream fos = new FileOutputStream(file);
                 OutputStreamWriter osw = new OutputStreamWriter(fos);
                 CSVPrinter csvPrinter = new CSVPrinter(osw, CSVFormat.DEFAULT);
-                csvPrinter.printRecord(list.get(0));
+                csvPrinter.printRecord(prepareListToCSV(list));
                 csvPrinter.close();
                 return true;
             }
@@ -45,4 +46,19 @@ public class CSVExportHelper  extends ExportHelper {
         return false;
     }
 
+
+    /**
+     *
+     * @param list
+     * @return
+     */
+    public static ArrayList<String> prepareListToCSV(ArrayList<Bookmark> list) {
+        ArrayList<String> listTmp = new ArrayList<>();
+        for (Bookmark item : list) {
+            listTmp.add(item.getUrl() + ';' + item.getTimestamp() + ';' +
+                    Utils.getNameByBookmark(item) + ';' );
+        }
+
+        return listTmp;
+    }
 }

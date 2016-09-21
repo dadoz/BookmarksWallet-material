@@ -4,21 +4,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/export_cardviews_layout"
-        android:id="@+id/importCardviewsLayoutId"
-        android:visibility="gone"/>
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/mainContainerViewId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/bookmarkRecyclerViewId"
-            android:layout_width="fill_parent"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include layout="@layout/export_cardviews_layout"
+            android:id="@+id/exportCardviewLayoutId"/>
+        <TextView
+            android:id="@+id/recyclerviewLabelTextId"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/fab_margin"
-            android:clipToPadding="false"
-            android:scrollbars="vertical"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_below="@id/exportCardviewLayoutId"
+            android:textSize="@dimen/text_size_24"
+            android:textColor="@color/blue_grey_900"
+            android:layout_margin="@dimen/padding_16"
+            android:text="@string/bookmark_list_label"/>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/mainContainerViewId"
+            android:layout_below="@id/recyclerviewLabelTextId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/bookmarkRecyclerViewId"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/fab_margin"
+                android:clipToPadding="false"
+                android:scrollbars="vertical"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </RelativeLayout>
     <include layout="@layout/empty_link_list_layout"/>
     <include layout="@layout/empty_search_result_layout"/>
     <android.support.design.widget.FloatingActionButton

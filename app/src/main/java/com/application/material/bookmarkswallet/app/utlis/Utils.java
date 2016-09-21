@@ -17,6 +17,7 @@ import android.widget.ImageView;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -215,5 +216,17 @@ public class Utils {
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(ctx.get(), isError ? R.color.red_400 : R.color.teal_400));
         snackbar.show();
+    }
+
+    /**
+     *
+     * @param bookmark
+     * @return
+     */
+    public static String getNameByBookmark(Bookmark bookmark) {
+        if (bookmark == null) {
+            return "No Title";
+        }
+        return (bookmark.getName().equals("") ? bookmark.getUrl() : bookmark.getName());
     }
 }

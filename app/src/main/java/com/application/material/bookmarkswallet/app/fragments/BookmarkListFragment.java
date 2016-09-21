@@ -13,6 +13,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.*;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -49,7 +50,7 @@ public class BookmarkListFragment extends Fragment
         MenuItemCompat.OnActionExpandListener, BookmarkRecyclerViewAdapter.OnActionListenerInterface {
     public static final String FRAG_TAG = "LinksListFragment";
     @Bind(R.id.addBookmarkFabId)
-    FloatingActionButton mAddBookmarkFab;
+    FloatingActionButton addNewFab;
     @Bind(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @Bind(R.id.bookmarkRecyclerViewId)
@@ -57,19 +58,25 @@ public class BookmarkListFragment extends Fragment
     @Bind(R.id.emptyLinkListViewId)
     View mEmptyLinkListView;
     @Bind(R.id.emptySearchResultLayoutId)
-    View mEmptySearchResultLayout;
-    @Bind(R.id.importFromAccountButtonId)
-    View importFromAccountButton;
-    @Bind(R.id.importFromKeepButtonId)
-    View importFromKeepButton;
-    @Bind(R.id.importFromAccountDismissButtonId)
-    View importFromAccountDismissButton;
-    @Bind(R.id.importFromKeepDismissButtonId)
-    View importFromKeepDismissButton;
-    @Bind(R.id.importFromAccountCardviewLayoutId)
-    View importFromAccountCardviewLayout;
-    @Bind(R.id.importFromKeepCardviewLayoutId)
-    View importFromKeepCardviewLayout;
+    View emptySearchResultLayout;
+    @Bind(R.id.exportCardviewButtonId)
+    View exportCardviewButton;
+    @Bind(R.id.exportCardviewLayoutId)
+    View exportCardviewLayout;
+    @Bind(R.id.recyclerviewLabelTextId)
+    View recyclerviewLabelText;
+//    @Bind(R.id.importFromAccountButtonId)
+//    View importFromAccountButton;
+//    @Bind(R.id.importFromKeepButtonId)
+//    View importFromKeepButton;
+//    @Bind(R.id.importFromAccountDismissButtonId)
+//    View importFromAccountDismissButton;
+//    @Bind(R.id.importFromKeepDismissButtonId)
+//    View importFromKeepDismissButton;
+//    @Bind(R.id.importFromAccountCardviewLayoutId)
+//    View importFromAccountCardviewLayout;
+//    @Bind(R.id.importFromKeepCardviewLayoutId)
+//    View importFromKeepCardviewLayout;
 
     private Realm mRealm;
     private SearchManager searchManager;
@@ -124,15 +131,16 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-        Utils.animateFabIn(mAddBookmarkFab);
+        searchManager.handleMenuItemActionExpandLayout(new View []{addNewFab, exportCardviewLayout,
+                recyclerviewLabelText});
         statusHelper.setSearchMode(true);
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        mEmptySearchResultLayout.setVisibility(View.GONE); //PATCH
-        Utils.animateFabOut(mAddBookmarkFab);
+        searchManager.handleMenuItemActionCollapsedLayout(new View []{addNewFab,
+                exportCardviewLayout, recyclerviewLabelText, emptySearchResultLayout});
         statusHelper.unsetStatus();
         return true;
     }
@@ -143,18 +151,25 @@ public class BookmarkListFragment extends Fragment
             case R.id.addBookmarkFabId:
                 mBookmarkActionSingleton.addBookmarkAction(this);
                 break;
-            case R.id.importFromKeepButtonId:
-                FlurryAgent.logEvent("importFromKeep", true);
-                dismissCardview(v);
+            case R.id.exportCardviewButtonId:
+                FlurryAgent.logEvent("export", true);
+                ExportStrategy
+                        .buildInstance(new WeakReference<>(getContext()), mainView)
+                        .checkAndRequestPermission();
+//                dismissCardview(v);
                 break;
-            case R.id.importFromAccountButtonId:
-                FlurryAgent.logEvent("importFromAccount", true);
-                dismissCardview(v);
-                break;
-            case R.id.importFromAccountDismissButtonId:
-            case R.id.importFromKeepDismissButtonId:
-                dismissCardview(v);
-                break;
+//            case R.id.importFromKeepButtonId:
+//                FlurryAgent.logEvent("importFromKeep", true);
+//                dismissCardview(v);
+//                break;
+//            case R.id.importFromAccountButtonId:
+//                FlurryAgent.logEvent("importFromAccount", true);
+//                dismissCardview(v);
+//                break;
+//            case R.id.importFromAccountDismissButtonId:
+//            case R.id.importFromKeepDismissButtonId:
+//                dismissCardview(v);
+//                break;
         }
     }
 
@@ -164,22 +179,22 @@ public class BookmarkListFragment extends Fragment
      */
     private void dismissCardview(View v) {
         switch (v.getId()) {
-            case R.id.importFromKeepButtonId:
-            case R.id.importFromKeepDismissButtonId:
-                SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
-                        .setValue(IMPORT_KEEP_NOTIFIED, true);
-                hideViewAnimator(importFromKeepCardviewLayout);
-                recyclerView.scrollToPosition(0);
-                importNotificationToUser();
-                break;
-            case R.id.importFromAccountButtonId:
-            case R.id.importFromAccountDismissButtonId:
-                SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
-                        .setValue(IMPORT_ACCOUNT_NOTIFIED, true);
-                hideViewAnimator(importFromAccountCardviewLayout);
-                recyclerView.scrollToPosition(0);
-                importNotificationToUser();
-                break;
+//            case R.id.importFromKeepButtonId:
+//            case R.id.importFromKeepDismissButtonId:
+//                SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
+//                        .setValue(IMPORT_KEEP_NOTIFIED, true);
+//                hideViewAnimator(importFromKeepCardviewLayout);
+//                recyclerView.scrollToPosition(0);
+//                importNotificationToUser();
+//                break;
+//            case R.id.importFromAccountButtonId:
+//            case R.id.importFromAccountDismissButtonId:
+//                SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
+//                        .setValue(IMPORT_ACCOUNT_NOTIFIED, true);
+//                hideViewAnimator(importFromAccountCardviewLayout);
+//                recyclerView.scrollToPosition(0);
+//                importNotificationToUser();
+//                break;
         }
     }
 
@@ -244,10 +259,9 @@ public class BookmarkListFragment extends Fragment
                 statusHelper.unsetStatus();
                 handleSetting();
                 return true;
-            case R.id.action_import_export:
-                ExportStrategy
-                        .buildInstance(new WeakReference<>(getContext()), mainView)
-                        .checkAndRequestPermission();
+            case R.id.action_import:
+                Toast.makeText(getContext(), getString(R.string.not_implemented_yet),
+                        Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_terms_and_licences:
                 handleTermsAndLicences();
@@ -285,7 +299,8 @@ public class BookmarkListFragment extends Fragment
         initPullToRefresh();
         initActionbar();
         initRecyclerView();
-        mAddBookmarkFab.setOnClickListener(this);
+        addNewFab.setOnClickListener(this);
+        exportCardviewButton.setOnClickListener(this);
 //        initImportViews();
 //        setNotSyncBookmarks();
     }
@@ -294,18 +309,18 @@ public class BookmarkListFragment extends Fragment
      *
      */
     private void initImportViews() {
-        importFromKeepButton.setOnClickListener(this);
-        importFromKeepDismissButton.setOnClickListener(this);
-        importFromAccountButton.setOnClickListener(this);
-        importFromAccountDismissButton.setOnClickListener(this);
-        if ((boolean) SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
-                .getValue(IMPORT_KEEP_NOTIFIED, false)) {
-            importFromKeepCardviewLayout.setVisibility(View.GONE);
-        }
-        if ((boolean) SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
-                .getValue(IMPORT_ACCOUNT_NOTIFIED, false)) {
-            importFromAccountCardviewLayout.setVisibility(View.GONE);
-        }
+//        importFromKeepButton.setOnClickListener(this);
+//        importFromKeepDismissButton.setOnClickListener(this);
+//        importFromAccountButton.setOnClickListener(this);
+//        importFromAccountDismissButton.setOnClickListener(this);
+//        if ((boolean) SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
+//                .getValue(IMPORT_KEEP_NOTIFIED, false)) {
+//            importFromKeepCardviewLayout.setVisibility(View.GONE);
+//        }
+//        if ((boolean) SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
+//                .getValue(IMPORT_ACCOUNT_NOTIFIED, false)) {
+//            importFromAccountCardviewLayout.setVisibility(View.GONE);
+//        }
     }
 
     /**
@@ -313,7 +328,7 @@ public class BookmarkListFragment extends Fragment
      */
     private void initActionbar() {
         mActionbarSingleton.initActionBar();
-        mActionbarSingleton.setTitle(getString(R.string.bookmark_list_title));
+        mActionbarSingleton.setTitle("Material Bookmarks");//getString(R.string.bookmark_list_title));
     }
 
     /**
@@ -346,7 +361,7 @@ public class BookmarkListFragment extends Fragment
     private void registerDataObserver(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
         //TODO leak
         BookmarkListObserver observer = new BookmarkListObserver(recyclerView, mEmptyLinkListView,
-                mEmptySearchResultLayout, mSwipeRefreshLayout, searchManager);
+                emptySearchResultLayout, mSwipeRefreshLayout, searchManager);
         recyclerViewAdapter.registerAdapterDataObserver(observer);
     }
 

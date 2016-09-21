@@ -41,10 +41,13 @@ public class HtmlExportHelper extends ExportHelper {
                         "<DT><H3 ADD_DATE=\"1472893318090001\">Bookmark list</H3>\n" +
                         "<DL><p>\n");
 
-                for (Bookmark bookmark : list) {
-                    String title = bookmark.getName().equals("") ? bookmark.getUrl() : bookmark.getName();
-                    osw.write("<DT><A HREF=" + Utils.buildUrl(bookmark.getUrl(), false) + " ADD_DATE=" +
-                            bookmark.getTimestamp() +">" + title + "</A>\n");
+                for (Bookmark item : list) {
+                    osw.write("<DT><A HREF=" +
+                            Utils.buildUrl(item.getUrl(), false) +
+                            " ADD_DATE=" +
+                            item.getTimestamp() + ">" +
+                            Utils.getNameByBookmark(item) +
+                            "</A>\n");
                 }
 
                 osw.write("</DL><p>\n" +

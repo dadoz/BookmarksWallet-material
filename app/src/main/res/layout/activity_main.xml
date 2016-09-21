@@ -1,4 +1,4 @@
-<android.support.design.widget.CoordinatorLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/coordinatorLayoutId"
     android:layout_width="match_parent"
@@ -20,5 +20,4 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"/>
     </android.support.design.widget.AppBarLayout>
-
-</android.support.design.widget.CoordinatorLayout>
+</FrameLayout>

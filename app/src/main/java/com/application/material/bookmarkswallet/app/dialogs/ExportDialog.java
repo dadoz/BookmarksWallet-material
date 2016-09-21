@@ -2,10 +2,12 @@ package com.application.material.bookmarkswallet.app.dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
@@ -34,7 +36,7 @@ public class ExportDialog implements DialogInterface.OnClickListener, CompoundBu
     public void dialogHandler() {
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx.get(), R.style.CustomLollipopDialogStyle);
         AlertDialog dialog = builder
-                .setTitle("Bookmarks export!")
+                .setTitle(ctx.get().getString(R.string.export_dialog_title))
                 .setView(R.layout.dialog_export_bookmarks_layout)
                 .setNegativeButton(ctx.get().getString(android.R.string.cancel), this)
                 .setPositiveButton(ctx.get().getString(android.R.string.yes), this)
@@ -45,6 +47,8 @@ public class ExportDialog implements DialogInterface.OnClickListener, CompoundBu
     }
 
     private void initDialogListeners(AlertDialog dialog) {
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+                .setTextColor(ContextCompat.getColor(ctx.get(), R.color.grey_400));
         csvCheckbox = (CheckBox) dialog.findViewById(R.id.exportCSVCheckboxId);
         htmlCheckbox = (CheckBox) dialog.findViewById(R.id.exportHTMLCheckboxId);
         csvCheckbox.setOnCheckedChangeListener(this);

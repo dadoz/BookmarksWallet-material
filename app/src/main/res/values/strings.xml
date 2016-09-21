@@ -7,7 +7,7 @@
     <string name="links_tab_name">bookmarks</string>
     <string name="import_export_tab_name">import/export</string>
     <string name="terms_and_licences">terms and licence</string>
-    <string name="search_hint">type bookamrk name</string>
+    <string name="search_hint">type bookmark name</string>
 
     <string name="FLURRY_API_KEY">KQ2Y8SXVGPBSKY9BCYW8</string>
     <string name="ANDROID_FEEDBACK_KEY">AF-EB325C27D659-03</string>
@@ -47,4 +47,10 @@
     <string name="are_you_sure_you_want_to_delete">Are you sure you want to delete all your bookmarks?</string>
     <string name="delete_dialog_label">Delete bookmarks!</string>
     <string name="delete_button_label">DELETE</string>
+    <string name="export_feature">Export!</string>
+    <string name="export_description">Now you can export the bookmark list on Download folder.</string>
+    <string name="export_button_label">EXPORT</string>
+    <string name="bookmark_list_label">Bookmark list</string>
+    <string name="import_menu_label">import</string>
+    <string name="export_dialog_title">Export</string>
 </resources>

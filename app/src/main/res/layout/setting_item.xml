@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/indigo_600"
         android:text="sasdfa sdfasdf"
-        android:textSize="@dimen/text_size_16"/>
+        android:textSize="@dimen/text_size_20"/>
     <TextView
         android:id="@+id/settingDescriptionTextId"
         android:layout_below="@id/settingLabelTextId"

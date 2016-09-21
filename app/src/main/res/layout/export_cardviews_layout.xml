@@ -5,9 +5,7 @@
     android:layout_height="wrap_content">
     <android.support.v7.widget.CardView
         android:id="@+id/importFromKeepCardviewLayoutId"
-        android:layout_marginTop="@dimen/padding_16"
-        android:layout_marginLeft="@dimen/padding_16"
-        android:layout_marginRight="@dimen/padding_16"
+        android:layout_margin="@dimen/padding_16"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <RelativeLayout
@@ -18,89 +16,40 @@
                 android:id="@+id/imageViewId1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_done_black_48dp"/>
+                android:src="@drawable/ic_archive_black_48dp"/>
             <TextView
+                android:id="@+id/exportTitleTextId"
                 android:layout_toRightOf="@id/imageViewId1"
                 android:layout_marginLeft="@dimen/padding_16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_18"
-                android:textColor="@color/blue_grey_900"
-                android:text="@string/import_from_google_keep"/>
-            <TextView
-                android:id="@+id/importFromKeepButtonId"
-                android:background="?attr/selectableItemBackground"
-                android:layout_marginTop="@dimen/padding_16"
-                android:layout_below="@id/imageViewId1"
-                android:layout_alignParentRight="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_16"
+                android:textSize="@dimen/text_size_24"
                 android:textColor="@color/indigo_600"
-                android:text="@string/notify_label"/>
+                android:text="@string/export_feature"/>
             <TextView
-                android:id="@+id/importFromKeepDismissButtonId"
-                android:background="?attr/selectableItemBackground"
-                android:layout_below="@id/imageViewId1"
-                android:layout_marginTop="@dimen/padding_16"
-                android:layout_marginRight="@dimen/padding_16"
-                android:layout_toLeftOf="@id/importFromKeepButtonId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_16"
-                android:textColor="@color/red_400"
-                android:text="@string/dismiss_label"/>
-
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-    <android.support.v7.widget.CardView
-        android:id="@+id/importFromAccountCardviewLayoutId"
-        android:layout_below="@id/importFromKeepCardviewLayoutId"
-        android:layout_margin="@dimen/padding_16"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_16">
-            <ImageView
-                android:id="@+id/imageViewId2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_done_black_48dp"/>
-            <TextView
-                android:layout_toRightOf="@id/imageViewId2"
+                android:id="@+id/exportDescriptionTextId"
+                android:layout_toRightOf="@id/imageViewId1"
                 android:layout_marginLeft="@dimen/padding_16"
+                android:layout_marginTop="@dimen/small_padding"
+                android:layout_below="@id/exportTitleTextId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_18"
+                android:textSize="@dimen/text_size_16"
                 android:textColor="@color/blue_grey_900"
-                android:text="@string/import_from_your_account"/>
+                android:text="@string/export_description"/>
             <TextView
-                android:id="@+id/importFromAccountButtonId"
+                android:id="@+id/exportCardviewButtonId"
                 android:background="?attr/selectableItemBackground"
-                android:layout_below="@id/imageViewId2"
                 android:layout_marginTop="@dimen/padding_16"
+                android:layout_below="@id/exportDescriptionTextId"
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_16"
                 android:textColor="@color/indigo_600"
-                android:text="@string/notify_label"/>
-            <TextView
-                android:id="@+id/importFromAccountDismissButtonId"
-                android:background="?attr/selectableItemBackground"
-                android:layout_below="@id/imageViewId2"
-                android:layout_marginTop="@dimen/padding_16"
-                android:layout_marginRight="@dimen/padding_16"
-                android:layout_toLeftOf="@id/importFromAccountButtonId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_16"
-                android:textColor="@color/red_400"
-                android:text="@string/dismiss_label"/>
+                android:padding="12dp"
+                android:text="@string/export_button_label"/>
 
         </RelativeLayout>
-
     </android.support.v7.widget.CardView>
 </RelativeLayout>

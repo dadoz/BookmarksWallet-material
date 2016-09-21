@@ -33,6 +33,7 @@ public class AnimatorBuilder {
         this.duration = duration;
     }
 
+
     /**
      *
      * @param view
@@ -54,11 +55,14 @@ public class AnimatorBuilder {
      * @param viewArray
      * @param isDelaySet
      */
-    public boolean buildShowAnimator(@NonNull View[] viewArray, boolean isDelaySet) {
+    public Animator[] buildShowAnimator(@NonNull View[] viewArray, boolean isDelaySet) {
+        Animator[] animatoArray = new Animator[viewArray.length];
+        int i = 0;
         for (View view: viewArray) {
-            buildShowAnimator(view, isDelaySet);
+            animatoArray[i] = buildShowAnimator(view, isDelaySet);
+            i++;
         }
-        return true;
+        return animatoArray;
     }
 
     /**
@@ -67,11 +71,14 @@ public class AnimatorBuilder {
      * @param viewArray
      * @param isDelaySet
      */
-    public boolean buildHideAnimator(@NonNull View[] viewArray, boolean isDelaySet) {
+    public Animator[] buildHideAnimator(@NonNull View[] viewArray, boolean isDelaySet) {
+        Animator[] animatoArray = new Animator[viewArray.length];
+        int i = 0;
         for (View view: viewArray) {
-            buildHideAnimator(view, isDelaySet);
+            animatoArray[i] = buildHideAnimator(view, isDelaySet);
+            i++;
         }
-        return true;
+        return animatoArray;
     }
 
     /**

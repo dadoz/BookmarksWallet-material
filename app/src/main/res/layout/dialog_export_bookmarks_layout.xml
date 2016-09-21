@@ -3,7 +3,7 @@
     android:id="@+id/exportFrameLayoutId"
     android:layout_width="wrap_content"
     android:maxWidth="@dimen/export_bookmarks_framelayout_width"
-    android:padding="@dimen/small_padding"
+    android:padding="@dimen/padding_16"
     android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/exportSuccessIconId"
@@ -26,6 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/blue_grey_900"
+        android:layout_marginLeft="@dimen/small_padding"
         android:text="HTML"/>
 
     <android.support.v7.widget.AppCompatCheckBox
@@ -38,6 +39,7 @@
     <TextView
         android:layout_below="@id/exportHTMLCheckboxId"
         android:id="@+id/exportCSVTextViewId"
+        android:layout_marginLeft="@dimen/small_padding"
         android:layout_alignBaseline="@id/exportCSVCheckboxId"
         android:layout_toRightOf="@id/exportCSVCheckboxId"
         android:layout_width="wrap_content"

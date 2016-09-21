@@ -1,15 +1,20 @@
 package com.application.material.bookmarkswallet.app.manager;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
@@ -162,6 +167,76 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
      */
     public String getFilterString() {
         return mFilterString;
+    }
+
+    /**
+     *
+     * @param views
+     */
+    public void handleMenuItemActionCollapsedLayout(@NonNull View[] views) {
+        collapseViews(views[0], views[1], true);
+        views[2].setVisibility(View.VISIBLE);
+        views[3].setVisibility(View.GONE); //TODO PATCH
+    }
+
+    /**
+     *
+     * @param views
+     */
+    public void handleMenuItemActionExpandLayout(@NonNull View[] views) {
+        collapseViews(views[0], views[1], false);
+        views[2].setVisibility(View.GONE);
+    }
+
+
+    /**
+     *
+     * @param fab
+     * @param cardview
+     * @param collapsing
+     */
+    private void collapseViews(View fab, final View cardview, final boolean collapsing) {
+        Animator fabAnimator = collapsing ?
+                AnimatorBuilder.getInstance(context)
+                        .buildHideAnimator(fab, false) :
+                AnimatorBuilder.getInstance(context)
+                        .buildShowAnimator(fab, false);
+        Animator cardviewAnimator = collapsing ?
+                AnimatorBuilder.getInstance(context)
+                        .getYTranslation(cardview, -cardview.getMeasuredHeight(), 0, 0):
+                AnimatorBuilder.getInstance(context)
+                        .getYTranslation(cardview, 0, -cardview.getMeasuredHeight(), 0);
+
+
+        AnimatorSet temp = new AnimatorSet();
+        temp.playTogether(fabAnimator, cardviewAnimator);
+        cardviewAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                if (collapsing) {
+                    cardview.setVisibility(View.VISIBLE);
+                }
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                if (!collapsing) {
+                    cardview.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        temp.start();
     }
 
     /**
