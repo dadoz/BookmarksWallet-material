@@ -12,6 +12,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.*;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -223,13 +224,23 @@ public class BookmarkListFragment extends Fragment
      * connected to main fragment app
      */
     private void initRecyclerView() {
-        BookmarkRecyclerViewAdapter recyclerViewAdapter = new BookmarkRecyclerViewAdapter(getActivity(),
+        BookmarkRecyclerViewAdapter rvAdapter = new BookmarkRecyclerViewAdapter(getActivity(),
                 new WeakReference<BookmarkRecyclerViewAdapter.OnActionListenerInterface>(this));
-        registerDataObserver(recyclerViewAdapter);
+        registerDataObserver(rvAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(recyclerViewAdapter);
-        setRealmAdapter(recyclerViewAdapter, RealmUtils.getResults(mRealm));
-        searchManager.setAdapter(recyclerViewAdapter); //TODO what???
+        recyclerView.setAdapter(rvAdapter);
+        setRealmAdapter(rvAdapter, RealmUtils.getResults(mRealm));
+        searchManager.setAdapter(rvAdapter); //TODO what???
+        initItemTouchHelper(rvAdapter);
+    }
+
+    /**
+     *
+     * @param rvAdapter
+     */
+    private void initItemTouchHelper(BookmarkRecyclerViewAdapter rvAdapter) {
+        new ItemTouchHelper(new SimpleItemTouchHelperCallback(rvAdapter))
+            .attachToRecyclerView(recyclerView);
     }
 
     /**

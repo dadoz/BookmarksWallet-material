@@ -18,6 +18,7 @@ import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import java.lang.ref.WeakReference;
 
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 
@@ -29,14 +30,13 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
     private final WeakReference<OnActionListenerInterface> listener;
     private final StatusHelper mStatusSingleton;
     private final int mDarkGrey;
-    private final int mLightGrey;
+    private final static int mLightGrey = Color.TRANSPARENT;
 
     public BookmarkRecyclerViewAdapter(Activity activity, WeakReference<OnActionListenerInterface> lst) {
         mActivityRef = activity;
         listener = lst;
         mStatusSingleton = StatusHelper.getInstance();
         mDarkGrey = ContextCompat.getColor(mActivityRef.getApplicationContext(), R.color.indigo_50);
-        mLightGrey = Color.TRANSPARENT;
     }
 
     @Override
@@ -111,19 +111,24 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-
     }
 
     @Override
     public void onItemDismiss(int position) {
+        //TODO refactor
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        getRealmBaseAdapter().getItem(position).deleteFromRealm();
+        realm.commitTransaction();
 
+        notifyItemRemoved(position);
     }
 
     /**
      * ViewHolder def
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder
-            implements View.OnLongClickListener, View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder 
+            implements View.OnClickListener {
         private final WeakReference<OnActionListenerInterface> listener;
         public View mLayoutView;
         private ImageView mIconView;
@@ -139,15 +144,15 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
             mLabelView = (TextView) v.findViewById(R.id.linkTitleId);
             mUrlView = (TextView) v.findViewById(R.id.linkUrlId);
             mTimestampView = (TextView) v.findViewById(R.id.linkTimestampId);
-            itemView.setOnLongClickListener(this);
+//            itemView.setOnLongClickListener(this);
             itemView.setOnClickListener(this);
         }
 
-        @Override
-        public boolean onLongClick(View view) {
-            return listener.get().onLongItemClick(view, getAdapterPosition());
-        }
-
+//        @Override
+//        public boolean onLongClick(View view) {
+//            return listener.get().onLongItemClick(view, getAdapterPosition());
+//        }
+//
         @Override
         public void onClick(View view) {
             listener.get().onItemClick(view, getAdapterPosition());

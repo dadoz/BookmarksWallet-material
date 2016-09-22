@@ -12,14 +12,16 @@ import io.realm.Sort;
  * Created by davide on 21/04/15.
  */
 public class RealmModelAdapter<T extends RealmObject> extends RealmBaseAdapter<T> {
+    private final RealmResults itemList;
+
     public RealmModelAdapter(Context context, RealmResults realmResults) {
         super(context, realmResults);
         realmResults.sort("timestamp", Sort.DESCENDING);
+        itemList = realmResults;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         return null;
     }
-
 }

@@ -1,8 +1,10 @@
 package com.application.material.bookmarkswallet.app.realm.adapter;
 import android.support.v7.widget.RecyclerView;
 
+import com.application.material.bookmarkswallet.app.adapter.ItemTouchHelperAdapter;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 
+import io.realm.Realm;
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
