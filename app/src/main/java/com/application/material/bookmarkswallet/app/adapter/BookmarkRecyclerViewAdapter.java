@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.*;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ import io.realm.RealmResults;
 import static com.application.material.bookmarkswallet.app.models.Bookmark.Utils.getBookmarkNameWrapper;
 
 public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
-        RealmRecyclerViewAdapter<Bookmark>{
+        RealmRecyclerViewAdapter<Bookmark> implements ItemTouchHelperAdapter {
     private final Activity mActivityRef;
     private final WeakReference<OnActionListenerInterface> listener;
     private final StatusHelper mStatusSingleton;
@@ -108,6 +109,15 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         getRealmBaseAdapter().updateData(filteredList);
     }
 
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+
+    }
 
     /**
      * ViewHolder def

@@ -20,7 +20,7 @@
     <string name="setting_feedback_label">Send a feedback</string>
     <string name="setting_build_version_label">Build version</string>
     <string name="send_feedback_email">tunnus.android@gmail.com</string>
-    <string name="bookmark_list_title">List</string>
+    <string name="bookmark_list_title">Material Bookmarks</string>
     <string name="https_checkbox_label">HTTPS</string>
     <string name="search_label">SEARCH</string>
     <string name="save_new_bookmark">SAVE BOOKMARK</string>
