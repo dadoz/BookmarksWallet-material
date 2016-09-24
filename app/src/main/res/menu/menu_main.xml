@@ -8,10 +8,6 @@
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:title="Search"/>
-    <!--<item-->
-        <!--android:icon="@drawable/ic_archive_black_48dp"-->
-        <!--app:showAsAction="always|collapseActionView"-->
-        <!--android:title="Search"/>-->
     <item android:id="@+id/action_import"
         android:title="@string/import_menu_label"
         android:orderInCategory="100"
