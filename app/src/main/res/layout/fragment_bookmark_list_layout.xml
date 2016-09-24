@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/exportCardviewLayoutId"
             android:textSize="@dimen/text_size_20"
-            android:textColor="@color/indigo_600"
+            android:textColor="@color/grey_400"
             android:layout_margin="@dimen/padding_16"
             android:text="@string/bookmark_list_label"/>
         <android.support.v4.widget.SwipeRefreshLayout
