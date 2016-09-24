@@ -1,5 +1,6 @@
 package com.application.material.bookmarkswallet.app.observer;
 
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,25 +16,23 @@ import com.application.material.bookmarkswallet.app.helpers.StatusHelper.StatusE
  */
 public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
 
+    private final View exportCardview;
+    private final View recyclerviewLabelText;
     private StatusHelper mStatusSingleton;
     private RecyclerView mRecyclerView;
     private View mEmptyLinkListView;
     private View mEmptySearchResultLayout;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private SearchManager searchManager;
 
-    public BookmarkListObserver(RecyclerView recyclerView,
-                                View emptyLinkListView,
-                                View emptySearchResultLayout,
-                                SwipeRefreshLayout swipeRefreshLayout,
-                                SearchManager searchHandlerSingleton) {
+    public BookmarkListObserver(@NonNull View[] views, SearchManager searchMng) {
 
-        this.mStatusSingleton = StatusHelper.getInstance();
-        this.mRecyclerView = recyclerView;
-        this.mEmptyLinkListView = emptyLinkListView;
-        this.mEmptySearchResultLayout = emptySearchResultLayout;
-        this.mSwipeRefreshLayout = swipeRefreshLayout;
-        this.searchManager = searchHandlerSingleton;
+        mStatusSingleton = StatusHelper.getInstance();
+        mRecyclerView = (RecyclerView) views[0]; //recyclerView;
+        mEmptyLinkListView = views[1]; //emptyLinkListView;
+        mEmptySearchResultLayout = views[2]; //emptySearchResultLayout;
+        recyclerviewLabelText = views[3]; //emptySearchResultLayout;
+        exportCardview = views[4]; //emptySearchResultLayout;
+        searchManager = searchMng;
     }
 
     @Override
@@ -57,6 +56,8 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
      */
     private void handleListView() {
         mEmptyLinkListView.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
+        recyclerviewLabelText.setVisibility(isEmptyData() ? View.GONE : View.VISIBLE);
+        exportCardview.setVisibility(isEmptyData() ? View.GONE : View.VISIBLE);
     }
 
     /**

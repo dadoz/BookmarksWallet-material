@@ -201,42 +201,8 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
                         .buildHideAnimator(fab, false) :
                 AnimatorBuilder.getInstance(context)
                         .buildShowAnimator(fab, false);
-        Animator cardviewAnimator = collapsing ?
-                AnimatorBuilder.getInstance(context)
-                        .getYTranslation(cardview, -cardview.getMeasuredHeight(), 0, 0):
-                AnimatorBuilder.getInstance(context)
-                        .getYTranslation(cardview, 0, -cardview.getMeasuredHeight(), 0);
-
-
-        AnimatorSet temp = new AnimatorSet();
-        temp.playTogether(fabAnimator, cardviewAnimator);
-        cardviewAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-                if (collapsing) {
-                    cardview.setVisibility(View.VISIBLE);
-                }
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                if (!collapsing) {
-                    cardview.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        });
-        temp.start();
+        fabAnimator.start();
+        cardview.setVisibility(collapsing ? View.VISIBLE : View.GONE);
     }
 
     /**

@@ -1,13 +1,16 @@
 package com.application.material.bookmarkswallet.app.dialogs;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.helpers.CSVExportHelper;
@@ -20,7 +23,8 @@ import com.application.material.bookmarkswallet.app.utlis.Utils;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class ExportDialog implements DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener, OnExportResultCallback {
+public class ExportDialog implements DialogInterface.OnClickListener,
+        CompoundButton.OnCheckedChangeListener, OnExportResultCallback, View.OnClickListener {
     private final WeakReference<Context> ctx;
     private final View view;
     private CheckBox htmlCheckbox;
@@ -94,16 +98,15 @@ public class ExportDialog implements DialogInterface.OnClickListener, CompoundBu
      *
      */
     private void errorUI() {
-        String message = "download with error";
-        Utils.setSnackbar(view, ctx, message, true);
+        Utils.setSnackbar(view, ctx, ctx.get().getString(R.string.downloaded_with_error), true, null, null);
     }
 
     /**
      *
      */
     private void successUI() {
-        String message = "download with success";
-        Utils.setSnackbar(view, ctx, message, false);
+        Utils.setSnackbar(view, ctx, ctx.get().getString(R.string.downloaded_with_success), false,
+                ctx.get().getString(R.string.open), new WeakReference<View.OnClickListener>(this));
     }
 
     @Override
@@ -124,5 +127,11 @@ public class ExportDialog implements DialogInterface.OnClickListener, CompoundBu
     @Override
     public void onExportResultError(String message) {
         errorUI();
+    }
+
+    @Override
+    public void onClick(View view) {
+        //TODO switch on ids
+        ctx.get().startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
     }
 }

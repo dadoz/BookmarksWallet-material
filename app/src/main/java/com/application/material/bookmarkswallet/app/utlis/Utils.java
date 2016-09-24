@@ -2,6 +2,7 @@ package com.application.material.bookmarkswallet.app.utlis;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
@@ -14,6 +15,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
@@ -149,16 +151,6 @@ public class Utils {
                 .start();
     }
 
-    /**
-     *
-     * @param v
-     */
-    public static void animateFabOut(View v) {
-        v.animate().translationY(0)
-                .setInterpolator(new DecelerateInterpolator(2))
-                .start();
-    }
-
     /**check if url contain already http or https protocol otw atttach it
      *
      */
@@ -212,9 +204,14 @@ public class Utils {
      * @param message
      * @param isError
      */
-    public static void setSnackbar(View view, WeakReference<Context> ctx, String message, boolean isError) {
+    public static void setSnackbar(View view, final WeakReference<Context> ctx, String message, boolean isError,
+                                   String actionLabel, WeakReference<View.OnClickListener> actionListener) {
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(ctx.get(), isError ? R.color.red_400 : R.color.teal_400));
+        if (actionListener != null) {
+            snackbar.setAction(actionLabel, actionListener.get());
+            snackbar.setActionTextColor(ContextCompat.getColor(ctx.get(), R.color.blue_grey_900));
+        }
         snackbar.show();
     }
 
