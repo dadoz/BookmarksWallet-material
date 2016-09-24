@@ -54,12 +54,6 @@ public class BookmarkListFragment extends Fragment
     View mEmptyLinkListView;
     @Bind(R.id.emptySearchResultLayoutId)
     View emptySearchResultLayout;
-    @Bind(R.id.exportCardviewButtonId)
-    View exportCardviewButton;
-    @Bind(R.id.exportCardviewLayoutId)
-    View exportCardviewLayout;
-    @Bind(R.id.recyclerviewLabelTextId)
-    View recyclerviewLabelText;
 
 
     private Realm mRealm;
@@ -115,16 +109,14 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-        searchManager.handleMenuItemActionExpandLayout(new View []{addNewFab, exportCardviewLayout,
-                recyclerviewLabelText});
+        searchManager.handleMenuItemActionExpandLayout(new View []{addNewFab});
         statusHelper.setSearchMode(true);
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        searchManager.handleMenuItemActionCollapsedLayout(new View []{addNewFab,
-                exportCardviewLayout, recyclerviewLabelText, emptySearchResultLayout});
+        searchManager.handleMenuItemActionCollapsedLayout(new View []{addNewFab, emptySearchResultLayout});
         statusHelper.unsetStatus();
         return true;
     }
@@ -134,12 +126,6 @@ public class BookmarkListFragment extends Fragment
         switch (v.getId()) {
             case R.id.addBookmarkFabId:
                 mBookmarkActionSingleton.addBookmarkAction(this);
-                break;
-            case R.id.exportCardviewButtonId:
-                FlurryAgent.logEvent("export", true);
-                ExportStrategy
-                        .buildInstance(new WeakReference<>(getContext()), mainView)
-                        .checkAndRequestPermission();
                 break;
         }
     }
@@ -172,6 +158,12 @@ public class BookmarkListFragment extends Fragment
                 return true;
             case R.id.action_terms_and_licences:
                 handleTermsAndLicences();
+                return true;
+            case R.id.action_export:
+                FlurryAgent.logEvent("export", true);
+                ExportStrategy
+                        .buildInstance(new WeakReference<>(getContext()), mainView)
+                        .checkAndRequestPermission();
                 return true;
         }
         return true;
@@ -207,7 +199,6 @@ public class BookmarkListFragment extends Fragment
         initActionbar();
         initRecyclerView();
         addNewFab.setOnClickListener(this);
-        exportCardviewButton.setOnClickListener(this);
 //        setNotSyncBookmarks();
     }
 
@@ -259,7 +250,7 @@ public class BookmarkListFragment extends Fragment
     private void registerDataObserver(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
         //TODO leak
         BookmarkListObserver observer = new BookmarkListObserver(new View[] { recyclerView,
-                mEmptyLinkListView, emptySearchResultLayout, recyclerviewLabelText, exportCardviewLayout}, searchManager);
+                mEmptyLinkListView, emptySearchResultLayout}, searchManager);
         recyclerViewAdapter.registerAdapterDataObserver(observer);
     }
 

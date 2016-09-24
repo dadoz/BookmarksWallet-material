@@ -1,7 +1,6 @@
 package com.application.material.bookmarkswallet.app.manager;
 
 import android.animation.Animator;
-import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -15,9 +14,7 @@ import android.widget.Filterable;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
-import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
@@ -27,7 +24,6 @@ import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 public class SearchManager implements Filterable, SearchView.OnQueryTextListener {
     private static WeakReference<Context> context;
@@ -174,9 +170,8 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
      * @param views
      */
     public void handleMenuItemActionCollapsedLayout(@NonNull View[] views) {
-        collapseViews(views[0], views[1], true);
-        views[2].setVisibility(View.VISIBLE);
-        views[3].setVisibility(View.GONE); //TODO PATCH
+        collapseViews(views[0], true);
+        views[1].setVisibility(View.GONE); //TODO PATCH
     }
 
     /**
@@ -184,25 +179,21 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
      * @param views
      */
     public void handleMenuItemActionExpandLayout(@NonNull View[] views) {
-        collapseViews(views[0], views[1], false);
-        views[2].setVisibility(View.GONE);
+        collapseViews(views[0], false);
     }
 
 
     /**
-     *
-     * @param fab
-     * @param cardview
+     *  @param fab
      * @param collapsing
      */
-    private void collapseViews(View fab, final View cardview, final boolean collapsing) {
+    private void collapseViews(View fab, final boolean collapsing) {
         Animator fabAnimator = collapsing ?
                 AnimatorBuilder.getInstance(context)
                         .buildHideAnimator(fab, false) :
                 AnimatorBuilder.getInstance(context)
                         .buildShowAnimator(fab, false);
         fabAnimator.start();
-        cardview.setVisibility(collapsing ? View.VISIBLE : View.GONE);
     }
 
     /**
