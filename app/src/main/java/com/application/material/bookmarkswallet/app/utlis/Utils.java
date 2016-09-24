@@ -149,16 +149,6 @@ public class Utils {
                 .start();
     }
 
-    /**
-     *
-     * @param v
-     */
-    public static void animateFabOut(View v) {
-        v.animate().translationY(0)
-                .setInterpolator(new DecelerateInterpolator(2))
-                .start();
-    }
-
     /**check if url contain already http or https protocol otw atttach it
      *
      */

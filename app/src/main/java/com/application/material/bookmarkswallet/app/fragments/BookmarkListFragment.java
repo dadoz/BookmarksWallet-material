@@ -247,8 +247,8 @@ public class BookmarkListFragment extends Fragment
      */
     private void registerDataObserver(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
         //TODO leak
-        BookmarkListObserver observer = new BookmarkListObserver(recyclerView, mEmptyLinkListView,
-                emptySearchResultLayout, mSwipeRefreshLayout, searchManager);
+        BookmarkListObserver observer = new BookmarkListObserver(new View[] { recyclerView,
+                mEmptyLinkListView, emptySearchResultLayout, recyclerviewLabelText, exportCardviewLayout}, searchManager);
         recyclerViewAdapter.registerAdapterDataObserver(observer);
     }
 

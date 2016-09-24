@@ -53,4 +53,5 @@
     <string name="bookmark_list_label">Bookmark list</string>
     <string name="import_menu_label">import</string>
     <string name="export_dialog_title">Export</string>
+    <string name="no_bookmarks_here">No bookmarks here!</string>
 </resources>

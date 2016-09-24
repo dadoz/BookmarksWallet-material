@@ -1,42 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/emptyLinkListViewId"
-              android:visibility="gone"
-              android:padding="@dimen/medium_padding"
-              android:paddingBottom="@dimen/sliding_panel_header_height"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:gravity="center"
-              android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/emptyLinkListViewId"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <ImageView
+        android:layout_centerInParent="true"
+        android:id="@+id/noBookmarkIconId"
+        android:layout_width="@dimen/large_icon_size"
+        android:layout_height="@dimen/large_icon_size"
+        android:src="@drawable/ic_pin_colorful_48dp"/>
+    <TextView
+        android:layout_marginTop="@dimen/padding_16"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/noBookmarkIconId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_bookmarks_here"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@color/blue_grey_900"/>
 
-    <LinearLayout
-            android:id="@+id/importLocalBookmarksButtonId"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="?android:selectableItemBackground"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/sliding_panel_header_height">
-        <ImageView
-                android:layout_width="@dimen/large_icon_size"
-                android:layout_height="@dimen/large_icon_size"
-
-                android:src="@drawable/ic_pin_colorful_48dp"/>
-        <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/medium_padding"
-                android:gravity="center"
-                android:orientation="vertical">
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No bookmarks here!"
-                    android:textSize="@dimen/text_size_14"
-                    android:gravity="center"
-                    android:textColor="@color/blue_grey_200"/>
-
-        </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

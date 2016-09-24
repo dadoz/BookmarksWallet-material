@@ -10,14 +10,9 @@
         android:background="@color/grey_50"
         android:id="@+id/fragmentContainerFrameLayoutId"/>
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbarLayoutId"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-        <android.support.v7.widget.Toolbar
-            android:background="?attr/colorPrimary"
-            android:id="@+id/toolbarId"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"/>
-    </android.support.design.widget.AppBarLayout>
+    <android.support.v7.widget.Toolbar
+        android:background="?attr/colorPrimary"
+        android:id="@+id/toolbarId"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"/>
 </FrameLayout>

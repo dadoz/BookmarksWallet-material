@@ -8,7 +8,6 @@ import android.widget.Toast;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
-import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.flurry.android.FlurryAgent;
 
 import java.lang.ref.WeakReference;
