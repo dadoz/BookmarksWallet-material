@@ -7,20 +7,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <include layout="@layout/export_cardviews_layout"
-            android:id="@+id/exportCardviewLayoutId"/>
-        <TextView
-            android:id="@+id/recyclerviewLabelTextId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/exportCardviewLayoutId"
-            android:textSize="@dimen/text_size_20"
-            android:textColor="@color/grey_400"
-            android:layout_margin="@dimen/padding_16"
-            android:text="@string/bookmark_list_label"/>
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/mainContainerViewId"
-            android:layout_below="@id/recyclerviewLabelTextId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <android.support.v7.widget.RecyclerView
@@ -32,7 +20,7 @@
                 android:scrollbars="vertical"/>
         </android.support.v4.widget.SwipeRefreshLayout>
     </RelativeLayout>
-    <include layout="@layout/empty_link_list_layout"/>
+
     <include layout="@layout/empty_search_result_layout"/>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addBookmarkFabId"
@@ -42,9 +30,10 @@
         android:src="@drawable/ic_add_white_48dp"
         app:elevation="4dp"
         app:borderWidth="0dp"
-        app:layout_anchor="@id/bookmarkRecyclerViewId"
-        app:layout_anchorGravity="bottom|right"
+        android:layout_gravity="bottom|right"
         app:layout_behavior="com.application.material.bookmarkswallet.app.behavior.FloatingActionButtonBehavior"
         app:backgroundTint="@color/indigo_600"
         app:fabSize="normal"/>
+
+    <include layout="@layout/empty_link_list_layout"/>
 </android.support.design.widget.CoordinatorLayout>

@@ -53,12 +53,6 @@ public class BookmarkListFragment extends Fragment
     View mEmptyLinkListView;
     @Bind(R.id.emptySearchResultLayoutId)
     View emptySearchResultLayout;
-    @Bind(R.id.exportCardviewButtonId)
-    View exportCardviewButton;
-    @Bind(R.id.exportCardviewLayoutId)
-    View exportCardviewLayout;
-    @Bind(R.id.recyclerviewLabelTextId)
-    View recyclerviewLabelText;
 
 
     private Realm mRealm;
@@ -67,6 +61,7 @@ public class BookmarkListFragment extends Fragment
     private ActionsSingleton mBookmarkActionSingleton;
     private View mainView;
     private StatusHelper statusHelper;
+    private MenuItem exportMenuItem;
 
     @Override
     public void onAttach(Context context) {
@@ -108,22 +103,21 @@ public class BookmarkListFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
         searchManager.initSearchView(menu);
+        exportMenuItem = menu.findItem(R.id.action_export);
         MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), this);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-        searchManager.handleMenuItemActionExpandLayout(new View []{addNewFab, exportCardviewLayout,
-                recyclerviewLabelText});
+        searchManager.handleMenuItemActionExpandLayout(new View[] {addNewFab}, exportMenuItem);
         statusHelper.setSearchMode(true);
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        searchManager.handleMenuItemActionCollapsedLayout(new View []{addNewFab,
-                exportCardviewLayout, recyclerviewLabelText, emptySearchResultLayout});
+        searchManager.handleMenuItemActionCollapsedLayout(new View []{addNewFab, emptySearchResultLayout}, exportMenuItem);
         statusHelper.unsetStatus();
         return true;
     }
@@ -133,12 +127,6 @@ public class BookmarkListFragment extends Fragment
         switch (v.getId()) {
             case R.id.addBookmarkFabId:
                 mBookmarkActionSingleton.addBookmarkAction(this);
-                break;
-            case R.id.exportCardviewButtonId:
-                FlurryAgent.logEvent("export", true);
-                ExportStrategy
-                        .buildInstance(new WeakReference<>(getContext()), mainView)
-                        .checkAndRequestPermission();
                 break;
         }
     }
@@ -160,6 +148,12 @@ public class BookmarkListFragment extends Fragment
         switch (item.getItemId()) {
             case R.id.action_share:
                 shareBookmark();
+                break;
+            case R.id.action_export:
+                FlurryAgent.logEvent("export", true);
+                ExportStrategy
+                        .buildInstance(new WeakReference<>(getContext()), mainView)
+                        .checkAndRequestPermission();
                 break;
             case R.id.action_settings:
                 statusHelper.unsetStatus();
@@ -206,7 +200,6 @@ public class BookmarkListFragment extends Fragment
         initActionbar();
         initRecyclerView();
         addNewFab.setOnClickListener(this);
-        exportCardviewButton.setOnClickListener(this);
 //        setNotSyncBookmarks();
     }
 
@@ -247,8 +240,8 @@ public class BookmarkListFragment extends Fragment
      */
     private void registerDataObserver(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
         //TODO leak
-        BookmarkListObserver observer = new BookmarkListObserver(new View[] { recyclerView,
-                mEmptyLinkListView, emptySearchResultLayout, recyclerviewLabelText, exportCardviewLayout}, searchManager);
+        BookmarkListObserver observer = new BookmarkListObserver(new View[] {recyclerView,
+                mEmptyLinkListView, emptySearchResultLayout}, searchManager);
         recyclerViewAdapter.registerAdapterDataObserver(observer);
     }
 

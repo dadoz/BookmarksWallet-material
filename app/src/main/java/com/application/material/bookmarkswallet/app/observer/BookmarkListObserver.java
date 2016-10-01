@@ -16,8 +16,6 @@ import com.application.material.bookmarkswallet.app.helpers.StatusHelper.StatusE
  */
 public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
 
-    private final View exportCardview;
-    private final View recyclerviewLabelText;
     private StatusHelper mStatusSingleton;
     private RecyclerView mRecyclerView;
     private View mEmptyLinkListView;
@@ -30,8 +28,6 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
         mRecyclerView = (RecyclerView) views[0]; //recyclerView;
         mEmptyLinkListView = views[1]; //emptyLinkListView;
         mEmptySearchResultLayout = views[2]; //emptySearchResultLayout;
-        recyclerviewLabelText = views[3]; //emptySearchResultLayout;
-        exportCardview = views[4]; //emptySearchResultLayout;
         searchManager = searchMng;
     }
 
@@ -56,8 +52,6 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
      */
     private void handleListView() {
         mEmptyLinkListView.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
-        recyclerviewLabelText.setVisibility(isEmptyData() ? View.GONE : View.VISIBLE);
-        exportCardview.setVisibility(isEmptyData() ? View.GONE : View.VISIBLE);
     }
 
     /**

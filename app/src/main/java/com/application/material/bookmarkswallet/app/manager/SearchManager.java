@@ -172,37 +172,37 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
     /**
      *
      * @param views
+     * @param exportMenuItem
      */
-    public void handleMenuItemActionCollapsedLayout(@NonNull View[] views) {
-        collapseViews(views[0], views[1], true);
-        views[2].setVisibility(View.VISIBLE);
-        views[3].setVisibility(View.GONE); //TODO PATCH
+    public void handleMenuItemActionCollapsedLayout(@NonNull View[] views, MenuItem exportMenuItem) {
+        collapseViews(views[0], true);
+        views[1].setVisibility(View.GONE); //TODO PATCH
+        exportMenuItem.setVisible(true);
     }
 
     /**
      *
      * @param views
+     * @param exportMenuItem
      */
-    public void handleMenuItemActionExpandLayout(@NonNull View[] views) {
-        collapseViews(views[0], views[1], false);
-        views[2].setVisibility(View.GONE);
+    public void handleMenuItemActionExpandLayout(@NonNull View[] views, MenuItem exportMenuItem) {
+        collapseViews(views[0], false);
+        exportMenuItem.setVisible(false);
     }
 
 
     /**
      *
      * @param fab
-     * @param cardview
      * @param collapsing
      */
-    private void collapseViews(View fab, final View cardview, final boolean collapsing) {
+    private void collapseViews(View fab, final boolean collapsing) {
         Animator fabAnimator = collapsing ?
                 AnimatorBuilder.getInstance(context)
                         .buildHideAnimator(fab, false) :
                 AnimatorBuilder.getInstance(context)
                         .buildShowAnimator(fab, false);
         fabAnimator.start();
-        cardview.setVisibility(collapsing ? View.VISIBLE : View.GONE);
     }
 
     /**
