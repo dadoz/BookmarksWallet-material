@@ -119,7 +119,8 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        searchManager.handleMenuItemActionCollapsedLayout(new View []{addNewFab, emptySearchResultLayout}, exportMenuItem);
+        searchManager.handleMenuItemActionCollapsedLayout(new View []{addNewFab, emptySearchResultLayout},
+                exportMenuItem);
         statusHelper.unsetStatus();
         return true;
     }
@@ -302,37 +303,6 @@ public class BookmarkListFragment extends Fragment
         ((OnChangeFragmentWrapperInterface) getActivity())
                 .changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
     }
-
-    /**
-     * share bookmark through intent you like more
-     */
-//    private void shareBookmark() {
-//        Log.e("TAG", "SHARE BOOKMARK");
-//        Intent intent = getIntentForEditBookmark(getSelectedItem());
-//        getActivity().startActivity(Intent.createChooser(intent, "share bookmark to..."));
-//    }
-
-    /**
-     * get bookmark obj by item pos on recycler view
-     * @return
-     */
-//    public Bookmark getSelectedItem() {
-//        return (((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
-//                .getItem(statusHelper.getEditItemPos()));
-//    }
-
-    /**
-     * get shared intent
-     * @param bookmark
-     * @return
-     */
-//    public Intent getIntentForEditBookmark(Bookmark bookmark) {
-//        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-//        shareIntent.putExtra(Intent.EXTRA_TEXT, Bookmark.Utils.stringify(bookmark));
-//        shareIntent.setType("text/plain");
-//        return shareIntent;
-//    }
-
 
     /**
      * init singleton instances
