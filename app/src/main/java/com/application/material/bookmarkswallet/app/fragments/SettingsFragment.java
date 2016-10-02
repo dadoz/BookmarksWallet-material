@@ -5,24 +5,21 @@ import android.content.pm.PackageManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.SettingListAdapter;
-import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.models.Setting;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
-import com.application.material.bookmarkswallet.app.singleton.ActionsSingleton;
+import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.willowtreeapps.saguaro.android.Saguaro;
@@ -37,14 +34,14 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
     public static String FRAG_TAG = "SettingsFragment_FRAG";
     public static String SETTINGS_TITLE = "Settings";
     private ActionbarSingleton mActionbarSingleton;
-    private ActionsSingleton mBookmarkActionSingleton;
+    private BookmarkActionHelper mBookmarkActionSingleton;
     private View mSettingsView;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(getContext()));
-        mBookmarkActionSingleton = ActionsSingleton.getInstance(new WeakReference<>(getContext()));
+        mBookmarkActionSingleton = BookmarkActionHelper.getInstance(new WeakReference<>(getContext()));
     }
 
     @Override

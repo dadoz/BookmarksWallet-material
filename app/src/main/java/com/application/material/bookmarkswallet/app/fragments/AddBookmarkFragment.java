@@ -1,23 +1,17 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.*;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -25,7 +19,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import butterknife.Bind;
@@ -33,7 +26,6 @@ import butterknife.ButterKnife;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.application.BookmarksWalletApplication;
 import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
 import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
@@ -41,15 +33,15 @@ import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.presenter.SearchBookmarkPresenter;
 import com.application.material.bookmarkswallet.app.presenter.SearchResultPresenter;
 import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
-import com.application.material.bookmarkswallet.app.singleton.ActionsSingleton;
 import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
+import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.squareup.picasso.Picasso;
 
 import icepick.Icepick;
 import icepick.State;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
+
 import java.lang.ref.WeakReference;
 
 public class AddBookmarkFragment extends Fragment implements
@@ -58,7 +50,6 @@ public class AddBookmarkFragment extends Fragment implements
     public static final String FRAG_TAG = "AddBookmarkFragmentTAG";
     private static final String TAG = "AddBookmarkFragment";
     private ActionbarSingleton mActionbarSingleton;
-    private ActionsSingleton mBookmarkActionSingleton;
 
     @Bind(R.id.addBookmarkRefreshLayoutId)
     SwipeRefreshLayout refreshLayout;
@@ -126,7 +117,6 @@ public class AddBookmarkFragment extends Fragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
         mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(context));
-        mBookmarkActionSingleton = ActionsSingleton.getInstance(new WeakReference<>(context));
         searchBookmarkPresenter = SearchBookmarkPresenter.getInstance();
         retrieveIconHelper = RetrieveIconHelper.getInstance(new WeakReference<RetrieveIconHelper.OnRetrieveIconInterface>(this));
         searchResultPresenter = new SearchResultPresenter(new WeakReference<>(getContext()));
@@ -283,8 +273,7 @@ public class AddBookmarkFragment extends Fragment implements
      */
     public void addBookmark() {
         statusManager.setOnSearchMode();
-        Realm realmInstance = Realm.getDefaultInstance();
-        mBookmarkActionSingleton.addOrmObject(realmInstance, bookmarkTitle, null,
+        RealmUtils.addItemOnRealm(Realm.getDefaultInstance(), bookmarkTitle, null,
                 Utils.convertBitmapToByteArray(((BitmapDrawable) addBookmarkIconImage
                         .getDrawable()).getBitmap()), bookmarkUrl);
         if (getActivity() != null) {

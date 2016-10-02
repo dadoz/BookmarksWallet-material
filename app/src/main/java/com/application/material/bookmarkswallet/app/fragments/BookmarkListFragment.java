@@ -18,8 +18,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionMode;
+import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionModeCallback;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.realm.adapter.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
@@ -58,10 +59,11 @@ public class BookmarkListFragment extends Fragment
     private Realm mRealm;
     private SearchManager searchManager;
     private ActionbarSingleton mActionbarSingleton;
-    private ActionsSingleton mBookmarkActionSingleton;
+    private BookmarkActionHelper mBookmarkActionSingleton;
     private View mainView;
     private StatusHelper statusHelper;
     private MenuItem exportMenuItem;
+    private EditBookmarkActionModeCallback actionMode;
 
     @Override
     public void onAttach(Context context) {
@@ -146,9 +148,6 @@ public class BookmarkListFragment extends Fragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_share:
-                shareBookmark();
-                break;
             case R.id.action_export:
                 FlurryAgent.logEvent("export", true);
                 ExportStrategy
@@ -216,13 +215,15 @@ public class BookmarkListFragment extends Fragment
      * connected to main fragment app
      */
     private void initRecyclerView() {
-        BookmarkRecyclerViewAdapter recyclerViewAdapter = new BookmarkRecyclerViewAdapter(getActivity(),
+        BookmarkRecyclerViewAdapter recyclerViewAdapter = new BookmarkRecyclerViewAdapter(new WeakReference<>(getContext()),
                 new WeakReference<BookmarkRecyclerViewAdapter.OnActionListenerInterface>(this));
         registerDataObserver(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(recyclerViewAdapter);
         setRealmAdapter(recyclerViewAdapter, RealmUtils.getResults(mRealm));
         searchManager.setAdapter(recyclerViewAdapter); //TODO what???
+        actionMode = new EditBookmarkActionModeCallback(new WeakReference<>(getContext()),
+                ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()));
     }
 
     /**
@@ -305,31 +306,32 @@ public class BookmarkListFragment extends Fragment
     /**
      * share bookmark through intent you like more
      */
-    private void shareBookmark() {
-        Intent intent = getIntentForEditBookmark(getSelectedItem());
-        getActivity().startActivity(Intent.createChooser(intent, "share bookmark to..."));
-    }
+//    private void shareBookmark() {
+//        Log.e("TAG", "SHARE BOOKMARK");
+//        Intent intent = getIntentForEditBookmark(getSelectedItem());
+//        getActivity().startActivity(Intent.createChooser(intent, "share bookmark to..."));
+//    }
 
     /**
      * get bookmark obj by item pos on recycler view
      * @return
      */
-    public Bookmark getSelectedItem() {
-        return (((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
-                .getItem(statusHelper.getEditItemPos()));
-    }
+//    public Bookmark getSelectedItem() {
+//        return (((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
+//                .getItem(statusHelper.getEditItemPos()));
+//    }
 
     /**
      * get shared intent
      * @param bookmark
      * @return
      */
-    public Intent getIntentForEditBookmark(Bookmark bookmark) {
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, Bookmark.Utils.stringify(bookmark));
-        shareIntent.setType("text/plain");
-        return shareIntent;
-    }
+//    public Intent getIntentForEditBookmark(Bookmark bookmark) {
+//        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+//        shareIntent.putExtra(Intent.EXTRA_TEXT, Bookmark.Utils.stringify(bookmark));
+//        shareIntent.setType("text/plain");
+//        return shareIntent;
+//    }
 
 
     /**
@@ -339,25 +341,45 @@ public class BookmarkListFragment extends Fragment
         mRealm = Realm.getDefaultInstance();
         statusHelper = StatusHelper.getInstance();
         mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(getContext()));
-        mBookmarkActionSingleton = ActionsSingleton.getInstance(new WeakReference<>(getContext()));
+        mBookmarkActionSingleton = BookmarkActionHelper.getInstance(new WeakReference<>(getContext()));
         searchManager = SearchManager.getInstance(new WeakReference<>(getContext()), mRealm);
     }
 
 
+
     @Override
     public boolean onLongItemClick(View view, int position) {
-        EditBookmarkActionMode editActionMode = new EditBookmarkActionMode(new WeakReference<>(getContext()),
-                position, ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()));
+        if (!statusHelper.isEditMode()) {
+            getActivity().startActionMode(actionMode);
+        }
 
-        getActivity().startActionMode(editActionMode);
-        statusHelper.setEditMode(position);
-        recyclerView.getAdapter().notifyItemChanged(position);
+        handleSelectItemByPos(position);
         return true;
     }
 
     @Override
     public void onItemClick(View view, int position) {
+        if (statusHelper.isEditMode()) {
+            handleSelectItemByPos(position);
+            return;
+        }
         Bookmark bookmark = ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).getItem(position);
         mBookmarkActionSingleton.openLinkOnBrowser(bookmark.getUrl());
+    }
+
+    /**
+     *
+     * @param position
+     */
+    private void handleSelectItemByPos(int position) {
+        statusHelper.setEditMode();
+        BookmarkRecyclerViewAdapter adapter = ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter());
+        adapter.setSelectedItemPos(position);
+        recyclerView.getAdapter().notifyItemChanged(position);
+        actionMode.toggleVisibilityIconMenu(0, adapter.getSelectedItemListSize() <= 1);
+        if (((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).isEmptySelectedPosArray()) {
+            actionMode.forceToFinish();
+        }
+
     }
 }

@@ -107,22 +107,19 @@ public class Utils {
     /**
      * set icon - default or imageIcon
      * @param iconView
-     * @param blob
+     * @param icon
      * @param defaultIcon
-     * @param isSelectedItem
      */
     public static void setIconOnImageView(ImageView iconView,
-                                          byte [] blob, Drawable defaultIcon,
-                                          boolean isSelectedItem, int size) {
+                                          Bitmap icon, Bitmap defaultIcon) {
         try {
-            if ((blob == null || blob.length == 0) ||
-                    isSelectedItem) {
-                iconView.setImageDrawable(defaultIcon);
+            if ((icon == null)) {
+                iconView.setImageBitmap(defaultIcon);
                 return;
             }
-            iconView.setImageBitmap(getIconBitmap(blob, size));
+            iconView.setImageBitmap(icon);
         } catch (Exception e) {
-            iconView.setImageDrawable(defaultIcon);
+            iconView.setImageBitmap(defaultIcon);
         }
     }
 

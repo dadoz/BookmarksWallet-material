@@ -4,32 +4,32 @@ import android.content.Context;
 import android.view.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.singleton.ActionsSingleton;
+import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
 
 import java.lang.ref.WeakReference;
 
 public class EditBookmarkActionModeCallback implements ActionMode.Callback {
 
-    private final StatusHelper mStatusSingleton;
-    private ActionsSingleton mBookmarkActionSingleton;
-    private int position;
+    private final StatusHelper statusHelper;
+    private BookmarkActionHelper mBookmarkActionSingleton;
     private BookmarkRecyclerViewAdapter adapter;
+    private ActionMode actionMode;
 
     /**
      *
      * @param
      */
-    public EditBookmarkActionModeCallback(WeakReference<Context> context, int pos,
+    public EditBookmarkActionModeCallback(WeakReference<Context> context,
                                           BookmarkRecyclerViewAdapter adp) {
         adapter = adp;
-        position = pos;
-        mBookmarkActionSingleton = ActionsSingleton.getInstance(context);
-        mStatusSingleton = StatusHelper.getInstance();
+        mBookmarkActionSingleton = BookmarkActionHelper.getInstance(context);
+        statusHelper = StatusHelper.getInstance();
     }
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        actionMode = mode;
         mode.getMenuInflater().inflate(R.menu.share_delete_menu, menu);
         return true;
     }
@@ -42,12 +42,12 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.shareActionId:
-                mBookmarkActionSingleton.shareAction(adapter.getItem(position));
+            case R.id.action_share:
+                mBookmarkActionSingleton.shareAction(adapter);
                 mode.finish();
                 return true;
-            case R.id.deleteActionId:
-                mBookmarkActionSingleton.deleteAction(adapter, position);
+            case R.id.action_delete:
+                mBookmarkActionSingleton.deleteAction(adapter);
                 mode.finish();
                 return true;
         }
@@ -57,12 +57,33 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
     /**
      *
      */
-    private void unsetEditItem() {
-        int pos = mStatusSingleton.getEditItemPos();
-        if (pos != StatusHelper.EDIT_POS_NOT_SET) {
-            adapter.notifyItemChanged(pos);
-            mStatusSingleton.unsetStatus();
+    public void forceToFinish() {
+        if (actionMode != null) {
+            actionMode.finish();
         }
+    }
+
+    /**
+     *
+     * @param id
+     * @param isVisible
+     */
+    public void toggleVisibilityIconMenu(int id, boolean isVisible) {
+        actionMode.getMenu().findItem(R.id.action_share).setVisible(isVisible);
+    }
+
+    /**
+     *
+     */
+    private void unsetEditItem() {
+        statusHelper.unsetStatus();
+        adapter.clearSelectedItemPosArray();
+        adapter.notifyDataSetChanged();
+//        int pos = mStatusSingleton.getEditItemPos();
+//        if (pos != StatusHelper.EDIT_POS_NOT_SET) {
+//            adapter.notifyItemChanged(pos);
+//            mStatusSingleton.unsetStatus();
+//        }
     }
 
     @Override

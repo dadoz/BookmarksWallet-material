@@ -97,9 +97,10 @@ public class BookmarkActionHelper {
 
     /**
      *
+     * @param adapter
      */
-    public void shareAction(Bookmark bookmark) {
-        Intent intent = getSharingBookmarkIntent(bookmark);
+    public void shareAction(BookmarkRecyclerViewAdapter adapter) {
+        Intent intent = getSharingBookmarkIntent(adapter.getSelectedItem());
         context.get().startActivity(Intent.createChooser(intent, context.get().getString(R.string.share_to)));
     }
 
