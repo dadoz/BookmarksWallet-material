@@ -9,7 +9,7 @@ import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
 
 import java.lang.ref.WeakReference;
 
-public class EditBookmarkActionMode implements ActionMode.Callback {
+public class EditBookmarkActionModeCallback implements ActionMode.Callback {
 
     private final StatusHelper mStatusSingleton;
     private ActionsSingleton mBookmarkActionSingleton;
@@ -20,8 +20,8 @@ public class EditBookmarkActionMode implements ActionMode.Callback {
      *
      * @param
      */
-    public EditBookmarkActionMode(WeakReference<Context> context, int pos,
-                                  BookmarkRecyclerViewAdapter adp) {
+    public EditBookmarkActionModeCallback(WeakReference<Context> context, int pos,
+                                          BookmarkRecyclerViewAdapter adp) {
         adapter = adp;
         position = pos;
         mBookmarkActionSingleton = ActionsSingleton.getInstance(context);
@@ -30,9 +30,7 @@ public class EditBookmarkActionMode implements ActionMode.Callback {
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        MenuInflater inflater = mode.getMenuInflater();
-        inflater.inflate(R.menu.share_delete_menu, menu);
-
+        mode.getMenuInflater().inflate(R.menu.share_delete_menu, menu);
         return true;
     }
 
@@ -59,7 +57,7 @@ public class EditBookmarkActionMode implements ActionMode.Callback {
     /**
      *
      */
-    public void unsetEditItem() {
+    private void unsetEditItem() {
         int pos = mStatusSingleton.getEditItemPos();
         if (pos != StatusHelper.EDIT_POS_NOT_SET) {
             adapter.notifyItemChanged(pos);
