@@ -120,4 +120,12 @@ public class BookmarkActionHelper {
         }
     }
 
+    /**
+     *
+     * @param adapter
+     */
+    public void selectAllAction(BookmarkRecyclerViewAdapter adapter) {
+        adapter.setSelectedAllItemPos();
+        adapter.notifyDataSetChanged();
+    }
 }

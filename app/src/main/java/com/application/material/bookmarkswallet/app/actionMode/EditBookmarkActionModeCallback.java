@@ -50,6 +50,9 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
                 mBookmarkActionSingleton.deleteAction(adapter);
                 mode.finish();
                 return true;
+            case R.id.action_select_all:
+                mBookmarkActionSingleton.selectAllAction(adapter);
+                return true;
         }
         return false;
     }
@@ -65,10 +68,9 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
 
     /**
      *
-     * @param id
      * @param isVisible
      */
-    public void toggleVisibilityIconMenu(int id, boolean isVisible) {
+    public void toggleVisibilityIconMenu(boolean isVisible) {
         actionMode.getMenu().findItem(R.id.action_share).setVisible(isVisible);
     }
 
@@ -79,11 +81,6 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
         statusHelper.unsetStatus();
         adapter.clearSelectedItemPosArray();
         adapter.notifyDataSetChanged();
-//        int pos = mStatusSingleton.getEditItemPos();
-//        if (pos != StatusHelper.EDIT_POS_NOT_SET) {
-//            adapter.notifyItemChanged(pos);
-//            mStatusSingleton.unsetStatus();
-//        }
     }
 
     @Override

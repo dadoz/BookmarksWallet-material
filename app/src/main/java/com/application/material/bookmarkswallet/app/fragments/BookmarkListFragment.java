@@ -346,7 +346,7 @@ public class BookmarkListFragment extends Fragment
         BookmarkRecyclerViewAdapter adapter = ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter());
         adapter.setSelectedItemPos(position);
         recyclerView.getAdapter().notifyItemChanged(position);
-        actionMode.toggleVisibilityIconMenu(0, adapter.getSelectedItemListSize() <= 1);
+        actionMode.toggleVisibilityIconMenu(adapter.getSelectedItemListSize() <= 1);
         if (((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).isEmptySelectedPosArray()) {
             actionMode.forceToFinish();
         }
