@@ -51,6 +51,8 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
                 mode.finish();
                 return true;
             case R.id.action_select_all:
+                actionMode = mode; //TODO this is not initialized but why???
+                toggleVisibilityIconMenu(false);
                 mBookmarkActionSingleton.selectAllAction(adapter);
                 return true;
         }

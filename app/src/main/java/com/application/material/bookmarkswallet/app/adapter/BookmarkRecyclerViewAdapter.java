@@ -85,11 +85,6 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
     }
 
     /**
-     * TODO EXTEND class please
-     */
-
-
-    /**
      * ViewHolder def
      */
     private static class ViewHolder extends RecyclerView.ViewHolder
