@@ -3,10 +3,13 @@ package com.application.material.bookmarkswallet.app.utlis;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -222,5 +225,34 @@ public class Utils {
             return "No Title";
         }
         return (bookmark.getName().equals("") ? bookmark.getUrl() : bookmark.getName());
+    }
+
+    /**
+     * ret version name
+     * @return
+     */
+    public static String getVersionName(WeakReference<Context> context) {
+        String versionName = "0.0";
+        try {
+            versionName = context.get().getPackageManager()
+                    .getPackageInfo(context.get().getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
+    }
+
+    /**
+     *
+     * @param type
+     * @param context
+     * @return
+     */
+    public static Intent getMarketIntent(int type, WeakReference<Context> context) {
+        return type == 0 ?
+                new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=" + context.get().getPackageName())) :
+                new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + context.get().getPackageName()));
     }
 }
