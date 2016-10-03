@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.*;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
@@ -68,19 +70,11 @@ public class BookmarkActionHelper {
     }
 
     /**
-     *
-     */
-    public void deleteAllAction() {
-        RealmUtils.deleteAllFromRealm(mRealm);
-//        adapter.notifyDataSetChanged();
-    }
-
-    /**
      * @param adapter
      */
-    public void deleteAction(BookmarkRecyclerViewAdapter adapter) {
+    public void deleteAction(final BookmarkRecyclerViewAdapter adapter) {
         RealmUtils.deleteListFromRealm(mRealm, adapter.getSelectedItemList());
-        adapter.notifyRemovedSelectedItems();
+        adapter.notifyRemovedSelectedItems(); //NEVER TRIGGERED
     }
 
     /**

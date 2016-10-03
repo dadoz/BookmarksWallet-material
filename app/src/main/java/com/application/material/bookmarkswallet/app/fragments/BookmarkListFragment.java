@@ -216,15 +216,14 @@ public class BookmarkListFragment extends Fragment
      * connected to main fragment app
      */
     private void initRecyclerView() {
-        BookmarkRecyclerViewAdapter recyclerViewAdapter = new BookmarkRecyclerViewAdapter(new WeakReference<>(getContext()),
-                new WeakReference<BookmarkRecyclerViewAdapter.OnActionListenerInterface>(this));
-        registerDataObserver(recyclerViewAdapter);
+        BookmarkRecyclerViewAdapter adapter =
+                new BookmarkRecyclerViewAdapter(new WeakReference<>(getContext()),
+                    new WeakReference<BookmarkRecyclerViewAdapter.OnActionListenerInterface>(this));
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(recyclerViewAdapter);
-        setRealmAdapter(recyclerViewAdapter, RealmUtils.getResults(mRealm));
-        searchManager.setAdapter(recyclerViewAdapter); //TODO what???
-        actionMode = new EditBookmarkActionModeCallback(new WeakReference<>(getContext()),
-                ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()));
+        recyclerView.setAdapter(adapter);
+        searchManager.setAdapter(adapter); //TODO what???
+        actionMode = new EditBookmarkActionModeCallback(new WeakReference<>(getContext()), adapter);
+        registerDataObserver(adapter);
     }
 
     /**
@@ -245,23 +244,7 @@ public class BookmarkListFragment extends Fragment
         BookmarkListObserver observer = new BookmarkListObserver(new View[] {recyclerView,
                 mEmptyLinkListView, emptySearchResultLayout}, searchManager);
         recyclerViewAdapter.registerAdapterDataObserver(observer);
-    }
-
-    /**
-     * @param realmResults
-     * @param recyclerViewAdapter
-     * Realm io function to handle adapter and get
-     * data from db
-     */
-    public void setRealmAdapter(BookmarkRecyclerViewAdapter recyclerViewAdapter,
-                                RealmResults realmResults) {
-        try {
-            RealmModelAdapter realmModelAdapter = new RealmModelAdapter(getActivity(), realmResults);
-            recyclerViewAdapter.setRealmBaseAdapter(realmModelAdapter);
-            recyclerViewAdapter.notifyDataSetChanged();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        recyclerViewAdapter.notifyDataSetChanged();
     }
 
     /**

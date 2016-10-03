@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.realm.adapter.RealmRecyclerViewAdapter;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import io.realm.RealmObject;
@@ -17,8 +18,8 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
         RealmRecyclerViewAdapter<Bookmark> {
     private final MultipleSelector multipleSelector;
 
-    MultipleSelectorHelperAdapter() {
-        super();
+    MultipleSelectorHelperAdapter(WeakReference<Context> ctx) {
+        super(ctx);
         multipleSelector = new MultipleSelector();
     }
 
@@ -64,7 +65,7 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
         //inside multiple selector
         for (int i = 0; i < multipleSelector.getSelectedPosArraySize(); i++) {
             int itemPos = multipleSelector.getSelectedPosArray().keyAt(i);
-            selectedItemList.add(getRealmBaseAdapter().getItem(itemPos));
+            selectedItemList.add(getItem(itemPos));
         }
         return selectedItemList.size() != 0 ? selectedItemList : null;
     }
@@ -75,7 +76,7 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
      */
     public Bookmark getSelectedItem() {
         int itemPos = multipleSelector.getSelectedPosArray().keyAt(0);
-        return getRealmBaseAdapter().getItem(itemPos);
+        return getItem(itemPos);
     }
 
     /**
@@ -90,8 +91,7 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
      *
      */
     public void setSelectedAllItemPos() {
-        int itemListSize = getRealmBaseAdapter().getCount();
-        for (int i = 0; i < itemListSize; i++) {
+        for (int i = 0; i < getItemCount(); i++) {
             multipleSelector.setSelectedPos(i, true);
         }
     }

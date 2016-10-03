@@ -12,9 +12,13 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.application.material.bookmarkswallet.app.realm.adapter.RealmModelAdapter;
+import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import java.lang.ref.WeakReference;
+
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 import static com.application.material.bookmarkswallet.app.models.Bookmark.Utils.getBookmarkNameWrapper;
@@ -26,13 +30,18 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
     private static int mLightGrey = Color.TRANSPARENT;
     private final Bitmap defaultIcon;
 
+    /**
+     *
+     * @param ctx
+     * @param lst
+     */
     public BookmarkRecyclerViewAdapter(WeakReference<Context> ctx, WeakReference<OnActionListenerInterface> lst) {
+        super(ctx);
         context = ctx;
         listener = lst;
         mDarkGrey = ContextCompat.getColor(context.get(), R.color.indigo_50);
         defaultIcon = BitmapFactory.decodeResource(context.get().getResources(),
                 R.drawable.ic_bookmark_black_48dp);
-
     }
 
     @Override
@@ -66,10 +75,6 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         return super.isSelectedPos(position);
     }
 
-    @Override
-    public int getItemCount() {
-        return getRealmBaseAdapter() == null ? 0 : getRealmBaseAdapter().getCount();
-    }
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
@@ -79,10 +84,6 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
     public void onItemDismiss(int position) {
     }
 
-    @Override
-    public void updateData(RealmResults filteredList) {
-        getRealmBaseAdapter().updateData(filteredList);
-    }
 
     /**
      * ViewHolder def

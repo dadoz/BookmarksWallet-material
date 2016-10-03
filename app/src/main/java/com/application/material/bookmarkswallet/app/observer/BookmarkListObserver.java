@@ -34,11 +34,11 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
 
     @Override
     public void onChanged() {
+        Log.e("TAG", "udpated " + recyclerView.getAdapter().getItemCount());
+
         StatusEnum status = mStatusSingleton.getCurrentStatus();
-        Log.e("TAG", "hey");
         if (status == StatusEnum.IDLE ||
                 status == StatusEnum.EDIT) {
-
             handleListView();
             return;
         }
@@ -48,6 +48,7 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
         }
 
     }
+
 
     @Override
     public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -61,13 +62,14 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
      * handle empty listview
      */
     private void handleListView() {
-        //TODO FIX it - it's due to a delayed update on adapter
+        mEmptyLinkListView.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 mEmptyLinkListView.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
             }
         }, 100);
+
     }
 
     /**
