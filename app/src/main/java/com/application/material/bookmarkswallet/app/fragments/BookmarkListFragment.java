@@ -1,7 +1,9 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
@@ -219,9 +222,10 @@ public class BookmarkListFragment extends Fragment
         BookmarkRecyclerViewAdapter adapter =
                 new BookmarkRecyclerViewAdapter(new WeakReference<>(getContext()),
                     new WeakReference<BookmarkRecyclerViewAdapter.OnActionListenerInterface>(this));
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+//        ((Activity) getContext()).getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         recyclerView.setAdapter(adapter);
-        searchManager.setAdapter(adapter); //TODO what???
+//        searchManager.setAdapter(adapter); //TODO what???
         actionMode = new EditBookmarkActionModeCallback(new WeakReference<>(getContext()), adapter);
         registerDataObserver(adapter);
     }

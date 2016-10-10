@@ -27,7 +27,7 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
     private final WeakReference<Context> context;
     private final WeakReference<OnActionListenerInterface> listener;
     private static int mDarkGrey;
-    private static int mLightGrey = Color.TRANSPARENT;
+    private static int mLightGrey = Color.WHITE;
     private final Bitmap defaultIcon;
 
     /**
@@ -63,7 +63,6 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         holder.setIcon(Utils.getIconBitmap(bookmark.getBlobIcon(),
                 (int) context.get().getResources().getDimension(R.dimen.medium_icon_size)), defaultIcon,
                 isSelectedPos(position));
-
     }
 
     /**
