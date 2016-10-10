@@ -9,7 +9,6 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:title="Search"/>
     <item android:id="@+id/action_export"
-        android:title="@string/import_menu_label"
         android:icon="@drawable/ic_archive_black_48dp"
         android:orderInCategory="100"
         app:showAsAction="always" />

@@ -2,13 +2,10 @@ package com.application.material.bookmarkswallet.app.helpers;
 
 public class StatusHelper {
     private static StatusHelper mInstance;
-    public static final int EDIT_POS_NOT_SET = -1;
-
     public enum StatusEnum {EDIT, SYNC, SEARCH, IDLE}
-    private int mEditItemPos;
     private StatusEnum mCurrentStatus = StatusEnum.IDLE;
 
-    public StatusHelper() {
+    private StatusHelper() {
     }
 
     /**
@@ -94,25 +91,24 @@ public class StatusHelper {
      *
      * @return
      */
-    public void setEditMode(int pos) {
+    public void setEditMode() {
         mCurrentStatus = StatusEnum.EDIT;
-        setEditItemPos(pos);
     }
 
     /**
      *
      * @return
      */
-    public int getEditItemPos() {
-        return mCurrentStatus == StatusEnum.EDIT ? mEditItemPos : EDIT_POS_NOT_SET;
-    }
+//    public int getEditItemPos() {
+//        return mCurrentStatus == StatusEnum.EDIT ? mEditItemPos : EDIT_POS_NOT_SET;
+//    }
 
     /**
      *
      * @param pos
      */
-    public void setEditItemPos(int pos) {
-        mEditItemPos = pos;
-    }
+//    public void setEditItemPos(int pos) {
+//        mEditItemPos = pos;
+//    }
 
 }

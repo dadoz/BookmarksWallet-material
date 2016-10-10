@@ -168,23 +168,28 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
     /**
      *
      * @param views
+     * @param exportMenuItem
      */
-    public void handleMenuItemActionCollapsedLayout(@NonNull View[] views) {
+    public void handleMenuItemActionCollapsedLayout(@NonNull View[] views, MenuItem exportMenuItem) {
         collapseViews(views[0], true);
         views[1].setVisibility(View.GONE); //TODO PATCH
+        exportMenuItem.setVisible(true);
     }
 
     /**
      *
      * @param views
+     * @param exportMenuItem
      */
-    public void handleMenuItemActionExpandLayout(@NonNull View[] views) {
+    public void handleMenuItemActionExpandLayout(@NonNull View[] views, MenuItem exportMenuItem) {
         collapseViews(views[0], false);
+        exportMenuItem.setVisible(false);
     }
 
 
     /**
-     *  @param fab
+     *
+     * @param fab
      * @param collapsing
      */
     private void collapseViews(View fab, final boolean collapsing) {

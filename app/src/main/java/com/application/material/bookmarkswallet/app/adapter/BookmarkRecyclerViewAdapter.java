@@ -1,42 +1,45 @@
 package com.application.material.bookmarkswallet.app.adapter;
 
-import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.*;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.realm.adapter.RealmRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import java.lang.ref.WeakReference;
 
 import io.realm.Realm;
-import io.realm.RealmObject;
-import io.realm.RealmResults;
 
 import static com.application.material.bookmarkswallet.app.models.Bookmark.Utils.getBookmarkNameWrapper;
 
-public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
-        RealmRecyclerViewAdapter<Bookmark> implements ItemTouchHelperAdapter {
-    private final Activity mActivityRef;
+public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter implements ItemTouchHelperAdapter {
+    private final WeakReference<Context> context;
     private final WeakReference<OnActionListenerInterface> listener;
-    private final StatusHelper mStatusSingleton;
-    private final int mDarkGrey;
-    private final static int mLightGrey = Color.TRANSPARENT;
+    private static int mDarkGrey;
+    private static int mLightGrey = Color.TRANSPARENT;
+    private final Bitmap defaultIcon;
 
-    public BookmarkRecyclerViewAdapter(Activity activity, WeakReference<OnActionListenerInterface> lst) {
-        mActivityRef = activity;
+    /**
+     *  @param ctx
+     * @param lst
+     */
+    public BookmarkRecyclerViewAdapter(FragmentActivity ctx, WeakReference<OnActionListenerInterface> lst) {
+        super(ctx);
+        context = ctx;
         listener = lst;
-        mStatusSingleton = StatusHelper.getInstance();
-        mDarkGrey = ContextCompat.getColor(mActivityRef.getApplicationContext(), R.color.indigo_50);
+        mDarkGrey = ContextCompat.getColor(context.get(), R.color.indigo_50);
+        defaultIcon = BitmapFactory.decodeResource(context.get().getResources(),
+                R.drawable.ic_bookmark_black_48dp);
     }
 
     @Override
@@ -50,10 +53,14 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         final ViewHolder holder = (ViewHolder) rvh;
         final Bookmark bookmark = getItem(position);
 
-        holder.mLabelView.setText(getBookmarkNameWrapper(bookmark.getName()));
-        holder.mUrlView.setText(bookmark.getUrl());
-        holder.mTimestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark
+        holder.labelView.setText(getBookmarkNameWrapper(bookmark.getName()));
+        holder.urlView.setText(bookmark.getUrl());
+        holder.timestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark
                 .getTimestamp()));
+        holder.selectItem(isSelectedPos(position));
+        holder.setIcon(Utils.getIconBitmap(bookmark.getBlobIcon(),
+                (int) context.get().getResources().getDimension(R.dimen.medium_icon_size)), defaultIcon,
+                isSelectedPos(position));
 
         setEditMode(holder, bookmark, position);
     }
@@ -62,52 +69,20 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
      * 
      */
     private void setEditMode(ViewHolder holder, Bookmark bookmark, int position) {
-        boolean isEditMode = getEditModeStatus(position);
-        setIcon(holder.mIconView, bookmark, isEditMode);
+//        boolean isEditMode = getEditModeStatus(position);
+//        setIcon(holder.mIconView, bookmark, isEditMode);
 //        setEditItem(holder.mLayoutView, isEditMode);
     }
 
     /**
      *
-     * @param pos
+     * @param position
      * @return
      */
-    private boolean getEditModeStatus(int pos) {
-        return mStatusSingleton.isEditMode() &&
-                mStatusSingleton.getEditItemPos() == pos;
+    public boolean isSelectedPos(int position) {
+        return super.isSelectedPos(position);
     }
 
-    /**
-     *
-     * @param v
-     * @param isEdit
-     */
-    private void setEditItem(View v, boolean isEdit) {
-        v.setBackgroundColor(isEdit ? mDarkGrey : mLightGrey);
-    }
-
-    @Override
-    public int getItemCount() {
-        return getRealmBaseAdapter() == null ? 0 : getRealmBaseAdapter().getCount();
-    }
-
-    /**
-     * TODO refactor
-     * @param iconView
-     * @param bookmark
-     * @param isSelectedItem
-     */
-    private void setIcon(ImageView iconView, Bookmark bookmark, boolean isSelectedItem) {
-        Drawable defaultIcon = ContextCompat.getDrawable(mActivityRef.getApplicationContext(),
-                R.drawable.ic_bookmark_black_48dp);
-        Utils.setIconOnImageView(iconView, bookmark.getBlobIcon(), defaultIcon, isSelectedItem,
-                (int) mActivityRef.getResources().getDimension(R.dimen.medium_icon_size));
-    }
-
-    @Override
-    public void updateData(RealmResults<Bookmark> filteredList) {
-        getRealmBaseAdapter().updateData(filteredList);
-    }
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
@@ -118,46 +93,63 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
         //TODO refactor
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        getRealmBaseAdapter().getItem(position).deleteFromRealm();
+//        getRealmBaseAdapter().getItem(position).deleteFromRealm();
         realm.commitTransaction();
 
         notifyItemRemoved(position);
     }
 
+
     /**
      * ViewHolder def
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder 
-            implements View.OnClickListener {
+    private static class ViewHolder extends RecyclerView.ViewHolder
+            implements View.OnLongClickListener, View.OnClickListener {
         private final WeakReference<OnActionListenerInterface> listener;
-        public View mLayoutView;
-        private ImageView mIconView;
-        private TextView mLabelView;
-        private TextView mTimestampView;
-        private TextView mUrlView;
+        private ImageView iconView;
+        private TextView labelView;
+        private TextView timestampView;
+        private TextView urlView;
 
-        public ViewHolder(View v, WeakReference<OnActionListenerInterface> lst) {
+        private ViewHolder(View v, WeakReference<OnActionListenerInterface> lst) {
             super(v);
             listener = lst;
-            mLayoutView = v.findViewById(R.id.backgroundLayoutId);
-            mIconView = (ImageView) v.findViewById(R.id.linkIconId);
-            mLabelView = (TextView) v.findViewById(R.id.linkTitleId);
-            mUrlView = (TextView) v.findViewById(R.id.linkUrlId);
-            mTimestampView = (TextView) v.findViewById(R.id.linkTimestampId);
 //            itemView.setOnLongClickListener(this);
+            iconView = (ImageView) v.findViewById(R.id.linkIconId);
+            labelView = (TextView) v.findViewById(R.id.linkTitleId);
+            urlView = (TextView) v.findViewById(R.id.linkUrlId);
+            timestampView = (TextView) v.findViewById(R.id.linkTimestampId);
+            itemView.setOnLongClickListener(this);
             itemView.setOnClickListener(this);
         }
 
-//        @Override
-//        public boolean onLongClick(View view) {
+        @Override
+        public boolean onLongClick(View view) {
+            return false;
 //            return listener.get().onLongItemClick(view, getAdapterPosition());
-//        }
-//
+        }
+
         @Override
         public void onClick(View view) {
             listener.get().onItemClick(view, getAdapterPosition());
         }
 
+        /**
+         *
+         * @param selected
+         */
+        void selectItem(boolean selected) {
+            itemView.setBackgroundColor(selected ? mDarkGrey : mLightGrey);
+        }
+
+        /**
+         *
+         * @param blobIcon
+         * @param defaultIcon
+         */
+        void setIcon(Bitmap blobIcon, Bitmap defaultIcon, boolean isSelected) {
+            Utils.setIconOnImageView(iconView, isSelected ? defaultIcon : blobIcon, defaultIcon);
+        }
     }
 
     /**

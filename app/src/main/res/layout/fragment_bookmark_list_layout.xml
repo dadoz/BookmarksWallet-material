@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/mainContainerViewId"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/padding_8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <android.support.v7.widget.RecyclerView
@@ -27,9 +27,10 @@
         android:src="@drawable/ic_add_white_48dp"
         app:elevation="4dp"
         app:borderWidth="0dp"
-        app:layout_anchor="@id/bookmarkRecyclerViewId"
-        app:layout_anchorGravity="bottom|right"
+        android:layout_gravity="bottom|right"
         app:layout_behavior="com.application.material.bookmarkswallet.app.behavior.FloatingActionButtonBehavior"
         app:backgroundTint="@color/indigo_600"
         app:fabSize="normal"/>
+
+    <include layout="@layout/empty_link_list_layout"/>
 </android.support.design.widget.CoordinatorLayout>

@@ -1,5 +1,6 @@
 package com.application.material.bookmarkswallet.app.observer;
 
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +18,7 @@ import com.application.material.bookmarkswallet.app.helpers.StatusHelper.StatusE
 public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
 
     private StatusHelper mStatusSingleton;
-    private RecyclerView mRecyclerView;
+    private RecyclerView recyclerView;
     private View mEmptyLinkListView;
     private View mEmptySearchResultLayout;
     private SearchManager searchManager;
@@ -25,7 +26,7 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
     public BookmarkListObserver(@NonNull View[] views, SearchManager searchMng) {
 
         mStatusSingleton = StatusHelper.getInstance();
-        mRecyclerView = (RecyclerView) views[0]; //recyclerView;
+        recyclerView = (RecyclerView) views[0]; //recyclerView;
         mEmptyLinkListView = views[1]; //emptyLinkListView;
         mEmptySearchResultLayout = views[2]; //emptySearchResultLayout;
         searchManager = searchMng;
@@ -33,17 +34,27 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
 
     @Override
     public void onChanged() {
+        Log.e("TAG", "udpated " + recyclerView.getAdapter().getItemCount());
+
         StatusEnum status = mStatusSingleton.getCurrentStatus();
-        if (status == StatusEnum.IDLE || status == StatusEnum.EDIT) {
+        if (status == StatusEnum.IDLE ||
+                status == StatusEnum.EDIT) {
             handleListView();
-        } else if (status == StatusEnum.SEARCH) {
+            return;
+        }
+
+        if (status == StatusEnum.SEARCH) {
             handleSearchView();
         }
+
     }
 
+
+    @Override
     public void onItemRangeInserted(int positionStart, int itemCount) {
     }
 
+    @Override
     public void onItemRangeRemoved(int positionStart, int itemCount) {
     }
 
@@ -52,6 +63,12 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
      */
     private void handleListView() {
         mEmptyLinkListView.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mEmptyLinkListView.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
+            }
+        }, 100);
     }
 
     /**
@@ -68,6 +85,6 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
      * @return
      */
     private boolean isEmptyData() {
-        return mRecyclerView.getAdapter().getItemCount() == 0;
+        return recyclerView.getAdapter().getItemCount() == 0;
     }
 }
