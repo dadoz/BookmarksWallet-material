@@ -7,7 +7,7 @@
         android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_50"
+        android:background="@color/grey_200"
         android:id="@+id/fragmentContainerFrameLayoutId"/>
 
     <android.support.v7.widget.Toolbar

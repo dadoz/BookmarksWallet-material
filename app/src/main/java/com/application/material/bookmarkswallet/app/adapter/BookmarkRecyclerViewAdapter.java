@@ -64,7 +64,7 @@ public class BookmarkRecyclerViewAdapter<T extends RealmObject> extends
     private void setEditMode(ViewHolder holder, Bookmark bookmark, int position) {
         boolean isEditMode = getEditModeStatus(position);
         setIcon(holder.mIconView, bookmark, isEditMode);
-        setEditItem(holder.mLayoutView, isEditMode);
+//        setEditItem(holder.mLayoutView, isEditMode);
     }
 
     /**

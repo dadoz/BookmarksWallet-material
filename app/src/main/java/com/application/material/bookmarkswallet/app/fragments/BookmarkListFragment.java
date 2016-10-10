@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -218,7 +219,7 @@ public class BookmarkListFragment extends Fragment
         BookmarkRecyclerViewAdapter rvAdapter = new BookmarkRecyclerViewAdapter(getActivity(),
                 new WeakReference<BookmarkRecyclerViewAdapter.OnActionListenerInterface>(this));
         registerDataObserver(rvAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         recyclerView.setAdapter(rvAdapter);
         setRealmAdapter(rvAdapter, RealmUtils.getResults(mRealm));
         searchManager.setAdapter(rvAdapter); //TODO what???

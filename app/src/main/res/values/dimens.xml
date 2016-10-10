@@ -45,4 +45,6 @@
     <dimen name="webview_height">200dp</dimen>
     <dimen name="padding_32">32dp</dimen>
     <dimen name="text_size_12">12sp</dimen>
+    <dimen name="padding_8">8dp</dimen>
+    <dimen name="padding_2">2dp</dimen>
 </resources>
