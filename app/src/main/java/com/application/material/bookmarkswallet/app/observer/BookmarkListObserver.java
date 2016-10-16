@@ -34,7 +34,7 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
 
     @Override
     public void onChanged() {
-        Log.e("TAG", "udpated " + recyclerView.getAdapter().getItemCount());
+        Log.e("TAG", "onChange - " + recyclerView.getAdapter().getItemCount());
 
         StatusEnum status = mStatusSingleton.getCurrentStatus();
         if (status == StatusEnum.IDLE ||

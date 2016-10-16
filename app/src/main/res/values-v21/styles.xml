@@ -8,7 +8,6 @@
         <item name="colorPrimaryDark">@color/yellow_600</item>
         <item name="colorPrimary">@color/yellow_400</item>
         <item name="windowActionModeOverlay">true</item>
-
         <item name="android:windowEnterTransition">@android:transition/slide_top</item>
         <item name="android:windowReturnTransition">@android:transition/slide_bottom</item>
         <item name="colorControlActivated">@color/indigo_600</item>
@@ -16,6 +15,7 @@
         <item name="android:itemTextAppearance">@style/customMenuTextAppearance</item>
 
         <item name="actionModeStyle">@style/ActionMode</item>
+        <item name="colorAccent">@color/indigo_600</item>
     </style>
 
     <!-- MENU APPEARANCE-->
@@ -26,6 +26,12 @@
     <!-- ACTION MODE-->
     <style name="ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@color/yellow_200</item>
+        <item name="titleTextStyle">@style/customActionModeTitle</item>
+
+    </style>
+    <!--TITLE ACTIONMODE -->
+    <style name="customActionModeTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="titleTextColor">@color/grey_50</item>
     </style>
 
     <!-- COLOR CONTROL LIGHT-->
@@ -51,5 +57,6 @@
     <style name="customMaterialButtonYellowStyle" parent="@style/Base.Widget.AppCompat.Button">
         <item name="android:backgroundTint">@color/yellow_500</item>
     </style>
+
 
 </resources>

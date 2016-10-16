@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.singleton;
+package com.application.material.bookmarkswallet.app.helpers;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,27 +11,21 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
 
 import java.lang.ref.WeakReference;
+public class ActionbarHelper implements OnInitActionBarInterface {
 
-
-/**
- * Created by davide on 18/03/15.
- */
-public class ActionbarSingleton implements OnInitActionBarInterface {
-
-    private static final String TAG = "ActionbarSingleton";
-    private static ActionbarSingleton instanceRef;
+    private static final String TAG = "ActionbarHelper";
+    private static ActionbarHelper instanceRef;
     private static WeakReference<Context> context;
 
-    private ActionbarSingleton() {
+    private ActionbarHelper() {
     }
 
-    public static ActionbarSingleton getInstance(WeakReference<Context> ctx) {
+    public static ActionbarHelper getInstance(WeakReference<Context> ctx) {
         context = ctx;
         return instanceRef == null ?
-                instanceRef = new ActionbarSingleton() : instanceRef;
+                instanceRef = new ActionbarHelper() : instanceRef;
     }
 
     /**
@@ -44,7 +38,6 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
             getActionBar().setDisplayHomeAsUpEnabled(false);
             getActionBar().setDisplayShowTitleEnabled(true);
             getActionBar().setDisplayShowCustomEnabled(false);
-            setElevation(10);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,25 +73,6 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
     }
 
     /**
-     * init title on toolbar
-     * @param title
-     * @param color
-     * @return
-     */
-//    @Override
-//    public boolean setTitle(String title, int color) {
-//        try {
-//            setTitle(title);
-//            Toolbar toolbar = (Toolbar) activityRef.findViewById(R.id.toolbarId);
-//            toolbar.setTitleTextColor(color);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//        return true;
-//    }
-
-    /**
      *
      * @param isHomeUpEnabled
      */
@@ -112,24 +86,6 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
             e.printStackTrace();
         }
     }
-
-    /**
-     *
-     * @param isHomeUpEnabled
-     * @param actionbarColor
-     * @param toolbarColor
-     */
-//    @Override
-//    public void updateActionBar(boolean isHomeUpEnabled,
-//                                int actionbarColor, Drawable toolbarColor) {
-//        try {
-//            setDisplayHomeEnabled(isHomeUpEnabled);
-//            setStatusbarColor(actionbarColor);
-//            setToolbarColor(toolbarColor);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     /**
      * set toolbar color
@@ -153,7 +109,7 @@ public class ActionbarSingleton implements OnInitActionBarInterface {
      *
      * @param color
      */
-    private void setStatusbarColor(int color) {
+    public void setStatusbarColor(int color) {
         if (Build.VERSION.SDK_INT >= 21) {
             Window window = ((Activity) context.get()).getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

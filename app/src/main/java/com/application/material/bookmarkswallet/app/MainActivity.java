@@ -23,7 +23,7 @@ import static com.application.material.bookmarkswallet.app.helpers.ExportHelper.
 public class MainActivity extends AppCompatActivity
         implements OnChangeFragmentWrapperInterface {
     private String TAG = "MainActivity";
-    private BackPressedSingleton mBackPressedSingleton;
+//    private BackPressedSingleton mBackPressedSingleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,16 +31,16 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         FlurryAgent.onStartSession(this);
 
-        initSingletonRef();
+//        initSingletonRef();
         onInitFragment();
     }
 
     /**
      * init singleton references
      */
-    private void initSingletonRef() {
-        mBackPressedSingleton = BackPressedSingleton.getInstance(new WeakReference<Context>(this));
-    }
+//    private void initSingletonRef() {
+//        mBackPressedSingleton = BackPressedSingleton.getInstance(new WeakReference<Context>(this));
+//    }
 
     @Override
     public void onResume() {

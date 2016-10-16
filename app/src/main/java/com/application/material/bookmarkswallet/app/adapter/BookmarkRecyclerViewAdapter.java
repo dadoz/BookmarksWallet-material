@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.*;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
@@ -26,14 +24,14 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
     private final WeakReference<Context> context;
     private final WeakReference<OnActionListenerInterface> listener;
     private static int mDarkGrey;
-    private static int mLightGrey = Color.TRANSPARENT;
+    private static int mLightGrey = Color.WHITE;
     private final Bitmap defaultIcon;
 
     /**
      *  @param ctx
      * @param lst
      */
-    public BookmarkRecyclerViewAdapter(FragmentActivity ctx, WeakReference<OnActionListenerInterface> lst) {
+    public BookmarkRecyclerViewAdapter(WeakReference<Context> ctx, WeakReference<OnActionListenerInterface> lst) {
         super(ctx);
         context = ctx;
         listener = lst;
@@ -61,17 +59,6 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         holder.setIcon(Utils.getIconBitmap(bookmark.getBlobIcon(),
                 (int) context.get().getResources().getDimension(R.dimen.medium_icon_size)), defaultIcon,
                 isSelectedPos(position));
-
-        setEditMode(holder, bookmark, position);
-    }
-
-    /**
-     * 
-     */
-    private void setEditMode(ViewHolder holder, Bookmark bookmark, int position) {
-//        boolean isEditMode = getEditModeStatus(position);
-//        setIcon(holder.mIconView, bookmark, isEditMode);
-//        setEditItem(holder.mLayoutView, isEditMode);
     }
 
     /**
@@ -93,9 +80,8 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         //TODO refactor
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-//        getRealmBaseAdapter().getItem(position).deleteFromRealm();
+//        getItem(position).deleteFromRealm();
         realm.commitTransaction();
-
         notifyItemRemoved(position);
     }
 
@@ -103,18 +89,17 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
     /**
      * ViewHolder def
      */
-    private static class ViewHolder extends RecyclerView.ViewHolder
+    public static class ViewHolder extends RecyclerView.ViewHolder
             implements View.OnLongClickListener, View.OnClickListener {
         private final WeakReference<OnActionListenerInterface> listener;
         private ImageView iconView;
-        private TextView labelView;
+        public TextView labelView;
         private TextView timestampView;
         private TextView urlView;
 
         private ViewHolder(View v, WeakReference<OnActionListenerInterface> lst) {
             super(v);
             listener = lst;
-//            itemView.setOnLongClickListener(this);
             iconView = (ImageView) v.findViewById(R.id.linkIconId);
             labelView = (TextView) v.findViewById(R.id.linkTitleId);
             urlView = (TextView) v.findViewById(R.id.linkUrlId);
@@ -125,8 +110,7 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
 
         @Override
         public boolean onLongClick(View view) {
-            return false;
-//            return listener.get().onLongItemClick(view, getAdapterPosition());
+            return listener.get().onLongItemClick(view, getAdapterPosition());
         }
 
         @Override

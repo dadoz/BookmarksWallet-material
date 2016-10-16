@@ -1,14 +1,7 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,8 +11,7 @@ import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.SettingListAdapter;
 import com.application.material.bookmarkswallet.app.models.Setting;
-import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
-import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
+import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.willowtreeapps.saguaro.android.Saguaro;
@@ -33,13 +25,13 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
         CompoundButton.OnCheckedChangeListener {
     public static String FRAG_TAG = "SettingsFragment_FRAG";
     public static String SETTINGS_TITLE = "Settings";
-    private ActionbarSingleton mActionbarSingleton;
+    private ActionbarHelper mActionbarSingleton;
     private View mSettingsView;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(getContext()));
+        mActionbarSingleton = ActionbarHelper.getInstance(new WeakReference<>(getContext()));
     }
 
     @Override

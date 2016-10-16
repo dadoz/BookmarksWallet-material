@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.fragments.interfaces;
+package com.application.material.bookmarkswallet.app.helpers;
 
 public interface OnInitActionBarInterface {
     void initActionBar();
