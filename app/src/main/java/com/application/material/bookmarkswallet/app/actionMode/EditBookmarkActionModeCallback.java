@@ -1,9 +1,11 @@
 package com.application.material.bookmarkswallet.app.actionMode;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
 
@@ -12,6 +14,9 @@ import java.lang.ref.WeakReference;
 public class EditBookmarkActionModeCallback implements ActionMode.Callback {
 
     private final StatusHelper statusHelper;
+    private final WeakReference<Context> ctx;
+    private final int colorPrimaryDarkSelected;
+    private final int colorPrimaryDark;
     private BookmarkActionHelper mBookmarkActionSingleton;
     private BookmarkRecyclerViewAdapter adapter;
     private ActionMode actionMode;
@@ -22,14 +27,18 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
      */
     public EditBookmarkActionModeCallback(WeakReference<Context> context,
                                           BookmarkRecyclerViewAdapter adp) {
+        ctx = context;
         adapter = adp;
         mBookmarkActionSingleton = BookmarkActionHelper.getInstance(context);
         statusHelper = StatusHelper.getInstance();
+        colorPrimaryDark = ContextCompat.getColor(ctx.get(), R.color.yellow_600);
+        colorPrimaryDarkSelected = ContextCompat.getColor(ctx.get(), R.color.yellow_400);
     }
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         actionMode = mode;
+        ActionbarHelper.getInstance(ctx).setStatusbarColor(colorPrimaryDarkSelected);
         mode.getMenuInflater().inflate(R.menu.share_delete_menu, menu);
         return true;
     }
@@ -87,6 +96,7 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
+        ActionbarHelper.getInstance(ctx).setStatusbarColor(colorPrimaryDark);
         unsetEditItem();
     }
 

@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.bookmarkswallet.app.singleton.BackPressedSingleton;
 import com.flurry.android.FlurryAgent;
 
 import java.lang.ref.WeakReference;
@@ -23,7 +22,6 @@ import static com.application.material.bookmarkswallet.app.helpers.ExportHelper.
 public class MainActivity extends AppCompatActivity
         implements OnChangeFragmentWrapperInterface {
     private String TAG = "MainActivity";
-    private BackPressedSingleton mBackPressedSingleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +37,6 @@ public class MainActivity extends AppCompatActivity
      * init singleton references
      */
     private void initSingletonRef() {
-        mBackPressedSingleton = BackPressedSingleton.getInstance(new WeakReference<Context>(this));
     }
 
     @Override

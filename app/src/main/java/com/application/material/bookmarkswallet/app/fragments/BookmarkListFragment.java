@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.CallSuper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.*;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -23,14 +26,14 @@ import butterknife.ButterKnife;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionModeCallback;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
+import com.application.material.bookmarkswallet.app.manager.SearchManager.SearchManagerCallbackInterface;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
-import com.application.material.bookmarkswallet.app.realm.adapter.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.singleton.*;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.observer.BookmarkListObserver;
@@ -41,11 +44,14 @@ import java.lang.ref.WeakReference;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static android.content.ContentValues.TAG;
+
 
 public class BookmarkListFragment extends Fragment
         implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener,
-        MenuItemCompat.OnActionExpandListener, BookmarkRecyclerViewAdapter.OnActionListenerInterface {
+        MenuItemCompat.OnActionExpandListener, BookmarkRecyclerViewAdapter.OnActionListenerInterface,
+        SearchManagerCallbackInterface {
     public static final String FRAG_TAG = "LinksListFragment";
     @Bind(R.id.addBookmarkFabId)
     FloatingActionButton addNewFab;
@@ -61,7 +67,7 @@ public class BookmarkListFragment extends Fragment
 
     private Realm mRealm;
     private SearchManager searchManager;
-    private ActionbarSingleton mActionbarSingleton;
+    private ActionbarHelper mActionbarHelper;
     private BookmarkActionHelper mBookmarkActionSingleton;
     private View mainView;
     private StatusHelper statusHelper;
@@ -210,8 +216,8 @@ public class BookmarkListFragment extends Fragment
      *
      */
     private void initActionbar() {
-        mActionbarSingleton.initActionBar();
-        mActionbarSingleton.setTitle(getString(R.string.bookmark_list_title));
+        mActionbarHelper.initActionBar();
+        mActionbarHelper.setTitle(getString(R.string.bookmark_list_title));
     }
 
     /**
@@ -222,14 +228,24 @@ public class BookmarkListFragment extends Fragment
         BookmarkRecyclerViewAdapter adapter =
                 new BookmarkRecyclerViewAdapter(new WeakReference<>(getContext()),
                     new WeakReference<BookmarkRecyclerViewAdapter.OnActionListenerInterface>(this));
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-//        ((Activity) getContext()).getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        Log.e("TAG", "" + Utils.getCardNumberInRow(getContext()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), Utils.getCardNumberInRow(getContext())));
         recyclerView.setAdapter(adapter);
-//        searchManager.setAdapter(adapter); //TODO what???
         actionMode = new EditBookmarkActionModeCallback(new WeakReference<>(getContext()), adapter);
         registerDataObserver(adapter);
     }
 
+    /**
+     *
+     */
+    private void updateGridLayoutManager() {
+        if (recyclerView != null &&
+                recyclerView.getLayoutManager() != null) {
+            ((GridLayoutManager) recyclerView.getLayoutManager())
+                    .setSpanCount(Utils.getCardNumberInRow(getContext()));
+        }
+
+    }
     /**
      *
      */
@@ -286,7 +302,7 @@ public class BookmarkListFragment extends Fragment
      * handle setting option - open up a new activity with all preferences available
      */
     private void handleSetting() {
-        mActionbarSingleton.updateActionBar(true);
+        mActionbarHelper.updateActionBar(true);
         ((OnChangeFragmentWrapperInterface) getActivity())
                 .changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
     }
@@ -297,9 +313,10 @@ public class BookmarkListFragment extends Fragment
     private void initSingletonInstances() {
         mRealm = Realm.getDefaultInstance();
         statusHelper = StatusHelper.getInstance();
-        mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(getContext()));
+        mActionbarHelper = ActionbarHelper.getInstance(new WeakReference<>(getContext()));
         mBookmarkActionSingleton = BookmarkActionHelper.getInstance(new WeakReference<>(getContext()));
-        searchManager = SearchManager.getInstance(new WeakReference<>(getContext()), mRealm);
+        searchManager = SearchManager.getInstance(new WeakReference<>(getContext()), mRealm,
+                new WeakReference<SearchManagerCallbackInterface>(this));
     }
 
 
@@ -338,5 +355,17 @@ public class BookmarkListFragment extends Fragment
             actionMode.forceToFinish();
         }
 
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGridLayoutManager();
+    }
+
+    @Override
+    public void updateSearchDataList(RealmResults list) {
+        ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).updateData(list);
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -254,5 +255,15 @@ public class Utils {
                     Uri.parse("market://details?id=" + context.get().getPackageName())) :
                 new Intent(Intent.ACTION_VIEW,
                     Uri.parse("http://play.google.com/store/apps/details?id=" + context.get().getPackageName()));
+    }
+
+    /**
+     *
+     * @param context
+     * @return
+     */
+    public static int getCardNumberInRow(Context context) {
+        Log.e("TAG", "" + context.getResources().getConfiguration().orientation);
+        return (context.getResources().getConfiguration().orientation == 1) ? 2 : 3;
     }
 }

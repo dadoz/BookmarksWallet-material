@@ -26,13 +26,13 @@ import butterknife.ButterKnife;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
 import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.presenter.SearchBookmarkPresenter;
 import com.application.material.bookmarkswallet.app.presenter.SearchResultPresenter;
-import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
 import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
@@ -49,7 +49,7 @@ public class AddBookmarkFragment extends Fragment implements
         RetrieveIconHelper.OnRetrieveIconInterface, AddBookmarkActivity.OnHandleBackPressed {
     public static final String FRAG_TAG = "AddBookmarkFragmentTAG";
     private static final String TAG = "AddBookmarkFragment";
-    private ActionbarSingleton mActionbarSingleton;
+    private ActionbarHelper mActionbarHelper;
 
     @Bind(R.id.addBookmarkRefreshLayoutId)
     SwipeRefreshLayout refreshLayout;
@@ -116,7 +116,7 @@ public class AddBookmarkFragment extends Fragment implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(context));
+        mActionbarHelper = ActionbarHelper.getInstance(new WeakReference<>(context));
         searchBookmarkPresenter = SearchBookmarkPresenter.getInstance();
         retrieveIconHelper = RetrieveIconHelper.getInstance(new WeakReference<RetrieveIconHelper.OnRetrieveIconInterface>(this));
         searchResultPresenter = new SearchResultPresenter(new WeakReference<>(getContext()));
@@ -262,10 +262,10 @@ public class AddBookmarkFragment extends Fragment implements
      * init action bar
      */
     private void initActionbar() {
-        mActionbarSingleton.initActionBar();
-        mActionbarSingleton.updateActionBar(true);
-        mActionbarSingleton.setElevation(0.0f);
-        mActionbarSingleton.setTitle("Add new");
+        mActionbarHelper.initActionBar();
+        mActionbarHelper.updateActionBar(true);
+        mActionbarHelper.setElevation(0.0f);
+        mActionbarHelper.setTitle("Add new");
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.application.material.bookmarkswallet.app.manager;
 
 import android.animation.Animator;
-import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -13,11 +12,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
-import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
@@ -27,7 +23,6 @@ import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 public class SearchManager implements Filterable, SearchView.OnQueryTextListener {
     private static WeakReference<Context> context;
@@ -35,8 +30,7 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
     private static SearchManager instance;
     private String mFilterString;
     private MenuItem searchItem;
-    private BookmarkRecyclerViewAdapter adapter;
-
+    private static WeakReference<SearchManagerCallbackInterface> listener;
     public SearchManager() {
     }
 
@@ -46,9 +40,11 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
      * @param realm
      * @return
      */
-    public static SearchManager getInstance(WeakReference<Context> ctx, Realm realm) {
+    public static SearchManager getInstance(WeakReference<Context> ctx, Realm realm,
+                                            WeakReference<SearchManagerCallbackInterface> lst) {
         context = ctx;
         mRealm = realm;
+        listener = lst;
         return instance == null ?
                 instance = new SearchManager() :
                 instance;
@@ -79,14 +75,6 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
         return false;
     }
 
-
-    /**
-     *
-     * @param adpt
-     */
-    public void setAdapter(BookmarkRecyclerViewAdapter adpt) {
-        adapter = adpt;
-    }
 
     /**
      * @param menu
@@ -128,15 +116,6 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
     public boolean onQueryTextChange(String newText) {
         getFilter().filter(newText);
         return true;
-    }
-
-    /**
-     * TODO move on realm class
-     * @param list
-     */
-    private void updateDataSet(RealmResults<Bookmark> list) {
-        adapter.updateData(list);
-        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -232,7 +211,7 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
                         String searchValue = ((String) constraint).trim().toLowerCase();
                         RealmResults list = searchValue.equals("") ?
                                 RealmUtils.getResults(mRealm) : getFilteredList(searchValue, mCaseSensitive);
-                        updateDataSet(list);
+                        listener.get().updateSearchDataList(list);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -241,5 +220,21 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
         }
 
     }
+
+    /**
+     *
+     */
+    public interface SearchManagerCallbackInterface {
+        void updateSearchDataList(RealmResults list);
+    }
+
+    /**
+     * TODO move on realm class
+     * @param list
+     */
+//    private void updateDataSet(RealmResults<Bookmark> list) {
+//        adapter.updateData(list);
+//        adapter.notifyDataSetChanged();
+//    }
 
 }

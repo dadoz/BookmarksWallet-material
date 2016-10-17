@@ -17,9 +17,8 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.SettingListAdapter;
+import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.models.Setting;
-import com.application.material.bookmarkswallet.app.singleton.ActionbarSingleton;
-import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.willowtreeapps.saguaro.android.Saguaro;
@@ -33,13 +32,13 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
         CompoundButton.OnCheckedChangeListener {
     public static String FRAG_TAG = "SettingsFragment_FRAG";
     public static String SETTINGS_TITLE = "Settings";
-    private ActionbarSingleton mActionbarSingleton;
+    private ActionbarHelper actionbarHelper;
     private View mSettingsView;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActionbarSingleton = ActionbarSingleton.getInstance(new WeakReference<>(getContext()));
+        actionbarHelper = ActionbarHelper.getInstance(new WeakReference<>(getContext()));
     }
 
     @Override
@@ -71,8 +70,8 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
      * init actionbar
      */
     private void initActionbar() {
-        mActionbarSingleton.setTitle(SETTINGS_TITLE);
-        mActionbarSingleton.setDisplayHomeEnabled(true);
+        actionbarHelper.setTitle(SETTINGS_TITLE);
+        actionbarHelper.setDisplayHomeEnabled(true);
     }
 
     @Override
