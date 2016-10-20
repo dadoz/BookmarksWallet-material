@@ -39,7 +39,7 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         super(ctx);
         context = ctx;
         listener = lst;
-        mDarkGrey = ContextCompat.getColor(context.get(), R.color.indigo_50);
+        mDarkGrey = ContextCompat.getColor(context.get(), R.color.yellow_50);
         defaultIcon = BitmapFactory.decodeResource(context.get().getResources(),
                 R.drawable.ic_bookmark_black_48dp);
     }

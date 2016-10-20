@@ -36,6 +36,7 @@ public class ActionbarHelper implements OnInitActionBarInterface {
     public void initActionBar() {
         try {
             setActionBar();
+            getActionBar().setElevation(4.0f);
             getActionBar().setDisplayHomeAsUpEnabled(false);
             getActionBar().setDisplayShowTitleEnabled(true);
             getActionBar().setDisplayShowCustomEnabled(false);
