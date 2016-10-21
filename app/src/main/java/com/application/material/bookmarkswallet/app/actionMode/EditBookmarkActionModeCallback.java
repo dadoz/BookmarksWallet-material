@@ -61,6 +61,7 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
                 return true;
             case R.id.action_select_all:
                 actionMode = mode; //TODO this is not initialized but why???
+                setSelectedItemCount(adapter.getItemCount());
                 toggleVisibilityIconMenu(false);
                 mBookmarkActionSingleton.selectAllAction(adapter);
                 return true;
@@ -100,4 +101,12 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
         unsetEditItem();
     }
 
+    /**
+     *
+     * @param count
+     */
+    public void setSelectedItemCount(int count) {
+        if (actionMode != null)
+            actionMode.setTitle(Integer.toString(count));
+    }
 }

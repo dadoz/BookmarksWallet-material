@@ -153,5 +153,4 @@ public class ActionbarHelper implements OnInitActionBarInterface {
         return ContextCompat
                 .getColor(context.get(), R.color.yellow_600);
     }
-
 }
