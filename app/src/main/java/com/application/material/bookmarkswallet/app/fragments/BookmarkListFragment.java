@@ -5,14 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.BaseColumns;
+import android.provider.Browser;
 import android.support.annotation.CallSuper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,6 +50,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 import static android.content.ContentValues.TAG;
+import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
 
 
 public class BookmarkListFragment extends Fragment
@@ -169,14 +175,107 @@ public class BookmarkListFragment extends Fragment
                 handleSetting();
                 return true;
             case R.id.action_import:
-                Toast.makeText(getContext(), getString(R.string.not_implemented_yet),
-                        Toast.LENGTH_SHORT).show();
+
+                bookmarkImport();
                 return true;
             case R.id.action_terms_and_licences:
                 handleTermsAndLicences();
                 return true;
         }
         return true;
+    }
+
+    private void bookmarkImport() {
+        try {
+            Toast.makeText(getContext(), "Title", Toast.LENGTH_SHORT).show();
+            String proj[] = new String[] {BookmarkColumns.TITLE, BookmarkColumns.URL};
+            Uri uriCustom = Uri.parse("content://org.mozilla.firefox.db.browser/bookmarks");
+//        Uri uriCustom = Uri.parse("content://com.android.chrome.browser/bookmarks");
+//            Uri uriCustom = Uri.parse("content://browser/bookmarks");
+            String sel = BookmarkColumns.BOOKMARK + " = 0";
+            Cursor cursor = getActivity().getContentResolver().query(uriCustom, proj, sel, null, null);
+            if (cursor != null &&
+                    cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                while (!cursor.isLast()) {
+                    Toast.makeText(getContext(), "Title"
+                            + cursor.getString(cursor.getColumnIndex(BookmarkColumns.TITLE))
+                            + "Url" + cursor.getString(cursor.getColumnIndex(BookmarkColumns.URL)), Toast.LENGTH_SHORT).show();
+                    cursor.moveToNext();
+                }
+                cursor.close();
+                return;
+            }
+            Toast.makeText(getContext(), "no data", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "error - " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    /**
+     * Column definitions for the mixed bookmark and history items available
+     * at {@link #}.
+     * @removed
+     */
+    static class BookmarkColumns implements BaseColumns {
+        /**
+         * The URL of the bookmark or history item.
+         * <p>Type: TEXT (URL)</p>
+         */
+        public static final String URL = "url";
+
+        /**
+         * The number of time the item has been visited.
+         * <p>Type: NUMBER</p>
+         */
+        public static final String VISITS = "visits";
+
+        /**
+         * The date the item was last visited, in milliseconds since the epoch.
+         * <p>Type: NUMBER (date in milliseconds since January 1, 1970)</p>
+         */
+        public static final String DATE = "date";
+
+        /**
+         * Flag indicating that an item is a bookmark. A value of 1 indicates a bookmark, a value
+         * of 0 indicates a history item.
+         * <p>Type: INTEGER (boolean)</p>
+         */
+        public static final String BOOKMARK = "bookmark";
+
+        /**
+         * The user visible title of the bookmark or history item.
+         * <p>Type: TEXT</p>
+         */
+        public static final String TITLE = "title";
+
+        /**
+         * The date the item created, in milliseconds since the epoch.
+         * <p>Type: NUMBER (date in milliseconds since January 1, 1970)</p>
+         */
+        public static final String CREATED = "created";
+
+        /**
+         * The favicon of the bookmark. Must decode via {@link BitmapFactory#decodeByteArray}.
+         * <p>Type: BLOB (image)</p>
+         */
+        public static final String FAVICON = "favicon";
+
+        /**
+         * @hide
+         */
+        public static final String THUMBNAIL = "thumbnail";
+
+        /**
+         * @hide
+         */
+        public static final String TOUCH_ICON = "touch_icon";
+
+        /**
+         * @hide
+         */
+        public static final String USER_ENTERED = "user_entered";
     }
 
     @Override
