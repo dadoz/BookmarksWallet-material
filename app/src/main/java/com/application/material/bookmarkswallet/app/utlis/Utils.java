@@ -2,9 +2,7 @@ package com.application.material.bookmarkswallet.app.utlis;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,10 +14,8 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
@@ -41,6 +37,7 @@ public class Utils {
     private static final int CONST_VALUE = 100;
     private static final String HTTP_PROTOCOL = "http://";
     private static final String HTTPS_PROTOCOL = "https://";
+    public static final int MAX_CARD_COUNT= 2;
 
     /**
      * @param url
@@ -260,10 +257,13 @@ public class Utils {
     /**
      *
      * @param context
+     * @param isExpanded
      * @return
      */
-    public static int getCardNumberInRow(Context context) {
-        Log.e("TAG", "" + context.getResources().getConfiguration().orientation);
-        return (context.getResources().getConfiguration().orientation == 1) ? 2 : 3;
+    public static int getCardNumberInRow(Context context, boolean isExpanded) {
+        boolean isPortrait = (context.getResources().getConfiguration().orientation == 1);
+        return isPortrait ? (isExpanded ? MAX_CARD_COUNT - 1 : MAX_CARD_COUNT) :
+                (isExpanded ? MAX_CARD_COUNT : MAX_CARD_COUNT + 1);
     }
+
 }

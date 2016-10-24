@@ -3,16 +3,19 @@ package com.application.material.bookmarkswallet.app.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.application.material.bookmarkswallet.app.utlis.Utils;
+
 import java.lang.ref.WeakReference;
 
 public class SharedPrefHelper {
     private static SharedPrefHelper instance;
     private static SharedPreferences sharedPref;
 
-    public enum SharedPrefKeysEnum {TUTORIAL_DONE, SYNC_STATUS, SEARCH_URL_MODE, IMPORT_KEEP_NOTIFIED, IMPORT_ACCOUNT_NOTIFIED }
+    public enum SharedPrefKeysEnum {TUTORIAL_DONE, SYNC_STATUS, SEARCH_URL_MODE, IMPORT_KEEP_NOTIFIED,
+        IMPORT_ACCOUNT_NOTIFIED, EXPANDED_GRIDVIEW }
     private static final String BOOKMARKS_WALLET_SHAREDPREF = "BOOKMARKS_WALLET_SHAREDPREF";
 
-    protected SharedPrefHelper(WeakReference<Context> ctx) {
+    private SharedPrefHelper(WeakReference<Context> ctx) {
         sharedPref = ctx.get().getSharedPreferences(BOOKMARKS_WALLET_SHAREDPREF, 0);
     }
 
@@ -35,7 +38,8 @@ public class SharedPrefHelper {
         if (key.equals(SharedPrefKeysEnum.SEARCH_URL_MODE) ||
             key.equals(SharedPrefKeysEnum.TUTORIAL_DONE) ||
             key.equals(SharedPrefKeysEnum.IMPORT_ACCOUNT_NOTIFIED) ||
-            key.equals(SharedPrefKeysEnum.IMPORT_KEEP_NOTIFIED)) {
+            key.equals(SharedPrefKeysEnum.IMPORT_KEEP_NOTIFIED) ||
+            key.equals(SharedPrefKeysEnum.EXPANDED_GRIDVIEW)) {
             return sharedPref.getBoolean(key.name(), (boolean) defValue);
         }
         return null;
@@ -49,7 +53,8 @@ public class SharedPrefHelper {
         if (key.equals(SharedPrefKeysEnum.SEARCH_URL_MODE) ||
             key.equals(SharedPrefKeysEnum.TUTORIAL_DONE) ||
             key.equals(SharedPrefKeysEnum.IMPORT_ACCOUNT_NOTIFIED) ||
-            key.equals(SharedPrefKeysEnum.IMPORT_KEEP_NOTIFIED)) {
+            key.equals(SharedPrefKeysEnum.IMPORT_KEEP_NOTIFIED) ||
+            key.equals(SharedPrefKeysEnum.EXPANDED_GRIDVIEW)) {
             sharedPref
                 .edit()
                 .putBoolean(key.name(), (boolean) value)
