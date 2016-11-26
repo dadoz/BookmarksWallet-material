@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
@@ -24,8 +25,12 @@ public class AddBookmarkActivity extends AppCompatActivity {
     public void onInitFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (getSupportFragmentManager().findFragmentByTag(AddBookmarkFragment.FRAG_TAG) == null) {
+            Fragment addBookmarkFrag = new AddBookmarkFragment();
+            if (getIntent().getExtras() != null) {
+                addBookmarkFrag.setArguments(getIntent().getExtras());
+            }
             transaction.replace(R.id.fragmentContainerFrameLayoutId,
-                    new AddBookmarkFragment(), AddBookmarkFragment.FRAG_TAG).commit();
+                    addBookmarkFrag, AddBookmarkFragment.FRAG_TAG).commit();
         }
     }
 

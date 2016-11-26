@@ -1,18 +1,20 @@
 package com.application.material.bookmarkswallet.app;
 
-import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.flurry.android.FlurryAgent;
 
 import java.lang.ref.WeakReference;
@@ -22,6 +24,7 @@ import static com.application.material.bookmarkswallet.app.helpers.ExportHelper.
 public class MainActivity extends AppCompatActivity
         implements OnChangeFragmentWrapperInterface {
     private String TAG = "MainActivity";
+    public static String SHARED_URL_EXTRA_KEY = "SHARED_URL_EXTRA_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +32,15 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         FlurryAgent.onStartSession(this);
 
-        initSingletonRef();
+        //first handle frag
         onInitFragment();
-    }
 
-    /**
-     * init singleton references
-     */
-    private void initSingletonRef() {
+        //then handleSharedIntent
+        if (handleSharedIntent() != null) {
+            Intent intent = new Intent(this, AddBookmarkActivity.class);
+            intent.putExtras(handleSharedIntent());
+            startActivityForResult(intent, Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE);return;
+        }
     }
 
     @Override
@@ -148,6 +152,24 @@ public class MainActivity extends AppCompatActivity
             ExportStrategy.getInstance(new WeakReference<>(getApplicationContext()))
                 .handleRequestPermissionDeny();
         }
+    }
+
+    /**
+     *
+     */
+    private Bundle handleSharedIntent()  {
+        if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
+            Log.e(TAG, "hey" + getIntent().getStringExtra(Intent.EXTRA_TEXT));
+            String sharedUrl = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+            if (sharedUrl == null) {
+                return null;
+            }
+
+            Bundle sharedUrlBundle = new Bundle();
+            sharedUrlBundle.putString(SHARED_URL_EXTRA_KEY, sharedUrl);
+            return sharedUrlBundle;
+        }
+        return null;
     }
 
 }

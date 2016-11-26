@@ -114,6 +114,9 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
 
     }
 
+    /**
+     * multiple selector handler
+     */
     private class MultipleSelector {
         SparseBooleanArray selectedPosArray = new SparseBooleanArray();
 

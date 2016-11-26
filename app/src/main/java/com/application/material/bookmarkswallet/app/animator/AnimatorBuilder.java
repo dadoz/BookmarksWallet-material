@@ -5,8 +5,12 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import java.lang.ref.WeakReference;
 
@@ -135,5 +139,67 @@ public class AnimatorBuilder {
             }
         });
         return animator;
+    }
+
+    /**
+     *
+     * @param view
+     * @param lst
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public Animator buildRevealAnimation(final View view, final boolean isShowing,
+                                         final WeakReference<OnRevealAnimationListener> lst) {
+        int cx = (view.getLeft() + view.getRight());
+        int cy = (view.getTop() + view.getBottom()) / 2;
+
+        // get the final radius for the clipping circle
+        int dx = Math.max(cx, view.getWidth() - cx);
+        int dy = Math.max(cy, view.getHeight() - cy);
+        float finalRadius = (float) Math.hypot(dx, dy);
+        float initialRadius = 0;
+
+        Animator animator = ViewAnimationUtils.createCircularReveal(view, cx, cy,
+                        isShowing ? initialRadius : finalRadius,
+                        isShowing ? finalRadius : initialRadius);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                if (isShowing) {
+                    view.setVisibility(View.VISIBLE);
+                }
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                if (!isShowing) {
+                    view.setVisibility(View.GONE);
+                    if (lst != null &&
+                            lst.get() != null) {
+                        lst.get().omRevealAnimationEnd();
+                    }
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
+        return animator;
+    }
+
+    /**
+     *
+     */
+    public interface OnRevealAnimationListener {
+        void omRevealAnimationEnd();
     }
 }

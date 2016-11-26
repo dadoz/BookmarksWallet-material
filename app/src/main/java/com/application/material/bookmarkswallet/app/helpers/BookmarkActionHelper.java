@@ -64,9 +64,9 @@ public class BookmarkActionHelper {
      * add bookmark action
      * @param fragment
      */
-    public void addBookmarkAction(Fragment fragment) {
+    public void addBookmarkAction(WeakReference<Fragment> fragment) {
         Intent intent = new Intent(context.get(), AddBookmarkActivity.class);
-        fragment.startActivityForResult(intent, Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE);
+        fragment.get().startActivityForResult(intent, Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE);
     }
 
     /**

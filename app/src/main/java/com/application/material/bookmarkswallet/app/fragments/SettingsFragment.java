@@ -71,6 +71,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
      */
     private void initActionbar() {
         actionbarHelper.setTitle(SETTINGS_TITLE);
+        actionbarHelper.setElevation(4);
         actionbarHelper.setDisplayHomeEnabled(true);
     }
 
@@ -104,6 +105,10 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
                 View.GONE, false));
         settingList.add(new Setting(getResources().getString(R.string.setting_url_search_label),
                 getResources().getString(R.string.setting_url_search_description),
+                View.VISIBLE, Utils.getSearchOnUrlEnabledFromSharedPref(new WeakReference<>(getActivity()
+                .getApplicationContext()))));
+        settingList.add(new Setting(getResources().getString(R.string.setting_no_favicon),
+                getResources().getString(R.string.setting_no_favicon_description),
                 View.VISIBLE, Utils.getSearchOnUrlEnabledFromSharedPref(new WeakReference<>(getActivity()
                 .getApplicationContext()))));
         settingList.add(new Setting(getResources().getString(R.string.setting_feedback_label),

@@ -14,13 +14,13 @@
     <string name="banner_ad_unit_id">ca-app-pub-3777798024824179/7880605447</string>
     <string name="main_title">Bookmarks</string>
     <string name="setting_rate_label">Rate us on Play Store</string>
-    <string name="setting_url_search_label">Search on URL enabled</string>
+    <string name="setting_url_search_label">Search on URL</string>
     <string name="setting_find_icon_label">Find icon automatically</string>
     <string name="setting_delete_all_label">Delete all bookmarks</string>
     <string name="setting_feedback_label">Send a feedback</string>
     <string name="setting_build_version_label">Build version</string>
     <string name="send_feedback_email">tunnus.android@gmail.com</string>
-    <string name="bookmark_list_title">List</string>
+    <string name="bookmark_list_title">Material Bookmarks</string>
     <string name="https_checkbox_label">HTTPS</string>
     <string name="search_label">SEARCH</string>
     <string name="save_new_bookmark">SAVE BOOKMARK</string>
@@ -53,10 +53,16 @@
     <string name="bookmark_list_label">Bookmark list</string>
     <string name="import_menu_label">import</string>
     <string name="export_dialog_title">Export</string>
-    <string name="no_bookmarks_here">No bookmarks here!</string>
+    <string name="no_bookmarks_here">No Bookmarks</string>
     <string name="open">OPEN</string>
     <string name="downloaded_with_error">Oh Snap! Download failed.</string>
     <string name="downloaded_with_success">Bookmarks exported with success!</string>
     <string name="select_all_menu_label">select all</string>
     <string name="gridview_resize">gridview resize</string>
+    <string name="import_default_bookmarks">Import default bookmarks as Chrome and Firefox does</string>
+    <string name="default_bookmarks">Default Bookmarks</string>
+    <string name="setting_no_favicon_description">Disable favicon on each bookmark</string>
+    <string name="setting_no_favicon">Default icon</string>
+    <string name="accept">accept</string>
+    <string name="decline">decline</string>
 </resources>

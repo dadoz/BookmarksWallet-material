@@ -25,6 +25,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
+import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
@@ -199,6 +200,20 @@ public class AddBookmarkFragment extends Fragment implements
         if (savedInstanceState != null) {
             initResultViewOnConfigChanged();
         }
+
+        if (getArguments() != null ||
+                getArguments().getString(MainActivity.SHARED_URL_EXTRA_KEY) != null) {
+            handleArguments();
+        }
+
+    }
+
+    /**
+     *
+     */
+    private void handleArguments() {
+        String sharedUrl = getArguments().getString(MainActivity.SHARED_URL_EXTRA_KEY);
+        urlEditText.setText(sharedUrl);
     }
 
     /**

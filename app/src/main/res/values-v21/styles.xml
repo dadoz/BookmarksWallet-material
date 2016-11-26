@@ -16,6 +16,7 @@
         <item name="android:itemTextAppearance">@style/customMenuTextAppearance</item>
 
         <item name="actionModeStyle">@style/ActionMode</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <!-- MENU APPEARANCE-->
