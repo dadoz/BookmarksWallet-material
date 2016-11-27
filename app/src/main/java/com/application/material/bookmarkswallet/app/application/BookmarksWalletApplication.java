@@ -23,7 +23,7 @@ public class BookmarksWalletApplication extends Application {
                 .build(this, getString(R.string.FLURRY_API_KEY));
         setRealmDefaultConfiguration();
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/OzHandicraftBT.ttf")
+                .setDefaultFontPath("fonts/ITC-Migrate-W01-Regular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );

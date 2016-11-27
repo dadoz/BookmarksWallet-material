@@ -40,6 +40,6 @@
         android:src="@drawable/abc_ic_menu_paste_mtrl_am_alpha"
         app:elevation="4dp"
         app:borderWidth="0dp"
-        app:backgroundTint="@color/blue_grey_900"
+        app:backgroundTint="@color/indigo_600"
         app:fabSize="mini"/>
 </RelativeLayout>
