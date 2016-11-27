@@ -12,7 +12,7 @@ public class SharedPrefHelper {
     private static SharedPreferences sharedPref;
 
     public enum SharedPrefKeysEnum {TUTORIAL_DONE, SYNC_STATUS, NO_FAVICON_MODE, SEARCH_URL_MODE, IMPORT_KEEP_NOTIFIED,
-        IMPORT_ACCOUNT_NOTIFIED, EXPANDED_GRIDVIEW;
+        IMPORT_ACCOUNT_NOTIFIED, EXPANDED_GRIDVIEW, CLOUD_SYNC;
     }
     private static final String BOOKMARKS_WALLET_SHAREDPREF = "BOOKMARKS_WALLET_SHAREDPREF";
 

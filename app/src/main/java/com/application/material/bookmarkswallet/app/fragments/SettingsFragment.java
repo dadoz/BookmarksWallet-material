@@ -1,17 +1,10 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.text.Annotation;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,11 +74,12 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.e("TAG", "view" + view.getId());
         switch (position) {
             case 0:
                 goToMarket();
                 break;
-            case 3:
+            case 4:
                 startActivity(Saguaro.getSendFeedbackIntent(getActivity()));
                 break;
         }
@@ -108,19 +102,30 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
     public ArrayList<Setting> getSettingList() {
         ArrayList<Setting> settingList = new ArrayList<>();
         settingList.add(new Setting(getResources().getString(R.string.setting_rate_label), null,
-                View.GONE, false));
+                null, View.GONE, false));
+
         settingList.add(new Setting(getResources().getString(R.string.setting_url_search_label),
                 getResources().getString(R.string.setting_url_search_description),
-                View.VISIBLE, (Boolean) sharedPrefHelper
+                SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE, View.VISIBLE, (Boolean) sharedPrefHelper
                     .getValue(SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE, false)));
+
         settingList.add(new Setting(getResources().getString(R.string.setting_no_favicon),
                 getResources().getString(R.string.setting_no_favicon_description),
-                View.VISIBLE, (Boolean) sharedPrefHelper
+                SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE, View.VISIBLE, (Boolean) sharedPrefHelper
                 .getValue(SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE, false)));
+
+        settingList.add(new Setting(getResources().getString(R.string.setting_cloud_sync),
+                getResources().getString(R.string.setting_cloud_sync_description),
+                SharedPrefHelper.SharedPrefKeysEnum.CLOUD_SYNC,
+                View.VISIBLE, (Boolean) sharedPrefHelper
+                .getValue(SharedPrefHelper.SharedPrefKeysEnum.CLOUD_SYNC, false)));
+
         settingList.add(new Setting(getResources().getString(R.string.setting_feedback_label),
-                null, View.GONE, false));
+                null, null, View.GONE, false));
+
         settingList.add(new Setting(getResources().getString(R.string.setting_build_version_label),
-                Utils.getVersionName(new WeakReference<>(getContext())), View.GONE, false));
+                Utils.getVersionName(new WeakReference<>(getContext())),
+                null, View.GONE, false));
 
         return settingList;
     }

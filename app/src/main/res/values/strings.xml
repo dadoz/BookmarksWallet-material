@@ -65,4 +65,6 @@
     <string name="setting_no_favicon">Default icon</string>
     <string name="accept">accept</string>
     <string name="decline">decline</string>
+    <string name="setting_cloud_sync_description">Store your bookmarks over Cloud</string>
+    <string name="setting_cloud_sync">Cloud Sync</string>
 </resources>
