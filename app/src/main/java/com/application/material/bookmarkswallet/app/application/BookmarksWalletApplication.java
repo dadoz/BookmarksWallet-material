@@ -8,6 +8,7 @@ import com.flurry.android.FlurryAgent;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class BookmarksWalletApplication extends Application {
 
@@ -21,6 +22,11 @@ public class BookmarksWalletApplication extends Application {
                 .withLogEnabled(false)
                 .build(this, getString(R.string.FLURRY_API_KEY));
         setRealmDefaultConfiguration();
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/OzHandicraftBT.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
     }
 
     /**

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.realm.adapter.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
@@ -21,6 +22,7 @@ import java.lang.ref.WeakReference;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE;
 import static com.application.material.bookmarkswallet.app.models.Bookmark.Utils.getBookmarkNameWrapper;
 
 public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter implements ItemTouchHelperAdapter {
@@ -29,6 +31,7 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
     private static int mDarkGrey;
     private static int mLightGrey = Color.WHITE;
     private final Bitmap defaultIcon;
+    private final boolean isFaviconNotEnabled;
 
     /**
      *
@@ -42,6 +45,8 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         mDarkGrey = ContextCompat.getColor(context.get(), R.color.yellow_50);
         defaultIcon = BitmapFactory.decodeResource(context.get().getResources(),
                 R.drawable.ic_bookmark_black_48dp);
+        isFaviconNotEnabled = (boolean) SharedPrefHelper.getInstance(ctx).getValue(NO_FAVICON_MODE, false);
+
     }
 
     @Override
@@ -62,7 +67,7 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         holder.selectItem(isSelectedPos(position));
         holder.setIcon(Utils.getIconBitmap(bookmark.getBlobIcon(),
                 (int) context.get().getResources().getDimension(R.dimen.medium_icon_size)), defaultIcon,
-                isSelectedPos(position));
+                isSelectedPos(position), isFaviconNotEnabled);
     }
 
     /**
@@ -128,9 +133,11 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
          *
          * @param blobIcon
          * @param defaultIcon
+         * @param isSelected
+         * @param isFaviconNotEnabled
          */
-        void setIcon(Bitmap blobIcon, Bitmap defaultIcon, boolean isSelected) {
-            Utils.setIconOnImageView(iconView, isSelected ? defaultIcon : blobIcon, defaultIcon);
+        void setIcon(Bitmap blobIcon, Bitmap defaultIcon, boolean isSelected, boolean isFaviconNotEnabled) {
+            Utils.setIconOnImageView(iconView, isFaviconNotEnabled ? defaultIcon : (isSelected ? defaultIcon : blobIcon), defaultIcon);
         }
     }
 

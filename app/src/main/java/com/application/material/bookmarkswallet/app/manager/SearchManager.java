@@ -13,6 +13,7 @@ import android.widget.Filterable;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
+import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
@@ -124,7 +125,8 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
      */
     private RealmResults getFilteredList(String filterString,
                                          boolean isCaseSensitive) {
-        boolean isSearchOnUrlEnabled = Utils.getSearchOnUrlEnabledFromSharedPref(context);
+        boolean isSearchOnUrlEnabled = (boolean) SharedPrefHelper.getInstance(context)
+                .getValue(SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE, false);
 
         mFilterString = filterString;
         RealmQuery<Bookmark> query = mRealm.where(Bookmark.class);

@@ -21,7 +21,7 @@ public class SplashscreenActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 finish();
             }
-        }, 3000);
+        }, 1500);
     }
 
     @Override

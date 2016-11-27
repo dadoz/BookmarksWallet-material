@@ -11,8 +11,9 @@ public class SharedPrefHelper {
     private static SharedPrefHelper instance;
     private static SharedPreferences sharedPref;
 
-    public enum SharedPrefKeysEnum {TUTORIAL_DONE, SYNC_STATUS, SEARCH_URL_MODE, IMPORT_KEEP_NOTIFIED,
-        IMPORT_ACCOUNT_NOTIFIED, EXPANDED_GRIDVIEW }
+    public enum SharedPrefKeysEnum {TUTORIAL_DONE, SYNC_STATUS, NO_FAVICON_MODE, SEARCH_URL_MODE, IMPORT_KEEP_NOTIFIED,
+        IMPORT_ACCOUNT_NOTIFIED, EXPANDED_GRIDVIEW;
+    }
     private static final String BOOKMARKS_WALLET_SHAREDPREF = "BOOKMARKS_WALLET_SHAREDPREF";
 
     private SharedPrefHelper(WeakReference<Context> ctx) {
@@ -35,14 +36,8 @@ public class SharedPrefHelper {
      * @return
      */
     public Object getValue(SharedPrefKeysEnum key, Object defValue) {
-        if (key.equals(SharedPrefKeysEnum.SEARCH_URL_MODE) ||
-            key.equals(SharedPrefKeysEnum.TUTORIAL_DONE) ||
-            key.equals(SharedPrefKeysEnum.IMPORT_ACCOUNT_NOTIFIED) ||
-            key.equals(SharedPrefKeysEnum.IMPORT_KEEP_NOTIFIED) ||
-            key.equals(SharedPrefKeysEnum.EXPANDED_GRIDVIEW)) {
-            return sharedPref.getBoolean(key.name(), (boolean) defValue);
-        }
-        return null;
+        //TODO check type
+        return sharedPref.getBoolean(key.name(), (boolean) defValue);
     }
 
     /**
@@ -50,15 +45,10 @@ public class SharedPrefHelper {
      * @param value
      */
     public void setValue(SharedPrefKeysEnum key, Object value) {
-        if (key.equals(SharedPrefKeysEnum.SEARCH_URL_MODE) ||
-            key.equals(SharedPrefKeysEnum.TUTORIAL_DONE) ||
-            key.equals(SharedPrefKeysEnum.IMPORT_ACCOUNT_NOTIFIED) ||
-            key.equals(SharedPrefKeysEnum.IMPORT_KEEP_NOTIFIED) ||
-            key.equals(SharedPrefKeysEnum.EXPANDED_GRIDVIEW)) {
-            sharedPref
-                .edit()
-                .putBoolean(key.name(), (boolean) value)
-                .apply();
-        }
+        //TODO check type
+        sharedPref
+            .edit()
+            .putBoolean(key.name(), (boolean) value)
+            .apply();
     }
 }

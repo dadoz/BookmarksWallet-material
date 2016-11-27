@@ -26,13 +26,29 @@ public class SettingListAdapter extends ArrayAdapter<Setting> {
     private final CompoundButton.OnCheckedChangeListener mCheckedChangeListener;
     private String TAG = "SettingListAdapter";
 
-    public SettingListAdapter(Context context, int resource, ArrayList<Setting> settingList, SettingsFragment settingsFragment) {
+    /**
+     *
+     * @param context
+     * @param resource
+     * @param settingList
+     * @param settingsFragment
+     */
+    public SettingListAdapter(Context context, int resource, ArrayList<Setting> settingList,
+                              SettingsFragment settingsFragment) {
         super(context, resource, settingList);
         this.settingList = settingList;
         this.context = context;
         this.mCheckedChangeListener = settingsFragment;
     }
 
+    /**
+     *
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
+    @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         Setting settingObj = settingList.get(position);
 
@@ -45,6 +61,8 @@ public class SettingListAdapter extends ArrayAdapter<Setting> {
         TextView description = ((TextView) convertView.findViewById(R.id.settingDescriptionTextId));
         SwitchCompat switchCompat = ((SwitchCompat) convertView.findViewById(R.id.settingSwitchId));
 
+        //to handle type of button
+        switchCompat.setTag(settingObj.getLabel());
         label.setText(settingObj.getLabel());
 
         description.setVisibility(settingObj.getDescription() == null ? View.GONE : View.VISIBLE);

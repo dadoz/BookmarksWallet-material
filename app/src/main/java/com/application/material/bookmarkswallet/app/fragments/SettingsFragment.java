@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.text.Annotation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +19,15 @@ import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.SettingListAdapter;
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
-import com.application.material.bookmarkswallet.app.models.Setting;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
+import com.application.material.bookmarkswallet.app.models.Setting;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.willowtreeapps.saguaro.android.Saguaro;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE;
 
 public class SettingsFragment extends Fragment implements AdapterView.OnItemClickListener,
@@ -34,11 +36,13 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
     public static String SETTINGS_TITLE = "Settings";
     private ActionbarHelper actionbarHelper;
     private View mSettingsView;
+    private SharedPrefHelper sharedPrefHelper;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        actionbarHelper = ActionbarHelper.getInstance(new WeakReference<>(getContext()));
+        actionbarHelper = ActionbarHelper.getInstance(new WeakReference<>(context));
+        sharedPrefHelper = SharedPrefHelper.getInstance(new WeakReference<>(context));
     }
 
     @Override
@@ -59,7 +63,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
      * init view
      */
     private void onInitView() {
-        ArrayAdapter<Setting> adapter = new SettingListAdapter(getActivity().getBaseContext(),
+        ArrayAdapter<Setting> adapter = new SettingListAdapter(getContext(),
                 R.layout.setting_item, getSettingList(), this);
         ListView listView = (ListView) mSettingsView.findViewById(R.id.settingsListId);
         listView.setOnItemClickListener(this);
@@ -89,9 +93,11 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        //TODO no case since I've only one toggle button
+        final String urlSearchMode = getResources().getString(R.string.setting_url_search_label);
+        SharedPrefHelper.SharedPrefKeysEnum value = buttonView.getTag().equals(urlSearchMode) ?
+                SEARCH_URL_MODE : NO_FAVICON_MODE;
         SharedPrefHelper.getInstance(new WeakReference<>(getActivity().getApplicationContext()))
-                .setValue(SEARCH_URL_MODE, isChecked);
+                .setValue(value, isChecked);
     }
 
 
@@ -105,12 +111,12 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
                 View.GONE, false));
         settingList.add(new Setting(getResources().getString(R.string.setting_url_search_label),
                 getResources().getString(R.string.setting_url_search_description),
-                View.VISIBLE, Utils.getSearchOnUrlEnabledFromSharedPref(new WeakReference<>(getActivity()
-                .getApplicationContext()))));
+                View.VISIBLE, (Boolean) sharedPrefHelper
+                    .getValue(SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE, false)));
         settingList.add(new Setting(getResources().getString(R.string.setting_no_favicon),
                 getResources().getString(R.string.setting_no_favicon_description),
-                View.VISIBLE, Utils.getSearchOnUrlEnabledFromSharedPref(new WeakReference<>(getActivity()
-                .getApplicationContext()))));
+                View.VISIBLE, (Boolean) sharedPrefHelper
+                .getValue(SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE, false)));
         settingList.add(new Setting(getResources().getString(R.string.setting_feedback_label),
                 null, View.GONE, false));
         settingList.add(new Setting(getResources().getString(R.string.setting_build_version_label),

@@ -88,6 +88,8 @@ dependencies {
 
     compile 'org.apache.commons:commons-csv:1.4'
 
+    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+
     compile 'io.reactivex:rxandroid:1.2.1'
     // Because RxAndroid releases are few and far between, it is recommended you also
     // explicitly depend on RxJava's latest version for bug fixes and new features.

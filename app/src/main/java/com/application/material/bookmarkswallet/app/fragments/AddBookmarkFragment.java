@@ -201,7 +201,7 @@ public class AddBookmarkFragment extends Fragment implements
             initResultViewOnConfigChanged();
         }
 
-        if (getArguments() != null ||
+        if (getArguments() != null &&
                 getArguments().getString(MainActivity.SHARED_URL_EXTRA_KEY) != null) {
             handleArguments();
         }

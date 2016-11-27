@@ -187,16 +187,6 @@ public class Utils {
     }
 
     /**
-     *
-     * @param context
-     * @return
-     */
-    public static boolean getSearchOnUrlEnabledFromSharedPref(WeakReference<Context> context) {
-        return (boolean) SharedPrefHelper.getInstance(context)
-                .getValue(SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE, false);
-    }
-
-    /**
      *  @param view
      * @param ctx
      * @param message
