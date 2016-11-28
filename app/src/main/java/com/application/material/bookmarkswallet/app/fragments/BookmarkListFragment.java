@@ -1,15 +1,11 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -19,16 +15,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.*;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionModeCallback;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
@@ -48,15 +40,20 @@ import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.observer.BookmarkListObserver;
 import com.flurry.android.FlurryAgent;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+import io.codetail.widget.RevealFrameLayout;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import rx.Observable;
 
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.EXPANDED_GRIDVIEW;
 
-
+//TODO refactor it
 public class BookmarkListFragment extends Fragment
         implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener,
@@ -77,7 +74,7 @@ public class BookmarkListFragment extends Fragment
     @Bind(R.id.importDefaultBookmarksButtonId)
     View importDefaultBookmarksButton;
     @Bind(R.id.optionMenuContainerRevealLayoutId)
-    View optionMenuContainerRevealLayout;
+    RevealFrameLayout optionMenuContainerRevealLayout;
     @Bind(R.id.fragmentBookmarkListMainFrameLayoutId)
     View fragmentBookmarkListMainFrameLayout;
     @Bind(R.id.actionMenuExportId)
@@ -87,15 +84,12 @@ public class BookmarkListFragment extends Fragment
     @Bind(R.id.actionMenuSettingsId)
     View actionMenuSettings;
 
-
     private Realm mRealm;
     private SearchManager searchManager;
     private ActionbarHelper mActionbarHelper;
     private BookmarkActionHelper mBookmarkActionSingleton;
     private View mainView;
     private StatusHelper statusHelper;
-//    private MenuItem exportMenuItem;
-//    private MenuItem expandGridviewMenuItem;
     private EditBookmarkActionModeCallback actionMode;
     private boolean expandedGridview;
     private MenuItem openMenuItem;
@@ -104,10 +98,6 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (!(context instanceof OnChangeFragmentWrapperInterface)) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnLoadViewHandlerInterface");
-        }
         initSingletonInstances();
     }
 
@@ -142,8 +132,6 @@ public class BookmarkListFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
         searchManager.initSearchView(menu);
-//        exportMenuItem = menu.findItem(R.id.action_export);
-//        expandGridviewMenuItem = menu.findItem(R.id.action_gridview_resize);
         MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), this);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -167,8 +155,11 @@ public class BookmarkListFragment extends Fragment
         switch (v.getId()) {
             case R.id.importDefaultBookmarksButtonId:
                 Toast.makeText(getContext(), "Import default bookmarks", Toast.LENGTH_SHORT).show();
-//                Observable.from(getActivity().getAssets().open(""))
-//                RealmUtils.addItemOnRealm(Realm.getDefaultInstance(), "blal", null, null, "www.gooogole.it");
+                try {
+                    handleImportDefaultBookmarks();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.addBookmarkFabId:
                 mBookmarkActionSingleton.addBookmarkAction(new WeakReference<Fragment>(this));
@@ -187,14 +178,38 @@ public class BookmarkListFragment extends Fragment
             case R.id.actionMenuGridviewResizeId:
                 expandedGridview = !expandedGridview;
                 actionMenuRevealPresenter.toggleRevealActionMenu(false);
-                ((ImageView) v).setImageDrawable(ContextCompat.getDrawable(getContext(),
-                        expandedGridview ? R.drawable.ic_view_quilt_black_48dp: R.drawable.ic_view_stream_black_48dp));
+                Utils.toggleResizeIcon((ImageView) v, getContext(), expandedGridview);
+
                 int count = Utils.getCardNumberInRow(getContext(), expandedGridview);
                 ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(count);
                 SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
                         .setValue(EXPANDED_GRIDVIEW, expandedGridview);
                 break;
         }
+    }
+
+    /**
+     *
+     * @throws IOException
+     * @throws JSONException
+     */
+    private void handleImportDefaultBookmarks() throws IOException, JSONException {
+        //update interface
+        mEmptyLinkListView.setVisibility(View.GONE);
+        mSwipeRefreshLayout.setRefreshing(true);
+
+        //parse data
+        String json = Utils.readAssetsToString(getActivity().getAssets(), "default_bookmarks.json");
+        JSONArray bookmarksArray = new JSONArray(json);
+        for (int i = 0; i < bookmarksArray.length(); i++) {
+            JSONObject bookmark = bookmarksArray.getJSONObject(i);
+            RealmUtils.addItemOnRealm(Realm.getDefaultInstance(), bookmark.getString("title"),
+                    bookmark.getString("iconUrl"), null, bookmark.getString("url"));
+        }
+
+        //update interface
+        mSwipeRefreshLayout.setRefreshing(false);
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -216,9 +231,11 @@ public class BookmarkListFragment extends Fragment
                 handleTermsAndLicences();
                 return true;
             case R.id.action_open_menu:
-                final boolean isShowing = optionMenuContainerRevealLayout.getVisibility() == View.GONE;
+                boolean isShowing = optionMenuContainerRevealLayout.getVisibility() == View.GONE;
+                addNewFab.setVisibility(isShowing ? View.GONE: View.VISIBLE);
                 openMenuItem = item;
-                actionMenuRevealPresenter.toggleRevealActionMenu(isShowing);
+                actionMenuRevealPresenter
+                        .toggleRevealActionMenu(isShowing);
                 break;
         }
         return true;
@@ -274,6 +291,7 @@ public class BookmarkListFragment extends Fragment
         actionMenuSettings.setOnClickListener(this);
         actionMenuGridviewResize.setOnClickListener(this);
         actionMenuExport.setOnClickListener(this);
+        Utils.toggleResizeIcon((ImageView) actionMenuGridviewResize, getContext(), expandedGridview);
     }
 
     /**
@@ -420,7 +438,6 @@ public class BookmarkListFragment extends Fragment
         if (((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).isEmptySelectedPosArray()) {
             actionMode.forceToFinish();
         }
-
     }
 
     /**
@@ -441,5 +458,4 @@ public class BookmarkListFragment extends Fragment
         ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).updateData(list);
         recyclerView.getAdapter().notifyDataSetChanged();
     }
-
 }

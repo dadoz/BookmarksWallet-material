@@ -143,8 +143,8 @@ public class AddBookmarkFragment extends Fragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.clipboard_menu, menu);
+//        menu.clear();
+//        inflater.inflate(R.menu.clipboard_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

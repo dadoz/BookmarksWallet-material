@@ -16,6 +16,7 @@ import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.realm.adapter.RealmModelAdapter;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
+import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 
@@ -65,6 +66,12 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         holder.timestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark
                 .getTimestamp()));
         holder.selectItem(isSelectedPos(position));
+
+        if (bookmark.getIconPath() != null) {
+            holder.setIconByUrl(bookmark.getIconPath(), defaultIcon,
+                    isSelectedPos(position), isFaviconNotEnabled);
+            return;
+        }
         holder.setIcon(Utils.getIconBitmap(bookmark.getBlobIcon(),
                 (int) context.get().getResources().getDimension(R.dimen.medium_icon_size)), defaultIcon,
                 isSelectedPos(position), isFaviconNotEnabled);
@@ -138,6 +145,25 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
          */
         void setIcon(Bitmap blobIcon, Bitmap defaultIcon, boolean isSelected, boolean isFaviconNotEnabled) {
             Utils.setIconOnImageView(iconView, isFaviconNotEnabled ? defaultIcon : (isSelected ? defaultIcon : blobIcon), defaultIcon);
+        }
+
+        /**
+         *
+         * @param iconUrl
+         * @param defaultIcon
+         * @param isSelected
+         * @param isFaviconNotEnabled
+         */
+        public void setIconByUrl(String iconUrl, Bitmap defaultIcon, boolean isSelected, boolean isFaviconNotEnabled) {
+            if (isFaviconNotEnabled ||
+                    isSelected) {
+                iconView.setImageBitmap(defaultIcon);
+                return;
+            }
+            Picasso
+                    .with(itemView.getContext())
+                    .load(iconUrl)
+                    .into(iconView);
         }
     }
 

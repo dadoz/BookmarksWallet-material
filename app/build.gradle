@@ -95,6 +95,10 @@ dependencies {
     // explicitly depend on RxJava's latest version for bug fixes and new features.
     compile 'io.reactivex:rxjava:1.1.6'
 
+    //reveal effect api < 21
+    compile ('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
+        transitive = true;
+    }
     compile 'frankiesardo:icepick:3.2.0'
     provided 'frankiesardo:icepick-processor:3.2.0'
 

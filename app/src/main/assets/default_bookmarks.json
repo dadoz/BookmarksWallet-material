@@ -1,9 +1,27 @@
-[{
-  "url": "blalal",
-  "title": "heeyye"
-
-},{
-  "url": "blalal",
-  "title": "heeyye"
-
-}]
+[
+  {
+    "url": "https://www.google.com",
+    "title": "Google",
+    "iconUrl": "https://www.google.com//images/branding/product/ico/googleg_lodp.ico"
+  },
+  {
+    "url": "https://www.facebook.com",
+    "title": "Facebook",
+    "iconUrl": "https://www.facebook.com/rsrc.php/yl/r/H3nktOa7ZMg.ico"
+  },
+  {
+    "url": "https://www.wikipedia.com",
+    "title": "Wikipedia",
+    "iconUrl": "https://en.wikipedia.org//static/favicon/wikipedia.ico"
+  },
+  {
+    "url": "https://www.amazon.com",
+    "title": "Amazon",
+    "iconUrl": "http://icons.iconarchive.com/icons/uiconstock/socialmedia/512/Amazon-icon.png"
+  },
+  {
+    "url": "https://www.youtube.com",
+    "title": "Youtube",
+    "iconUrl": "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png"
+  }
+]

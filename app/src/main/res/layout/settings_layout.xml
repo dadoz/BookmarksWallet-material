@@ -3,4 +3,6 @@
     android:id="@+id/settingsListId"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:paddingLeft="@dimen/padding_16"
+    android:paddingRight="@dimen/padding_16"
     android:background="@color/grey_50"/>

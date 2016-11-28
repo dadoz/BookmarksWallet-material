@@ -60,13 +60,13 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
      * handle empty listview
      */
     private void handleListView() {
-        mEmptyLinkListView.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
+//        mEmptyLinkListView.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 mEmptyLinkListView.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
             }
-        }, 100);
+        }, 200);
 
     }
 

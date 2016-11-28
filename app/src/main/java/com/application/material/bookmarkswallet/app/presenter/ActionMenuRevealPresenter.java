@@ -14,6 +14,8 @@ import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
 
 import java.lang.ref.WeakReference;
 
+import io.codetail.widget.RevealFrameLayout;
+
 /**
  * Created by davide on 26/11/2016.
  */
@@ -38,7 +40,6 @@ public class ActionMenuRevealPresenter implements AnimatorBuilder.OnRevealAnimat
     /**
      * move in a presenter?
      */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void toggleRevealActionMenu(boolean isShowing) {
         if (openMenuItem != null) {
             openMenuItem.setIcon(ContextCompat.getDrawable(ctx.get(),

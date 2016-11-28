@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
@@ -18,13 +19,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 
+import org.json.JSONException;
+
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLConnection;
@@ -130,6 +134,9 @@ public class Utils {
      * @return
      */
     public static Bitmap getIconBitmap(byte[] blobIcon, int size) {
+        if (blobIcon == null) {
+            return null;
+        }
         try {
             Bitmap bmp = BitmapFactory.decodeByteArray(blobIcon, 0, blobIcon.length);
             return Bitmap.createScaledBitmap(bmp,size, size, false);
@@ -256,4 +263,31 @@ public class Utils {
                 (isExpanded ? MAX_CARD_COUNT : MAX_CARD_COUNT + 1);
     }
 
+    /**
+     *  @param assets
+     * @param fileName
+     *
+     * */
+    public static String readAssetsToString(AssetManager assets, String fileName) throws IOException {
+        StringBuilder buffer = new StringBuilder();
+        InputStream reader = assets.open(fileName); //"default_bookmarks.json");
+        BufferedReader br = new BufferedReader(new InputStreamReader(reader));
+        String line;
+        while ((line = br.readLine()) != null) {
+            buffer.append(line);
+        }
+        br.close();
+        return buffer.toString();
+    }
+
+    /**
+     *
+     * @param v
+     * @param context
+     */
+    public static void toggleResizeIcon(ImageView v, Context context, boolean expandedGridview) {
+        v.setImageDrawable(ContextCompat.getDrawable(context,
+                expandedGridview ? R.drawable.ic_view_quilt_black_48dp: R.drawable.ic_view_stream_black_48dp));
+
+    }
 }

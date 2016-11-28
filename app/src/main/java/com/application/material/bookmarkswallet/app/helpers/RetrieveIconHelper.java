@@ -42,7 +42,7 @@ public class RetrieveIconHelper {
     }
 
     /**
-     *
+     * TODO add listener to this class
      */
     public class RetrieveIconThread extends Thread {
         private final static String LINK_SELECT_PARAM = "link[href~=.*\\.(png|ico)]";

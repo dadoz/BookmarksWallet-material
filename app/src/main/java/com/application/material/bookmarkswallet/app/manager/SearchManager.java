@@ -155,7 +155,7 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
      *
      */
     public void handleMenuItemActionCollapsedLayout(@NonNull View[] views) {
-        collapseViews(views[0], true);
+        AnimatorBuilder.getInstance(context).collapseViews(views[0], true);
         views[1].setVisibility(View.GONE); //TODO PATCH
 //        itemMenuArray[0].setVisible(true);
 //        itemMenuArray[1].setVisible(true);
@@ -166,25 +166,11 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
      *
      */
     public void handleMenuItemActionExpandLayout(@NonNull View[] views) {
-        collapseViews(views[0], false);
+        AnimatorBuilder.getInstance(context).collapseViews(views[0], false);
 //        itemMenuArray[0].setVisible(false);
 //        itemMenuArray[1].setVisible(false);
     }
 
-
-    /**
-     *
-     * @param fab
-     * @param collapsing
-     */
-    private void collapseViews(View fab, final boolean collapsing) {
-        Animator fabAnimator = collapsing ?
-                AnimatorBuilder.getInstance(context)
-                        .buildHideAnimator(fab, false) :
-                AnimatorBuilder.getInstance(context)
-                        .buildShowAnimator(fab, false);
-        fabAnimator.start();
-    }
 
     /**
      * filter class handled by search

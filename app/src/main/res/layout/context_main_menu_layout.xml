@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:visibility="gone"
+<io.codetail.widget.RevealFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/yellow_400"
-    android:id="@+id/optionMenuContainerRevealLayoutId"
-    android:elevation="1dp">
+    android:visibility="gone"
+    android:id="@+id/optionMenuContainerRevealLayoutId">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="right">
+        android:gravity="right"
+        android:background="@color/yellow_400">
         <ImageView
             android:id="@+id/actionMenuExportId"
             android:layout_width="30dp"
@@ -37,4 +36,4 @@
             android:src="@drawable/ic_settings_black_48dp"/>
 
     </LinearLayout>
-</FrameLayout>
+</io.codetail.widget.RevealFrameLayout>

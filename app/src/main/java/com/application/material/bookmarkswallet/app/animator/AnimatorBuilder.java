@@ -9,10 +9,12 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.view.View;
-import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import java.lang.ref.WeakReference;
+
+import io.codetail.animation.ViewAnimationUtils;
 
 /**
  * Created by davide on 24/10/15.
@@ -21,6 +23,7 @@ public class AnimatorBuilder {
     private static final String TRANSLATION_Y = "translationY";
     private static final String ALPHA = "alpha";
     private static final long START_DELAY = 300;
+    private static WeakReference<Context> ctx;
     private final int duration;
 
     /**
@@ -29,6 +32,7 @@ public class AnimatorBuilder {
      * @return
      */
     public static AnimatorBuilder getInstance(WeakReference<Context> contextWeakReference) {
+        ctx = contextWeakReference;
         return new AnimatorBuilder(contextWeakReference.get().
                 getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
@@ -146,7 +150,6 @@ public class AnimatorBuilder {
      * @param view
      * @param lst
      */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public Animator buildRevealAnimation(final View view, final boolean isShowing,
                                          final WeakReference<OnRevealAnimationListener> lst) {
         int cx = (view.getLeft() + view.getRight());
@@ -158,7 +161,7 @@ public class AnimatorBuilder {
         float finalRadius = (float) Math.hypot(dx, dy);
         float initialRadius = 0;
 
-        Animator animator = ViewAnimationUtils.createCircularReveal(view, cx, cy,
+        Animator animator = ViewAnimationUtils.createCircularReveal(((ViewGroup) view).getChildAt(0), cx, cy,
                         isShowing ? initialRadius : finalRadius,
                         isShowing ? finalRadius : initialRadius);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -202,4 +205,19 @@ public class AnimatorBuilder {
     public interface OnRevealAnimationListener {
         void omRevealAnimationEnd();
     }
+
+    /**
+     *
+     * @param fab
+     * @param collapsing
+     */
+    public void collapseViews(View fab, final boolean collapsing) {
+        Animator fabAnimator = collapsing ?
+                AnimatorBuilder.getInstance(ctx)
+                        .buildHideAnimator(fab, false) :
+                AnimatorBuilder.getInstance(ctx)
+                        .buildShowAnimator(fab, false);
+        fabAnimator.start();
+    }
+
 }
