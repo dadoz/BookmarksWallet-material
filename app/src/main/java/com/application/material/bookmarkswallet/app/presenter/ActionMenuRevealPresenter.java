@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
@@ -13,20 +14,23 @@ import com.application.material.bookmarkswallet.app.manager.StatusManager;
 
 import java.lang.ref.WeakReference;
 
-public class ActionMenuRevealPresenter implements AnimatorBuilder.OnRevealAnimationListener {
+public class ActionMenuRevealPresenter implements AnimatorBuilder.OnRevealAnimationListener,
+        ViewTreeObserver.OnPreDrawListener {
 
     private final WeakReference<Context> ctx;
     private final View actionMenuView;
     private final View mainView;
     private final ActionBar actionBar;
+    private int revealLayoutHeight;
 
     public ActionMenuRevealPresenter(WeakReference<Context> context,
-                                     ActionBar actionBar,
+                                     ActionBar actionb,
                                      View[] views) {
         ctx = context;
         mainView = views[0];
         actionMenuView = views[1];
-        this.actionBar = actionBar;
+        actionBar = actionb;
+        actionMenuView.getViewTreeObserver().addOnPreDrawListener(this);
     }
     /**
      * move in a presenter?
@@ -39,7 +43,7 @@ public class ActionMenuRevealPresenter implements AnimatorBuilder.OnRevealAnimat
         }
 
         if (isShowing) {
-            int revealLayoutHeight = 180; //TODO need to calculated
+//            int revealLayoutHeight = 180; //TODO need to calculated
             mainView.setTranslationY(revealLayoutHeight);
         }
 
@@ -69,4 +73,9 @@ public class ActionMenuRevealPresenter implements AnimatorBuilder.OnRevealAnimat
         mainView.setTranslationY(0);
     }
 
+    @Override
+    public boolean onPreDraw() {
+        revealLayoutHeight = actionMenuView.getHeight();
+        return true;
+    }
 }
