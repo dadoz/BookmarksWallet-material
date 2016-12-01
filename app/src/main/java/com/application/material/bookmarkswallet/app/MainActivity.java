@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.application.material.bookmarkswallet.app.fragments.AddBookmarkFragment;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
@@ -134,9 +135,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-//        if (!mBackPressedSingleton.isBackPressedHandled()) {
-//            return;
-//        }
+        if (((AddBookmarkActivity.OnHandleBackPressed) getSupportFragmentManager()
+                .findFragmentByTag(BookmarkListFragment.FRAG_TAG)).handleBackPressed()) {
+            return;
+        }
         super.onBackPressed();
     }
 

@@ -31,7 +31,7 @@ import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
 import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
-import com.application.material.bookmarkswallet.app.manager.StatusManager;
+import com.application.material.bookmarkswallet.app.manager.AddNewStatusManager;
 import com.application.material.bookmarkswallet.app.presenter.SearchBookmarkPresenter;
 import com.application.material.bookmarkswallet.app.presenter.SearchResultPresenter;
 import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
@@ -93,7 +93,7 @@ public class AddBookmarkFragment extends Fragment implements
     private int MIN_ICON_SIZE = 64;
     private RetrieveIconHelper retrieveIconHelper;
     private SearchResultPresenter searchResultPresenter;
-    private StatusManager statusManager;
+    private AddNewStatusManager statusManager;
 
     @State
     public String bookmarkUrl;
@@ -121,7 +121,7 @@ public class AddBookmarkFragment extends Fragment implements
         searchBookmarkPresenter = SearchBookmarkPresenter.getInstance();
         retrieveIconHelper = RetrieveIconHelper.getInstance(new WeakReference<RetrieveIconHelper.OnRetrieveIconInterface>(this));
         searchResultPresenter = new SearchResultPresenter(new WeakReference<>(getContext()));
-        statusManager = StatusManager.getInstance();
+        statusManager = AddNewStatusManager.getInstance();
     }
 
     @Override

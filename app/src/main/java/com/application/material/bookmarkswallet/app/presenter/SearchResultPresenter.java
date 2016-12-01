@@ -5,14 +5,12 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
-import com.application.material.bookmarkswallet.app.manager.StatusManager;
-import com.application.material.bookmarkswallet.app.utlis.Utils;
+import com.application.material.bookmarkswallet.app.manager.AddNewStatusManager;
 
 import java.lang.ref.WeakReference;
 
@@ -139,7 +137,7 @@ public class SearchResultPresenter implements ViewTreeObserver.OnGlobalLayoutLis
                 viewHeight < frameLayout.getMeasuredHeight();
         if (isViewHeightToBeUpdate) {
             viewHeight = frameLayout.getMeasuredHeight();
-            if (StatusManager.getInstance().isOnResultMode()) {
+            if (AddNewStatusManager.getInstance().isOnResultMode()) {
                 showResultOnConfigChanged();
                 return;
             }

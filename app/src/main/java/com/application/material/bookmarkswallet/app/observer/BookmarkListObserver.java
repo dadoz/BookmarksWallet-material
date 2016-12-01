@@ -2,22 +2,20 @@ package com.application.material.bookmarkswallet.app.observer;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
-import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
-import com.application.material.bookmarkswallet.app.helpers.StatusHelper.StatusEnum;
+import com.application.material.bookmarkswallet.app.manager.StatusManager;
+import com.application.material.bookmarkswallet.app.manager.StatusManager.StatusEnum;
 
 /**
  * set empty view on empty data TODO move
  */
 public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
 
-    private StatusHelper mStatusSingleton;
+    private StatusManager mStatusSingleton;
     private RecyclerView recyclerView;
     private View mEmptyLinkListView;
     private View mEmptySearchResultLayout;
@@ -25,7 +23,7 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
 
     public BookmarkListObserver(@NonNull View[] views, SearchManager searchMng) {
 
-        mStatusSingleton = StatusHelper.getInstance();
+        mStatusSingleton = StatusManager.getInstance();
         recyclerView = (RecyclerView) views[0]; //recyclerView;
         mEmptyLinkListView = views[1]; //emptyLinkListView;
         mEmptySearchResultLayout = views[2]; //emptySearchResultLayout;

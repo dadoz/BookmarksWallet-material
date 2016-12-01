@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -21,10 +20,10 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionModeCallback;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
@@ -32,7 +31,7 @@ import com.application.material.bookmarkswallet.app.manager.SearchManager.Search
 import com.application.material.bookmarkswallet.app.presenter.ActionMenuRevealPresenter;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.bookmarkswallet.app.helpers.StatusHelper;
+import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
@@ -59,7 +58,8 @@ public class BookmarkListFragment extends Fragment
         SwipeRefreshLayout.OnRefreshListener,
         MenuItemCompat.OnActionExpandListener,
         BookmarkRecyclerViewAdapter.OnActionListenerInterface,
-        SearchManagerCallbackInterface {
+        SearchManagerCallbackInterface,
+        AddBookmarkActivity.OnHandleBackPressed {
     public static final String FRAG_TAG = "LinksListFragment";
     @Bind(R.id.addBookmarkFabId)
     FloatingActionButton addNewFab;
@@ -89,7 +89,7 @@ public class BookmarkListFragment extends Fragment
     private ActionbarHelper mActionbarHelper;
     private BookmarkActionHelper mBookmarkActionSingleton;
     private View mainView;
-    private StatusHelper statusHelper;
+    private StatusManager statusHelper;
     private EditBookmarkActionModeCallback actionMode;
     private boolean expandedGridview;
     private MenuItem openMenuItem;
@@ -169,7 +169,7 @@ public class BookmarkListFragment extends Fragment
                 handleSetting();
                 break;
             case R.id.actionMenuExportId:
-                actionMenuRevealPresenter.toggleRevealActionMenu(false);
+                actionMenuRevealPresenter.toggleRevealActionMenu(false, openMenuItem);
                 FlurryAgent.logEvent("export", true);
                 ExportStrategy
                         .buildInstance(new WeakReference<>(getContext()), mainView)
@@ -177,7 +177,7 @@ public class BookmarkListFragment extends Fragment
                 break;
             case R.id.actionMenuGridviewResizeId:
                 expandedGridview = !expandedGridview;
-                actionMenuRevealPresenter.toggleRevealActionMenu(false);
+                actionMenuRevealPresenter.toggleRevealActionMenu(false, openMenuItem);
                 Utils.toggleResizeIcon((ImageView) v, getContext(), expandedGridview);
 
                 int count = Utils.getCardNumberInRow(getContext(), expandedGridview);
@@ -235,7 +235,7 @@ public class BookmarkListFragment extends Fragment
                 addNewFab.setVisibility(isShowing ? View.GONE: View.VISIBLE);
                 openMenuItem = item;
                 actionMenuRevealPresenter
-                        .toggleRevealActionMenu(isShowing);
+                        .toggleRevealActionMenu(isShowing, openMenuItem);
                 break;
         }
         return true;
@@ -285,7 +285,7 @@ public class BookmarkListFragment extends Fragment
      */
     private void initActionMenu() {
         actionMenuRevealPresenter = new ActionMenuRevealPresenter(
-                new WeakReference<Context>(getContext()), openMenuItem,
+                new WeakReference<Context>(getContext()),
                 ((AppCompatActivity) getActivity()).getSupportActionBar(),
                 new View[] {fragmentBookmarkListMainFrameLayout, optionMenuContainerRevealLayout});
         actionMenuSettings.setOnClickListener(this);
@@ -396,7 +396,7 @@ public class BookmarkListFragment extends Fragment
      */
     private void initSingletonInstances() {
         mRealm = Realm.getDefaultInstance();
-        statusHelper = StatusHelper.getInstance();
+        statusHelper = StatusManager.getInstance();
         mActionbarHelper = ActionbarHelper.getInstance(new WeakReference<>(getContext()));
         mBookmarkActionSingleton = BookmarkActionHelper.getInstance(new WeakReference<>(getContext()));
         searchManager = SearchManager.getInstance(new WeakReference<>(getContext()), mRealm,
@@ -407,7 +407,7 @@ public class BookmarkListFragment extends Fragment
     public boolean onLongItemClick(View view, int position) {
         if (!statusHelper.isEditMode()) {
             getActivity().startActionMode(actionMode);
-            actionMenuRevealPresenter.toggleRevealActionMenu(false);
+            actionMenuRevealPresenter.toggleRevealActionMenu(false, openMenuItem);
         }
 
         handleSelectItemByPos(position);
@@ -457,5 +457,17 @@ public class BookmarkListFragment extends Fragment
     public void updateSearchDataList(RealmResults list) {
         ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).updateData(list);
         recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean handleBackPressed() {
+        StatusManager status = StatusManager.getInstance();
+        if (status.isOnActionMenuMode()) {
+            status.unsetStatus();
+            addNewFab.setVisibility(View.VISIBLE);
+            actionMenuRevealPresenter.toggleRevealActionMenu(false, openMenuItem);
+            return true;
+        }
+        return false;
     }
 }
