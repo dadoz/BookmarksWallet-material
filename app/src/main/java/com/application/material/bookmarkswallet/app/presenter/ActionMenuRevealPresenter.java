@@ -9,7 +9,6 @@ import android.view.ViewTreeObserver;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
-import com.application.material.bookmarkswallet.app.manager.AddNewStatusManager;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 
 import java.lang.ref.WeakReference;
