@@ -4,7 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.BitmapCompat;
 import android.support.v7.widget.*;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -163,6 +166,7 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
             Picasso
                     .with(itemView.getContext())
                     .load(iconUrl)
+                    .placeholder(new BitmapDrawable(itemView.getContext().getResources(), defaultIcon))
                     .into(iconView);
         }
     }

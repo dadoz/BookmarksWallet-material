@@ -61,6 +61,7 @@ public class BookmarkListFragment extends Fragment
         SearchManagerCallbackInterface,
         AddBookmarkActivity.OnHandleBackPressed {
     public static final String FRAG_TAG = "LinksListFragment";
+    private static final String DEFAULT_BOOKMARKS_FILE = "default_bookmarks.json";
     @Bind(R.id.addBookmarkFabId)
     FloatingActionButton addNewFab;
     @Bind(R.id.mainContainerViewId)
@@ -154,7 +155,7 @@ public class BookmarkListFragment extends Fragment
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.importDefaultBookmarksButtonId:
-                Toast.makeText(getContext(), "Import default bookmarks", Toast.LENGTH_SHORT).show();
+                Snackbar.make(mainView, getString(R.string.import_default_bookmarks), Snackbar.LENGTH_SHORT).show();
                 try {
                     handleImportDefaultBookmarks();
                 } catch (Exception e) {
@@ -199,7 +200,7 @@ public class BookmarkListFragment extends Fragment
         mSwipeRefreshLayout.setRefreshing(true);
 
         //parse data
-        String json = Utils.readAssetsToString(getActivity().getAssets(), "default_bookmarks.json");
+        String json = Utils.readAssetsToString(getActivity().getAssets(), DEFAULT_BOOKMARKS_FILE);
         JSONArray bookmarksArray = new JSONArray(json);
         for (int i = 0; i < bookmarksArray.length(); i++) {
             JSONObject bookmark = bookmarksArray.getJSONObject(i);
