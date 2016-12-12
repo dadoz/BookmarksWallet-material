@@ -4,34 +4,14 @@
     tools:context=".MainActivity" >
     <item
         android:id="@+id/action_search"
-        android:icon="@drawable/ic_search_black_24dp"
+        android:icon="@drawable/ic_search_black_18dp"
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:title="Search"/>
-    <!--<item-->
-        <!--android:visible="false"-->
-        <!--android:id="@+id/action_export"-->
-        <!--android:icon="@drawable/ic_archive_black_48dp"-->
-        <!--android:orderInCategory="100"-->
-        <!--android:title="@string/export_feature"-->
-        <!--app:showAsAction="always" />-->
-    <!--<item android:id="@+id/action_gridview_resize"-->
-        <!--android:visible="false"-->
-        <!--android:title="@string/gridview_resize"-->
-        <!--android:orderInCategory="100"-->
-        <!--android:icon="@drawable/ic_filter_list_black_48dp"-->
-        <!--app:showAsAction="always" />-->
-    <!--<item android:id="@+id/action_import"-->
-        <!--android:title="@string/import_menu_label"-->
-        <!--android:orderInCategory="100"-->
-        <!--app:showAsAction="never" />-->
+
     <item android:id="@+id/action_open_menu"
         android:title="@string/action_settings"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_keyboard_arrow_down_black_24dp"
+        android:icon="@drawable/ic_keyboard_arrow_down_black_18dp"
         app:showAsAction="always" />
-    <!--<item android:id="@+id/action_terms_and_licences"-->
-        <!--android:title="@string/terms_and_licences"-->
-        <!--android:orderInCategory="100"-->
-        <!--app:showAsAction="never" />-->
 </menu>

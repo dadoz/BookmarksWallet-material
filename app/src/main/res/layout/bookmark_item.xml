@@ -41,8 +41,7 @@
             android:textSize="@dimen/text_size_14"
             android:ellipsize="end"
             android:minLines="2"
-            android:maxLines="2"
-            android:textColor="@color/blue_grey_900"/>
+            android:maxLines="2"/>
         <TextView
             android:id="@+id/linkTimestampId"
             android:layout_width="wrap_content"
