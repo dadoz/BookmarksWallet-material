@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/context_main_menu_layout"/>
+    <include layout="@layout/context_menu_layout"/>
     <FrameLayout
         android:id="@+id/fragmentBookmarkListMainFrameLayoutId"
         android:layout_width="wrap_content"
@@ -23,7 +23,7 @@
                 android:scrollbars="vertical"/>
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <include layout="@layout/empty_link_list_layout"/>
+        <include layout="@layout/empty_bookmark_list_layout"/>
         <include layout="@layout/empty_search_result_layout"/>
 
         <android.support.design.widget.FloatingActionButton
@@ -39,7 +39,7 @@
             app:backgroundTint="@color/indigo_600"
             app:fabSize="normal"/>
 
-        <include layout="@layout/empty_link_list_layout"/>
+        <include layout="@layout/empty_bookmark_list_layout"/>
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

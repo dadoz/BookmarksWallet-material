@@ -30,7 +30,7 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
         ctx = context;
         adapter = adp;
         mBookmarkActionSingleton = BookmarkActionHelper.getInstance(context);
-        statusHelper = StatusManager.getInstance();
+        statusHelper = StatusManager.getInstance(); 
         colorPrimaryDark = ContextCompat.getColor(ctx.get(), R.color.yellow_600);
         colorPrimaryDarkSelected = ContextCompat.getColor(ctx.get(), R.color.yellow_400);
     }
@@ -38,7 +38,7 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         actionMode = mode;
-        ActionbarHelper.getInstance(ctx).setStatusbarColor(colorPrimaryDarkSelected);
+//        ActionbarHelper.getInstance(ctx).setStatusbarColor(colorPrimaryDarkSelected);
         mode.getMenuInflater().inflate(R.menu.share_delete_menu, menu);
         return true;
     }
@@ -97,7 +97,7 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        ActionbarHelper.getInstance(ctx).setStatusbarColor(colorPrimaryDark);
+//        ActionbarHelper.getInstance(ctx).setStatusbarColor(colorPrimaryDark);
         unsetEditItem();
     }
 

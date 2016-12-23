@@ -23,10 +23,10 @@ public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface,
     private final WeakReference<EditText> urlField;
     private final AnimatorBuilder animatorBuilder;
 
-    @Bind(R.id.noBookmarkPreviewLayoutId)
-    View noBookmarkPreviewLayout;
-    @Bind(R.id.iconImageViewId)
-    View iconImageView;
+//    @Bind(R.id.noBookmarkPreviewLayoutId)
+//    View noBookmarkPreviewLayout;
+//    @Bind(R.id.iconImageViewId)
+//    View iconImageView;
     @Bind(R.id.addBookmarkFabId)
     FloatingActionButton addFab;
     @Bind(R.id.pasteClipboardFabId)
@@ -94,8 +94,8 @@ public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface,
             return;
         }
         alreadyAnimated = !emptyString;
-        initHideShowAnimator(noBookmarkPreviewLayout, !emptyString).start();
-        initHideShowAnimator(iconImageView, emptyString).start();
+//        initHideShowAnimator(noBookmarkPreviewLayout, !emptyString).start();
+//        initHideShowAnimator(iconImageView, emptyString).start();
 //        animateOnRemoveView(addInfoTitleTextInput, emptyString);
         if (emptyString) {
             titleField.get().setText("");

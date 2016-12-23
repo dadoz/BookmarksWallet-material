@@ -20,7 +20,7 @@ public class AddBookmarkActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_layout);
         ButterKnife.bind(this);
         onInitFragment();
     }

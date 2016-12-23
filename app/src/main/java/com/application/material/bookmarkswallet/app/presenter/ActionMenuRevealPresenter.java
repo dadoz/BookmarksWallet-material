@@ -3,6 +3,7 @@ package com.application.material.bookmarkswallet.app.presenter;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -37,8 +38,8 @@ public class ActionMenuRevealPresenter implements AnimatorBuilder.OnRevealAnimat
     public void toggleRevealActionMenu(boolean isShowing, MenuItem openMenuItem) {
         if (openMenuItem != null) {
             openMenuItem.setIcon(ContextCompat.getDrawable(ctx.get(),
-                    isShowing ? R.drawable.ic_keyboard_arrow_up_black_24dp :
-                            R.drawable.ic_keyboard_arrow_down_black_24dp));
+                    isShowing ?  R.drawable.ic_keyboard_arrow_up_white_24dp :
+                            R.drawable.ic_keyboard_arrow_down_white_24dp));
         }
 
         if (isShowing) {
@@ -50,7 +51,7 @@ public class ActionMenuRevealPresenter implements AnimatorBuilder.OnRevealAnimat
                 .buildRevealAnimation(actionMenuView, isShowing,
                         new WeakReference<AnimatorBuilder.OnRevealAnimationListener>(this))
                 .start();
-        actionBar.setElevation(isShowing ? 0 : 3);
+//        actionBar.setElevation(isShowing ? 0 : 3);
         setStatus(isShowing);
     }
 

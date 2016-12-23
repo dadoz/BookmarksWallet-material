@@ -18,13 +18,6 @@
         <item name="actionModeStyle">@style/ActionMode</item>
     </style>
 
-    <!--<style name="AppThemeDark" parent="Theme.AppCompat.DayNight.NoActionBar">-->
-        <!--<item name="colorPrimaryDark">@color/yellow_600</item>-->
-        <!--<item name="colorPrimary">@color/yellow_400</item>-->
-         <!--<item name="colorAccent">@color/yellow_400</item>-->
-        <!--<item name="android:windowBackground">@color/cardview_dark_background</item>-->
-    <!--</style>-->
-
     <!-- MENU APPEARANCE-->
     <style name="customMenuTextAppearance">
         <item name="android:textColor">@color/blue_grey_900</item>

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,6 +22,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
+import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionModeCallback;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
@@ -38,6 +40,7 @@ import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.observer.BookmarkListObserver;
 import com.flurry.android.FlurryAgent;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -103,11 +106,6 @@ public class BookmarkListFragment extends Fragment
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstance) {
-        super.onActivityCreated(savedInstance);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstance) {
         mainView = inflater.inflate(R.layout.fragment_bookmark_list_layout,
@@ -121,17 +119,21 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
+        ButterKnife.unbind(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        ButterKnife.unbind(this);
     }
 
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        ((MaterialSearchView) getView().getRootView().findViewById(R.id.searchViewId)).setMenuItem(item);
         searchManager.initSearchView(menu);
         MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), this);
         super.onCreateOptionsMenu(menu, inflater);
@@ -278,6 +280,7 @@ public class BookmarkListFragment extends Fragment
         initRecyclerView();
         addNewFab.setOnClickListener(this);
         initActionMenu();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setElevation(0);
 //        setNotSyncBookmarks();
     }
 

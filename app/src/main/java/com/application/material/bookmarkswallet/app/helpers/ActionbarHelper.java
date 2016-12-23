@@ -82,8 +82,8 @@ public class ActionbarHelper implements OnInitActionBarInterface {
     public void updateActionBar(boolean isHomeUpEnabled) {
         try {
             setDisplayHomeEnabled(isHomeUpEnabled);
-            setStatusbarColor(getDefaultActionbarColor());
-            setToolbarColor(getDefaultToolbarDrawableColor());
+//            setStatusbarColor(getDefaultActionbarColor());
+//            setToolbarColor(getDefaultToolbarDrawableColor());
         } catch (Exception e) {
             e.printStackTrace();
         }
