@@ -11,7 +11,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.fragments.interfaces.OnInitActionBarInterface;
+import com.application.material.bookmarkswallet.app.helpers.interfaces.OnInitActionBarInterface;
 
 import java.lang.ref.WeakReference;
 public class ActionbarHelper implements OnInitActionBarInterface {

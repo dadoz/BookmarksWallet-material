@@ -17,6 +17,7 @@ import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.lang.ref.WeakReference;
 
@@ -25,13 +26,16 @@ import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
-public class SearchManager implements Filterable, SearchView.OnQueryTextListener {
+public class SearchManager implements Filterable,
+        MaterialSearchView.OnQueryTextListener, MaterialSearchView.SearchViewListener {
     private static WeakReference<Context> context;
     private static Realm mRealm;
     private static SearchManager instance;
     private String mFilterString;
     private MenuItem searchItem;
     private static WeakReference<SearchManagerCallbackInterface> listener;
+    private View addNewFab;
+
     public SearchManager() {
     }
 
@@ -79,16 +83,23 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
 
     /**
      * @param menu
+     * @param views
      */
-    public void initSearchView(Menu menu) {
+    public void initSearchView(Menu menu, @NonNull View[] views) {
         try {
+            MaterialSearchView searchView = (MaterialSearchView) views[0];
+            addNewFab = views[1];
             searchItem = menu.findItem(R.id.action_search);
-            android.app.SearchManager searchManager = (android.app.SearchManager) context.get()
-                    .getSystemService(Context.SEARCH_SERVICE);
-            SearchView searchView = (SearchView) searchItem.getActionView();
-            searchView.setSearchableInfo(searchManager
-                    .getSearchableInfo(((Activity) context.get()).getComponentName()));
+            searchView.setMenuItem(searchItem);
+
+            //std
+//            SearchView searchView = (SearchView) searchItem.getActionView();
+//            android.app.SearchManager searchManager = (android.app.SearchManager) context.get()
+//                    .getSystemService(Context.SEARCH_SERVICE);
+//            searchView.get().setSearchableInfo(searchManager
+//                    .getSearchableInfo(((Activity) context.get()).getComponentName()));
             searchView.setOnQueryTextListener(this);
+            searchView.setOnSearchViewListener(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,7 +167,7 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
      */
     public void handleMenuItemActionCollapsedLayout(@NonNull View[] views) {
         AnimatorBuilder.getInstance(context).collapseViews(views[0], true);
-        views[1].setVisibility(View.GONE); //TODO PATCH
+//        views[1].setVisibility(View.GONE); //TODO PATCH
 //        itemMenuArray[0].setVisible(true);
 //        itemMenuArray[1].setVisible(true);
     }
@@ -169,6 +180,18 @@ public class SearchManager implements Filterable, SearchView.OnQueryTextListener
         AnimatorBuilder.getInstance(context).collapseViews(views[0], false);
 //        itemMenuArray[0].setVisible(false);
 //        itemMenuArray[1].setVisible(false);
+    }
+
+    @Override
+    public void onSearchViewShown() {
+        handleMenuItemActionExpandLayout(new View[] {addNewFab});
+        StatusManager.getInstance().setSearchMode(true);
+    }
+
+    @Override
+    public void onSearchViewClosed() {
+        handleMenuItemActionCollapsedLayout(new View[] {addNewFab});
+        StatusManager.getInstance().unsetStatus();
     }
 
 

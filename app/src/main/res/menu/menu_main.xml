@@ -12,6 +12,6 @@
     <item android:id="@+id/action_open_menu"
         android:title="@string/action_settings"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_keyboard_arrow_down_black_18dp"
+        android:icon="@drawable/ic_keyboard_arrow_down_white_24dp"
         app:showAsAction="always" />
 </menu>

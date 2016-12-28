@@ -15,7 +15,6 @@ import android.view.MenuItem;
 
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
-import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.flurry.android.FlurryAgent;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -26,8 +25,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.application.material.bookmarkswallet.app.helpers.ExportHelper.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
 
-public class MainActivity extends AppCompatActivity
-        implements OnChangeFragmentWrapperInterface {
+public class MainActivity extends AppCompatActivity {
     private String TAG = "MainActivity";
     public static String SHARED_URL_EXTRA_KEY = "SHARED_URL_EXTRA_KEY";
 
@@ -50,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         if (handleSharedIntent() != null) {
             Intent intent = new Intent(this, AddBookmarkActivity.class);
             intent.putExtras(handleSharedIntent());
-            startActivityForResult(intent, Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE);return;
+            startActivityForResult(intent, Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE);
         }
     }
 
@@ -116,22 +114,6 @@ public class MainActivity extends AppCompatActivity
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void changeFragment(Fragment fragment, Bundle bundle, String tag) {
-        if (fragment == null) {
-            return;
-        }
-        fragment.setArguments(bundle);
-        FragmentTransaction transaction = getSupportFragmentManager().
-                beginTransaction();
-
-        transaction.replace(R.id.fragmentContainerFrameLayoutId, fragment, tag);
-        if (! tag.equals(BookmarkListFragment.FRAG_TAG)) {
-            transaction.addToBackStack(tag);
-        }
-        transaction.commit();
     }
 
     @Override

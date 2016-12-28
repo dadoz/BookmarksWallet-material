@@ -52,4 +52,14 @@
         <item name="android:backgroundTint">@color/yellow_500</item>
     </style>
 
+    <!--TOOLBAR STYLE-->
+    <style name="ToolbarCustomStyle">
+        <item name="android:background">@color/yellow_400</item>
+    </style>
+
+    <!--REVEAL menu STYLE-->
+    <style name="RevealViewStyle">
+        <item name="android:background">@color/yellow_400</item>
+    </style>
+
 </resources>

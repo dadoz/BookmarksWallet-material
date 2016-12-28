@@ -67,4 +67,5 @@
     <string name="decline">decline</string>
     <string name="setting_cloud_sync_description">Store your bookmarks over Cloud</string>
     <string name="setting_cloud_sync">Cloud Sync</string>
+    <string name="setting_actionbar_title">Settings</string>
 </resources>

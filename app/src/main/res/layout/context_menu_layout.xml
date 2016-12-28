@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="right"
-        android:background="@color/yellow_400">
+        style="@style/RevealViewStyle">
         <ImageView
             android:id="@+id/actionMenuExportId"
             android:layout_width="30dp"

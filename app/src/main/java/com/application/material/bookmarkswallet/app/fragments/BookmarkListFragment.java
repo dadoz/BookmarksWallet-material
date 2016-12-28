@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,8 +21,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
-import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.SettingsActivity;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionModeCallback;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
@@ -32,7 +31,6 @@ import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.manager.SearchManager.SearchManagerCallbackInterface;
 import com.application.material.bookmarkswallet.app.presenter.ActionMenuRevealPresenter;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
-import com.application.material.bookmarkswallet.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
@@ -119,22 +117,22 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-        ButterKnife.unbind(this);
+//        ButterKnife.unbind(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        ButterKnife.unbind(this);
+//        ButterKnife.unbind(this);
     }
 
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        ((MaterialSearchView) getView().getRootView().findViewById(R.id.searchViewId)).setMenuItem(item);
-        searchManager.initSearchView(menu);
+
+        MaterialSearchView searchView = ((MaterialSearchView) getView().getRootView().findViewById(R.id.searchViewId));
+        searchManager.initSearchView(menu, new View[] {searchView, addNewFab});
         MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), this);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -391,8 +389,7 @@ public class BookmarkListFragment extends Fragment
      */
     private void handleSetting() {
         mActionbarHelper.updateActionBar(true);
-        ((OnChangeFragmentWrapperInterface) getActivity())
-                .changeFragment(new SettingsFragment(), null, SettingsFragment.FRAG_TAG);
+        startActivity(new Intent(getActivity(), SettingsActivity.class));
     }
 
     /**

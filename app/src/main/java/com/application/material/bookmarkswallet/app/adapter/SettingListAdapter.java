@@ -9,19 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Setting;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class SettingListAdapter extends ArrayAdapter<Setting> {
     private final ArrayList<Setting> settingList;
     private final Context context;
-    private final CompoundButton.OnCheckedChangeListener mCheckedChangeListener;
+    private final WeakReference<CompoundButton.OnCheckedChangeListener> listener;
     private String TAG = "SettingListAdapter";
 
     /**
@@ -29,14 +28,14 @@ public class SettingListAdapter extends ArrayAdapter<Setting> {
      * @param context
      * @param resource
      * @param settingList
-     * @param settingsFragment
+     * @param lst
      */
     public SettingListAdapter(Context context, int resource, ArrayList<Setting> settingList,
-                              SettingsFragment settingsFragment) {
+                              WeakReference<CompoundButton.OnCheckedChangeListener> lst) {
         super(context, resource, settingList);
         this.settingList = settingList;
         this.context = context;
-        this.mCheckedChangeListener = settingsFragment;
+        this.listener = lst;
     }
 
     /**
@@ -76,7 +75,7 @@ public class SettingListAdapter extends ArrayAdapter<Setting> {
 
         switchCompat.setVisibility(settingObj.isSwitchVisible() ? View.VISIBLE : View.GONE);
         switchCompat.setChecked(settingObj.isSwitchVisible() && settingObj.isSwitchCheck());
-        switchCompat.setOnCheckedChangeListener(mCheckedChangeListener);
+        switchCompat.setOnCheckedChangeListener(listener.get());
         return convertView;
     }
 }

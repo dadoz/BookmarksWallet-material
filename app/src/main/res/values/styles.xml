@@ -49,4 +49,18 @@
         <!-- Used for the background -->
         <!--<item name="android:background">#4CAF50</item>-->
     </style>
+
+    <style name="AddFrameLayoutStyle">
+        <item name="android:background">@color/indigo_600</item>
+    </style>
+
+    <style name="ToolbarCustomStyle">
+        <item name="android:background">@color/yellow_400</item>
+    </style>
+
+    <!--REVEAL menu STYLE-->
+    <style name="RevealViewStyle">
+        <item name="android:background">@color/yellow_400</item>
+    </style>
+
 </resources>

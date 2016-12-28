@@ -11,7 +11,7 @@ import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.manager.StatusManager.StatusEnum;
 
 /**
- * set empty view on empty data TODO move
+ * set empty view on empty data TODO move in a presenter
  */
 public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
 

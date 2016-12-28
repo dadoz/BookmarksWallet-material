@@ -1,64 +1,78 @@
-package com.application.material.bookmarkswallet.app.fragments;
+package com.application.material.bookmarkswallet.app;
 
-import android.content.Context;
 import android.content.ActivityNotFoundException;
-import android.support.v4.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.*;
-import com.application.material.bookmarkswallet.app.R;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.ListView;
+
 import com.application.material.bookmarkswallet.app.adapter.SettingListAdapter;
+import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Setting;
+import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
+import com.flurry.android.FlurryAgent;
 import com.willowtreeapps.saguaro.android.Saguaro;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static com.application.material.bookmarkswallet.app.helpers.ExportHelper.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE;
 
-public class SettingsFragment extends Fragment implements AdapterView.OnItemClickListener,
+public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         CompoundButton.OnCheckedChangeListener {
-    public static String FRAG_TAG = "SettingsFragment_FRAG";
-    public static String SETTINGS_TITLE = "Settings";
+    private String TAG = "MainActivity";
     private ActionbarHelper actionbarHelper;
-    private View mSettingsView;
     private SharedPrefHelper sharedPrefHelper;
+    @Bind(R.id.settingsListId)
+    ListView listView;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        actionbarHelper = ActionbarHelper.getInstance(new WeakReference<>(context));
-        sharedPrefHelper = SharedPrefHelper.getInstance(new WeakReference<>(context));
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings_layout);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        actionbarHelper = ActionbarHelper.getInstance(new WeakReference<>(getApplicationContext()));
+        sharedPrefHelper = SharedPrefHelper.getInstance(new WeakReference<>(getApplicationContext()));
+        ButterKnife.bind(this); //unbind it
 
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        mSettingsView = inflater.inflate(R.layout.settings_layout, null);
+        //mv
         initActionbar();
         onInitView();
-        return mSettingsView;
     }
 
     /**
      * init view
      */
     private void onInitView() {
-        ArrayAdapter<Setting> adapter = new SettingListAdapter(getContext(),
-                R.layout.setting_item, getSettingList(), this);
-        ListView listView = (ListView) mSettingsView.findViewById(R.id.settingsListId);
+        ArrayAdapter<Setting> adapter = new SettingListAdapter(getApplicationContext(),
+                R.layout.setting_item, getSettingList(), new WeakReference<CompoundButton.OnCheckedChangeListener>(this));
         listView.setOnItemClickListener(this);
         listView.setAdapter(adapter);
     }
@@ -67,7 +81,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
      * init actionbar
      */
     private void initActionbar() {
-        actionbarHelper.setTitle(SETTINGS_TITLE);
+        actionbarHelper.setTitle(getString(R.string.setting_actionbar_title));
         actionbarHelper.setElevation(4);
         actionbarHelper.setDisplayHomeEnabled(true);
     }
@@ -80,7 +94,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
                 goToMarket();
                 break;
             case 4:
-                startActivity(Saguaro.getSendFeedbackIntent(getActivity()));
+                startActivity(Saguaro.getSendFeedbackIntent(this));
                 break;
         }
     }
@@ -90,12 +104,13 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
         final String urlSearchMode = getResources().getString(R.string.setting_url_search_label);
         SharedPrefHelper.SharedPrefKeysEnum value = buttonView.getTag().equals(urlSearchMode) ?
                 SEARCH_URL_MODE : NO_FAVICON_MODE;
-        SharedPrefHelper.getInstance(new WeakReference<>(getActivity().getApplicationContext()))
+        SharedPrefHelper.getInstance(new WeakReference<>(getApplicationContext()))
                 .setValue(value, isChecked);
     }
 
 
     /**
+     * mv PRESENTER
      * set data for setting list
      * @return
      */
@@ -107,7 +122,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
         settingList.add(new Setting(getResources().getString(R.string.setting_url_search_label),
                 getResources().getString(R.string.setting_url_search_description),
                 SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE, View.VISIBLE, (Boolean) sharedPrefHelper
-                    .getValue(SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE, false)));
+                .getValue(SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE, false)));
 
         settingList.add(new Setting(getResources().getString(R.string.setting_no_favicon),
                 getResources().getString(R.string.setting_no_favicon_description),
@@ -124,7 +139,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
                 null, null, View.GONE, false));
 
         settingList.add(new Setting(getResources().getString(R.string.setting_build_version_label),
-                Utils.getVersionName(new WeakReference<>(getContext())),
+                Utils.getVersionName(new WeakReference<>(getApplicationContext())),
                 null, View.GONE, false));
 
         return settingList;
@@ -135,9 +150,9 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemClic
      */
     private void goToMarket() {
         try {
-            startActivity(Utils.getMarketIntent(0, new WeakReference<>(getContext())));
+            startActivity(Utils.getMarketIntent(0, new WeakReference<>(getApplicationContext())));
         } catch (ActivityNotFoundException e) {
-            startActivity(Utils.getMarketIntent(1, new WeakReference<>(getContext())));
+            startActivity(Utils.getMarketIntent(1, new WeakReference<>(getApplicationContext())));
         }
     }
 }
