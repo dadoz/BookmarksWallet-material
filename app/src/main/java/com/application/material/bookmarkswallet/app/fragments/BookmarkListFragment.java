@@ -17,7 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.Toast;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
@@ -63,27 +63,27 @@ public class BookmarkListFragment extends Fragment
         AddBookmarkActivity.OnHandleBackPressed {
     public static final String FRAG_TAG = "LinksListFragment";
     private static final String DEFAULT_BOOKMARKS_FILE = "default_bookmarks.json";
-    @Bind(R.id.addBookmarkFabId)
+    @BindView(R.id.addBookmarkFabId)
     FloatingActionButton addNewFab;
-    @Bind(R.id.mainContainerViewId)
+    @BindView(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    @Bind(R.id.bookmarkRecyclerViewId)
+    @BindView(R.id.bookmarkRecyclerViewId)
     RecyclerView recyclerView;
-    @Bind(R.id.emptyLinkListViewId)
+    @BindView(R.id.emptyLinkListViewId)
     View mEmptyLinkListView;
-    @Bind(R.id.emptySearchResultLayoutId)
+    @BindView(R.id.emptySearchResultLayoutId)
     View emptySearchResultLayout;
-    @Bind(R.id.importDefaultBookmarksButtonId)
+    @BindView(R.id.importDefaultBookmarksButtonId)
     View importDefaultBookmarksButton;
-    @Bind(R.id.optionMenuContainerRevealLayoutId)
+    @BindView(R.id.optionMenuContainerRevealLayoutId)
     RevealFrameLayout optionMenuContainerRevealLayout;
-    @Bind(R.id.fragmentBookmarkListMainFrameLayoutId)
+    @BindView(R.id.fragmentBookmarkListMainFrameLayoutId)
     View fragmentBookmarkListMainFrameLayout;
-    @Bind(R.id.actionMenuExportId)
+    @BindView(R.id.actionMenuExportId)
     View actionMenuExport;
-    @Bind(R.id.actionMenuGridviewResizeId)
+    @BindView(R.id.actionMenuGridviewResizeId)
     View actionMenuGridviewResize;
-    @Bind(R.id.actionMenuSettingsId)
+    @BindView(R.id.actionMenuSettingsId)
     View actionMenuSettings;
 
     private Realm mRealm;

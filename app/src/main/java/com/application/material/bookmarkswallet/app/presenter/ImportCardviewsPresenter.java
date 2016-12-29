@@ -13,23 +13,23 @@ import com.flurry.android.FlurryAgent;
 import java.lang.ref.WeakReference;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.*;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ImportCardviewsPresenter implements View.OnClickListener {
     private final WeakReference<Context> context;
     private final View view;
-    @Bind(R.id.importFromAccountButtonId)
+    @BindView(R.id.importFromAccountButtonId)
     View importFromAccountButton;
-    @Bind(R.id.importFromKeepButtonId)
+    @BindView(R.id.importFromKeepButtonId)
     View importFromKeepButton;
-    @Bind(R.id.importFromAccountDismissButtonId)
+    @BindView(R.id.importFromAccountDismissButtonId)
     View importFromAccountDismissButton;
-    @Bind(R.id.importFromKeepDismissButtonId)
+    @BindView(R.id.importFromKeepDismissButtonId)
     View importFromKeepDismissButton;
-    @Bind(R.id.importFromAccountCardviewLayoutId)
+    @BindView(R.id.importFromAccountCardviewLayoutId)
     View importFromAccountCardviewLayout;
-    @Bind(R.id.importFromKeepCardviewLayoutId)
+    @BindView(R.id.importFromKeepCardviewLayoutId)
     View importFromKeepCardviewLayout;
 
     public ImportCardviewsPresenter(WeakReference<Context> ctx, View v) {

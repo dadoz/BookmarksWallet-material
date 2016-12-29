@@ -32,8 +32,9 @@ import com.willowtreeapps.saguaro.android.Saguaro;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.application.material.bookmarkswallet.app.helpers.ExportHelper.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
@@ -45,8 +46,9 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     private String TAG = "MainActivity";
     private ActionbarHelper actionbarHelper;
     private SharedPrefHelper sharedPrefHelper;
-    @Bind(R.id.settingsListId)
+    @BindView(R.id.settingsListId)
     ListView listView;
+    private Unbinder unbinder;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -57,14 +59,21 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_layout);
+        unbinder = ButterKnife.bind(this);
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         actionbarHelper = ActionbarHelper.getInstance(new WeakReference<>(getApplicationContext()));
         sharedPrefHelper = SharedPrefHelper.getInstance(new WeakReference<>(getApplicationContext()));
-        ButterKnife.bind(this); //unbind it
 
         //mv
         initActionbar();
         onInitView();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 
     /**

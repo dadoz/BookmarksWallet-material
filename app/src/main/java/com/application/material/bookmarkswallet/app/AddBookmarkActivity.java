@@ -21,24 +21,10 @@ public class AddBookmarkActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_main_layout);
-        ButterKnife.bind(this);
-        onInitFragment();
-    }
-
-
-    /**
-     * init fragment function
-     */
-    public void onInitFragment() {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (getSupportFragmentManager().findFragmentByTag(AddBookmarkFragment.FRAG_TAG) == null) {
-            Fragment addBookmarkFrag = new AddBookmarkFragment();
-            if (getIntent().getExtras() != null) {
-                addBookmarkFrag.setArguments(getIntent().getExtras());
-            }
-            transaction.replace(R.id.fragmentContainerFrameLayoutId,
-                    addBookmarkFrag, AddBookmarkFragment.FRAG_TAG).commit();
-        }
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainerFrameLayoutId,
+                new AddBookmarkFragment(), AddBookmarkFragment.FRAG_TAG).commit();
     }
 
     /**
