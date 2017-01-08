@@ -1,23 +1,4 @@
 <resources>
-
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:textColorPrimary">@color/indigo_600</item>
-        <item name="android:textColorSecondary">@color/indigo_600</item>
-        <item name="colorPrimaryDark">@color/yellow_600</item>
-        <item name="colorPrimary">@color/yellow_400</item>
-        <item name="windowActionModeOverlay">true</item>
-
-        <item name="android:windowEnterTransition">@android:transition/slide_top</item>
-        <item name="android:windowReturnTransition">@android:transition/slide_bottom</item>
-        <item name="colorControlActivated">@color/indigo_600</item>
-        <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
-        <item name="android:itemTextAppearance">@style/customMenuTextAppearance</item>
-
-        <item name="actionModeStyle">@style/ActionMode</item>
-    </style>
-
     <!-- MENU APPEARANCE-->
     <style name="customMenuTextAppearance">
         <item name="android:textColor">@color/blue_grey_900</item>
@@ -27,11 +8,6 @@
     <style name="ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@color/yellow_200</item>
     </style>
-
-    <!-- COLOR CONTROL LIGHT-->
-    <!--<style name="colorControlLightTheme">-->
-        <!--<item name="colorControlActivated">@color/indigo_600</item>-->
-    <!--</style>-->
 
     <!-- DIALOG STYLE-->
     <style name="CustomLollipopDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">

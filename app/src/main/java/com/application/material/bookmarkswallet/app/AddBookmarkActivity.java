@@ -12,7 +12,10 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import com.application.material.bookmarkswallet.app.fragments.AddBookmarkResultFragment;
 import com.application.material.bookmarkswallet.app.fragments.AddBookmarkSearchFragment;
+import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.views.AddBookmarkResultLayout;
+
+import java.lang.ref.WeakReference;
 
 public class AddBookmarkActivity extends AppCompatActivity {
     @Override
@@ -24,7 +27,7 @@ public class AddBookmarkActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_main_layout);
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        NightModeHelper.getInstance().setNightModeIfEnabled(new WeakReference<>(getApplicationContext()));
         initActionbar();
         changeFrag();
     }

@@ -2,18 +2,10 @@ package com.application.material.bookmarkswallet.app;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,14 +13,11 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 
 import com.application.material.bookmarkswallet.app.adapter.SettingListAdapter;
-import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
-import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
+import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum;
 import com.application.material.bookmarkswallet.app.models.Setting;
-import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
-import com.flurry.android.FlurryAgent;
 import com.willowtreeapps.saguaro.android.Saguaro;
 
 import java.lang.ref.WeakReference;
@@ -37,9 +26,6 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
-import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE;
-import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE;
 
 public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         CompoundButton.OnCheckedChangeListener {
@@ -59,7 +45,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         setContentView(R.layout.activity_settings_layout);
         ButterKnife.bind(this);
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        NightModeHelper.getInstance().setNightModeIfEnabled(new WeakReference<>(getApplicationContext()));
         sharedPrefHelper = SharedPrefHelper.getInstance(new WeakReference<>(getApplicationContext()));
 
         //mv
@@ -109,9 +95,6 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//        final String urlSearchMode = getResources().getString(R.string.setting_url_search_label);
-//        SharedPrefHelper.SharedPrefKeysEnum value = buttonView.getTag().equals(urlSearchMode) ?
-//                SEARCH_URL_MODE : NO_FAVICON_MODE;
         SharedPrefHelper.getInstance(new WeakReference<>(getApplicationContext()))
                 .setValue(SharedPrefKeysEnum.valueOf(buttonView.getTag().toString()),
                         isChecked);

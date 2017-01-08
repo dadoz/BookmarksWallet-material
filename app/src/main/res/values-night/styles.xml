@@ -6,9 +6,9 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:textColorPrimary">@color/grey_50</item>
         <item name="android:textColorSecondary">@color/grey_50</item>
+        <item name="android:textColor">@color/grey_200</item>
 
         <!--text-->
-        <item name="android:textColor">@color/grey_50</item>
         <item name="colorPrimary">@color/indigo_600</item>
         <item name="colorPrimaryDark">@color/indigo_800</item>
 
