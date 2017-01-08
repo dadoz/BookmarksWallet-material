@@ -62,4 +62,9 @@
         <item name="android:background">@color/yellow_400</item>
     </style>
 
+    <style name="DescriptionSecondaryTextColorStyle">
+        <item name="android:textColor">@color/indigo_400</item>
+    </style>
+
+
 </resources>

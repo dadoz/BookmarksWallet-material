@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import com.application.material.bookmarkswallet.app.adapter.SettingListAdapter;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
+import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum;
 import com.application.material.bookmarkswallet.app.models.Setting;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
@@ -36,14 +38,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import static com.application.material.bookmarkswallet.app.helpers.ExportHelper.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE;
 
 public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         CompoundButton.OnCheckedChangeListener {
     private String TAG = "MainActivity";
-    private ActionbarHelper actionbarHelper;
     private SharedPrefHelper sharedPrefHelper;
     @Bind(R.id.settingsListId)
     ListView listView;
@@ -60,7 +60,6 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         ButterKnife.bind(this);
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        actionbarHelper = ActionbarHelper.getInstance(new WeakReference<>(getApplicationContext()));
         sharedPrefHelper = SharedPrefHelper.getInstance(new WeakReference<>(getApplicationContext()));
 
         //mv
@@ -79,18 +78,20 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
      */
     private void onInitView() {
         ArrayAdapter<Setting> adapter = new SettingListAdapter(getApplicationContext(),
-                R.layout.setting_item, getSettingList(), new WeakReference<CompoundButton.OnCheckedChangeListener>(this));
-        listView.setOnItemClickListener(this);
+                R.layout.setting_item, getSettingList(),
+                new WeakReference<CompoundButton.OnCheckedChangeListener>(this));
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
     }
 
     /**
      * init actionbar
      */
     private void initActionbar() {
-        actionbarHelper.setTitle(getString(R.string.setting_actionbar_title));
-        actionbarHelper.setElevation(4);
-        actionbarHelper.setDisplayHomeEnabled(true);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbarId));
+        getSupportActionBar().setTitle(getString(R.string.setting_actionbar_title));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override
@@ -100,7 +101,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
             case 0:
                 goToMarket();
                 break;
-            case 4:
+            case 5:
                 startActivity(Saguaro.getSendFeedbackIntent(this));
                 break;
         }
@@ -108,11 +109,12 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        final String urlSearchMode = getResources().getString(R.string.setting_url_search_label);
-        SharedPrefHelper.SharedPrefKeysEnum value = buttonView.getTag().equals(urlSearchMode) ?
-                SEARCH_URL_MODE : NO_FAVICON_MODE;
+//        final String urlSearchMode = getResources().getString(R.string.setting_url_search_label);
+//        SharedPrefHelper.SharedPrefKeysEnum value = buttonView.getTag().equals(urlSearchMode) ?
+//                SEARCH_URL_MODE : NO_FAVICON_MODE;
         SharedPrefHelper.getInstance(new WeakReference<>(getApplicationContext()))
-                .setValue(value, isChecked);
+                .setValue(SharedPrefKeysEnum.valueOf(buttonView.getTag().toString()),
+                        isChecked);
     }
 
 
@@ -128,19 +130,25 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
 
         settingList.add(new Setting(getResources().getString(R.string.setting_url_search_label),
                 getResources().getString(R.string.setting_url_search_description),
-                SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE, View.VISIBLE, (Boolean) sharedPrefHelper
-                .getValue(SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE, false)));
+                SharedPrefKeysEnum.SEARCH_URL_MODE, View.VISIBLE, (Boolean) sharedPrefHelper
+                .getValue(SharedPrefKeysEnum.SEARCH_URL_MODE, false)));
 
         settingList.add(new Setting(getResources().getString(R.string.setting_no_favicon),
                 getResources().getString(R.string.setting_no_favicon_description),
-                SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE, View.VISIBLE, (Boolean) sharedPrefHelper
-                .getValue(SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE, false)));
+                SharedPrefKeysEnum.NO_FAVICON_MODE, View.VISIBLE, (Boolean) sharedPrefHelper
+                .getValue(SharedPrefKeysEnum.NO_FAVICON_MODE, false)));
 
         settingList.add(new Setting(getResources().getString(R.string.setting_cloud_sync),
                 getResources().getString(R.string.setting_cloud_sync_description),
-                SharedPrefHelper.SharedPrefKeysEnum.CLOUD_SYNC,
+                SharedPrefKeysEnum.CLOUD_SYNC,
                 View.VISIBLE, (Boolean) sharedPrefHelper
-                .getValue(SharedPrefHelper.SharedPrefKeysEnum.CLOUD_SYNC, false)));
+                .getValue(SharedPrefKeysEnum.CLOUD_SYNC, false)));
+
+        settingList.add(new Setting(getResources().getString(R.string.setting_night_mode),
+                getResources().getString(R.string.setting_night_mode_description),
+                SharedPrefKeysEnum.NIGHT_MODE,
+                View.VISIBLE, (Boolean) sharedPrefHelper
+                .getValue(SharedPrefKeysEnum.NIGHT_MODE, false)));
 
         settingList.add(new Setting(getResources().getString(R.string.setting_feedback_label),
                 null, null, View.GONE, false));

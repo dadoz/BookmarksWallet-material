@@ -6,6 +6,8 @@
     android:padding="@dimen/padding_16">
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/settingSwitchId"
+        android:textOff="Off"
+        android:textOn="On"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
@@ -14,7 +16,6 @@
         android:id="@+id/settingLabelTextId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/indigo_600"
         android:text="sasdfa sdfasdf"
         android:textSize="@dimen/text_size_20"/>
     <TextView
@@ -22,7 +23,9 @@
         android:layout_below="@id/settingLabelTextId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/blue_grey_900"
+        android:layout_marginTop="@dimen/padding_8"
+
+        style="@style/DescriptionSecondaryTextColorStyle"
         android:text="sdfasdfa sdf asd"
         android:textSize="@dimen/text_size_14"/>
 </RelativeLayout>

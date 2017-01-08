@@ -117,4 +117,8 @@
         <item name="android:background">@color/indigo_600</item>
     </style>
 
+    <style name="DescriptionSecondaryTextColorStyle">
+        <item name="android:textColor">@color/grey_400</item>
+    </style>
+
 </resources>

@@ -70,4 +70,6 @@
     <string name="setting_actionbar_title">Settings</string>
     <string name="add_new_bookmark_title">Add new</string>
     <string name="generic_error_message">Ops! Something went wrong!</string>
+    <string name="setting_night_mode_description">Enabling night mode</string>
+    <string name="setting_night_mode">Night Mode</string>
 </resources>

@@ -1,7 +1,9 @@
 package com.application.material.bookmarkswallet.app.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,7 +51,7 @@ public class SettingListAdapter extends ArrayAdapter<Setting> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         Setting settingObj = settingList.get(position);
         if (convertView == null) {
-            convertView = ((LayoutInflater) getContext()
+            convertView = ((LayoutInflater) parent.getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                     .inflate(R.layout.setting_item, parent, false);
         }
@@ -59,7 +61,7 @@ public class SettingListAdapter extends ArrayAdapter<Setting> {
         SwitchCompat switchCompat = ((SwitchCompat) convertView.findViewById(R.id.settingSwitchId));
 
         //to handle type of button
-        switchCompat.setTag(settingObj.getLabel());
+        switchCompat.setTag(settingObj.getType() != null ? settingObj.getType().name() : null);
         label.setText(settingObj.getLabel());
 
         description.setVisibility(settingObj.getDescription() == null ? View.GONE : View.VISIBLE);
