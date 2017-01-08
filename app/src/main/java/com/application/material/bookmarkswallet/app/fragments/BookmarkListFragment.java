@@ -225,7 +225,7 @@ public class BookmarkListFragment extends Fragment
                 handleTermsAndLicences();
                 return true;
             case R.id.action_open_menu:
-                boolean isShowing = optionMenuContainerRevealLayout.getVisibility() == View.GONE;
+                boolean isShowing = optionMenuContainerRevealLayout.getVisibility() == View.INVISIBLE;
                 addNewFab.setVisibility(isShowing ? View.GONE: View.VISIBLE);
                 openMenuItem = item;
                 actionMenuRevealPresenter

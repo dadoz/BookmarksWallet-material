@@ -1,8 +1,7 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-
-        <!--<item name="windowActionBar">false</item>-->
+        <item name="windowActionBar">false</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:textColorPrimary">@color/grey_50</item>
         <item name="android:textColorSecondary">@color/grey_50</item>
@@ -14,8 +13,8 @@
 
         <!--actionmode-->
         <item name="colorControlActivated">@color/grey_50</item>
-        <!--<item name="windowActionModeOverlay">true</item>-->
-        <!--<item name="android:windowActionBarOverlay">true</item>-->
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
         <item name="actionModeStyle">@style/ActionMode</item>
         <item name="android:itemTextAppearance">@style/customMenuTextAppearance</item>
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>

@@ -2,7 +2,7 @@
 <io.codetail.widget.RevealFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="gone"
+    android:visibility="invisible"
     android:id="@+id/optionMenuContainerRevealLayoutId">
     <LinearLayout
         android:layout_width="match_parent"

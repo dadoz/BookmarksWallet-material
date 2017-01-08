@@ -20,7 +20,6 @@ public class ActionMenuRevealPresenter implements AnimatorBuilder.OnRevealAnimat
     private final WeakReference<Context> ctx;
     private final View actionMenuView;
     private final View mainView;
-    private final ActionBar actionBar;
     private int revealLayoutHeight;
 
     public ActionMenuRevealPresenter(WeakReference<Context> context,
@@ -29,7 +28,6 @@ public class ActionMenuRevealPresenter implements AnimatorBuilder.OnRevealAnimat
         ctx = context;
         mainView = views[0];
         actionMenuView = views[1];
-        actionBar = actionb;
         actionMenuView.getViewTreeObserver().addOnPreDrawListener(this);
     }
     /**
@@ -43,7 +41,6 @@ public class ActionMenuRevealPresenter implements AnimatorBuilder.OnRevealAnimat
         }
 
         if (isShowing) {
-//            int revealLayoutHeight = 180; //TODO need to calculated
             mainView.setTranslationY(revealLayoutHeight);
         }
 
@@ -51,7 +48,6 @@ public class ActionMenuRevealPresenter implements AnimatorBuilder.OnRevealAnimat
                 .buildRevealAnimation(actionMenuView, isShowing,
                         new WeakReference<AnimatorBuilder.OnRevealAnimationListener>(this))
                 .start();
-//        actionBar.setElevation(isShowing ? 0 : 3);
         setStatus(isShowing);
     }
 

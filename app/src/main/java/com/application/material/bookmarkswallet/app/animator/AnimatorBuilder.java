@@ -177,7 +177,7 @@ public class AnimatorBuilder {
             @Override
             public void onAnimationEnd(Animator animator) {
                 if (!isShowing) {
-                    view.setVisibility(View.GONE);
+                    view.setVisibility(View.INVISIBLE);
                     if (lst != null &&
                             lst.get() != null) {
                         lst.get().omRevealAnimationEnd();
