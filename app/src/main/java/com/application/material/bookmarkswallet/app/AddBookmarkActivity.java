@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -23,7 +24,12 @@ public class AddBookmarkActivity extends AppCompatActivity {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_main_layout);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        initActionbar();
         changeFrag();
+    }
+
+    private void initActionbar() {
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbarId));
     }
 
     /**

@@ -18,7 +18,6 @@ import com.application.material.bookmarkswallet.app.application.BookmarksWalletA
 import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
-import com.application.material.bookmarkswallet.app.presenter.SearchBookmarkPresenter;
 import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.views.AddBookmarkSearchLayout;
@@ -68,8 +67,8 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
      * init actionbar
      */
     private void initActionbar() {
-//        ((AppCompatActivity) getActivity()).getSupportActionBar()
-//                .setTitle(getString(R.string.add_new_bookmark_title));
+        ((AppCompatActivity) getActivity()).getSupportActionBar()
+                .setTitle(getString(R.string.add_new_bookmark_title));
     }
 
     /**
@@ -127,9 +126,7 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
         SparseArray<String> searchParamsArray = addBookmarkSearchLayout.getSearchParamsArray();
         if (isConnected &&
                 SearchManager.search(searchParamsArray.get(0))) {
-            ((BookmarksWalletApplication) getActivity().getApplication())
-                    .setSearchParamsArray(searchParamsArray);
-            onSearchSuccess();
+            onSearchSuccess(searchParamsArray);
             return;
         }
 
@@ -151,12 +148,12 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
 
     /**
      * search success ui
+     * @param searchParamsArray
      */
-    private void onSearchSuccess() {
+    private void onSearchSuccess(SparseArray<String> searchParamsArray) {
         StatusManager.getInstance().setOnResultMode();
-//        searchResultPresenter.showResultView();
-//        Utils.hideKeyboard(getActivity());
-//        urlTextView.setText(bookmarkUrl);
+        ((BookmarksWalletApplication) getActivity().getApplication())
+                .setSearchParamsArray(searchParamsArray);
 
         //change frag
         getActivity().getSupportFragmentManager()
@@ -165,9 +162,6 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
                         new AddBookmarkResultFragment(), AddBookmarkResultFragment.FRAG_TAG)
                 .addToBackStack(AddBookmarkResultFragment.FRAG_TAG)
                 .commit();
-//        setBookmarkTitle();
-//        retrieveIcon();
-//        initWebView();
     }
 
     @Override
