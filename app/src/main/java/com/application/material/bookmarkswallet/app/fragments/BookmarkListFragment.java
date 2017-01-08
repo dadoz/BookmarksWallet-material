@@ -17,7 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.Toast;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
@@ -63,27 +63,27 @@ public class BookmarkListFragment extends Fragment
         AddBookmarkActivity.OnHandleBackPressed {
     public static final String FRAG_TAG = "LinksListFragment";
     private static final String DEFAULT_BOOKMARKS_FILE = "default_bookmarks.json";
-    @BindView(R.id.addBookmarkFabId)
+    @Bind(R.id.addBookmarkFabId)
     FloatingActionButton addNewFab;
-    @BindView(R.id.mainContainerViewId)
+    @Bind(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.bookmarkRecyclerViewId)
+    @Bind(R.id.bookmarkRecyclerViewId)
     RecyclerView recyclerView;
-    @BindView(R.id.emptyLinkListViewId)
+    @Bind(R.id.emptyLinkListViewId)
     View mEmptyLinkListView;
-    @BindView(R.id.emptySearchResultLayoutId)
+    @Bind(R.id.emptySearchResultLayoutId)
     View emptySearchResultLayout;
-    @BindView(R.id.importDefaultBookmarksButtonId)
+    @Bind(R.id.importDefaultBookmarksButtonId)
     View importDefaultBookmarksButton;
-    @BindView(R.id.optionMenuContainerRevealLayoutId)
+    @Bind(R.id.optionMenuContainerRevealLayoutId)
     RevealFrameLayout optionMenuContainerRevealLayout;
-    @BindView(R.id.fragmentBookmarkListMainFrameLayoutId)
+    @Bind(R.id.fragmentBookmarkListMainFrameLayoutId)
     View fragmentBookmarkListMainFrameLayout;
-    @BindView(R.id.actionMenuExportId)
+    @Bind(R.id.actionMenuExportId)
     View actionMenuExport;
-    @BindView(R.id.actionMenuGridviewResizeId)
+    @Bind(R.id.actionMenuGridviewResizeId)
     View actionMenuGridviewResize;
-    @BindView(R.id.actionMenuSettingsId)
+    @Bind(R.id.actionMenuSettingsId)
     View actionMenuSettings;
 
     private Realm mRealm;
@@ -115,19 +115,6 @@ public class BookmarkListFragment extends Fragment
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-//        ButterKnife.unbind(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-//        ButterKnife.unbind(this);
-    }
-
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
 
@@ -149,6 +136,12 @@ public class BookmarkListFragment extends Fragment
         searchManager.handleMenuItemActionCollapsedLayout(new View []{addNewFab, emptySearchResultLayout});
         statusHelper.unsetStatus();
         return true;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+//        ButterKnife.unbind(this);
     }
 
     @Override

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/addBookmarkRelativeLayoutId"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -16,21 +14,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    <com.application.material.bookmarkswallet.app.views.AddBookmarkSearchLayout
-        android:id="@+id/addBookmarkSearchLayoutId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/pasteClipboardFabId"
+    <com.application.material.bookmarkswallet.app.views.AddBookmarkResultLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="32dp"
-        android:src="@drawable/abc_ic_menu_paste_mtrl_am_alpha"
-        app:elevation="4dp"
-        app:borderWidth="0dp"
-        app:backgroundTint="@color/indigo_600"
-        app:fabSize="mini"/>
+        android:id="@+id/addBookmarkResultViewId"/>
+
 </RelativeLayout>

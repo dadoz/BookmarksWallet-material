@@ -21,7 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
@@ -31,7 +31,7 @@ import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
 import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
-import com.application.material.bookmarkswallet.app.manager.AddNewStatusManager;
+import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.presenter.SearchBookmarkPresenter;
 import com.application.material.bookmarkswallet.app.presenter.SearchResultPresenter;
 import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
@@ -52,48 +52,48 @@ public class AddBookmarkFragment extends Fragment implements
     private static final String TAG = "AddBookmarkFragment";
     private ActionbarHelper mActionbarHelper;
 
-    @BindView(R.id.addBookmarkRefreshLayoutId)
+    @Bind(R.id.addBookmarkRefreshLayoutId)
     SwipeRefreshLayout refreshLayout;
-    @BindView(R.id.urlEditTextId)
+    @Bind(R.id.urlEditTextId)
     EditText urlEditText;
-    @BindView(R.id.addBookmarkUrlTextInputId)
+    @Bind(R.id.addBookmarkUrlTextInputId)
     TextInputLayout addBookmarkUrlTextInput;
-    @BindView(R.id.titleEditTextId)
+    @Bind(R.id.titleEditTextId)
     EditText addBookmarkTitleEditText;
-    @BindView(R.id.addBookmarkHttpsCheckboxId)
+    @Bind(R.id.addBookmarkHttpsCheckboxId)
     CheckBox addBookmarkHttpsCheckbox;
-    @BindView(R.id.toggleNameViewSwitcherId)
+    @Bind(R.id.toggleNameViewSwitcherId)
     ViewSwitcher toggleNameViewSwitcher;
-    @BindView(R.id.addBookmarkTitleTextInputId)
+    @Bind(R.id.addBookmarkTitleTextInputId)
     TextInputLayout addBookmarkTitleTextInput;
-    @BindView(R.id.pasteClipboardFabId)
-    FloatingActionButton mPasteClipboardFab;
-    @BindView(R.id.addBookmarkSearchButtonId)
+    @Bind(R.id.pasteClipboardFabId)
+    FloatingActionButton pasteClipboardFab;
+    @Bind(R.id.addBookmarkSearchButtonId)
     View addBookmarkSearchButton;
-    @BindView(R.id.addBookmarkWebViewId)
+//    @Bind(R.id.addBookmarkWebViewId)
     WebView addBookmarkWebView;
-    @BindView(R.id.addBookmarkResultLayoutId)
+//    @Bind(R.id.addBookmarkResultLayoutId)
     View addBookmarkResultLayout;
-    @BindView(R.id.addBookmarkMainLayoutId)
+    @Bind(R.id.addBookmarkMainLayoutId)
     View addBookmarkMainLayout;
-    @BindView(R.id.addBookmarkDoneButtonId)
+//    @Bind(R.id.addBookmarkDoneButtonId)
     View addBookmarkDoneButton;
-    @BindView(R.id.addBookmarkToggleWebViewButtonId)
+//    @Bind(R.id.addBookmarkToggleWebViewButtonId)
     ImageView addBookmarkToggleWebViewButton;
-    @BindView(R.id.addBookmarkIconImageId)
+//    @Bind(R.id.addBookmarkIconImageId)
     ImageView addBookmarkIconImage;
-    @BindView(R.id.titleTextViewId)
+//    @Bind(R.id.titleTextViewId)
     TextView titleTextView;
-    @BindView(R.id.urlTextViewId)
+//    @Bind(R.id.urlTextViewId)
     TextView urlTextView;
-    @BindView(R.id.addBookmarkRelativeLayoutId)
+    @Bind(R.id.addBookmarkRelativeLayoutId)
     View addBookmarkRelativeLayout;
     private View mainView;
     private SearchBookmarkPresenter searchBookmarkPresenter;
     private int MIN_ICON_SIZE = 64;
     private RetrieveIconHelper retrieveIconHelper;
     private SearchResultPresenter searchResultPresenter;
-    private AddNewStatusManager statusManager;
+    private StatusManager statusManager;
 
     @State
     public String bookmarkUrl;
@@ -121,7 +121,7 @@ public class AddBookmarkFragment extends Fragment implements
         searchBookmarkPresenter = SearchBookmarkPresenter.getInstance();
         retrieveIconHelper = RetrieveIconHelper.getInstance(new WeakReference<RetrieveIconHelper.OnRetrieveIconInterface>(this));
         searchResultPresenter = new SearchResultPresenter(new WeakReference<>(getContext()));
-        statusManager = AddNewStatusManager.getInstance();
+        statusManager = StatusManager.getInstance();
     }
 
     @Override
@@ -178,12 +178,12 @@ public class AddBookmarkFragment extends Fragment implements
      * @param savedInstanceState
      */
     private void onInitView(Bundle savedInstanceState) {
-        mPasteClipboardFab.setOnClickListener(this);
+        pasteClipboardFab.setOnClickListener(this);
         addBookmarkSearchButton.setOnClickListener(this);
         addBookmarkDoneButton.setOnClickListener(this);
         initPullToRefresh();
         initToggleButton();
-        searchBookmarkPresenter.init(new View[] { urlEditText, mPasteClipboardFab,
+        searchBookmarkPresenter.init(new View[] { urlEditText, pasteClipboardFab,
                 addBookmarkSearchButton, addBookmarkUrlTextInput });
         searchResultPresenter.init(new View[] {addBookmarkMainLayout, addBookmarkResultLayout,
                 addBookmarkRelativeLayout});
@@ -337,9 +337,9 @@ public class AddBookmarkFragment extends Fragment implements
                 setUrlAndTextResultFromSearch();
                 searchAction();
                 break;
-            case R.id.addBookmarkDoneButtonId:
-                addBookmark();
-                break;
+//            case R.id.addBookmarkDoneButtonId:
+//                addBookmark();
+//                break;
         }
     }
 

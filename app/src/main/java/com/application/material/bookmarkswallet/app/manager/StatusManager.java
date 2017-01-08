@@ -4,6 +4,8 @@ public class StatusManager {
     private static StatusManager mInstance;
     public enum StatusEnum {IDLE, EDIT, SYNC, SEARCH, ACTION_MENU}
     private StatusEnum currentStatus = StatusEnum.IDLE;
+    private enum StatusSearchEnum {ADD_ON_SEARCH, ADD_ON_RESULT}
+    private StatusSearchEnum currentStatusSearch = StatusSearchEnum.ADD_ON_SEARCH;
 
     private StatusManager() {
     }
@@ -110,4 +112,33 @@ public class StatusManager {
         return currentStatus == StatusEnum.ACTION_MENU;
     }
 
+    /**
+     *
+     * @return
+     */
+    public boolean isOnSearchMode() {
+        return currentStatusSearch == StatusSearchEnum.ADD_ON_SEARCH;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isOnResultMode() {
+        return currentStatusSearch == StatusSearchEnum.ADD_ON_RESULT;
+    }
+
+    /**
+     *
+     */
+    public void setOnSearchMode() {
+        currentStatusSearch = StatusSearchEnum.ADD_ON_SEARCH;
+    }
+
+    /**
+     *
+     */
+    public void setOnResultMode() {
+        currentStatusSearch = StatusSearchEnum.ADD_ON_RESULT;
+    }
 }

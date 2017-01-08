@@ -10,7 +10,7 @@ import android.view.ViewTreeObserver;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
-import com.application.material.bookmarkswallet.app.manager.AddNewStatusManager;
+import com.application.material.bookmarkswallet.app.manager.StatusManager;
 
 import java.lang.ref.WeakReference;
 
@@ -137,7 +137,7 @@ public class SearchResultPresenter implements ViewTreeObserver.OnGlobalLayoutLis
                 viewHeight < frameLayout.getMeasuredHeight();
         if (isViewHeightToBeUpdate) {
             viewHeight = frameLayout.getMeasuredHeight();
-            if (AddNewStatusManager.getInstance().isOnResultMode()) {
+            if (StatusManager.getInstance().isOnResultMode()) {
                 showResultOnConfigChanged();
                 return;
             }

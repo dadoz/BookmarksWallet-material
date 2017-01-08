@@ -2,14 +2,13 @@ package com.application.material.bookmarkswallet.app;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 
-import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import com.application.material.bookmarkswallet.app.fragments.AddBookmarkFragment;
+import com.application.material.bookmarkswallet.app.fragments.AddBookmarkResultFragment;
+import com.application.material.bookmarkswallet.app.fragments.AddBookmarkSearchFragment;
 
 public class AddBookmarkActivity extends AppCompatActivity {
     @Override
@@ -21,10 +20,19 @@ public class AddBookmarkActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_main_layout);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        changeFrag();
+    }
+
+    /**
+     *
+     */
+    private void changeFrag() {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentContainerFrameLayoutId,
-                new AddBookmarkFragment(), AddBookmarkFragment.FRAG_TAG).commit();
+                        new AddBookmarkSearchFragment(), AddBookmarkSearchFragment.FRAG_TAG)
+                .commit();
     }
 
     /**
@@ -32,10 +40,10 @@ public class AddBookmarkActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        if (((OnHandleBackPressed) getSupportFragmentManager()
-                .findFragmentByTag(AddBookmarkFragment.FRAG_TAG)).handleBackPressed()) {
-            return;
-        }
+//        if (((OnHandleBackPressed) getSupportFragmentManager()
+//                .findFragmentByTag(AddBookmarkFragment.FRAG_TAG)).handleBackPressed()) {
+//            return;
+//        }
         super.onBackPressed();
     }
 

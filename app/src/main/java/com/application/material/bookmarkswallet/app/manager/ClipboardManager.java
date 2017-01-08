@@ -42,6 +42,9 @@ public class ClipboardManager {
      * @return
      */
     public String getTextFromClipboard() {
+        if (clipboardService.getPrimaryClip() == null) {
+            return null;
+        }
         ClipData.Item item = clipboardService.getPrimaryClip().getItemAt(0);
         CharSequence pasteData = item.getText();
         if (pasteData != null) {

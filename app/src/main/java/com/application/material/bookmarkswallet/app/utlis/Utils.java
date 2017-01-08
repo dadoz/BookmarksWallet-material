@@ -290,4 +290,20 @@ public class Utils {
                 expandedGridview ? R.drawable.ic_view_quilt_black_48dp: R.drawable.ic_view_stream_black_48dp));
 
     }
+
+    /**
+     *
+     * @param message
+     * @param view
+     * @param context
+     * @param isError
+     */
+    public static Snackbar buildSnackbar(String message, View view, Context context, boolean isError) {
+        Snackbar snackbar = Snackbar.make(view,
+                (message == null) ? context.getString(R.string.generic_error_message) : message,
+                Snackbar.LENGTH_LONG);
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, isError ?
+                        R.color.red_400 : R.color.indigo_600));
+        return snackbar;
+    }
 }
