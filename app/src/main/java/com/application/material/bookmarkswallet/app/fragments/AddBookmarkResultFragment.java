@@ -13,6 +13,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,6 +33,7 @@ import android.widget.ViewSwitcher;
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.application.BookmarksWalletApplication;
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
 import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
@@ -61,13 +64,12 @@ public class AddBookmarkResultFragment extends Fragment implements
     AddBookmarkResultLayout addBookmarkResultView;
     @Bind(R.id.addBookmarkRefreshLayoutId)
     SwipeRefreshLayout refreshLayout;
+    @Bind(R.id.addBookmarkDoneButtonId)
+    Button addBookmarkDoneButton;
 
-    @State
-    public String bookmarkUrl;
-    @State
-    public String bookmarkTitle;
     private StatusManager statusManager;
     private RetrieveIconHelper retrieveIconHelper;
+    private SparseArray<String> searchParamsArray;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstance) {
@@ -82,6 +84,8 @@ public class AddBookmarkResultFragment extends Fragment implements
         statusManager = StatusManager.getInstance();
         retrieveIconHelper = RetrieveIconHelper
                 .getInstance(new WeakReference<RetrieveIconHelper.OnRetrieveIconInterface>(this));
+        searchParamsArray = ((BookmarksWalletApplication) getActivity().getApplication())
+                .getSearchParamsArray();
     }
 
     @Override
@@ -113,44 +117,22 @@ public class AddBookmarkResultFragment extends Fragment implements
 //                addBookmarkRelativeLayout});
         statusManager.setOnResultMode();
         Utils.hideKeyboard(getActivity());
+        addBookmarkResultView.initView(searchParamsArray);
+        addBookmarkDoneButton.setOnClickListener(this);
         retrieveIcon();
-
-        //init bookmark
-        addBookmarkResultView.initView(bookmarkTitle, bookmarkUrl);
-        if (bookmarkTitle != null &&
-                bookmarkTitle.compareTo("") == 0) {
-            retrieveIconHelper.retrieveTitle(bookmarkUrl);
-            return;
-        }
+        retrieveTitle();
 
         if (savedInstanceState != null) {
             initResultViewOnConfigChanged();
         }
     }
 
-    /**
-     * add bookmark on orm db
-     */
-    public void addBookmark() {
-        statusManager.setOnSearchMode();
-
-        RealmUtils.addItemOnRealm(Realm.getDefaultInstance(), bookmarkTitle, null,
-                Utils.convertBitmapToByteArray(addBookmarkResultView.getIconBitmap()), bookmarkUrl);
-        if (getActivity() != null) {
-            getActivity().finish();
-        }
-    }
-
-
-
     @Override
     public void onClick(View v) {
-        Utils.hideKeyboard(getContext());
         switch (v.getId()) {
-            case R.id.addBookmarkFabId:
-//            case R.id.addBookmarkDoneButtonId:
-//                addBookmark();
-//                break;
+            case R.id.addBookmarkDoneButtonId:
+                addBookmark();
+                break;
         }
     }
 
@@ -159,7 +141,7 @@ public class AddBookmarkResultFragment extends Fragment implements
      */
     private void initResultViewOnConfigChanged() {
         if (statusManager.isOnResultMode()) {
-            addBookmarkResultView.initView(bookmarkTitle, bookmarkUrl);
+            addBookmarkResultView.initView(searchParamsArray);
         }
     }
 
@@ -167,8 +149,36 @@ public class AddBookmarkResultFragment extends Fragment implements
      * retrieve icon from gallery or url
      */
     private void retrieveIcon() {
+        String url = searchParamsArray.get(0);
         refreshLayout.setRefreshing(true);
-        retrieveIconHelper.retrieveIcon(bookmarkUrl);
+        retrieveIconHelper.retrieveIcon(url);
+    }
+
+    /**
+     *
+     */
+    private void retrieveTitle() {
+        String title = searchParamsArray.get(1);
+
+        if (title != null &&
+                title.compareTo("") == 0) {
+            retrieveIconHelper.retrieveTitle(title);
+        }
+    }
+
+    /**
+     * add bookmark on orm db
+     */
+    private void addBookmark() {
+        statusManager.setOnSearchMode();
+        String url = searchParamsArray.get(0);
+        String title = searchParamsArray.get(0);
+
+        RealmUtils.addItemOnRealm(Realm.getDefaultInstance(), title, null,
+                Utils.convertBitmapToByteArray(addBookmarkResultView.getIconBitmap()), url);
+        if (getActivity() != null) {
+            getActivity().finish();
+        }
     }
 
     /**
@@ -194,7 +204,8 @@ public class AddBookmarkResultFragment extends Fragment implements
         if (getActivity() == null) {
             return;
         }
-        bookmarkTitle = title;
+
+        searchParamsArray.put(1, title);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -225,11 +236,12 @@ public class AddBookmarkResultFragment extends Fragment implements
 
     @Override
     public boolean handleBackPressed() {
-//        if (statusManager.isOnResultMode()) {
-////            searchResultPresenter.hideResultView();
-//            statusManager.setOnSearchMode();
-//            return true;
-//        }
+        if (statusManager.isOnResultMode()) {
+//            searchResultPresenter.hideResultView();
+            statusManager.setOnSearchMode();
+            getActivity().getSupportFragmentManager().popBackStack();
+            return true;
+        }
         return false;
     }
 }

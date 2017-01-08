@@ -70,7 +70,8 @@ public class RetrieveIconHelper {
                 return;
             }
 
-            listener.get().onRetrieveIconFailure("icon url not found!");
+            if (listener.get() != null)
+                listener.get().onRetrieveIconFailure("icon url not found!");
         }
 
         /**

@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app.application;
 
 import android.app.Application;
+import android.util.SparseArray;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.realm.migrations.BookmarkRealmMigration;
@@ -11,7 +12,7 @@ import io.realm.RealmConfiguration;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class BookmarksWalletApplication extends Application {
-
+    private SparseArray<String> searchParamsArray;
     private RealmConfiguration realmConfig;
 
     @Override
@@ -42,5 +43,14 @@ public class BookmarksWalletApplication extends Application {
             Realm.setDefaultConfiguration(realmConfig);
         }
         return realmConfig;
+    }
+
+
+    public SparseArray<String> getSearchParamsArray() {
+        return searchParamsArray;
+    }
+
+    public void setSearchParamsArray(SparseArray<String> searchParamsArray) {
+        this.searchParamsArray = searchParamsArray;
     }
 }

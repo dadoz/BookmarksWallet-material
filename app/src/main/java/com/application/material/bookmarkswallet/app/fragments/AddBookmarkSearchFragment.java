@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.application.BookmarksWalletApplication;
 import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
@@ -126,6 +127,8 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
         SparseArray<String> searchParamsArray = addBookmarkSearchLayout.getSearchParamsArray();
         if (isConnected &&
                 SearchManager.search(searchParamsArray.get(0))) {
+            ((BookmarksWalletApplication) getActivity().getApplication())
+                    .setSearchParamsArray(searchParamsArray);
             onSearchSuccess();
             return;
         }
@@ -159,7 +162,8 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragmentContainerFrameLayoutId,
-                        new AddBookmarkResultFragment(), AddBookmarkSearchFragment.FRAG_TAG)
+                        new AddBookmarkResultFragment(), AddBookmarkResultFragment.FRAG_TAG)
+                .addToBackStack(AddBookmarkResultFragment.FRAG_TAG)
                 .commit();
 //        setBookmarkTitle();
 //        retrieveIcon();

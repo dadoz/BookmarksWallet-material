@@ -120,7 +120,9 @@ public class AddBookmarkResultLayout extends RelativeLayout {
 
     }
 
-    public void initView(String title, String url) {
+    public void initView(SparseArray<String> searchParamsArray) {
+        String url = searchParamsArray.get(0);
+        String title = searchParamsArray.get(1);
         initWebView(url);
         setBookmarkTitle(title);
         setUrl(url);
