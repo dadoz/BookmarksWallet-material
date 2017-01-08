@@ -172,7 +172,7 @@ public class AddBookmarkResultFragment extends Fragment implements
     private void addBookmark() {
         statusManager.setOnSearchMode();
         String url = searchParamsArray.get(0);
-        String title = searchParamsArray.get(0);
+        String title = searchParamsArray.get(1);
 
         RealmUtils.addItemOnRealm(Realm.getDefaultInstance(), title, null,
                 Utils.convertBitmapToByteArray(addBookmarkResultView.getIconBitmap()), url);

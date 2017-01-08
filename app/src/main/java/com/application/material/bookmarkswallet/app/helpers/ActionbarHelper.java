@@ -36,7 +36,7 @@ public class ActionbarHelper implements OnInitActionBarInterface {
     public void initActionBar() {
         try {
             setActionBar();
-            getActionBar().setElevation(4.0f);
+//            getActionBar().setElevation(4.0f);
             getActionBar().setDisplayHomeAsUpEnabled(false);
             getActionBar().setDisplayShowTitleEnabled(true);
             getActionBar().setDisplayShowCustomEnabled(false);
@@ -51,7 +51,7 @@ public class ActionbarHelper implements OnInitActionBarInterface {
      */
     public void setElevation(float elevation) {
         try {
-            getActionBar().setElevation(elevation);
+//            getActionBar().setElevation(elevation);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -3,6 +3,7 @@ package com.application.material.bookmarkswallet.app;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
@@ -28,8 +29,15 @@ public class AddBookmarkActivity extends AppCompatActivity {
         changeFrag();
     }
 
+    /**
+     *
+     */
     private void initActionbar() {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbarId));
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setTitle(getString(R.string.add_new_bookmark_title));
+        actionbar.setDisplayShowHomeEnabled(true);
+        actionbar.setDisplayHomeAsUpEnabled(true);
     }
 
     /**

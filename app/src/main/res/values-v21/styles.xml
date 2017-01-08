@@ -29,9 +29,9 @@
     </style>
 
     <!-- COLOR CONTROL LIGHT-->
-    <style name="colorControlLightTheme">
-        <item name="colorControlActivated">@color/indigo_600</item>
-    </style>
+    <!--<style name="colorControlLightTheme">-->
+        <!--<item name="colorControlActivated">@color/indigo_600</item>-->
+    <!--</style>-->
 
     <!-- DIALOG STYLE-->
     <style name="CustomLollipopDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -42,16 +42,6 @@
         <!-- Used for the background -->
     </style>
 
-    <!-- BUTTON STYLE-->
-    <style name="customMaterialButtonIndigoStyle" parent="@style/Base.Widget.AppCompat.Button">
-        <item name="android:backgroundTint">@color/indigo_600</item>
-    </style>
-
-    <!-- BUTTON STYLE-->
-    <style name="customMaterialButtonYellowStyle" parent="@style/Base.Widget.AppCompat.Button">
-        <item name="android:backgroundTint">@color/yellow_500</item>
-    </style>
-
     <!--TOOLBAR STYLE-->
     <style name="ToolbarCustomStyle">
         <item name="android:background">@color/yellow_400</item>
@@ -59,6 +49,16 @@
 
     <!--REVEAL menu STYLE-->
     <style name="RevealViewStyle">
+        <item name="android:background">@color/yellow_400</item>
+    </style>
+
+    <!--add bookmark text input style-->
+    <style name="TextInputLayoutStyle">
+        <item name="android:textColorHint">@color/indigo_600</item>
+    </style>
+
+    <!--RESULT background -->
+    <style name="ResultBackgroundStyle">
         <item name="android:background">@color/yellow_400</item>
     </style>
 

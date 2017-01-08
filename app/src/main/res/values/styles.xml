@@ -15,16 +15,6 @@
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
     </style>
 
-    <!-- BUTTON STYLE-->
-    <style name="customMaterialButtonIndigoStyle" parent="@style/Widget.AppCompat.Button.Colored">
-        <item name="backgroundTint">@color/indigo_600</item>
-    </style>
-
-    <!-- BUTTON STYLE-->
-    <style name="customMaterialButtonYellowStyle" parent="@style/Widget.AppCompat.Button.Colored">
-        <item name="backgroundTint">@color/yellow_500</item>
-    </style>
-
     <!-- MENU TEXT APPEARANCE-->
     <style name="customMenuTextAppearance">
         <item name="android:textColor">@color/blue_grey_900</item>
@@ -36,9 +26,9 @@
     </style>
 
     <!-- COLOR CONTROL LIGHT-->
-    <style name="colorControlLightTheme">
-        <item name="colorControlActivated">@color/indigo_600</item>
-    </style>
+    <!--<style name="colorControlLightTheme">-->
+        <!--<item name="colorControlActivated">@color/indigo_600</item>-->
+    <!--</style>-->
 
     <!-- DIALOG STYLE-->
     <style name="CustomLollipopDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -50,8 +40,10 @@
         <!--<item name="android:background">#4CAF50</item>-->
     </style>
 
+    <!-- ADD bookmark search background-->
     <style name="AddFrameLayoutStyle">
-        <item name="android:background">@color/indigo_600</item>
+        <item name="elevation">4dp</item>
+        <item name="android:background">@color/yellow_400</item>
     </style>
 
     <style name="ToolbarCustomStyle">
@@ -61,6 +53,22 @@
     <!--REVEAL menu STYLE-->
     <style name="RevealViewStyle">
         <item name="android:background">@color/yellow_400</item>
+    </style>
+
+    <style name="PasteClipboardButtonStyle">
+        <item name="backgroundTint">@color/indigo_600</item>
+    </style>
+
+    <!-- BUTTON STYLE-->
+    <style name="customMaterialButtonInvertedStyle" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="backgroundTint">@color/indigo_600</item>
+        <item name="android:textColor">@color/grey_50</item>
+    </style>
+
+    <!-- BUTTON STYLE-->
+    <style name="customMaterialButtonStyle" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="backgroundTint">@color/yellow_400</item>
+        <item name="android:textColor">@color/indigo_600</item>
     </style>
 
 </resources>

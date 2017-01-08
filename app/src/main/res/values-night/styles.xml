@@ -13,22 +13,12 @@
         <item name="colorPrimaryDark">@color/indigo_800</item>
 
         <!--actionmode-->
-        <item name="colorControlActivated">@color/indigo_400</item>
+        <item name="colorControlActivated">@color/grey_50</item>
         <!--<item name="windowActionModeOverlay">true</item>-->
         <!--<item name="android:windowActionBarOverlay">true</item>-->
         <item name="actionModeStyle">@style/ActionMode</item>
         <item name="android:itemTextAppearance">@style/customMenuTextAppearance</item>
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
-    </style>
-
-    <!-- BUTTON STYLE-->
-    <style name="customMaterialButtonIndigoStyle" parent="@style/Widget.AppCompat.Button.Colored">
-        <item name="backgroundTint">@color/indigo_600</item>
-    </style>
-
-    <!-- BUTTON STYLE-->
-    <style name="customMaterialButtonYellowStyle" parent="@style/Widget.AppCompat.Button.Colored">
-        <item name="backgroundTint">@color/yellow_500</item>
     </style>
 
     <!-- MENU TEXT APPEARANCE-->
@@ -42,9 +32,9 @@
     </style>
 
     <!-- COLOR CONTROL LIGHT-->
-    <style name="colorControlLightTheme">
-        <item name="colorControlActivated">@color/indigo_600</item>
-    </style>
+    <!--<style name="colorControlLightTheme">-->
+        <!--<item name="colorControlActivated">@color/grey_50</item>-->
+    <!--</style>-->
 
     <!-- DIALOG STYLE-->
     <style name="CustomLollipopDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -56,7 +46,7 @@
         <!--<item name="android:background">#4CAF50</item>-->
     </style>
 
-
+    <!--MATERIAL search view -->
     <style name="MaterialSearchViewStyle">
         <!-- Background for the search bar -->
         <item name="searchBackground">@color/indigo_900</item>
@@ -86,6 +76,11 @@
         <item name="android:hint">@string/search_hint</item>
     </style>
 
+    <!-- ADD bookmark search background-->
+    <style name="AddFrameLayoutStyle">
+        <item name="android:background">@color/indigo_600</item>
+    </style>
+
     <!--REVEAL menu STYLE-->
     <style name="RevealViewStyle">
         <item name="android:background">@color/indigo_600</item>
@@ -93,6 +88,32 @@
 
     <!-- TOOLBAR style -->
     <style name="ToolbarCustomStyle">
+        <item name="android:background">@color/indigo_600</item>
+    </style>
+
+    <!-- paste clipboard button -->
+    <style name="PasteClipboardButtonStyle">
+        <item name="backgroundTint">@color/yellow_400</item>
+    </style>
+
+    <!-- BUTTON STYLE-->
+    <style name="customMaterialButtonStyle" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="backgroundTint">@color/indigo_600</item>
+        <item name="android:textColor">@color/grey_50</item>
+    </style>
+
+    <!-- BUTTON STYLE-->
+    <style name="customMaterialButtonInvertedStyle" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="backgroundTint">@color/grey_50</item>
+        <item name="android:textColor">@color/indigo_600</item>
+    </style>
+
+    <!--add bookmark text input style-->
+    <style name="TextInputLayoutStyle">
+        <item name="android:textColorHint">@color/grey_400</item>
+    </style>
+    <!--RESULT background -->
+    <style name="ResultBackgroundStyle">
         <item name="android:background">@color/indigo_600</item>
     </style>
 

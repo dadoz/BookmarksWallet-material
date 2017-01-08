@@ -2,15 +2,15 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    style="@style/ResultBackgroundStyle">
     <Button
         android:id="@+id/addBookmarkDoneButtonId"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/grey_50"
-        style="@style/customMaterialButtonIndigoStyle"
+        style="@style/customMaterialButtonInvertedStyle"
         android:layout_marginBottom="@dimen/padding_16"
         android:text="@string/save_new_bookmark"/>
 
@@ -25,13 +25,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/padding_16">
+            <ImageView
+                android:id="@+id/addBookmarkIconImageId"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/padding_8"
+                android:src="@drawable/ic_bookmark_black_48dp"/>
+
             <TextView
                 android:id="@+id/titleTextViewId"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/indigo_600"
+                android:layout_toLeftOf="@id/addBookmarkIconImageId"
                 android:textSize="@dimen/text_size_24"
                 android:maxLines="1"
                 android:text="...">
@@ -42,25 +50,17 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/titleTextViewId"
                 android:layout_marginBottom="@dimen/medium_padding"
+                android:layout_marginTop="@dimen/padding_8"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:layout_toLeftOf="@id/addBookmarkIconImageId"
                 android:textSize="@dimen/text_size_18"
-                android:text="www.googe.it"
+                android:text="blabla.it"
                 android:maxLength="50"
-                android:maxLines="2"
-                android:textColor="@color/blue_grey_900"/>
-
-            <ImageView
-                android:id="@+id/addBookmarkIconImageId"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/ic_bookmark_black_48dp"/>
-            <FrameLayout
+                android:maxLines="2"/>
+            <RelativeLayout
                 android:id="@+id/addBookmarkDivisorLineId"
-                android:layout_marginTop="@dimen/padding_32"
-                android:layout_below="@id/titleTextViewId"
+                android:layout_below="@id/urlTextViewId"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/grey_300"/>

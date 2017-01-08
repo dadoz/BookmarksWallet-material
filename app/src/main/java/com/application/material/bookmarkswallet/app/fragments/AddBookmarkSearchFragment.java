@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.KeyEvent;
@@ -58,17 +59,8 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
         View mainView = inflater.inflate(R.layout.fragment_add_bookmark_layout, container, false);
         ButterKnife.bind(this, mainView);
         setHasOptionsMenu(true);
-        initActionbar();
         initView(savedInstance);
         return mainView;
-    }
-
-    /**
-     * init actionbar
-     */
-    private void initActionbar() {
-        ((AppCompatActivity) getActivity()).getSupportActionBar()
-                .setTitle(getString(R.string.add_new_bookmark_title));
     }
 
     /**
