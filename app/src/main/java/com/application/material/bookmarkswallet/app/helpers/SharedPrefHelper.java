@@ -2,6 +2,7 @@ package com.application.material.bookmarkswallet.app.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
@@ -14,10 +15,9 @@ public class SharedPrefHelper {
     public enum SharedPrefKeysEnum {TUTORIAL_DONE, SYNC_STATUS, NO_FAVICON_MODE, SEARCH_URL_MODE, IMPORT_KEEP_NOTIFIED,
         IMPORT_ACCOUNT_NOTIFIED, EXPANDED_GRIDVIEW, CLOUD_SYNC, NIGHT_MODE
     }
-    private static final String BOOKMARKS_WALLET_SHAREDPREF = "BOOKMARKS_WALLET_SHAREDPREF";
 
     private SharedPrefHelper(WeakReference<Context> ctx) {
-        sharedPref = ctx.get().getSharedPreferences(BOOKMARKS_WALLET_SHAREDPREF, 0);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctx.get());
     }
 
     /**
@@ -36,8 +36,13 @@ public class SharedPrefHelper {
      * @return
      */
     public Object getValue(SharedPrefKeysEnum key, Object defValue) {
-        //TODO check type
-        return sharedPref.getBoolean(key.name(), (boolean) defValue);
+        if (defValue instanceof Boolean) {
+            return sharedPref.getBoolean(key.name(), (boolean) defValue);
+        }
+        if (defValue instanceof Integer) {
+            return sharedPref.getInt(key.name(), (int) defValue);
+        }
+        return null;
     }
 
     /**
@@ -46,9 +51,12 @@ public class SharedPrefHelper {
      */
     public void setValue(SharedPrefKeysEnum key, Object value) {
         //TODO check type
-        sharedPref
-            .edit()
-            .putBoolean(key.name(), (boolean) value)
-            .apply();
+        SharedPreferences.Editor editor = sharedPref.edit();
+        if (value instanceof Boolean) {
+            editor.putBoolean(key.name(), (boolean) value);
+        } else if (value instanceof Integer) {
+            editor.putInt(key.name(), (int) value);
+        }
+        editor.apply();
     }
 }

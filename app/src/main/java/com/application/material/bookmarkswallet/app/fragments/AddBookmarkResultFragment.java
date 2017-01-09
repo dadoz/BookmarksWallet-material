@@ -223,13 +223,8 @@ public class AddBookmarkResultFragment extends Fragment implements
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.setRefreshing(false);
-                    }
-                }, 1000);
-                Utils.buildSnackbar(error, getView(), getContext(), true).show();
+                refreshLayout.setRefreshing(false);
+                Utils.buildSnackbar(error, getView(), getActivity().getApplicationContext(), true).show();
             }
         });
     }

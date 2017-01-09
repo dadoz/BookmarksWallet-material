@@ -27,7 +27,7 @@ public class AddBookmarkActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_main_layout);
-        NightModeHelper.getInstance().setNightModeIfEnabled(new WeakReference<>(getApplicationContext()));
+        NightModeHelper.getInstance(this).setConfigurationMode();
         initActionbar();
         changeFrag();
     }

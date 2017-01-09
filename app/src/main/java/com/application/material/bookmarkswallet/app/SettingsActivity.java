@@ -2,8 +2,10 @@ package com.application.material.bookmarkswallet.app;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -45,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         setContentView(R.layout.activity_settings_layout);
         ButterKnife.bind(this);
 
-        NightModeHelper.getInstance().setNightModeIfEnabled(new WeakReference<>(getApplicationContext()));
+        NightModeHelper.getInstance(this).setConfigurationMode();
         sharedPrefHelper = SharedPrefHelper.getInstance(new WeakReference<>(getApplicationContext()));
 
         //mv
@@ -98,6 +100,11 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         SharedPrefHelper.getInstance(new WeakReference<>(getApplicationContext()))
                 .setValue(SharedPrefKeysEnum.valueOf(buttonView.getTag().toString()),
                         isChecked);
+        if (SharedPrefKeysEnum.valueOf((String) buttonView.getTag()) == SharedPrefKeysEnum.NIGHT_MODE) {
+            NightModeHelper.getInstance(this)
+                    .toggle();
+//            onBackPressed();
+        }
     }
 
 
@@ -130,8 +137,8 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         settingList.add(new Setting(getResources().getString(R.string.setting_night_mode),
                 getResources().getString(R.string.setting_night_mode_description),
                 SharedPrefKeysEnum.NIGHT_MODE,
-                View.VISIBLE, (Boolean) sharedPrefHelper
-                .getValue(SharedPrefKeysEnum.NIGHT_MODE, false)));
+                View.VISIBLE, (int) sharedPrefHelper
+                .getValue(SharedPrefKeysEnum.NIGHT_MODE, AppCompatDelegate.MODE_NIGHT_AUTO) == AppCompatDelegate.MODE_NIGHT_YES));
 
         settingList.add(new Setting(getResources().getString(R.string.setting_feedback_label),
                 null, null, View.GONE, false));
