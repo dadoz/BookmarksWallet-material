@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.realm.adapter.RealmModelAdapter;
@@ -32,10 +33,12 @@ import static com.application.material.bookmarkswallet.app.models.Bookmark.Utils
 public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter implements ItemTouchHelperAdapter {
     private final WeakReference<Context> context;
     private final WeakReference<OnActionListenerInterface> listener;
-    private static int mDarkGrey;
-    private static int mLightGrey = Color.WHITE;
+    private static int darkGrey;
+    private static int lightGrey;
     private final Bitmap defaultIcon;
     private final boolean isFaviconNotEnabled;
+    private static int darkGreyNight;
+    private static int lightGreyNight;
 
     /**
      *
@@ -46,10 +49,18 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         super(ctx);
         context = ctx;
         listener = lst;
-        mDarkGrey = ContextCompat.getColor(context.get(), R.color.yellow_50);
+        initColors();
         defaultIcon = BitmapFactory.decodeResource(context.get().getResources(),
                 R.drawable.ic_bookmark_black_48dp);
         isFaviconNotEnabled = (boolean) SharedPrefHelper.getInstance(ctx).getValue(NO_FAVICON_MODE, false);
+
+    }
+
+    private void initColors() {
+        lightGrey = Color.WHITE;
+        darkGrey = ContextCompat.getColor(context.get(), R.color.yellow_50);
+        lightGreyNight = ContextCompat.getColor(context.get(), R.color.grey_800);
+        darkGreyNight = ContextCompat.getColor(context.get(), R.color.indigo_400);
 
     }
 
@@ -68,7 +79,7 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         holder.urlView.setText(bookmark.getUrl());
         holder.timestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark
                 .getTimestamp()));
-//        holder.selectItem(isSelectedPos(position)); //TODO handle night mode
+        holder.selectItem(isSelectedPos(position)); //TODO handle night mode
 
         if (bookmark.getIconPath() != null) {
             holder.setIconByUrl(bookmark.getIconPath(), defaultIcon,
@@ -136,7 +147,9 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
          * @param selected
          */
         void selectItem(boolean selected) {
-            itemView.setBackgroundColor(selected ? mDarkGrey : mLightGrey);
+            int darkColor = NightModeHelper.getInstance().isNightMode() ? darkGreyNight : darkGrey;
+            int lightColor = NightModeHelper.getInstance().isNightMode() ? lightGreyNight : lightGrey;
+            itemView.setBackgroundColor(selected ? darkColor : lightColor);
         }
 
         /**
