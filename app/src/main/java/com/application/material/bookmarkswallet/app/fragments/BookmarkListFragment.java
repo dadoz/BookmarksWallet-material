@@ -267,11 +267,10 @@ public class BookmarkListFragment extends Fragment
     private void onInitView() {
         handleEmptyView();
         initPullToRefresh();
-        initActionbar();
+//        initActionbar();
         initRecyclerView();
         addNewFab.setOnClickListener(this);
         initActionMenu();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setElevation(0);
 //        setNotSyncBookmarks();
     }
 
@@ -295,6 +294,7 @@ public class BookmarkListFragment extends Fragment
     private void initActionbar() {
         mActionbarHelper.initActionBar();
         mActionbarHelper.setTitle(getString(R.string.bookmark_list_title));
+
     }
 
     /**

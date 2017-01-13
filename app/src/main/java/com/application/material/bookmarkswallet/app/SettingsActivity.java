@@ -95,14 +95,18 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         }
     }
 
+    /**
+     * TODO modify to get also type on fx
+     * @param buttonView
+     * @param isChecked
+     */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         SharedPrefHelper.getInstance(new WeakReference<>(getApplicationContext()))
                 .setValue(SharedPrefKeysEnum.valueOf(buttonView.getTag().toString()),
                         isChecked);
         if (SharedPrefKeysEnum.valueOf((String) buttonView.getTag()) == SharedPrefKeysEnum.NIGHT_MODE) {
-            NightModeHelper.getInstance(this)
-                    .toggle();
+            NightModeHelper.getInstance(this).toggle();
 //            onBackPressed();
         }
     }
@@ -159,5 +163,10 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         } catch (ActivityNotFoundException e) {
             startActivity(Utils.getMarketIntent(1, new WeakReference<>(getApplicationContext())));
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

@@ -1,5 +1,6 @@
 package com.application.material.bookmarkswallet.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,8 +41,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_layout);
-        NightModeHelper.getInstance(this).setConfigurationMode();
         FlurryAgent.onStartSession(this);
+        NightModeHelper.getInstance(this).setConfigurationMode();
+
+        //init actionbar
+        initActionbar();
 
         //first handle frag
         onInitFragment();
@@ -53,9 +58,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     */
+    private void initActionbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarId);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayShowCustomEnabled(false);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        NightModeHelper.getInstance(this).setNightModeLocal();
     }
 
     @Override
@@ -67,38 +85,10 @@ public class MainActivity extends AppCompatActivity {
      * init fragment function
      */
     public void onInitFragment() {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        int backStackCnt = getSupportFragmentManager().getBackStackEntryCount();
-        Fragment frag = getSupportFragmentManager().
-                findFragmentByTag(BookmarkListFragment.FRAG_TAG);
-
-        if (backStackCnt > 0) {
-            handleBackStackEntry(transaction);
-            return;
-        }
-
-        if (backStackCnt == 0 &&
-                frag != null) {
-            transaction.replace(R.id.fragmentContainerFrameLayoutId,
-                    frag, BookmarkListFragment.FRAG_TAG).commit();
-            return;
-        }
-
-        //no fragment already adedd
-        transaction.add(R.id.fragmentContainerFrameLayoutId,
-                new BookmarkListFragment(), BookmarkListFragment.FRAG_TAG).commit();
-    }
-
-    /**
-     *
-     * @param transaction
-     */
-    private void handleBackStackEntry(FragmentTransaction transaction) {
-        int fragCount = getSupportFragmentManager().getBackStackEntryCount();
-        String fragTag = getSupportFragmentManager().getBackStackEntryAt(fragCount - 1).getName();
-        Fragment frag = getSupportFragmentManager().findFragmentByTag(fragTag);
-        transaction.replace(R.id.fragmentContainerFrameLayoutId,
-                frag, fragTag).commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainerFrameLayoutId,
+                    new BookmarkListFragment(), BookmarkListFragment.FRAG_TAG)
+                .commit();
     }
 
     @Override
@@ -153,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private Bundle handleSharedIntent()  {
         if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
-            Log.e(TAG, "hey" + getIntent().getStringExtra(Intent.EXTRA_TEXT));
+//            Log.e(TAG, "hey" + getIntent().getStringExtra(Intent.EXTRA_TEXT));
             String sharedUrl = getIntent().getStringExtra(Intent.EXTRA_TEXT);
             if (sharedUrl == null) {
                 return null;

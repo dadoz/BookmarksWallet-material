@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 
 
@@ -151,11 +152,22 @@ import android.support.v7.app.AppCompatDelegate;
         /**
          *
          */
+        public void setNightModeLocal() {
+            if (mActivity.get() != null)
+                ((AppCompatActivity) mActivity.get()).getDelegate().setLocalNightMode(sUiNightMode);
+        }
+
+        /**
+         *
+         */
         public void setConfigurationMode() {
             setConfigMode();
             AppCompatDelegate.setDefaultNightMode(sUiNightMode);
         }
 
+        public int getConfigMode() {
+            return sUiNightMode;
+        }
         /**
          *
          */
@@ -166,5 +178,6 @@ import android.support.v7.app.AppCompatDelegate;
                 sUiNightMode = defaultUiMode;
             }
         }
+
     }
 
