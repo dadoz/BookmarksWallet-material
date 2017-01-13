@@ -78,11 +78,30 @@ import android.support.v7.app.AppCompatDelegate;
             mPrefs = SharedPrefHelper.getInstance(new WeakReference<Context>(activity));
         }
 
+        /**
+         *
+         * @return
+         */
+        public static NightModeHelper getInstance() {
+            return instance == null ? instance = new NightModeHelper(null) : instance;
+        }
+
+        /**
+         *
+         * @param activity
+         * @return
+         */
         public static NightModeHelper getInstance(Activity activity) {
             mActivity = new WeakReference<Activity>(activity);
             return instance == null ? instance = new NightModeHelper(activity) : instance;
         }
 
+        /**
+         *
+         * @param activity
+         * @param defaultUiMode
+         * @return
+         */
         public static NightModeHelper getInstance(Activity activity, int defaultUiMode) {
             mActivity = new WeakReference<Activity>(activity);
             return instance == null ? instance = new NightModeHelper(activity, defaultUiMode) : instance;
@@ -94,6 +113,9 @@ import android.support.v7.app.AppCompatDelegate;
          */
         private void updateConfig(int uiNightMode)
         {
+            if (mActivity == null)
+                return;
+
             Activity activity = mActivity.get();
             if(activity == null){
                 throw new IllegalStateException("Activity went away?");
@@ -136,6 +158,9 @@ import android.support.v7.app.AppCompatDelegate;
          */
         public void notNight()
         {
+            if (mActivity == null)
+                return;
+
             updateConfig(AppCompatDelegate.MODE_NIGHT_NO);
             mActivity.get().recreate();
         }
@@ -145,6 +170,9 @@ import android.support.v7.app.AppCompatDelegate;
          */
         public void night()
         {
+            if (mActivity == null)
+                return;
+
             updateConfig(AppCompatDelegate.MODE_NIGHT_YES);
             mActivity.get().recreate();
         }
@@ -153,8 +181,11 @@ import android.support.v7.app.AppCompatDelegate;
          *
          */
         public void setNightModeLocal() {
-            if (mActivity.get() != null)
-                ((AppCompatActivity) mActivity.get()).getDelegate().setLocalNightMode(sUiNightMode);
+            if (mActivity == null ||
+                    mActivity.get() == null)
+                return;
+
+            ((AppCompatActivity) mActivity.get()).getDelegate().setLocalNightMode(sUiNightMode);
         }
 
         /**
@@ -172,6 +203,9 @@ import android.support.v7.app.AppCompatDelegate;
          *
          */
         public void setConfigMode() {
+            if (mPrefs == null)
+                return;
+
             int defaultUiMode = (int) mPrefs.getValue(SharedPrefHelper.SharedPrefKeysEnum.NIGHT_MODE,
                     Configuration.UI_MODE_NIGHT_UNDEFINED);
             if(sUiNightMode == AppCompatDelegate.MODE_NIGHT_AUTO) {

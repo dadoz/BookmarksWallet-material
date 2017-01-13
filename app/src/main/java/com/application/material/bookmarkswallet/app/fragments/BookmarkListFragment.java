@@ -37,6 +37,7 @@ import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.observer.BookmarkListObserver;
+import com.application.material.bookmarkswallet.app.views.ContextRevealMenuView;
 import com.flurry.android.FlurryAgent;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
@@ -76,7 +77,7 @@ public class BookmarkListFragment extends Fragment
     @Bind(R.id.importDefaultBookmarksButtonId)
     View importDefaultBookmarksButton;
     @Bind(R.id.optionMenuContainerRevealLayoutId)
-    RevealFrameLayout optionMenuContainerRevealLayout;
+    ContextRevealMenuView optionMenuContainerRevealLayout;
     @Bind(R.id.fragmentBookmarkListMainFrameLayoutId)
     View fragmentBookmarkListMainFrameLayout;
     @Bind(R.id.actionMenuExportId)
@@ -159,6 +160,7 @@ public class BookmarkListFragment extends Fragment
                 mBookmarkActionSingleton.addBookmarkAction(new WeakReference<Fragment>(this));
                 break;
             case R.id.actionMenuSettingsId:
+                actionMenuRevealPresenter.toggleRevealActionMenu(false, openMenuItem);
                 statusHelper.unsetStatus();
                 handleSetting();
                 break;
@@ -288,14 +290,14 @@ public class BookmarkListFragment extends Fragment
         Utils.toggleResizeIcon((ImageView) actionMenuGridviewResize, getContext(), expandedGridview);
     }
 
-    /**
-     *
-     */
-    private void initActionbar() {
-        mActionbarHelper.initActionBar();
-        mActionbarHelper.setTitle(getString(R.string.bookmark_list_title));
-
-    }
+//    /**
+//     *
+//     */
+//    private void initActionbar() {
+//        mActionbarHelper.initActionBar();
+//        mActionbarHelper.setTitle(getString(R.string.bookmark_list_title));
+//
+//    }
 
     /**
      * init view on recyclerView - setup adapter and other stuff
