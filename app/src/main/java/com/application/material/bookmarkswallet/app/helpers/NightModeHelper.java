@@ -213,5 +213,12 @@ import android.support.v7.app.AppCompatDelegate;
             }
         }
 
+        /**
+         *
+         * @return
+         */
+        public boolean isNightMode() {
+            return sUiNightMode == AppCompatDelegate.MODE_NIGHT_YES;
+        }
     }
 

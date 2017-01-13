@@ -59,15 +59,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarId);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setTitle(R.string.bookmark_list_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayShowCustomEnabled(false);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         NightModeHelper.getInstance(this).setNightModeLocal();
+        initActionbar();
     }
 
     @Override

@@ -11,6 +11,8 @@
         <item name="colorControlActivated">@color/indigo_400</item>
         <item name="windowActionModeOverlay">true</item>
 
+        <item name="android:icon">@color/indigo_800</item>
+
         <item name="actionModeStyle">@style/ActionMode</item>
         <item name="android:itemTextAppearance">@style/customMenuTextAppearance</item>
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>

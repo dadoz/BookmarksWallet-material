@@ -10,6 +10,7 @@ import android.view.ViewTreeObserver;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
+import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 
 import java.lang.ref.WeakReference;
@@ -35,9 +36,7 @@ public class ActionMenuRevealPresenter implements AnimatorBuilder.OnRevealAnimat
      */
     public void toggleRevealActionMenu(boolean isShowing, MenuItem openMenuItem) {
         if (openMenuItem != null) {
-            openMenuItem.setIcon(ContextCompat.getDrawable(ctx.get(),
-                    isShowing ?  R.drawable.ic_keyboard_arrow_up_white_24dp :
-                            R.drawable.ic_keyboard_arrow_down_white_24dp));
+            openMenuItem.setIcon(ContextCompat.getDrawable(ctx.get(), getIconByShowingStatus(isShowing)));
         }
 
         if (isShowing) {
@@ -49,6 +48,20 @@ public class ActionMenuRevealPresenter implements AnimatorBuilder.OnRevealAnimat
                         new WeakReference<AnimatorBuilder.OnRevealAnimationListener>(this))
                 .start();
         setStatus(isShowing);
+    }
+
+    /**
+     *
+     * @param isShowing
+     * @return
+     */
+    private int getIconByShowingStatus(boolean isShowing) {
+
+        return isShowing ?
+                (NightModeHelper.getInstance().isNightMode() ? R.drawable.ic_keyboard_arrow_up_white_24dp :
+                        R.drawable.ic_keyboard_arrow_up_black_24dp) :
+                (NightModeHelper.getInstance().isNightMode() ? R.drawable.ic_keyboard_arrow_down_white_24dp :
+                        R.drawable.ic_keyboard_arrow_down_black_24dp);
     }
 
     /**

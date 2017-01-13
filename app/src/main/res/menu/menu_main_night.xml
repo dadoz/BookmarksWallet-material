@@ -4,7 +4,7 @@
     tools:context=".MainActivity" >
     <item
         android:id="@+id/action_search"
-        android:icon="@drawable/ic_search_black_18dp"
+        android:icon="@drawable/ic_action_action_search"
         android:orderInCategory="100"
         app:showAsAction="always"
         android:title="Search"/>
@@ -12,6 +12,6 @@
     <item android:id="@+id/action_open_menu"
         android:title="@string/action_settings"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_keyboard_arrow_down_black_18dp"
+        android:icon="@drawable/ic_keyboard_arrow_down_white_24dp"
         app:showAsAction="always" />
 </menu>

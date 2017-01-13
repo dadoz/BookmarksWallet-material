@@ -27,6 +27,7 @@ import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActio
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
+import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.manager.SearchManager.SearchManagerCallbackInterface;
 import com.application.material.bookmarkswallet.app.presenter.ActionMenuRevealPresenter;
@@ -117,7 +118,9 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
+        int layout = NightModeHelper.getInstance().isNightMode() ? R.menu.menu_main_night :
+                R.menu.menu_main;
+        inflater.inflate(layout, menu);
 
         MaterialSearchView searchView = ((MaterialSearchView) getView().getRootView().findViewById(R.id.searchViewId));
         searchManager.initSearchView(menu, new View[] {searchView, addNewFab});
@@ -269,11 +272,9 @@ public class BookmarkListFragment extends Fragment
     private void onInitView() {
         handleEmptyView();
         initPullToRefresh();
-//        initActionbar();
         initRecyclerView();
         addNewFab.setOnClickListener(this);
         initActionMenu();
-//        setNotSyncBookmarks();
     }
 
     /**
@@ -290,13 +291,12 @@ public class BookmarkListFragment extends Fragment
         Utils.toggleResizeIcon((ImageView) actionMenuGridviewResize, getContext(), expandedGridview);
     }
 
-//    /**
-//     *
-//     */
 //    private void initActionbar() {
+//        if (getActivity() != null) {
+//            ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
+//        }
 //        mActionbarHelper.initActionBar();
 //        mActionbarHelper.setTitle(getString(R.string.bookmark_list_title));
-//
 //    }
 
     /**
