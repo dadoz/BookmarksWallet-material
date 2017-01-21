@@ -24,7 +24,7 @@ import java.lang.ref.WeakReference;
 
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.EXPANDED_GRIDVIEW;
 
-public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout {
+public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout implements View.OnClickListener {
     private ImageView exportIcon;
     private ImageView settingsIcon;
     private ImageView gridviewResizeIcon;
@@ -54,6 +54,10 @@ public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout 
         exportIcon = (ImageView) view.findViewById(R.id.actionMenuExportId);
         settingsIcon = (ImageView) view.findViewById(R.id.actionMenuSettingsId);
         gridviewResizeIcon = (ImageView) view.findViewById(R.id.actionMenuGridviewResizeId);
+
+        exportIcon.setOnClickListener(this);
+        settingsIcon.setOnClickListener(this);
+        gridviewResizeIcon.setOnClickListener(this);
         setColorByNightMode();
     }
 
@@ -73,7 +77,8 @@ public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout 
     /**
      *
      */
-    public void initActionMenu(boolean isExpandedGridView, WeakReference<ActionMenuRevealHelper.ActionMenuRevealCallbacks> lst ) {
+    public void initActionMenu(boolean isExpandedGridView,
+                               WeakReference<ActionMenuRevealHelper.ActionMenuRevealCallbacks> lst ) {
         listenerCallbacks = lst;
         toggleResizeIcon(isExpandedGridView);
     }
@@ -96,5 +101,26 @@ public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout 
                 expandedGridview ? R.drawable.ic_view_quilt_black_48dp :
                         R.drawable.ic_view_stream_black_48dp));
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.actionMenuSettingsId:
+                if (listenerCallbacks.get() != null)
+                    listenerCallbacks.get().hanldeSettingsContextMenu();
+                break;
+            case R.id.actionMenuExportId:
+                FlurryAgent.logEvent("export", true);
+                //toggleResizeIcon(v.getVisibility() == VISIBLE);
+                if (listenerCallbacks.get() != null)
+                    listenerCallbacks.get().hanldeExportContextMenu();
+                break;
+            case R.id.actionMenuGridviewResizeId:
+                if (listenerCallbacks.get() != null)
+                    listenerCallbacks.get().hanldeExportGridviewResizeMenu();
+                break;
+
+        }
     }
 }

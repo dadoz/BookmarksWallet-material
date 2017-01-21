@@ -8,7 +8,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="right"
-
         style="@style/RevealViewStyle">
         <ImageView
             android:id="@+id/actionMenuExportId"

@@ -138,11 +138,11 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        ButterKnife.unbind(this);
     }
 
     @Override
     public void onClick(View v) {
+        Log.e("TAG", "hey");
         switch (v.getId()) {
             case R.id.importDefaultBookmarksButtonId:
                 Snackbar.make(mainView, getString(R.string.import_default_bookmarks),
@@ -156,18 +156,6 @@ public class BookmarkListFragment extends Fragment
             case R.id.addBookmarkFabId:
                 mBookmarkActionSingleton.addBookmarkAction(new WeakReference<Fragment>(this));
                 break;
-            case R.id.actionMenuSettingsId:
-                    hanldeSettingsContextMenu();
-                break;
-            case R.id.actionMenuExportId:
-                FlurryAgent.logEvent("export", true);
-                //toggleResizeIcon(v.getVisibility() == VISIBLE);
-                hanldeExportContextMenu();
-                break;
-            case R.id.actionMenuGridviewResizeId:
-                hanldeExportGridviewResizeMenu();
-                break;
-
         }
     }
 
@@ -258,9 +246,6 @@ public class BookmarkListFragment extends Fragment
         initRecyclerView();
         addNewFab.setOnClickListener(this);
 
-//        settingsIcon.setOnClickListener(this);
-//        gridviewResizeIcon.setOnClickListener(this);
-//        exportIcon.setOnClickListener(this);
         optionMenuContainerRevealLayout.initActionMenu(expandedGridview,
                 new WeakReference<ActionMenuRevealHelper.ActionMenuRevealCallbacks>(this));
     }
