@@ -25,8 +25,6 @@ import android.widget.ViewSwitcher;
 
 import com.application.material.bookmarkswallet.app.R;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import icepick.State;
 
 public class AddBookmarkSearchLayout extends RelativeLayout implements View.OnClickListener, TextWatcher {

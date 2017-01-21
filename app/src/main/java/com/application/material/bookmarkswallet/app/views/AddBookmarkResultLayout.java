@@ -25,7 +25,6 @@ import com.squareup.picasso.Picasso;
 
 import java.text.BreakIterator;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import icepick.State;
 

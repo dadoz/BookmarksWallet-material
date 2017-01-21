@@ -28,7 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="32dp"
-        android:src="@drawable/abc_ic_menu_paste_mtrl_am_alpha"
         app:elevation="4dp"
         app:borderWidth="0dp"
         style="@style/PasteClipboardButtonStyle"

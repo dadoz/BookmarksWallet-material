@@ -14,7 +14,7 @@ import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
 
 import java.lang.ref.WeakReference;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface,
@@ -23,15 +23,15 @@ public class AddBookmarkUrlEditTextPresenter implements UrlEditTextInterface,
     private final WeakReference<EditText> urlField;
     private final AnimatorBuilder animatorBuilder;
 
-//    @Bind(R.id.noBookmarkPreviewLayoutId)
+//    @BindView(R.id.noBookmarkPreviewLayoutId)
 //    View noBookmarkPreviewLayout;
-//    @Bind(R.id.iconImageViewId)
+//    @BindView(R.id.iconImageViewId)
 //    View iconImageView;
-    @Bind(R.id.addBookmarkFabId)
+    @BindView(R.id.addBookmarkFabId)
     FloatingActionButton addFab;
-    @Bind(R.id.pasteClipboardFabId)
+    @BindView(R.id.pasteClipboardFabId)
     FloatingActionButton clipboardFab;
-    @Bind(R.id.addBookmarkMainContainerLayoutId)
+    @BindView(R.id.addBookmarkMainContainerLayoutId)
     ViewGroup parentView;
     private boolean alreadyAnimated = false;
 

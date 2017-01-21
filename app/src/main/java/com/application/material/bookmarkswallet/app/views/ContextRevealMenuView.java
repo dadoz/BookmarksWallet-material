@@ -3,21 +3,32 @@ package com.application.material.bookmarkswallet.app.views;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.GridLayoutManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper.ActionMenuRevealCallbacks;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
+import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper;
+import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
+import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
+import com.flurry.android.FlurryAgent;
+
+import java.lang.ref.WeakReference;
+
+import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.EXPANDED_GRIDVIEW;
 
 public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout {
     private ImageView exportIcon;
     private ImageView settingsIcon;
     private ImageView gridviewResizeIcon;
+    private WeakReference<ActionMenuRevealCallbacks> listenerCallbacks;
 
     public ContextRevealMenuView(Context context) {
         super(context);
@@ -57,5 +68,33 @@ public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout 
             drawable.setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_ATOP);
             view.setImageDrawable(drawable);
         }
+    }
+
+    /**
+     *
+     */
+    public void initActionMenu(boolean isExpandedGridView, WeakReference<ActionMenuRevealHelper.ActionMenuRevealCallbacks> lst ) {
+        listenerCallbacks = lst;
+        toggleResizeIcon(isExpandedGridView);
+    }
+
+
+    /**
+     *
+     * @param isShowing
+     */
+    public void toggleRevealActionMenu(boolean isShowing) {
+        ActionMenuRevealHelper.getInstance(new WeakReference<Context>(getContext()))
+                .toggleRevealActionMenu(this, isShowing, listenerCallbacks);
+    }
+
+    /**
+     *
+     */
+    public void toggleResizeIcon(boolean expandedGridview) {
+        gridviewResizeIcon.setImageDrawable(ContextCompat.getDrawable(getContext(),
+                expandedGridview ? R.drawable.ic_view_quilt_black_48dp :
+                        R.drawable.ic_view_stream_black_48dp));
+
     }
 }

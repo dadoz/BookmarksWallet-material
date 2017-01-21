@@ -280,16 +280,7 @@ public class Utils {
         return buffer.toString();
     }
 
-    /**
-     *
-     * @param v
-     * @param context
-     */
-    public static void toggleResizeIcon(ImageView v, Context context, boolean expandedGridview) {
-        v.setImageDrawable(ContextCompat.getDrawable(context,
-                expandedGridview ? R.drawable.ic_view_quilt_black_48dp: R.drawable.ic_view_stream_black_48dp));
 
-    }
 
     /**
      *

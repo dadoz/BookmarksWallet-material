@@ -92,7 +92,8 @@
 
     <!-- paste clipboard button -->
     <style name="PasteClipboardButtonStyle">
-        <item name="backgroundTint">@color/yellow_400</item>
+        <item name="backgroundTint">@color/grey_50</item>
+        <item name="android:src">@drawable/ic_content_paste_black_18dp</item>
     </style>
 
     <!-- BUTTON STYLE-->
@@ -118,6 +119,14 @@
 
     <style name="DescriptionSecondaryTextColorStyle">
         <item name="android:textColor">@color/grey_400</item>
+    </style>
+
+    <style name="AddBookmarkSearchBoxCollapseIcons">
+        <item name="android:src">@drawable/ic_keyboard_arrow_down_white_24dp</item>
+    </style>
+
+    <style name="AddBookmarkSearchBoxExpandIcons">
+        <item name="android:src">@drawable/ic_keyboard_arrow_up_white_24dp</item>
     </style>
 
 </resources>

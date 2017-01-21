@@ -25,20 +25,20 @@ import com.application.material.bookmarkswallet.app.views.AddBookmarkSearchLayou
 
 import java.lang.ref.WeakReference;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import icepick.Icepick;
 
 public class AddBookmarkSearchFragment extends Fragment implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener, TextView.OnEditorActionListener {
     public final static String FRAG_TAG = "AddBookmarkSearchFragment";
-    @Bind(R.id.addBookmarkSearchLayoutId)
+    @BindView(R.id.addBookmarkSearchLayoutId)
     AddBookmarkSearchLayout addBookmarkSearchLayout;
-    @Bind(R.id.pasteClipboardFabId)
+    @BindView(R.id.pasteClipboardFabId)
     FloatingActionButton pasteClipboardFab;
-    @Bind(R.id.addBookmarkRefreshLayoutId)
+    @BindView(R.id.addBookmarkRefreshLayoutId)
     SwipeRefreshLayout refreshLayout;
-    @Bind(R.id.addBookmarkSearchButtonId)
+    @BindView(R.id.addBookmarkSearchButtonId)
     View addBookmarkSearchButton;
 
     @Override

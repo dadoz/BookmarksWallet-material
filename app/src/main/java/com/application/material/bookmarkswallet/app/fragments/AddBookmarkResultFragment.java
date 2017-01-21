@@ -49,7 +49,7 @@ import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import icepick.Icepick;
 import icepick.State;
@@ -60,11 +60,11 @@ public class AddBookmarkResultFragment extends Fragment implements
         RetrieveIconHelper.OnRetrieveIconInterface, AddBookmarkActivity.OnHandleBackPressed {
     public static final String FRAG_TAG = "AddBookmarkFragmentTAG";
     private static final String TAG = "AddBookmarkFragment";
-    @Bind(R.id.addBookmarkResultViewId)
+    @BindView(R.id.addBookmarkResultViewId)
     AddBookmarkResultLayout addBookmarkResultView;
-    @Bind(R.id.addBookmarkRefreshLayoutId)
+    @BindView(R.id.addBookmarkRefreshLayoutId)
     SwipeRefreshLayout refreshLayout;
-    @Bind(R.id.addBookmarkDoneButtonId)
+    @BindView(R.id.addBookmarkDoneButtonId)
     Button addBookmarkDoneButton;
 
     private StatusManager statusManager;

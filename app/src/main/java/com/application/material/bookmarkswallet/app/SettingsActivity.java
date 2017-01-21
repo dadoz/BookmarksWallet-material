@@ -25,16 +25,18 @@ import com.willowtreeapps.saguaro.android.Saguaro;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         CompoundButton.OnCheckedChangeListener {
     private String TAG = "MainActivity";
     private SharedPrefHelper sharedPrefHelper;
-    @Bind(R.id.settingsListId)
+    @BindView(R.id.settingsListId)
     ListView listView;
+    private Unbinder unbinder;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -45,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_layout);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         NightModeHelper.getInstance(this).setConfigurationMode();
         sharedPrefHelper = SharedPrefHelper.getInstance(new WeakReference<>(getApplicationContext()));
@@ -58,7 +60,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     /**

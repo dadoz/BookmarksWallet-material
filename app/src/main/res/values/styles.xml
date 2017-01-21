@@ -61,6 +61,7 @@
 
     <style name="PasteClipboardButtonStyle">
         <item name="backgroundTint">@color/indigo_600</item>
+        <item name="android:src">@drawable/ic_content_paste_white_18dp</item>
     </style>
 
     <!-- BUTTON STYLE-->
@@ -73,6 +74,14 @@
     <style name="customMaterialButtonStyle" parent="@style/Widget.AppCompat.Button.Colored">
         <item name="backgroundTint">@color/yellow_400</item>
         <item name="android:textColor">@color/indigo_600</item>
+    </style>
+
+    <style name="AddBookmarkSearchBoxCollapseIcons">
+        <item name="android:src">@drawable/ic_keyboard_arrow_down_black_24dp</item>
+    </style>
+
+    <style name="AddBookmarkSearchBoxExpandIcons">
+        <item name="android:src">@drawable/ic_keyboard_arrow_up_black_24dp</item>
     </style>
 
 </resources>

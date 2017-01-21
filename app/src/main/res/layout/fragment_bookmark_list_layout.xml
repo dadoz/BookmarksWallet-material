@@ -43,7 +43,6 @@
             app:backgroundTint="@color/indigo_600"
             app:fabSize="normal"/>
 
-        <include layout="@layout/empty_bookmark_list_layout"/>
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

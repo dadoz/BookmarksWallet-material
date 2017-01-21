@@ -21,7 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
@@ -52,41 +52,41 @@ public class AddBookmarkFragment extends Fragment implements
     private static final String TAG = "AddBookmarkFragment";
     private ActionbarHelper mActionbarHelper;
 
-    @Bind(R.id.addBookmarkRefreshLayoutId)
+    @BindView(R.id.addBookmarkRefreshLayoutId)
     SwipeRefreshLayout refreshLayout;
-    @Bind(R.id.urlEditTextId)
+    @BindView(R.id.urlEditTextId)
     EditText urlEditText;
-    @Bind(R.id.addBookmarkUrlTextInputId)
+    @BindView(R.id.addBookmarkUrlTextInputId)
     TextInputLayout addBookmarkUrlTextInput;
-    @Bind(R.id.titleEditTextId)
+    @BindView(R.id.titleEditTextId)
     EditText addBookmarkTitleEditText;
-    @Bind(R.id.addBookmarkHttpsCheckboxId)
+    @BindView(R.id.addBookmarkHttpsCheckboxId)
     CheckBox addBookmarkHttpsCheckbox;
-    @Bind(R.id.toggleNameViewSwitcherId)
+    @BindView(R.id.toggleNameViewSwitcherId)
     ViewSwitcher toggleNameViewSwitcher;
-    @Bind(R.id.addBookmarkTitleTextInputId)
+    @BindView(R.id.addBookmarkTitleTextInputId)
     TextInputLayout addBookmarkTitleTextInput;
-    @Bind(R.id.pasteClipboardFabId)
+    @BindView(R.id.pasteClipboardFabId)
     FloatingActionButton pasteClipboardFab;
-    @Bind(R.id.addBookmarkSearchButtonId)
+    @BindView(R.id.addBookmarkSearchButtonId)
     View addBookmarkSearchButton;
-//    @Bind(R.id.addBookmarkWebViewId)
+//    @BindView(R.id.addBookmarkWebViewId)
     WebView addBookmarkWebView;
-//    @Bind(R.id.addBookmarkResultLayoutId)
+//    @BindView(R.id.addBookmarkResultLayoutId)
     View addBookmarkResultLayout;
-    @Bind(R.id.addBookmarkMainLayoutId)
+    @BindView(R.id.addBookmarkMainLayoutId)
     View addBookmarkMainLayout;
-//    @Bind(R.id.addBookmarkDoneButtonId)
+//    @BindView(R.id.addBookmarkDoneButtonId)
     View addBookmarkDoneButton;
-//    @Bind(R.id.addBookmarkToggleWebViewButtonId)
+//    @BindView(R.id.addBookmarkToggleWebViewButtonId)
     ImageView addBookmarkToggleWebViewButton;
-//    @Bind(R.id.addBookmarkIconImageId)
+//    @BindView(R.id.addBookmarkIconImageId)
     ImageView addBookmarkIconImage;
-//    @Bind(R.id.titleTextViewId)
+//    @BindView(R.id.titleTextViewId)
     TextView titleTextView;
-//    @Bind(R.id.urlTextViewId)
+//    @BindView(R.id.urlTextViewId)
     TextView urlTextView;
-    @Bind(R.id.addBookmarkRelativeLayoutId)
+    @BindView(R.id.addBookmarkRelativeLayoutId)
     View addBookmarkRelativeLayout;
     private View mainView;
     private SearchBookmarkPresenter searchBookmarkPresenter;

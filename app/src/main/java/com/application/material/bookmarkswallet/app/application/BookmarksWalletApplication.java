@@ -22,12 +22,14 @@ public class BookmarksWalletApplication extends Application {
         new FlurryAgent.Builder()
                 .withLogEnabled(false)
                 .build(this, getString(R.string.FLURRY_API_KEY));
-        setRealmDefaultConfiguration();
+
+        //calligraphy
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/Helvetica-Neue-47-Light-Condensed.otf")
                 .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
+                .build());
+
+        setRealmDefaultConfiguration();
     }
 
     /**
@@ -36,7 +38,8 @@ public class BookmarksWalletApplication extends Application {
      */
     public RealmConfiguration setRealmDefaultConfiguration() {
         if (realmConfig == null) {
-            realmConfig = new RealmConfiguration.Builder(getApplicationContext())
+            Realm.init(this);
+            realmConfig = new RealmConfiguration.Builder()
                     .schemaVersion(BookmarkRealmMigration.BOOKMARK_SCHEMA_VERSION) // Must be bumped when the schema changes
                     .migration(new BookmarkRealmMigration()) // Migration to run instead of throwing an exception
                     .build();
@@ -45,11 +48,18 @@ public class BookmarksWalletApplication extends Application {
         return realmConfig;
     }
 
-
+    /**
+     *
+     * @return
+     */
     public SparseArray<String> getSearchParamsArray() {
         return searchParamsArray;
     }
 
+    /**
+     *
+     * @param searchParamsArray
+     */
     public void setSearchParamsArray(SparseArray<String> searchParamsArray) {
         this.searchParamsArray = searchParamsArray;
     }

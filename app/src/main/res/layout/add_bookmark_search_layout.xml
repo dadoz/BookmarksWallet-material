@@ -47,11 +47,11 @@
                     <ImageView
                         android:layout_width="@dimen/small_icon_size"
                         android:layout_height="@dimen/small_icon_size"
-                        android:src="@drawable/ic_keyboard_arrow_down_black_24dp"/>
+                        style="@style/AddBookmarkSearchBoxCollapseIcons"/>
                     <ImageView
                         android:layout_width="@dimen/small_icon_size"
                         android:layout_height="@dimen/small_icon_size"
-                        android:src="@drawable/ic_keyboard_arrow_up_black_24dp"/>
+                        style="@style/AddBookmarkSearchBoxExpandIcons"/>
                 </ViewSwitcher>
 
                 <android.support.design.widget.TextInputLayout

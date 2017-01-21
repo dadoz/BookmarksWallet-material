@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<io.codetail.widget.RevealFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<io.codetail.widget.RevealFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <LinearLayout
@@ -7,6 +8,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="right"
+
         style="@style/RevealViewStyle">
         <ImageView
             android:id="@+id/actionMenuExportId"
