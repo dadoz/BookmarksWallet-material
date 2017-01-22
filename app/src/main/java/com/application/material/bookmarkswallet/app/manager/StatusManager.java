@@ -69,7 +69,7 @@ public class StatusManager {
      *
      * @param searchMode
      */
-    public void setSearchMode(boolean searchMode) {
+    public void setSearchActionbarMode(boolean searchMode) {
         currentStatus = searchMode ? StatusEnum.SEARCH : StatusEnum.IDLE;
     }
 
@@ -77,7 +77,7 @@ public class StatusManager {
      *
      * @return
      */
-    public boolean isSearchMode() {
+    public boolean isSearchActionbarMode() {
         return currentStatus == StatusEnum.SEARCH;
     }
 

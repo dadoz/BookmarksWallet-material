@@ -31,6 +31,7 @@ import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
+import com.application.material.bookmarkswallet.app.manager.DefaultBookmarkImportManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager.SearchManagerCallbackInterface;
 import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
@@ -54,18 +55,17 @@ import java.lang.ref.WeakReference;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static android.content.ContentValues.TAG;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.EXPANDED_GRIDVIEW;
 
 //TODO refactor it
 public class BookmarkListFragment extends Fragment
         implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener,
-        MenuItemCompat.OnActionExpandListener,
         BookmarkRecyclerViewAdapter.OnActionListenerInterface,
         SearchManagerCallbackInterface,
         AddBookmarkActivity.OnHandleBackPressed, ActionMenuRevealHelper.ActionMenuRevealCallbacks {
     public static final String FRAG_TAG = "LinksListFragment";
-    private static final String DEFAULT_BOOKMARKS_FILE = "default_bookmarks.json";
     @BindView(R.id.addBookmarkFabId)
     FloatingActionButton addNewFab;
     @BindView(R.id.mainContainerViewId)
@@ -95,7 +95,11 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        initSingletonInstances();
+        statusHelper = StatusManager.getInstance();
+        mActionbarHelper = ActionbarHelper.getInstance(new WeakReference<>(getContext()));
+        mBookmarkActionSingleton = BookmarkActionHelper.getInstance(new WeakReference<>(getContext()));
+        searchManager = SearchManager.getInstance(new WeakReference<>(getContext()),
+                Realm.getDefaultInstance(), new WeakReference<SearchManagerCallbackInterface>(this));
     }
 
     @Override
@@ -111,28 +115,13 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        int layout = NightModeHelper.getInstance().isNightMode() ? R.menu.menu_main_night :
-                R.menu.menu_main;
-        inflater.inflate(layout, menu);
+        inflater.inflate(NightModeHelper.getInstance().isNightMode() ? R.menu.menu_main_night :
+                R.menu.menu_main, menu);
 
-        MaterialSearchView searchView = ((MaterialSearchView) getView().getRootView().findViewById(R.id.searchViewId));
+        MaterialSearchView searchView = ((MaterialSearchView) getView().getRootView()
+                .findViewById(R.id.searchViewId));
         searchManager.initSearchView(menu, new View[] {searchView, addNewFab});
-        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), this);
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onMenuItemActionExpand(MenuItem item) {
-        searchManager.handleMenuItemActionExpandLayout(new View[] {addNewFab});
-        statusHelper.setSearchMode(true);
-        return true;
-    }
-
-    @Override
-    public boolean onMenuItemActionCollapse(MenuItem item) {
-        searchManager.handleMenuItemActionCollapsedLayout(new View []{addNewFab, emptySearchResultLayout});
-        statusHelper.unsetStatus();
-        return true;
     }
 
     @Override
@@ -142,45 +131,17 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onClick(View v) {
-        Log.e("TAG", "hey");
         switch (v.getId()) {
             case R.id.importDefaultBookmarksButtonId:
                 Snackbar.make(mainView, getString(R.string.import_default_bookmarks),
                         Snackbar.LENGTH_SHORT).show();
-                try {
-                    handleImportDefaultBookmarks();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                DefaultBookmarkImportManager.handleImportDefaultBookmarks(new WeakReference<>(getContext()),
+                        mEmptyLinkListView, mSwipeRefreshLayout, recyclerView);
                 break;
             case R.id.addBookmarkFabId:
                 mBookmarkActionSingleton.addBookmarkAction(new WeakReference<Fragment>(this));
                 break;
         }
-    }
-
-    /**
-     *
-     * @throws IOException
-     * @throws JSONException
-     */
-    private void handleImportDefaultBookmarks() throws IOException, JSONException {
-        //update interface
-        mEmptyLinkListView.setVisibility(View.GONE);
-        mSwipeRefreshLayout.setRefreshing(true);
-
-        //parse data helper class
-        String json = Utils.readAssetsToString(getActivity().getAssets(), DEFAULT_BOOKMARKS_FILE);
-        JSONArray bookmarksArray = new JSONArray(json);
-        for (int i = 0; i < bookmarksArray.length(); i++) {
-            JSONObject bookmark = bookmarksArray.getJSONObject(i);
-            RealmUtils.addItemOnRealm(Realm.getDefaultInstance(), bookmark.getString("title"),
-                    bookmark.getString("iconUrl"), null, bookmark.getString("url"));
-        }
-
-        //update interface
-        mSwipeRefreshLayout.setRefreshing(false);
-        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -198,14 +159,9 @@ public class BookmarkListFragment extends Fragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_terms_and_licences:
-                handleTermsAndLicences();
-                return true;
             case R.id.action_open_menu:
-                boolean isShowing = optionMenuContainerRevealLayout.getVisibility() == View.INVISIBLE;
                 openMenuItem = item;
-                optionMenuContainerRevealLayout
-                        .toggleRevealActionMenu(isShowing);
+                optionMenuContainerRevealLayout.toggleRevealActionMenu();
                 break;
         }
         return true;
@@ -218,22 +174,15 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE) {
-            initSingletonInstances();
+//            initSingletonInstances();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    notifyDataChanged();
+                    recyclerView.getAdapter().notifyDataSetChanged(); //TODO mv to inserted 0 only on insertion
                     updateRecyclerView();
                 }
             }, 500);
         }
-    }
-
-    /**
-     * notify data changed
-     */
-    public void notifyDataChanged() {
-        recyclerView.getAdapter().notifyDataSetChanged(); //TODO mv to inserted 0 only on insertion
     }
 
     /**
@@ -245,7 +194,6 @@ public class BookmarkListFragment extends Fragment
         initPullToRefresh();
         initRecyclerView();
         addNewFab.setOnClickListener(this);
-
         optionMenuContainerRevealLayout.initActionMenu(expandedGridview,
                 new WeakReference<ActionMenuRevealHelper.ActionMenuRevealCallbacks>(this));
     }
@@ -308,44 +256,11 @@ public class BookmarkListFragment extends Fragment
                 .setColorSchemeResources(R.color.indigo_600);
     }
 
-    /**
-     * set not fully sync bookmarks
-     */
-    private void setNotSyncBookmarks() {
-        Snackbar.make(mainView, "hey snack", Snackbar.LENGTH_LONG)
-                .setAction("SYNC", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getActivity(), "hey", Toast.LENGTH_SHORT).show();
-                    }
-                }).show();
-    }
-
-    /**
-     * handle terms and licences
-     */
-    private void handleTermsAndLicences() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse("http://www.apache.org/licenses/LICENSE-2.0"));
-        startActivity(browserIntent);
-    }
-
-    /**
-     * init singleton instances
-     */
-    private void initSingletonInstances() {
-        statusHelper = StatusManager.getInstance();
-        mActionbarHelper = ActionbarHelper.getInstance(new WeakReference<>(getContext()));
-        mBookmarkActionSingleton = BookmarkActionHelper.getInstance(new WeakReference<>(getContext()));
-        searchManager = SearchManager.getInstance(new WeakReference<>(getContext()),
-                Realm.getDefaultInstance(), new WeakReference<SearchManagerCallbackInterface>(this));
-    }
-
     @Override
     public boolean onLongItemClick(View view, int position) {
         if (!statusHelper.isEditMode()) {
             getActivity().startActionMode(actionMode);
-            optionMenuContainerRevealLayout.toggleRevealActionMenu(false);
+            optionMenuContainerRevealLayout.showRevealActionMenu(false);
         }
 
         handleSelectItemByPos(position);
@@ -398,12 +313,21 @@ public class BookmarkListFragment extends Fragment
     }
 
     @Override
+    public void onOpenSearchView() {
+        optionMenuContainerRevealLayout.showRevealActionMenu(false);
+        StatusManager.getInstance().setSearchActionbarMode(true);
+    }
+
+    @Override
     public boolean handleBackPressed() {
         StatusManager status = StatusManager.getInstance();
-        if (status.isOnActionMenuMode()) {
+        if (status.isOnActionMenuMode() ||
+                status.isSearchActionbarMode()) {
             status.unsetStatus();
             addNewFab.setVisibility(View.VISIBLE);
-            optionMenuContainerRevealLayout.toggleRevealActionMenu(false);
+            if (searchManager.getSearchView() != null)
+                searchManager.getSearchView().closeSearch();
+            optionMenuContainerRevealLayout.showRevealActionMenu(false);
             return true;
         }
         return false;

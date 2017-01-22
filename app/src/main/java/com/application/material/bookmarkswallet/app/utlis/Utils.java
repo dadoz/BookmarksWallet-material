@@ -21,8 +21,6 @@ import android.widget.ImageView;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 
-import org.json.JSONException;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -101,12 +99,29 @@ public class Utils {
 
     /**
      *
+     * @param context
      * @param drawable
      * @param color
      */
-    public static void setColorFilter(Drawable drawable, int color) {
-        drawable.setColorFilter(color,
-                PorterDuff.Mode.SRC_IN);
+    public static Drawable getColoredIcon(Context context, Drawable drawable, int color) {
+        if (context == null ||
+                drawable == null)
+            return drawable;
+
+        setColorFilter(context, drawable, color);
+        return drawable;
+    }
+    /**
+     *
+     * @param context
+     * @param drawable
+     * @param color
+     */
+    public static void setColorFilter(Context context, Drawable drawable, int color) {
+        if (context == null ||
+                drawable == null)
+            return;
+        drawable.setColorFilter(ContextCompat.getColor(context, color), PorterDuff.Mode.SRC_ATOP);
     }
 
     /**

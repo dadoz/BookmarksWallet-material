@@ -1,13 +1,8 @@
 package com.application.material.bookmarkswallet.app.views;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.GridLayoutManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -15,20 +10,17 @@ import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper.ActionMenuRevealCallbacks;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper;
-import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
-import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.flurry.android.FlurryAgent;
 
 import java.lang.ref.WeakReference;
-
-import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.EXPANDED_GRIDVIEW;
 
 public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout implements View.OnClickListener {
     private ImageView exportIcon;
     private ImageView settingsIcon;
     private ImageView gridviewResizeIcon;
     private WeakReference<ActionMenuRevealCallbacks> listenerCallbacks;
+    private boolean isExpanded;
 
     public ContextRevealMenuView(Context context) {
         super(context);
@@ -65,12 +57,9 @@ public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout 
      *
      */
     private void setColorByNightMode() {
-        int color = NightModeHelper.getInstance().getConfigMode() == AppCompatDelegate.MODE_NIGHT_NO ?
-                R.color.indigo_600 : R.color.grey_50;
+        int color = NightModeHelper.getInstance().isNightMode() ? R.color.grey_50 : R.color.indigo_600;
         for (ImageView view : new ImageView[] {exportIcon, settingsIcon, gridviewResizeIcon}) {
-            Drawable drawable = view.getDrawable();
-            drawable.setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_ATOP);
-            view.setImageDrawable(drawable);
+            view.setImageDrawable(Utils.getColoredIcon(getContext(), view.getDrawable(), color));
         }
     }
 
@@ -80,17 +69,25 @@ public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout 
     public void initActionMenu(boolean isExpandedGridView,
                                WeakReference<ActionMenuRevealHelper.ActionMenuRevealCallbacks> lst ) {
         listenerCallbacks = lst;
+        isExpanded = isExpandedGridView;
         toggleResizeIcon(isExpandedGridView);
+
     }
 
 
     /**
      *
-     * @param isShowing
      */
-    public void toggleRevealActionMenu(boolean isShowing) {
+    public void showRevealActionMenu(boolean isShowing) {
         ActionMenuRevealHelper.getInstance(new WeakReference<Context>(getContext()))
                 .toggleRevealActionMenu(this, isShowing, listenerCallbacks);
+    }
+    /**
+     *
+     */
+    public void toggleRevealActionMenu() {
+        ActionMenuRevealHelper.getInstance(new WeakReference<Context>(getContext()))
+                .toggleRevealActionMenu(this, isShowing(), listenerCallbacks);
     }
 
     /**
@@ -101,10 +98,14 @@ public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout 
                 expandedGridview ? R.drawable.ic_view_quilt_black_48dp :
                         R.drawable.ic_view_stream_black_48dp));
 
+        gridviewResizeIcon.setImageDrawable(Utils.getColoredIcon(getContext(), gridviewResizeIcon.getDrawable(),
+                NightModeHelper.getInstance().isNightMode() ? R.color.grey_50 : R.color.indigo_600));
+
     }
 
     @Override
     public void onClick(View view) {
+        toggleRevealActionMenu();
         switch (view.getId()) {
             case R.id.actionMenuSettingsId:
                 if (listenerCallbacks.get() != null)
@@ -112,15 +113,20 @@ public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout 
                 break;
             case R.id.actionMenuExportId:
                 FlurryAgent.logEvent("export", true);
-                //toggleResizeIcon(v.getVisibility() == VISIBLE);
                 if (listenerCallbacks.get() != null)
                     listenerCallbacks.get().hanldeExportContextMenu();
                 break;
             case R.id.actionMenuGridviewResizeId:
+                isExpanded = !isExpanded;
+                toggleResizeIcon(isExpanded);
                 if (listenerCallbacks.get() != null)
                     listenerCallbacks.get().hanldeExportGridviewResizeMenu();
                 break;
 
         }
+    }
+
+    public boolean isShowing() {
+        return !(getVisibility() == VISIBLE);
     }
 }

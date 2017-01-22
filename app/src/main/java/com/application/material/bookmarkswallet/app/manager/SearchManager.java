@@ -35,6 +35,7 @@ public class SearchManager implements Filterable,
     private MenuItem searchItem;
     private static WeakReference<SearchManagerCallbackInterface> listener;
     private View addNewFab;
+    private MaterialSearchView searchView;
 
     public SearchManager() {
     }
@@ -87,30 +88,14 @@ public class SearchManager implements Filterable,
      */
     public void initSearchView(Menu menu, @NonNull View[] views) {
         try {
-            MaterialSearchView searchView = (MaterialSearchView) views[0];
+            searchView = (MaterialSearchView) views[0];
             addNewFab = views[1];
             searchItem = menu.findItem(R.id.action_search);
             searchView.setMenuItem(searchItem);
-
-            //std
-//            SearchView searchView = (SearchView) searchItem.getActionView();
-//            android.app.SearchManager searchManager = (android.app.SearchManager) context.get()
-//                    .getSystemService(Context.SEARCH_SERVICE);
-//            searchView.get().setSearchableInfo(searchManager
-//                    .getSearchableInfo(((Activity) context.get()).getComponentName()));
             searchView.setOnQueryTextListener(this);
             searchView.setOnSearchViewListener(this);
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * collapse search view
-     */
-    public void collapseSearchView() {
-        if (searchItem != null) {
-            searchItem.collapseActionView();
         }
     }
 
@@ -167,9 +152,6 @@ public class SearchManager implements Filterable,
      */
     public void handleMenuItemActionCollapsedLayout(@NonNull View[] views) {
         AnimatorBuilder.getInstance(context).collapseViews(views[0], true);
-//        views[1].setVisibility(View.GONE); //TODO PATCH
-//        itemMenuArray[0].setVisible(true);
-//        itemMenuArray[1].setVisible(true);
     }
 
     /**
@@ -178,20 +160,28 @@ public class SearchManager implements Filterable,
      */
     public void handleMenuItemActionExpandLayout(@NonNull View[] views) {
         AnimatorBuilder.getInstance(context).collapseViews(views[0], false);
-//        itemMenuArray[0].setVisible(false);
-//        itemMenuArray[1].setVisible(false);
     }
 
     @Override
     public void onSearchViewShown() {
         handleMenuItemActionExpandLayout(new View[] {addNewFab});
-        StatusManager.getInstance().setSearchMode(true);
+        StatusManager.getInstance().setSearchActionbarMode(true);
+        if (listener.get() != null)
+            listener.get().onOpenSearchView();
     }
 
     @Override
     public void onSearchViewClosed() {
         handleMenuItemActionCollapsedLayout(new View[] {addNewFab});
         StatusManager.getInstance().unsetStatus();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public MaterialSearchView getSearchView() {
+        return searchView;
     }
 
 
@@ -237,15 +227,6 @@ public class SearchManager implements Filterable,
      */
     public interface SearchManagerCallbackInterface {
         void updateSearchDataList(RealmResults list);
+        void onOpenSearchView();
     }
-
-    /**
-     * TODO move on realm class
-     * @param list
-     */
-//    private void updateDataSet(RealmResults<Bookmark> list) {
-//        adapter.updateData(list);
-//        adapter.notifyDataSetChanged();
-//    }
-
 }
