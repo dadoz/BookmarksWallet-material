@@ -104,12 +104,9 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
      */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        SharedPrefHelper.getInstance(new WeakReference<>(getApplicationContext()))
-                .setValue(SharedPrefKeysEnum.valueOf(buttonView.getTag().toString()),
-                        isChecked);
+        sharedPrefHelper.setValue(SharedPrefKeysEnum.valueOf(buttonView.getTag().toString()), isChecked);
         if (SharedPrefKeysEnum.valueOf((String) buttonView.getTag()) == SharedPrefKeysEnum.NIGHT_MODE) {
             NightModeHelper.getInstance(this).toggle();
-//            onBackPressed();
         }
     }
 
@@ -126,13 +123,13 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
 
         settingList.add(new Setting(getResources().getString(R.string.setting_url_search_label),
                 getResources().getString(R.string.setting_url_search_description),
-                SharedPrefKeysEnum.SEARCH_URL_MODE, View.VISIBLE, (Boolean) sharedPrefHelper
-                .getValue(SharedPrefKeysEnum.SEARCH_URL_MODE, false)));
+                SharedPrefKeysEnum.SEARCH_URL_MODE, View.VISIBLE,
+                (Boolean) sharedPrefHelper.getValue(SharedPrefKeysEnum.SEARCH_URL_MODE, false)));
 
         settingList.add(new Setting(getResources().getString(R.string.setting_no_favicon),
                 getResources().getString(R.string.setting_no_favicon_description),
-                SharedPrefKeysEnum.NO_FAVICON_MODE, View.VISIBLE, (Boolean) sharedPrefHelper
-                .getValue(SharedPrefKeysEnum.NO_FAVICON_MODE, false)));
+                SharedPrefKeysEnum.NO_FAVICON_MODE, View.VISIBLE,
+                (Boolean) sharedPrefHelper.getValue(SharedPrefKeysEnum.NO_FAVICON_MODE, false)));
 
         settingList.add(new Setting(getResources().getString(R.string.setting_cloud_sync),
                 getResources().getString(R.string.setting_cloud_sync_description),
@@ -143,8 +140,8 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         settingList.add(new Setting(getResources().getString(R.string.setting_night_mode),
                 getResources().getString(R.string.setting_night_mode_description),
                 SharedPrefKeysEnum.NIGHT_MODE,
-                View.VISIBLE, (int) sharedPrefHelper
-                .getValue(SharedPrefKeysEnum.NIGHT_MODE, AppCompatDelegate.MODE_NIGHT_AUTO) == AppCompatDelegate.MODE_NIGHT_YES));
+                View.VISIBLE, (int) sharedPrefHelper.getValue(SharedPrefKeysEnum.NIGHT_MODE,
+                        AppCompatDelegate.MODE_NIGHT_AUTO) == AppCompatDelegate.MODE_NIGHT_YES));
 
         settingList.add(new Setting(getResources().getString(R.string.setting_feedback_label),
                 null, null, View.GONE, false));

@@ -25,7 +25,6 @@
         android:layout_alignBaseline="@id/exportHTMLCheckboxId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/blue_grey_900"
         android:layout_marginLeft="@dimen/small_padding"
         android:text="HTML"/>
 
@@ -44,7 +43,6 @@
         android:layout_toRightOf="@id/exportCSVCheckboxId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/blue_grey_900"
         android:text="CSV"/>
 
 </RelativeLayout>

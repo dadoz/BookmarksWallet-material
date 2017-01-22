@@ -131,6 +131,12 @@ public class BookmarkListFragment extends Fragment
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        updateRecyclerView();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.importDefaultBookmarksButtonId:
@@ -153,6 +159,7 @@ public class BookmarkListFragment extends Fragment
                 ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
                         .updateData(RealmUtils.getResults(Realm.getDefaultInstance()));
                 mSwipeRefreshLayout.setRefreshing(false);
+                recyclerView.getAdapter().notifyDataSetChanged();
             }
         }, 2000);
     }
@@ -228,12 +235,17 @@ public class BookmarkListFragment extends Fragment
         }
 
     }
+
     /**
      *
      */
     private void updateRecyclerView() {
-        if (recyclerView != null) {
+        if (recyclerView != null &&
+                    recyclerView.getAdapter() != null) {
+            ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
+                    .setIsFaviconIsEnabled(new WeakReference<>(getContext()));
             recyclerView.smoothScrollToPosition(0);
+            recyclerView.getAdapter().notifyDataSetChanged();
         }
     }
 

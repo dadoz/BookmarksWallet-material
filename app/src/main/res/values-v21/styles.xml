@@ -15,7 +15,6 @@
         <item name="colorAccent">@color/indigo_600</item>
         <!-- Used for the title and text -->
         <item name="android:textColorPrimary">@color/grey_900</item>
-        <!-- Used for the background -->
     </style>
 
     <!--TOOLBAR STYLE-->
