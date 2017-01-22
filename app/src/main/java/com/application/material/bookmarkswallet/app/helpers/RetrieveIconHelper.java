@@ -12,10 +12,15 @@ import org.jsoup.select.Elements;
 
 import java.lang.ref.WeakReference;
 
+import static com.google.common.collect.ComparisonChain.start;
+
 public class RetrieveIconHelper {
 
     private static RetrieveIconHelper instance;
     private static WeakReference<OnRetrieveIconInterface> listener;
+    private RetrieveIconThread threadIcon;
+    private RetrieveIconThread threadTitle;
+
     private enum JobTypeEnum {BOOKMARK_ICON_URL, BOOKMARK_TITLE};
 
     public static RetrieveIconHelper getInstance(WeakReference<OnRetrieveIconInterface> lst) {
@@ -29,7 +34,8 @@ public class RetrieveIconHelper {
      */
     public void retrieveIcon(String bookmarkUrl) {
         bookmarkUrl = Utils.buildUrl(bookmarkUrl, true);
-        new RetrieveIconThread(bookmarkUrl, JobTypeEnum.BOOKMARK_ICON_URL).start();
+        threadIcon = new RetrieveIconThread(bookmarkUrl, JobTypeEnum.BOOKMARK_ICON_URL);
+        threadIcon.start();
     }
 
     /**
@@ -38,9 +44,19 @@ public class RetrieveIconHelper {
      */
     public void retrieveTitle(String bookmarkUrl) {
         bookmarkUrl = Utils.buildUrl(bookmarkUrl, true);
-        new RetrieveIconThread(bookmarkUrl, JobTypeEnum.BOOKMARK_TITLE).start();
+        threadTitle = new RetrieveIconThread(bookmarkUrl, JobTypeEnum.BOOKMARK_TITLE);
+        threadTitle.start();
     }
 
+    /**
+     *
+     */
+    public void unsubscribe() {
+        if (threadIcon != null)
+            threadIcon.interrupt();
+        if (threadTitle != null)
+            threadTitle.interrupt();
+    }
     /**
      * TODO add listener to this class
      */

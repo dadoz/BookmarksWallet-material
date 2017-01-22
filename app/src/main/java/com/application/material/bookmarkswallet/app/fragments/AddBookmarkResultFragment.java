@@ -131,6 +131,7 @@ public class AddBookmarkResultFragment extends Fragment implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addBookmarkDoneButtonId:
+                retrieveIconHelper.unsubscribe();
                 addBookmark();
                 break;
         }
@@ -170,7 +171,7 @@ public class AddBookmarkResultFragment extends Fragment implements
      * add bookmark on orm db
      */
     private void addBookmark() {
-        statusManager.setOnSearchMode();
+//        statusManager.setOnSearchMode();
         String url = searchParamsArray.get(0);
         String title = searchParamsArray.get(1);
 
@@ -216,17 +217,16 @@ public class AddBookmarkResultFragment extends Fragment implements
 
     @Override
     public void onRetrieveIconFailure(final String error) {
-        if (getActivity() == null) {
-            return;
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    addBookmarkResultView.setTitle(getString(R.string.no_title));
+                    refreshLayout.setRefreshing(false);
+                    Utils.buildSnackbar(error, getView(), getActivity().getApplicationContext(), true).show();
+                }
+            });
         }
-
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(false);
-                Utils.buildSnackbar(error, getView(), getActivity().getApplicationContext(), true).show();
-            }
-        });
     }
 
     @Override

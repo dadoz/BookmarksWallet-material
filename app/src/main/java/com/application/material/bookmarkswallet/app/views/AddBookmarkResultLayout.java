@@ -39,27 +39,24 @@ public class AddBookmarkResultLayout extends RelativeLayout {
 
     public AddBookmarkResultLayout(Context context) {
         super(context);
-        initializeViews(context);
+        initializeViews();
     }
 
     public AddBookmarkResultLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initializeViews(context);
+        initializeViews();
     }
 
     public AddBookmarkResultLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initializeViews(context);
+        initializeViews();
     }
 
     /**
      * initialize view
-     * @param context
      */
-    private void initializeViews(Context context) {
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.add_bookmark_result_layout, this);
+    private void initializeViews() {
+        View view = inflate(getContext(), R.layout.add_bookmark_result_layout, this);
         urlTextView = (TextView) view.findViewById(R.id.urlTextViewId);
         titleTextView = (TextView) view.findViewById(R.id.titleTextViewId);
         addBookmarkIconImage = (ImageView) view.findViewById(R.id.addBookmarkIconImageId);

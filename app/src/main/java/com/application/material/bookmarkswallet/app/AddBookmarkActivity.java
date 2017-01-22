@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -41,6 +42,16 @@ public class AddBookmarkActivity extends AppCompatActivity {
         actionbar.setTitle(getString(R.string.add_new_bookmark_title));
         actionbar.setDisplayShowHomeEnabled(true);
         actionbar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
