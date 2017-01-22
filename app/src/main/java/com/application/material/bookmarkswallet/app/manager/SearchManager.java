@@ -174,6 +174,8 @@ public class SearchManager implements Filterable,
     public void onSearchViewClosed() {
         handleMenuItemActionCollapsedLayout(new View[] {addNewFab});
         StatusManager.getInstance().unsetStatus();
+        if (listener.get() != null)
+            listener.get().onCloseSearchView();
     }
 
     /**
@@ -228,5 +230,6 @@ public class SearchManager implements Filterable,
     public interface SearchManagerCallbackInterface {
         void updateSearchDataList(RealmResults list);
         void onOpenSearchView();
+        void onCloseSearchView();
     }
 }

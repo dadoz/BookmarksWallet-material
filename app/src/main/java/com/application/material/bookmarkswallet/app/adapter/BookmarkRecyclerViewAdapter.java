@@ -88,7 +88,6 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         holder.timestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark
                 .getTimestamp()));
         holder.selectItem(isSelectedPos(position)); //TODO handle night mode
-        Log.i("TAG", "is icon enabled" + isFaviconNotEnabled);
         if (bookmark.getIconPath() != null) {
             holder.setIcon(bookmark.getIconPath(), defaultIcon, isSelectedPos(position),
                     isFaviconNotEnabled);

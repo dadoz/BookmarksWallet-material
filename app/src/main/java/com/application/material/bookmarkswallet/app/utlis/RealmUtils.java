@@ -86,8 +86,8 @@ public class RealmUtils {
                 return false;
             }
             realm.beginTransaction();
-            Bookmark bookmark = realm.createObject(Bookmark.class);
-            bookmark.setId(UUID.randomUUID().getLeastSignificantBits());
+            long id = UUID.randomUUID().getLeastSignificantBits();
+            Bookmark bookmark = realm.createObject(Bookmark.class, id);
             bookmark.setName(title == null ? "" : title);
             if (iconPath != null) {
                 bookmark.setIconPath(iconPath);

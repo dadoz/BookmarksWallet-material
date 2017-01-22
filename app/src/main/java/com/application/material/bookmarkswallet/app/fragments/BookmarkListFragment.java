@@ -333,6 +333,11 @@ public class BookmarkListFragment extends Fragment
     }
 
     @Override
+    public void onCloseSearchView() {
+        emptySearchResultLayout.setVisibility(View.GONE);
+    }
+
+    @Override
     public boolean handleBackPressed() {
         StatusManager status = StatusManager.getInstance();
         if (status.isOnActionMenuMode() ||

@@ -84,4 +84,11 @@
         <item name="android:src">@drawable/ic_keyboard_arrow_up_black_24dp</item>
     </style>
 
+    <!--MATERIAL search view -->
+    <style name="MaterialSearchViewStyle">
+        <!-- Change text color for edit text. This will also be the color of the cursor -->
+        <item name="android:textColor">@color/grey_900</item>
+        <!-- Change hint text color for edit text -->
+        <item name="android:textColorHint">@color/indigo_600</item>
+    </style>
 </resources>
