@@ -7,7 +7,9 @@ import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
+import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import java.lang.ref.WeakReference;
 
@@ -35,11 +37,24 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
         colorPrimaryDarkSelected = ContextCompat.getColor(ctx.get(), R.color.yellow_400);
     }
 
+    /**
+     *
+     * @param color
+     */
+    private void initActionMode(int color) {
+        actionMode.getMenu().findItem(R.id.action_share).setIcon(Utils
+                .getColoredIcon(ctx.get(), actionMode.getMenu().findItem(R.id.action_share).getIcon(), color));
+        actionMode.getMenu().findItem(R.id.action_delete).setIcon(Utils
+                .getColoredIcon(ctx.get(), actionMode.getMenu().findItem(R.id.action_delete).getIcon(), color));
+        actionMode.getMenu().findItem(R.id.action_select_all).setIcon(Utils
+                .getColoredIcon(ctx.get(), actionMode.getMenu().findItem(R.id.action_select_all).getIcon(), color));
+    }
+
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         actionMode = mode;
-//        ActionbarHelper.getInstance(ctx).setStatusbarColor(colorPrimaryDarkSelected);
         mode.getMenuInflater().inflate(R.menu.share_delete_menu, menu);
+        initActionMode(NightModeHelper.getInstance().isNightMode() ? R.color.grey_50 : R.color.indigo_600);
         return true;
     }
 

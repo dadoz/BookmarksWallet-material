@@ -1,7 +1,7 @@
 <resources>
     <!-- MENU APPEARANCE-->
     <style name="customMenuTextAppearance">
-        <item name="android:textColor">@color/blue_grey_900</item>
+        <item name="android:textColor">@color/grey_200</item>
     </style>
 
     <!-- ACTION MODE-->
@@ -10,16 +10,16 @@
     </style>
 
     <!-- DIALOG STYLE-->
-    <style name="CustomLollipopDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="CustomLollipopDialogStyle" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <!-- Used for the buttons -->
         <item name="colorAccent">@color/indigo_600</item>
         <!-- Used for the title and text -->
-        <item name="android:textColorPrimary">@color/blue_grey_900</item>
+        <item name="android:textColorPrimary">@color/grey_900</item>
         <!-- Used for the background -->
     </style>
 
     <!--TOOLBAR STYLE-->
-    <style name="ToolbarCustomStyle">
+    <style name="ToolbarCustomStyle" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="android:background">@color/yellow_400</item>
     </style>
 

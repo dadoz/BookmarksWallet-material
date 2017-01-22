@@ -60,7 +60,7 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         lightGrey = Color.WHITE;
         darkGrey = ContextCompat.getColor(context.get(), R.color.yellow_50);
         lightGreyNight = ContextCompat.getColor(context.get(), R.color.grey_800);
-        darkGreyNight = ContextCompat.getColor(context.get(), R.color.indigo_400);
+        darkGreyNight = ContextCompat.getColor(context.get(), R.color.indigo_300);
 
     }
 
