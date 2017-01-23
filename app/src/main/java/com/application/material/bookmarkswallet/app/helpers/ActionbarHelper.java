@@ -8,9 +8,25 @@ import android.support.annotation.NonNull;
 import android.view.View;
 public class ActionbarHelper {
 
-    private ActionbarHelper() {
+    static final float elevation = 10f;
+
+    public static void setElevationOnVIew(@NonNull View appBarLayout, boolean isSet) {
+        if (Build.VERSION.SDK_INT >= 21) {
+            StateListAnimator stateListAnimator = new StateListAnimator();
+            stateListAnimator.addState(new int[0], ObjectAnimator.ofFloat(appBarLayout,
+                    "elevation", isSet ? elevation : 0f));
+            appBarLayout.setStateListAnimator(stateListAnimator);
+        }
     }
-//
+
+    public static void setDefaultHomeEnambled(@NonNull Activity activity, boolean isEnabled) {
+        if (activity.getActionBar() != null) {
+            activity.getActionBar().setDisplayHomeAsUpEnabled(isEnabled);
+            activity.getActionBar().setDisplayShowHomeEnabled(isEnabled);
+        }
+
+    }
+
 //    /**
 //     * init action bar
 //     */
@@ -136,22 +152,4 @@ public class ActionbarHelper {
 //                .getColor(context.get(), R.color.yellow_600);
 //    }
 
-    static final float elevation = 10f;
-
-    public static void setElevationOnVIew(@NonNull View appBarLayout, boolean isSet) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            StateListAnimator stateListAnimator = new StateListAnimator();
-            stateListAnimator.addState(new int[0], ObjectAnimator.ofFloat(appBarLayout,
-                    "elevation", isSet ? elevation : 0f));
-            appBarLayout.setStateListAnimator(stateListAnimator);
-        }
-    }
-
-    public static void setDefaultHomeEnambled(@NonNull Activity activity, boolean isEnabled) {
-        if (activity.getActionBar() != null) {
-            activity.getActionBar().setDisplayHomeAsUpEnabled(isEnabled);
-            activity.getActionBar().setDisplayShowHomeEnabled(isEnabled);
-        }
-
-    }
 }

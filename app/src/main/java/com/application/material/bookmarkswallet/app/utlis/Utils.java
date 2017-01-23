@@ -220,7 +220,7 @@ public class Utils {
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(ctx.get(), isError ? R.color.red_400 : R.color.teal_400));
         if (actionListener != null) {
             snackbar.setAction(actionLabel, actionListener.get());
-            snackbar.setActionTextColor(ContextCompat.getColor(ctx.get(), R.color.blue_grey_900));
+            snackbar.setActionTextColor(ContextCompat.getColor(ctx.get(), R.color.grey_50));
         }
         snackbar.show();
     }

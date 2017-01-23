@@ -51,6 +51,7 @@ import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import icepick.Icepick;
 import icepick.State;
 import io.realm.Realm;
@@ -70,6 +71,7 @@ public class AddBookmarkResultFragment extends Fragment implements
     private StatusManager statusManager;
     private RetrieveIconHelper retrieveIconHelper;
     private SparseArray<String> searchParamsArray;
+    private Unbinder unbinder;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstance) {
@@ -97,7 +99,7 @@ public class AddBookmarkResultFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstance) {
         View mainView = inflater.inflate(R.layout.fragment_add_bookmark_result_layout, container, false);
-        ButterKnife.bind(this, mainView);
+        unbinder = ButterKnife.bind(this, mainView);
         return mainView;
     }
 
@@ -107,6 +109,11 @@ public class AddBookmarkResultFragment extends Fragment implements
         onInitView(savedInstanceState);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 
     /**
      *
@@ -115,6 +122,7 @@ public class AddBookmarkResultFragment extends Fragment implements
     private void onInitView(Bundle savedInstanceState) {
 //        searchResultPresenter.init(new View[] {addBookmarkMainLayout, addBookmarkResultLayout,
 //                addBookmarkRelativeLayout});
+        refreshLayout.setRefreshing(true);
         statusManager.setOnResultMode();
         Utils.hideKeyboard(getActivity());
         addBookmarkResultView.initView(searchParamsArray);
@@ -163,7 +171,7 @@ public class AddBookmarkResultFragment extends Fragment implements
 
         if (title != null &&
                 title.compareTo("") == 0) {
-            retrieveIconHelper.retrieveTitle(title);
+            retrieveIconHelper.retrieveTitle(searchParamsArray.get(0));
         }
     }
 

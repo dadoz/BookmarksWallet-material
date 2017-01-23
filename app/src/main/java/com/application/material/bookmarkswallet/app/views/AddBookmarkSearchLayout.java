@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import icepick.State;
 
@@ -91,7 +92,7 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements View.OnCl
      */
     public SparseArray<String> getSearchParamsArray() {
         SparseArray<String> searchParamsArray = new SparseArray<>();
-        searchParamsArray.put(0, urlEditText.getText().toString());
+        searchParamsArray.put(0, Utils.buildUrl(urlEditText.getText().toString(), addBookmarkHttpsCheckbox.isChecked()));
         searchParamsArray.put(1, addBookmarkTitleEditText.getText().toString());
         return searchParamsArray;
     }

@@ -111,7 +111,7 @@ public class AddBookmarkResultLayout extends RelativeLayout {
         Picasso.with(getContext())
                 .load(url)
                 .error(R.drawable.ic_bookmark_black_48dp)
-                .resize(0, MIN_ICON_SIZE)
+//                .resize(0, MIN_ICON_SIZE)
                 .into(addBookmarkIconImage);
 
     }
