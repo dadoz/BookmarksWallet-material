@@ -4,18 +4,19 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <com.application.material.bookmarkswallet.app.views.AddBookmarkResultLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addBookmarkResultViewId"/>
     <android.support.v4.widget.SwipeRefreshLayout
         style="@style/AddFrameLayoutStyle"
         android:id="@+id/addBookmarkRefreshLayoutId"
         android:layout_below="@id/addBookmarkMainContainerLayoutId"
         android:layout_width="match_parent"
+        android:background="@android:color/transparent"
         android:layout_height="@dimen/add_bookmark_background_margin">
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>
-    <com.application.material.bookmarkswallet.app.views.AddBookmarkResultLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/addBookmarkResultViewId"/>
 </RelativeLayout>
