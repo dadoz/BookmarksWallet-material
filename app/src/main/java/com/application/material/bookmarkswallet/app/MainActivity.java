@@ -1,8 +1,11 @@
 package com.application.material.bookmarkswallet.app;
 
+import android.animation.ObjectAnimator;
+import android.animation.StateListAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
@@ -13,11 +16,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.lang.ref.WeakReference;
 
@@ -65,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.bookmark_list_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+        ActionbarHelper.setElevationOnVIew(findViewById(R.id.appBarLayoutId), true);
     }
 
     @Override
@@ -75,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
     }
 
@@ -85,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     public void onInitFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainerFrameLayoutId,
-                    new BookmarkListFragment(), BookmarkListFragment.FRAG_TAG)
+                        new BookmarkListFragment(), BookmarkListFragment.FRAG_TAG)
                 .commit();
     }
 
@@ -127,19 +136,19 @@ public class MainActivity extends AppCompatActivity {
             if (grantResults.length > 0 &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 ExportStrategy.getInstance(new WeakReference<>(getApplicationContext()))
-                    .handleRequestPermissionSuccess();
+                        .handleRequestPermissionSuccess();
                 return;
             }
 
             ExportStrategy.getInstance(new WeakReference<>(getApplicationContext()))
-                .handleRequestPermissionDeny();
+                    .handleRequestPermissionDeny();
         }
     }
 
     /**
      *
      */
-    private Bundle handleSharedIntent()  {
+    private Bundle handleSharedIntent() {
         if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
 //            Log.e(TAG, "hey" + getIntent().getStringExtra(Intent.EXTRA_TEXT));
             String sharedUrl = getIntent().getStringExtra(Intent.EXTRA_TEXT);
@@ -153,5 +162,22 @@ public class MainActivity extends AppCompatActivity {
         }
         return null;
     }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Main Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
 
 }

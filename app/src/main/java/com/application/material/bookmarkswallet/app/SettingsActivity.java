@@ -15,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 
 import com.application.material.bookmarkswallet.app.adapter.SettingListAdapter;
+import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum;
@@ -82,6 +83,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         getSupportActionBar().setTitle(getString(R.string.setting_actionbar_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setElevation(10f);
     }
 
     @Override

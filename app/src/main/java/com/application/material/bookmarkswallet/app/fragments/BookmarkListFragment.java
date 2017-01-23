@@ -85,7 +85,6 @@ public class BookmarkListFragment extends Fragment
     View fragmentBookmarkListMainFrameLayout;
 
     private SearchManager searchManager;
-    private ActionbarHelper mActionbarHelper;
     private BookmarkActionHelper mBookmarkActionSingleton;
     private View mainView;
     private StatusManager statusHelper;
@@ -97,7 +96,6 @@ public class BookmarkListFragment extends Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         statusHelper = StatusManager.getInstance();
-        mActionbarHelper = ActionbarHelper.getInstance(new WeakReference<>(getContext()));
         mBookmarkActionSingleton = BookmarkActionHelper.getInstance(new WeakReference<>(getContext()));
         searchManager = SearchManager.getInstance(new WeakReference<>(getContext()),
                 Realm.getDefaultInstance(), new WeakReference<SearchManagerCallbackInterface>(this));
@@ -357,8 +355,7 @@ public class BookmarkListFragment extends Fragment
     public void onToggleRevealCb(boolean isShowing) {
         if (openMenuItem != null) {
             openMenuItem.setIcon(ContextCompat.getDrawable(getContext(),
-                    ActionMenuRevealHelper.getInstance(new WeakReference<Context>(getContext()))
-                            .getIconByShowingStatus(isShowing)));
+                    ActionMenuRevealHelper.getIconByShowingStatus(isShowing)));
         }
 
         //animate viewAnimation not object animation welll done
@@ -379,7 +376,7 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void hanldeSettingsContextMenu() {
         statusHelper.unsetStatus();
-        mActionbarHelper.updateActionBar(true);
+        ActionbarHelper.setDefaultHomeEnambled(getActivity(), true);
         startActivity(new Intent(getActivity(), SettingsActivity.class));
     }
 

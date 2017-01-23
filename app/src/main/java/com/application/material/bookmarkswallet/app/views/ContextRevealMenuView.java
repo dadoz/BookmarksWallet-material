@@ -1,6 +1,7 @@
 package com.application.material.bookmarkswallet.app.views;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper.ActionMenuRevealCallbacks;
+import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
@@ -79,15 +81,21 @@ public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout 
      *
      */
     public void showRevealActionMenu(boolean isShowing) {
-        ActionMenuRevealHelper.getInstance(new WeakReference<Context>(getContext()))
-                .toggleRevealActionMenu(this, isShowing, listenerCallbacks);
+        View appbarLayout = getRootView().findViewById(R.id.appBarLayoutId);
+        ActionbarHelper.setElevationOnVIew(appbarLayout, false);
+
+        ActionMenuRevealHelper.toggleRevealActionMenu(new WeakReference<Context>(getContext()), this,
+                isShowing, listenerCallbacks);
     }
     /**
      *
      */
     public void toggleRevealActionMenu() {
-        ActionMenuRevealHelper.getInstance(new WeakReference<Context>(getContext()))
-                .toggleRevealActionMenu(this, isShowing(), listenerCallbacks);
+        View appbarLayout = getRootView().findViewById(R.id.appBarLayoutId);
+        ActionbarHelper.setElevationOnVIew(appbarLayout, !isShowing());
+
+        ActionMenuRevealHelper.toggleRevealActionMenu(new WeakReference<Context>(getContext()),
+                this, isShowing(), listenerCallbacks);
     }
 
     /**
