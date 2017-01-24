@@ -58,10 +58,14 @@ public class AddBookmarkActivity extends AppCompatActivity {
      *
      */
     private void changeFrag() {
+        AddBookmarkSearchFragment frag = new AddBookmarkSearchFragment();
+        if (getIntent() != null)
+            frag.setArguments(getIntent().getExtras());
+
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragmentContainerFrameLayoutId,
-                        new AddBookmarkSearchFragment(), AddBookmarkSearchFragment.FRAG_TAG)
+                .replace(R.id.fragmentContainerFrameLayoutId, frag,
+                        AddBookmarkSearchFragment.FRAG_TAG)
                 .commit();
     }
 
