@@ -7,6 +7,8 @@ repositories {
     maven {url "https://clojars.org/repo/"}
 }
 
+def versionBuildDate = Integer.parseInt(new Date().format("yyMMdd", TimeZone.getTimeZone("UTC")))
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -22,18 +24,10 @@ android {
         vectorDrawables.useSupportLibrary = true
         minSdkVersion 19 //cut off jellybean support
         targetSdkVersion 25
+
         versionCode 9
-        versionName "3.5"
-//        jackOptions {
-//            enabled true
-//        }
-
+        versionName "3.5.${versionBuildDate}"
     }
-
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
 
     signingConfigs {
         debug {
