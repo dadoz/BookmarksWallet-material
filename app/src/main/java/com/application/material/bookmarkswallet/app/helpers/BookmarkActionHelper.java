@@ -4,16 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.*;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.adapter.BookmarkRvAdapter;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
@@ -72,7 +70,7 @@ public class BookmarkActionHelper {
     /**
      * @param adapter
      */
-    public void deleteAction(final BookmarkRecyclerViewAdapter adapter) {
+    public void deleteAction(final BookmarkRvAdapter adapter) {
         RealmUtils.deleteListFromRealm(mRealm, adapter.getSelectedItemList());
         adapter.notifyRemovedSelectedItems(); //NEVER TRIGGERED
     }
@@ -93,7 +91,7 @@ public class BookmarkActionHelper {
      *
      * @param adapter
      */
-    public void shareAction(BookmarkRecyclerViewAdapter adapter) {
+    public void shareAction(BookmarkRvAdapter adapter) {
         Intent intent = getSharingBookmarkIntent(adapter.getSelectedItem());
         context.get().startActivity(Intent.createChooser(intent, context.get().getString(R.string.share_to)));
     }
@@ -118,7 +116,7 @@ public class BookmarkActionHelper {
      *
      * @param adapter
      */
-    public void selectAllAction(BookmarkRecyclerViewAdapter adapter) {
+    public void selectAllAction(BookmarkRvAdapter adapter) {
         adapter.setSelectedAllItemPos();
         adapter.notifyDataSetChanged();
     }

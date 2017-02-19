@@ -2,36 +2,22 @@ package com.application.material.bookmarkswallet.app.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.realm.adapter.RealmRecyclerViewAdapter;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import io.realm.RealmObject;
-import io.realm.RealmResults;
 
-public abstract class MultipleSelectorHelperAdapter extends FirebaseRecyclerAdapter<Bookmark, BookmarkFirebaseRvAdapter.BookmarkViewHolder> {
+public abstract class MultipleSelectorHelperRealmAdapter<T extends RealmObject> extends
+        RealmRecyclerViewAdapter<Bookmark> {
     private final MultipleSelector multipleSelector;
 
-
-    public MultipleSelectorHelperAdapter(Class<Bookmark> modelClass, int modelLayout,
-                                     Class<BookmarkFirebaseRvAdapter.BookmarkViewHolder> viewHolderClass, Query ref) {
-        super(modelClass, modelLayout, viewHolderClass, ref);
-        multipleSelector = new MultipleSelector();
-
-    }
-
-    public MultipleSelectorHelperAdapter(Class<Bookmark> modelClass, int modelLayout,
-                                     Class<BookmarkFirebaseRvAdapter.BookmarkViewHolder> viewHolderClass, DatabaseReference ref) {
-        super(modelClass, modelLayout, viewHolderClass, ref);
+    public MultipleSelectorHelperRealmAdapter(WeakReference<Context> ctx) {
+        super(ctx);
         multipleSelector = new MultipleSelector();
     }
 
@@ -114,6 +100,16 @@ public abstract class MultipleSelectorHelperAdapter extends FirebaseRecyclerAdap
      */
     public boolean isSelectedPos(int pos) {
         return multipleSelector.isSelectedPos(pos);
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
     }
 
     /**

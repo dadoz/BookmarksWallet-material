@@ -4,8 +4,7 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.view.*;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
+import com.application.material.bookmarkswallet.app.adapter.BookmarkRvAdapter;
 import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
@@ -20,7 +19,7 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
     private final int colorPrimaryDarkSelected;
     private final int colorPrimaryDark;
     private BookmarkActionHelper mBookmarkActionSingleton;
-    private BookmarkRecyclerViewAdapter adapter;
+    private BookmarkRvAdapter adapter;
     private ActionMode actionMode;
 
     /**
@@ -28,7 +27,7 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
      * @param
      */
     public EditBookmarkActionModeCallback(WeakReference<Context> context,
-                                          BookmarkRecyclerViewAdapter adp) {
+                                          BookmarkRvAdapter adp) {
         ctx = context;
         adapter = adp;
         mBookmarkActionSingleton = BookmarkActionHelper.getInstance(context);
