@@ -28,6 +28,7 @@ import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.manager.DefaultBookmarkImportManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager.SearchManagerCallbackInterface;
 import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
@@ -66,6 +67,8 @@ public class BookmarkListFragment extends BaseFirebaseFragment implements View.O
     ContextRevealMenuView optionMenuContainerRevealLayout;
     @BindView(R.id.fragmentBookmarkListMainFrameLayoutId)
     View fragmentBookmarkListMainFrameLayout;
+    @BindView(R.id.bookmarkListProgressId)
+    View bookmarkListProgress;
 
     private SearchManager searchManager;
     private BookmarkActionHelper mBookmarkActionSingleton;
@@ -196,6 +199,7 @@ public class BookmarkListFragment extends BaseFirebaseFragment implements View.O
                         mEmptyLinkListView, mSwipeRefreshLayout, recyclerView);
                 break;
             case R.id.addBookmarkFabId:
+//                pushToDatabase(bookmark);
                 mBookmarkActionSingleton.addBookmarkAction(new WeakReference<Fragment>(this));
                 break;
         }
@@ -225,6 +229,7 @@ public class BookmarkListFragment extends BaseFirebaseFragment implements View.O
         //refresh firebase view
         initFirebaseView();
         mSwipeRefreshLayout.setRefreshing(false);
+
     }
 
     @Override
@@ -242,6 +247,42 @@ public class BookmarkListFragment extends BaseFirebaseFragment implements View.O
         return false;
     }
 
+    @Override
+    public void onPopulateViewHolderCb() {
+        bookmarkListProgress.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean onLongItemClick(View view, int position) {
+        if (!statusHelper.isEditMode()) {
+            getActivity().startActionMode(actionMode);
+            optionMenuContainerRevealLayout.showRevealActionMenu(false);
+        }
+
+//        handleSelectItemByPos(position);
+        return true;
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        if (statusHelper.isEditMode()) {
+//            handleSelectItemByPos(position);
+            return;
+        }
+        Bookmark bookmark = ((BookmarkRvAdapter) recyclerView.getAdapter()).getItem(position);
+        mBookmarkActionSingleton.openLinkOnBrowser(bookmark.getUrl());
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE) {
+//            initSingletonInstances();
+            new Handler().postDelayed(() -> {
+
+                recyclerView.getAdapter().notifyDataSetChanged(); //TODO mv to inserted 0 only on insertion
+//                updateRecyclerView();
+            }, 500);
+        }
+    }
 
     //    @Override
 //    public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -284,20 +325,8 @@ public class BookmarkListFragment extends BaseFirebaseFragment implements View.O
 //     *
 //     */
 //
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE) {
-////            initSingletonInstances();
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    recyclerView.getAdapter().notifyDataSetChanged(); //TODO mv to inserted 0 only on insertion
-//                    updateRecyclerView();
-//                }
-//            }, 500);
-//        }
-//    }
-//
+
+
 
 //
 //    /**
@@ -355,28 +384,8 @@ public class BookmarkListFragment extends BaseFirebaseFragment implements View.O
 //    }
 //
 
-//
-//    @Override
-//    public boolean onLongItemClick(View view, int position) {
-//        if (!statusHelper.isEditMode()) {
-//            getActivity().startActionMode(actionMode);
-//            optionMenuContainerRevealLayout.showRevealActionMenu(false);
-//        }
-//
-//        handleSelectItemByPos(position);
-//        return true;
-//    }
-//
-//    @Override
-//    public void onItemClick(View view, int position) {
-//        if (statusHelper.isEditMode()) {
-//            handleSelectItemByPos(position);
-//            return;
-//        }
-//        Bookmark bookmark = ((BookmarkRvAdapter) recyclerView.getAdapter()).getItem(position);
-//        mBookmarkActionSingleton.openLinkOnBrowser(bookmark.getUrl());
-//    }
-//
+
+
 //    /**
 //     *
 //     * @param position

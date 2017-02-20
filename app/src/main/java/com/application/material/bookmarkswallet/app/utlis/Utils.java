@@ -34,6 +34,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utils {
+    public static final String ADD_BOOKMARK_INTENT_KEY = "ADD_BOOKMARK_INTENT_KEY";
     public static final int ADD_BOOKMARK_ACTIVITY_REQ_CODE = 99;
     private static final String TAG = "Utils";
     private static final int CONST_VALUE = 100;

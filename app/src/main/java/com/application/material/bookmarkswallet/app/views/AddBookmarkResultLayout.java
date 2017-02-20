@@ -91,9 +91,11 @@ public class AddBookmarkResultLayout extends RelativeLayout {
     }
 
 
-    public Bitmap getIconBitmap() {
-        return ((BitmapDrawable) addBookmarkIconImage
-                .getDrawable()).getBitmap();
+    public Bitmap getIconBitmap()
+    {
+        return addBookmarkIconImage
+                .getDrawable() != null ?
+            ((BitmapDrawable) addBookmarkIconImage.getDrawable()).getBitmap() : null;
     }
 
     public void setTitle(String title) {

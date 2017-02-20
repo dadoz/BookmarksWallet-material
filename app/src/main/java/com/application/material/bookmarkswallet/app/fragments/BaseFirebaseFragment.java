@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkFirebaseRvAdapter;
+import com.application.material.bookmarkswallet.app.adapter.BookmarkRvAdapter;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public abstract class BaseFirebaseFragment extends Fragment {
+public abstract class BaseFirebaseFragment extends Fragment implements BookmarkRvAdapter.OnPopulateViewHolderCb, BookmarkRvAdapter.OnActionListenerInterface {
 
     private static final String TAG = "EventsBaseFragment";
     private DatabaseReference mDatabase;
@@ -66,9 +67,9 @@ public abstract class BaseFirebaseFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        if (mAuthListener != null) {
+        if (mAuthListener != null)
             mAuth.removeAuthStateListener(mAuthListener);
-        }
+        FirebaseDatabase.getInstance().goOffline();
     }
 
     /**
@@ -76,8 +77,7 @@ public abstract class BaseFirebaseFragment extends Fragment {
      */
     protected void initFirebaseRef() {
         //get database ref and set consistency
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.keepSynced(true);
+        setDatabase();
 
         //loggin in user
         mAuth = FirebaseAuth.getInstance();
@@ -140,8 +140,20 @@ public abstract class BaseFirebaseFragment extends Fragment {
         // Set up FirebaseRecyclerAdapter with the Query
         Query eventsQuery = getQuery(mDatabase);
         mAdapter = new BookmarkFirebaseRvAdapter(Bookmark.class, R.layout.bookmark_item,
-                BookmarkFirebaseRvAdapter.BookmarkViewHolder.class, eventsQuery, new WeakReference<>(getContext()));
+                BookmarkFirebaseRvAdapter.BookmarkViewHolder.class, eventsQuery, new WeakReference<Context>(getContext()),
+                new WeakReference<BookmarkRvAdapter.OnActionListenerInterface>(this), new WeakReference<BookmarkRvAdapter.OnPopulateViewHolderCb>(this));
         return mAdapter;
+    }
+
+    /**
+     *
+     * @param bookmark
+     */
+    protected void pushToDatabase(Bookmark bookmark) {
+        if (mDatabase != null) {
+            DatabaseReference objRef = mDatabase.child("bookmarks").push();
+            objRef.setValue(bookmark);
+        }
     }
 
     @Override
@@ -169,4 +181,35 @@ public abstract class BaseFirebaseFragment extends Fragment {
      * @return
      */
     public abstract Query getQuery(DatabaseReference databaseReference);
+
+    /**
+     * set db and set persistence of db
+     */
+    public void setDatabase() {
+        try {
+            FirebaseDatabase firebaseInstance = FirebaseDatabase.getInstance();
+            if (mDatabase == null) {
+                firebaseInstance.setPersistenceEnabled(true);
+                mDatabase = firebaseInstance.getReference();
+                mDatabase.keepSynced(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPopulateViewHolderCb() {
+
+    }
+
+    @Override
+    public boolean onLongItemClick(View view, int position) {
+        return false;
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+
+    }
 }

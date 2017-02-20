@@ -31,17 +31,28 @@ public class BookmarkFirebaseRvAdapter extends MultipleSelectorHelperAdapter {
     private static boolean isFaviconNotEnabled;
     private static Bitmap defaultIcon;
     private WeakReference<Context> ctx;
+    private WeakReference<BookmarkRvAdapter.OnActionListenerInterface> listener;
+    private WeakReference<BookmarkRvAdapter.OnPopulateViewHolderCb> listenerCb;
 
     public BookmarkFirebaseRvAdapter(Class<Bookmark> modelClass, int modelLayout,
-                                     Class<BookmarkViewHolder> viewHolderClass, Query ref, WeakReference<Context> context) {
+                                     Class<BookmarkViewHolder> viewHolderClass, Query ref, WeakReference<Context> context,
+                                     WeakReference<BookmarkRvAdapter.OnActionListenerInterface> lst,
+                                     WeakReference<BookmarkRvAdapter.OnPopulateViewHolderCb> lst2) {
         super(modelClass, modelLayout, viewHolderClass, ref);
         init(context);
+        listener = lst;
+        listenerCb = lst2;
     }
 
     public BookmarkFirebaseRvAdapter(Class<Bookmark> modelClass, int modelLayout,
-                                     Class<BookmarkViewHolder> viewHolderClass, DatabaseReference ref, WeakReference<Context> context) {
+                                     Class<BookmarkViewHolder> viewHolderClass, DatabaseReference ref, WeakReference<Context> context,
+                                     WeakReference<BookmarkRvAdapter.OnActionListenerInterface> lst,
+                                     WeakReference<BookmarkRvAdapter.OnPopulateViewHolderCb> lst2) {
+
         super(modelClass, modelLayout, viewHolderClass, ref);
         init(context);
+        listener = lst;
+        listenerCb = lst2;
     }
 
     private void init(WeakReference<Context> context) {
@@ -53,14 +64,16 @@ public class BookmarkFirebaseRvAdapter extends MultipleSelectorHelperAdapter {
 
     @Override
     protected void populateViewHolder(BookmarkViewHolder viewHolder, Bookmark model, int position) {
-        Log.e(TAG, model.getName());
         viewHolder.bindToEvent(model, isSelectedPos(position));
+        viewHolder.setListener(listener);
+        if (listenerCb.get() != null)
+            listenerCb.get().onPopulateViewHolderCb();
     }
 
 
     public static class BookmarkViewHolder extends RecyclerView.ViewHolder
             implements View.OnLongClickListener, View.OnClickListener {
-        private final WeakReference<BookmarkRvAdapter.OnActionListenerInterface> listener = null;
+        private WeakReference<BookmarkRvAdapter.OnActionListenerInterface> listener = null;
         private ImageView iconView;
         public TextView labelView;
         public TextView timestampView;
@@ -77,7 +90,6 @@ public class BookmarkFirebaseRvAdapter extends MultipleSelectorHelperAdapter {
 
         public BookmarkViewHolder(View v) { //, WeakReference<BookmarkRvAdapter.OnActionListenerInterface> lst) {
             super(v);
-//        listener = lst;
             iconView = (ImageView) v.findViewById(R.id.linkIconId);
             labelView = (TextView) v.findViewById(R.id.linkTitleId);
             urlView = (TextView) v.findViewById(R.id.linkUrlId);
@@ -85,6 +97,14 @@ public class BookmarkFirebaseRvAdapter extends MultipleSelectorHelperAdapter {
             itemView.setOnLongClickListener(this);
             itemView.setOnClickListener(this);
             initColors(itemView.getContext());
+        }
+
+        /**
+         *
+         * @param lst
+         */
+        public void setListener(WeakReference<BookmarkRvAdapter.OnActionListenerInterface> lst) {
+            listener = lst;
         }
 
         /**

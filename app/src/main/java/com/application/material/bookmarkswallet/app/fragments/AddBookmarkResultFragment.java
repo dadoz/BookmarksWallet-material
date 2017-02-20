@@ -1,5 +1,6 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
+import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
@@ -7,12 +8,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -39,14 +42,18 @@ import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
 import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
+import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.presenter.SearchBookmarkPresenter;
 import com.application.material.bookmarkswallet.app.presenter.SearchResultPresenter;
 import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.views.AddBookmarkResultLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
@@ -55,6 +62,8 @@ import butterknife.Unbinder;
 import icepick.Icepick;
 import icepick.State;
 import io.realm.Realm;
+
+import static com.application.material.bookmarkswallet.app.utlis.Utils.ADD_BOOKMARK_INTENT_KEY;
 
 public class AddBookmarkResultFragment extends Fragment implements
         View.OnClickListener,
@@ -183,10 +192,33 @@ public class AddBookmarkResultFragment extends Fragment implements
         String url = searchParamsArray.get(0);
         String title = searchParamsArray.get(1);
 
-        RealmUtils.addItemOnRealm(Realm.getDefaultInstance(), title, null,
+        Object bookmark = RealmUtils.addItemOnRealm(Realm.getDefaultInstance(), title, null,
                 Utils.convertBitmapToByteArray(addBookmarkResultView.getIconBitmap()), url);
+
+        //trying to add on firebase
+        if (bookmark != null)
+            addBookmarkOnFirebase((Bookmark) bookmark);
+
         if (getActivity() != null) {
             getActivity().finish();
+        }
+    }
+
+    /**
+     * firebase
+     * @param bookmark
+     */
+    private void addBookmarkOnFirebase(Bookmark bookmark) {
+        try {
+            Realm.getDefaultInstance().beginTransaction();
+            bookmark.setBlobIcon(null); //you should use this FirebaseStorage storage = FirebaseStorage.getInstance(); bucket
+            Realm.getDefaultInstance().commitTransaction();
+
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("bookmarks").push();
+            ref.setValue(bookmark);
+        } catch (Exception e) {
+            e.printStackTrace();
+//            throw error
         }
     }
 
@@ -199,12 +231,9 @@ public class AddBookmarkResultFragment extends Fragment implements
             return;
         }
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(false);
-                addBookmarkResultView.setIconByUrl(url);
-            }
+        getActivity().runOnUiThread(() -> {
+            refreshLayout.setRefreshing(false);
+            addBookmarkResultView.setIconByUrl(url);
         });
     }
 
@@ -215,24 +244,16 @@ public class AddBookmarkResultFragment extends Fragment implements
         }
 
         searchParamsArray.put(1, title);
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                addBookmarkResultView.setTitle(title);
-            }
-        });
+        getActivity().runOnUiThread(() -> addBookmarkResultView.setTitle(title));
     }
 
     @Override
     public void onRetrieveIconFailure(final String error) {
         if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    addBookmarkResultView.setTitle(getString(R.string.no_title));
-                    refreshLayout.setRefreshing(false);
-                    Utils.buildSnackbar(error, getView(), getActivity().getApplicationContext(), true).show();
-                }
+            getActivity().runOnUiThread(() -> {
+                addBookmarkResultView.setTitle(getString(R.string.no_title));
+                refreshLayout.setRefreshing(false);
+                Utils.buildSnackbar(error, getView(), getActivity().getApplicationContext(), true).show();
             });
         }
     }

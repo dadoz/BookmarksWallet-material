@@ -79,7 +79,7 @@ public class RealmUtils {
      * @param url
      * @return
      */
-    public static boolean addItemOnRealm(@NonNull Realm realm, String title, String iconPath,
+    public static Object addItemOnRealm(@NonNull Realm realm, String title, String iconPath,
                                 byte[] blobIcon, String url) {
         try {
             if (url == null) {
@@ -88,6 +88,8 @@ public class RealmUtils {
             realm.beginTransaction();
             long id = UUID.randomUUID().getLeastSignificantBits();
             Bookmark bookmark = realm.createObject(Bookmark.class, id);
+            int userId = 1; //TODO hardcoded please remove it
+            bookmark.setUserId(userId);
             bookmark.setName(title == null ? "" : title);
             if (iconPath != null) {
                 bookmark.setIconPath(iconPath);
@@ -99,12 +101,12 @@ public class RealmUtils {
             bookmark.setTimestamp(Bookmark.Utils.getTodayTimestamp());
             bookmark.setLastUpdate(Bookmark.Utils.getTodayTimestamp());
             realm.commitTransaction();
-            return true;
+            return bookmark;
         } catch (Exception e) {
             realm.cancelTransaction();
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
 }

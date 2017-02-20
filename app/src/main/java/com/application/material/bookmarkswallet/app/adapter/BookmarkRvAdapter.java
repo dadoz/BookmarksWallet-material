@@ -112,4 +112,8 @@ public class BookmarkRvAdapter extends MultipleSelectorHelperRealmAdapter implem
         boolean onLongItemClick(View view, int position);
         void onItemClick(View view, int position);
     }
+
+    public interface OnPopulateViewHolderCb {
+        void onPopulateViewHolderCb();
+    }
 }
