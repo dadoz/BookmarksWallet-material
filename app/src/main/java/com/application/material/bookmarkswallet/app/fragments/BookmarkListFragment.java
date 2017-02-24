@@ -109,7 +109,7 @@ public class BookmarkListFragment extends BaseFirebaseFragment implements View.O
     }
 
     @Override
-    public Query getQuery(DatabaseReference databaseReference) {
+    public Query getQuery(DatabaseReference databaseReference) throws Exception {
 //        long fromTimestamp = new DateTime().minusDays(1).toInstant().getMillis();
 //        long toTimestamp = new DateTime().toInstant().getMillis();
         double userId = 1;

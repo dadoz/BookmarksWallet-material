@@ -100,6 +100,11 @@ dependencies {
     //material search view
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
 
+    //menu drawer
+    compile('com.mikepenz:materialdrawer:5.8.1@aar') {
+        transitive = true
+    }
+
     compile 'com.firebaseui:firebase-ui-database:0.6.2'
     compile 'com.google.firebase:firebase-auth:9.8.0'
     compile 'com.google.firebase:firebase-database:9.8.0'

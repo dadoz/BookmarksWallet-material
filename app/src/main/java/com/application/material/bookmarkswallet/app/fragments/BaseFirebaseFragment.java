@@ -138,10 +138,14 @@ public abstract class BaseFirebaseFragment extends Fragment implements BookmarkR
      */
     private FirebaseRecyclerAdapter<Bookmark, BookmarkFirebaseRvAdapter.BookmarkViewHolder> initFirebaseAdapter() {
         // Set up FirebaseRecyclerAdapter with the Query
-        Query eventsQuery = getQuery(mDatabase);
-        mAdapter = new BookmarkFirebaseRvAdapter(Bookmark.class, R.layout.bookmark_item,
-                BookmarkFirebaseRvAdapter.BookmarkViewHolder.class, eventsQuery, new WeakReference<Context>(getContext()),
-                new WeakReference<BookmarkRvAdapter.OnActionListenerInterface>(this), new WeakReference<BookmarkRvAdapter.OnPopulateViewHolderCb>(this));
+        try {
+            Query eventsQuery = getQuery(mDatabase);
+            mAdapter = new BookmarkFirebaseRvAdapter(Bookmark.class, R.layout.bookmark_item,
+                    BookmarkFirebaseRvAdapter.BookmarkViewHolder.class, eventsQuery, new WeakReference<>(getContext()),
+                    new WeakReference<>(this), new WeakReference<>(this));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return mAdapter;
     }
 
@@ -180,7 +184,7 @@ public abstract class BaseFirebaseFragment extends Fragment implements BookmarkR
      * @param databaseReference
      * @return
      */
-    public abstract Query getQuery(DatabaseReference databaseReference);
+    public abstract Query getQuery(DatabaseReference databaseReference) throws Exception;
 
     /**
      * set db and set persistence of db
