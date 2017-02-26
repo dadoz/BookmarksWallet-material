@@ -309,18 +309,21 @@ public class BookmarkListFragment extends BaseFirebaseFragment implements View.O
 //
 
 
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivity(new Intent(getContext(), SettingsActivity.class));
+                break;
 //            case R.id.action_open_menu:
 //                openMenuItem = item;
 //                optionMenuContainerRevealLayout.toggleRevealActionMenu();
 //                break;
-//        }
-//        return true;
-//    }
-//
+        }
+        return true;
+    }
+
 //    /**
 //     *
 //     */

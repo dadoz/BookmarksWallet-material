@@ -73,4 +73,5 @@
     <string name="setting_night_mode_description">Enabling night mode</string>
     <string name="setting_night_mode">Night Mode</string>
     <string name="no_title">No title</string>
+    <string name="logout">LOGOUT</string>
 </resources>

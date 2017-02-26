@@ -33,7 +33,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         CompoundButton.OnCheckedChangeListener {
-    private String TAG = "MainActivity";
+    private String TAG = "SettingsActivity";
     private SharedPrefHelper sharedPrefHelper;
     @BindView(R.id.settingsListId)
     ListView listView;
@@ -70,7 +70,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     private void onInitView() {
         ArrayAdapter<Setting> adapter = new SettingListAdapter(getApplicationContext(),
                 R.layout.setting_item, getSettingList(),
-                new WeakReference<CompoundButton.OnCheckedChangeListener>(this));
+                new WeakReference<>(this));
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
     }
@@ -133,17 +133,17 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
                 SharedPrefKeysEnum.NO_FAVICON_MODE, View.VISIBLE,
                 (Boolean) sharedPrefHelper.getValue(SharedPrefKeysEnum.NO_FAVICON_MODE, false)));
 
-        settingList.add(new Setting(getResources().getString(R.string.setting_cloud_sync),
-                getResources().getString(R.string.setting_cloud_sync_description),
-                SharedPrefKeysEnum.CLOUD_SYNC,
-                View.VISIBLE, (Boolean) sharedPrefHelper
-                .getValue(SharedPrefKeysEnum.CLOUD_SYNC, false)));
-
-        settingList.add(new Setting(getResources().getString(R.string.setting_night_mode),
-                getResources().getString(R.string.setting_night_mode_description),
-                SharedPrefKeysEnum.NIGHT_MODE,
-                View.VISIBLE, (int) sharedPrefHelper.getValue(SharedPrefKeysEnum.NIGHT_MODE,
-                        AppCompatDelegate.MODE_NIGHT_AUTO) == AppCompatDelegate.MODE_NIGHT_YES));
+//        settingList.add(new Setting(getResources().getString(R.string.setting_cloud_sync),
+//                getResources().getString(R.string.setting_cloud_sync_description),
+//                SharedPrefKeysEnum.CLOUD_SYNC,
+//                View.VISIBLE, (Boolean) sharedPrefHelper
+//                .getValue(SharedPrefKeysEnum.CLOUD_SYNC, false)));
+//
+//        settingList.add(new Setting(getResources().getString(R.string.setting_night_mode),
+//                getResources().getString(R.string.setting_night_mode_description),
+//                SharedPrefKeysEnum.NIGHT_MODE,
+//                View.VISIBLE, (int) sharedPrefHelper.getValue(SharedPrefKeysEnum.NIGHT_MODE,
+//                        AppCompatDelegate.MODE_NIGHT_AUTO) == AppCompatDelegate.MODE_NIGHT_YES));
 
         settingList.add(new Setting(getResources().getString(R.string.setting_feedback_label),
                 null, null, View.GONE, false));
