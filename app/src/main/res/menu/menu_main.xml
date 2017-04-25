@@ -9,9 +9,13 @@
         app:showAsAction="always"
         android:title="Search"/>
 
-    <item android:id="@+id/action_open_menu"
+    <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_keyboard_arrow_down_black_24dp"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
+    <!--<item android:id="@+id/action_open_menu"-->
+        <!--android:title="@string/action_settings"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:icon="@drawable/ic_keyboard_arrow_down_black_24dp"-->
+        <!--app:showAsAction="always" />-->
 </menu>

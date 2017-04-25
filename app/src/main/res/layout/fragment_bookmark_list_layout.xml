@@ -39,10 +39,10 @@
             app:fabSize="normal"/>
 
     </FrameLayout>
-    <com.application.material.bookmarkswallet.app.views.ContextRevealMenuView
-        android:id="@+id/optionMenuContainerRevealLayoutId"
-        android:visibility="invisible"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <!--<com.application.material.bookmarkswallet.app.views.ContextRevealMenuView-->
+        <!--android:id="@+id/optionMenuContainerRevealLayoutId"-->
+        <!--android:visibility="invisible"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"/>-->
 
 </android.support.design.widget.CoordinatorLayout>

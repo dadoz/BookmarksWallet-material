@@ -79,8 +79,6 @@ public class BookmarkListFragment extends Fragment
     View emptySearchResultLayout;
     @BindView(R.id.importDefaultBookmarksButtonId)
     View importDefaultBookmarksButton;
-    @BindView(R.id.optionMenuContainerRevealLayoutId)
-    ContextRevealMenuView optionMenuContainerRevealLayout;
     @BindView(R.id.fragmentBookmarkListMainFrameLayoutId)
     View fragmentBookmarkListMainFrameLayout;
 
@@ -164,12 +162,12 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_open_menu:
-                openMenuItem = item;
-                optionMenuContainerRevealLayout.toggleRevealActionMenu();
-                break;
-        }
+//        switch (item.getItemId()) {
+//            case R.id.action_open_menu:
+//                openMenuItem = item;
+//                optionMenuContainerRevealLayout.toggleRevealActionMenu();
+//                break;
+//        }
         return true;
     }
 
@@ -200,9 +198,6 @@ public class BookmarkListFragment extends Fragment
         initPullToRefresh();
         initRecyclerView();
         addNewFab.setOnClickListener(this);
-        optionMenuContainerRevealLayout.initActionMenu(expandedGridview,
-                new WeakReference<ActionMenuRevealHelper.ActionMenuRevealCallbacks>(this));
-
     }
 
     /**
@@ -272,7 +267,6 @@ public class BookmarkListFragment extends Fragment
     public boolean onLongItemClick(View view, int position) {
         if (!statusHelper.isEditMode()) {
             getActivity().startActionMode(actionMode);
-            optionMenuContainerRevealLayout.showRevealActionMenu(false);
         }
 
         handleSelectItemByPos(position);
@@ -326,7 +320,6 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onOpenSearchView() {
-        optionMenuContainerRevealLayout.showRevealActionMenu(false);
         StatusManager.getInstance().setSearchActionbarMode(true);
     }
 
@@ -344,7 +337,6 @@ public class BookmarkListFragment extends Fragment
             addNewFab.setVisibility(View.VISIBLE);
             if (searchManager.getSearchView() != null)
                 searchManager.getSearchView().closeSearch();
-            optionMenuContainerRevealLayout.showRevealActionMenu(false);
             return true;
         }
         return false;
@@ -359,7 +351,6 @@ public class BookmarkListFragment extends Fragment
         }
 
         //animate viewAnimation not object animation welll done
-        recyclerView.setTranslationY(isShowing ? optionMenuContainerRevealLayout.getHeight() : 0);
         addNewFab.setVisibility(isShowing ? View.GONE : View.VISIBLE);
     }
 

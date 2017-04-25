@@ -37,6 +37,8 @@ import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -140,6 +142,7 @@ public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
                         .withEmail(getString(R.string.send_feedback_email))
                         .withIcon(ContextCompat.getDrawable(this, R.drawable.ic_cloud_off_black_48dp)))
                 .withSelectionListEnabledForSingleProfile(false) //ADD multiple profile
+                .withTextColorRes(R.color.indigo_600)
                 .withDividerBelowHeader(true)
                 .build();
 
@@ -172,7 +175,8 @@ public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
             public Drawable placeholder(Context ctx, String tag) {
                 return null;
             }
-        });
+        })
+                .setImage(accountHeader.getHeaderBackgroundView(), Uri.parse("http://www.google.it"), "tag");
         return accountHeader;
     }
 
@@ -183,7 +187,7 @@ public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
         List<IDrawerItem> menuList = new ArrayList<>();
         menuList.add(new PrimaryDrawerItem()
                 .withName("Export Bookmarks")
-                .withDescription("descriptions bla bla bla")
+//                .withDescription("descriptions bla bla bla")
                 .withDescriptionTextColorRes(R.color.grey_400)
                 .withIdentifier(1)
                 .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
@@ -192,7 +196,7 @@ public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
                 .withSelectedColorRes(R.color.grey_100));
         menuList.add(new PrimaryDrawerItem()
                 .withName("Minify/Expanded")
-                .withDescription("Expand or minifiy view description")
+//                .withDescription("Expand or minifiy view description")
                 .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
                 .withIcon(R.drawable.ic_view_stream_black_48dp)
                 .withDescriptionTextColorRes(R.color.grey_400)
