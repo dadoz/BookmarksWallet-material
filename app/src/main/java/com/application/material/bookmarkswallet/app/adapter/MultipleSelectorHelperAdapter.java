@@ -3,16 +3,14 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.realm.adapter.RealmRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.realm.RealmRecyclerViewAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import io.realm.RealmObject;
-import io.realm.RealmResults;
 
 public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> extends
         RealmRecyclerViewAdapter<Bookmark> {
