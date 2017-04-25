@@ -1,31 +1,24 @@
 package com.application.material.bookmarkswallet.app;
 
-import android.animation.ObjectAnimator;
-import android.animation.StateListAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
+import com.application.material.bookmarkswallet.app.navigationDrawer.BaseNavigationDrawerActivity;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.lang.ref.WeakReference;
 
@@ -33,9 +26,13 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.application.material.bookmarkswallet.app.helpers.ExportHelper.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseNavigationDrawerActivity {
     private String TAG = "MainActivity";
     public static String SHARED_URL_EXTRA_KEY = "SHARED_URL_EXTRA_KEY";
+
+    protected MainActivity() {
+        super(R.layout.activity_main_drawer_layout);
+    }
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -43,9 +40,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onItemMenuSelectedCallback(int position) {
+        return false;
+    }
+
+    @Override
+    public void inflateViewOnMainView() {
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_layout);
+//        setContentView(R.layout.activity_main_layout);
         FlurryAgent.onStartSession(this);
         NightModeHelper.getInstance(this).setConfigurationMode();
 
@@ -63,18 +69,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     *
-     */
-    private void initActionbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarId);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setTitle(R.string.bookmark_list_title);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        ActionbarHelper.setElevationOnVIew(findViewById(R.id.appBarLayoutId), true);
-    }
+//    /**
+//     *
+//     */
+//    public void initActionbar() {
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarId);
+//        setSupportActionBar(toolbar);
+//
+//        getSupportActionBar().setTitle(R.string.bookmark_list_title);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//        getSupportActionBar().setDisplayShowTitleEnabled(true);
+//        ActionbarHelper.setElevationOnVIew(findViewById(R.id.appBarLayoutId), true);
+//    }
 
     @Override
     public void onResume() {
@@ -116,11 +122,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (((AddBookmarkActivity.OnHandleBackPressed) getSupportFragmentManager()
-                .findFragmentByTag(BookmarkListFragment.FRAG_TAG)).handleBackPressed()) {
-            return;
+        boolean isHandled = ((AddBookmarkActivity.OnHandleBackPressed) getSupportFragmentManager()
+                .findFragmentByTag(BookmarkListFragment.FRAG_TAG)).handleBackPressed();
+        if (!isHandled) {
+            super.onBackPressed();
         }
-        super.onBackPressed();
     }
 
     @Override
@@ -162,22 +168,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return null;
     }
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Main Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
 
 }

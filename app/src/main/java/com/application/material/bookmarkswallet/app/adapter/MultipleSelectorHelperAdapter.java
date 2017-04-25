@@ -5,7 +5,6 @@ import android.util.SparseBooleanArray;
 import android.view.ViewGroup;
 
 import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.realm.RealmRecyclerViewAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

@@ -104,5 +104,11 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.0'
     compile 'com.android.support:design:25.3.0'
     compile 'com.google.android.gms:play-services-appindexing:9.8.0' //8.4.0'
+
+    //menu drawer
+    compile('com.mikepenz:materialdrawer:5.8.1@aar') {
+        transitive = true
+    }
+
     testCompile 'junit:junit:4.12'
 }

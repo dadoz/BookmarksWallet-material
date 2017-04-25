@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/CustomMaterialDrawerTheme"
+    android:id="@+id/drawerLayoutId"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fragmentContainerFrameLayoutId"
+            android:layout_marginTop="?attr/actionBarSize"/>
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayoutId"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            app:elevation="0dp">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbarId"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    style="@style/ToolbarCustomStyle"/>
+                <com.miguelcatalan.materialsearchview.MaterialSearchView
+                    style="@style/MaterialSearchViewStyle"
+                    android:id="@+id/searchViewId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </FrameLayout>
+        </android.support.design.widget.AppBarLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <!-- The navigation drawer -->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/drawerNavigationViewId"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:itemTextColor="@color/grey_900"
+        app:itemIconTint="@color/grey_900"
+        android:background="@color/grey_50"/>
+</android.support.v4.widget.DrawerLayout>
