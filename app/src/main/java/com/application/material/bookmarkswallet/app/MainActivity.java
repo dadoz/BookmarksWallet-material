@@ -63,8 +63,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        NightModeHelper.getInstance(this).setNightModeLocal();
+        initActionbar();
+    }
+
     /**
-     *
+     * init actionbar with title and color
      */
     private void initActionbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarId);
@@ -74,18 +81,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         ActionbarHelper.setElevationOnVIew(findViewById(R.id.appBarLayoutId), true);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        NightModeHelper.getInstance(this).setNightModeLocal();
-        initActionbar();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     /**
@@ -162,22 +157,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return null;
     }
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Main Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
 
 }
