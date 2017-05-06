@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="tree_node_iew">
+        <attr name="has_menu" format="string" />
+    </declare-styleable>
+
+</resources>

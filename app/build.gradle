@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
+apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
     jcenter()
@@ -22,7 +23,7 @@ android {
     defaultConfig {
         applicationId "com.application.material.bookmarkswallet.app"
         vectorDrawables.useSupportLibrary = true
-        minSdkVersion 19 //cut off jellybean support
+        minSdkVersion 21 //cut off jellybean support
         targetSdkVersion 25
 
         versionCode 9
@@ -56,6 +57,11 @@ android {
     lintOptions {
         abortOnError false
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+
 }
 
 
@@ -111,4 +117,5 @@ dependencies {
     }
 
     testCompile 'junit:junit:4.12'
+    compile project(path: ':filetreevisitorlibrary')
 }

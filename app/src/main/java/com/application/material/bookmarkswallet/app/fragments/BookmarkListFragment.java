@@ -18,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
 import android.view.animation.Animation;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.BindView;
@@ -44,6 +45,11 @@ import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.observer.BookmarkListObserver;
 import com.application.material.bookmarkswallet.app.views.ContextRevealMenuView;
 import com.flurry.android.FlurryAgent;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
+import com.lib.davidelm.filetreevisitorlibrary.views.BreadCrumbsView;
+import com.lib.davidelm.filetreevisitorlibrary.views.OnNavigationCallbacks;
+import com.lib.davidelm.filetreevisitorlibrary.views.TreeNodeView;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.json.JSONArray;
@@ -65,7 +71,8 @@ public class BookmarkListFragment extends Fragment
         SwipeRefreshLayout.OnRefreshListener,
         BookmarkRecyclerViewAdapter.OnActionListenerInterface,
         SearchManagerCallbackInterface,
-        AddBookmarkActivity.OnHandleBackPressed, ActionMenuRevealHelper.ActionMenuRevealCallbacks {
+        AddBookmarkActivity.OnHandleBackPressed, ActionMenuRevealHelper.ActionMenuRevealCallbacks,
+        OnNavigationCallbacks {
     public static final String FRAG_TAG = "LinksListFragment";
     @BindView(R.id.addBookmarkFabId)
     FloatingActionButton addNewFab;
@@ -81,6 +88,10 @@ public class BookmarkListFragment extends Fragment
     View importDefaultBookmarksButton;
     @BindView(R.id.fragmentBookmarkListMainFrameLayoutId)
     View fragmentBookmarkListMainFrameLayout;
+    @BindView(R.id.treeNodeViewId)
+    TreeNodeView displayNodeView;
+    @BindView(R.id.breadCrumbsViewId)
+    BreadCrumbsView breadCrumbsView;
 
     private SearchManager searchManager;
     private BookmarkActionHelper mBookmarkActionSingleton;
@@ -198,6 +209,10 @@ public class BookmarkListFragment extends Fragment
         initPullToRefresh();
         initRecyclerView();
         addNewFab.setOnClickListener(this);
+
+        displayNodeView.setNavigationCallbacksListener(new WeakReference<>(this));
+        displayNodeView.setBreadCrumbsView(breadCrumbsView);
+
     }
 
     /**
@@ -209,7 +224,7 @@ public class BookmarkListFragment extends Fragment
                 .getValue(EXPANDED_GRIDVIEW, false);
         BookmarkRecyclerViewAdapter adapter =
                 new BookmarkRecyclerViewAdapter(new WeakReference<>(getContext()),
-                    new WeakReference<BookmarkRecyclerViewAdapter.OnActionListenerInterface>(this));
+                    new WeakReference<>(this));
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),
                 Utils.getCardNumberInRow(getContext(), expandedGridview)));
         recyclerView.setAdapter(adapter);
@@ -381,5 +396,18 @@ public class BookmarkListFragment extends Fragment
         ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(count);
     }
 
+    @Override
+    public void onNodeError(int type, TreeNodeInterface currentNode, String message) {
 
+    }
+
+    @Override
+    public void onFolderNodeClickCb(int position, TreeNodeInterface node) {
+
+    }
+
+    @Override
+    public void onFileNodeClickCb(int position, TreeNodeInterface node) {
+
+    }
 }
