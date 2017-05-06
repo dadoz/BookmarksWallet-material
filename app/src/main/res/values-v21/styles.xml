@@ -2,18 +2,20 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="android:windowActionBar">false</item>
-        <item name="android:textColorPrimary">@color/grey_50</item>
-        <item name="android:textColorSecondary">@color/grey_50</item>
-        <item name="android:textColor">@color/grey_200</item>
-
-        <!--actionmode-->
-        <item name="colorControlActivated">@color/grey_50</item>
+        <item name="android:textColorPrimary">@color/indigo_600</item>
+        <item name="android:textColorSecondary">@color/indigo_600</item>
+        <item name="android:textColor">@color/indigo_900</item>
+        <item name="colorPrimaryDark">@color/yellow_600</item>
+        <item name="colorPrimary">@color/yellow_400</item>
+        <item name="colorControlActivated">@color/indigo_400</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="android:windowActionBarOverlay">true</item>
+
+        <item name="android:icon">@color/indigo_800</item>
+
         <item name="actionModeStyle">@style/ActionMode</item>
         <item name="android:itemTextAppearance">@style/customMenuTextAppearance</item>
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
-        <item name="colorControlNormal">@color/grey_50</item>
+        <item name="android:windowBackground">@color/grey_200</item>
     </style>
     <!-- MENU APPEARANCE-->
     <style name="customMenuTextAppearance">

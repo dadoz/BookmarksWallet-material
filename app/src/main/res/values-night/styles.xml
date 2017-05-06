@@ -18,6 +18,7 @@
         <item name="actionModeStyle">@style/ActionMode</item>
         <item name="android:itemTextAppearance">@style/customMenuTextAppearance</item>
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
+        <item name="colorControlNormal">@color/grey_50</item>
 
     </style>
 

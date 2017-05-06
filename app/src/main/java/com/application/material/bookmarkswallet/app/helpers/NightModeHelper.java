@@ -53,7 +53,8 @@ import android.support.v7.app.AppCompatDelegate;
     public class NightModeHelper
     {
 
-        private static int sUiNightMode = AppCompatDelegate.MODE_NIGHT_AUTO;
+        /**init on day mode**/
+        private static int sUiNightMode = AppCompatDelegate.MODE_NIGHT_NO;
 
         private static WeakReference<Activity> mActivity;
         private SharedPrefHelper mPrefs;

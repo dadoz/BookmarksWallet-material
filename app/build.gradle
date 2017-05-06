@@ -25,9 +25,8 @@ android {
         vectorDrawables.useSupportLibrary = true
         minSdkVersion 21 //cut off jellybean support
         targetSdkVersion 25
-
-        versionCode 9
-        versionName "3.5.${versionBuildDate}"
+        versionCode 11
+        versionName "3.6.${versionBuildDate}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

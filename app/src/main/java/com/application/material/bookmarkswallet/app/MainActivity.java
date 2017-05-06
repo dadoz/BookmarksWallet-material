@@ -82,17 +82,6 @@ public class MainActivity extends BaseNavigationDrawerActivity {
 //        ActionbarHelper.setElevationOnVIew(findViewById(R.id.appBarLayoutId), true);
 //    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        NightModeHelper.getInstance(this).setNightModeLocal();
-        initActionbar();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 
     /**
      * init fragment function
