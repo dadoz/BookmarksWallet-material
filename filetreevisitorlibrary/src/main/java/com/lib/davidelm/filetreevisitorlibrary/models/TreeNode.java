@@ -17,15 +17,16 @@ public class TreeNode implements Serializable, TreeNodeInterface {
     private int id;
     private transient TreeNodeInterface mParent;
     private List<TreeNode> children = new ArrayList<>();
-    private String mValue;
     private boolean folder;
     private int MAX_ID = 0; //TODO handle it
+
+    private TreeNodeContent nodeContent;
 
     //GSON parser
     public TreeNode() {}
 
-    public TreeNode(String nodeName, boolean folder, int level) {
-        this.mValue = nodeName;
+    public TreeNode(TreeNodeContent nodeContent, boolean folder, int level) {
+        this.nodeContent = nodeContent;
         this.folder = folder;
         this.level = level;
     }
@@ -46,6 +47,10 @@ public class TreeNode implements Serializable, TreeNodeInterface {
 
     public void setId() {
         id = MAX_ID + 1;
+    }
+
+    public TreeNodeContent getNodeContent() {
+        return nodeContent;
     }
 
     public TreeNodeInterface addChildren(TreeNodeInterface... nodes) {
@@ -88,10 +93,6 @@ public class TreeNode implements Serializable, TreeNodeInterface {
         return id;
     }
 
-    public String getName() {
-        return mValue;
-    }
-
     public int getLevel() {
         int level = 0;
         TreeNodeInterface root = this;
@@ -103,7 +104,7 @@ public class TreeNode implements Serializable, TreeNodeInterface {
     }
 
     public boolean isRoot() {
-        Log.e(TAG, "check parent node value" + mValue);
+//        Log.e(TAG, "check parent node value" + mValue);
         return mParent == null && level == ROOT_LEVEL;
     }
 
@@ -117,7 +118,7 @@ public class TreeNode implements Serializable, TreeNodeInterface {
 
     public TreeNodeInterface getChildByName(String name) {
         for (TreeNodeInterface item : children) {
-            if (item.getName().equals(name)) {
+            if (item.getNodeContent().getName().equals(name)) {
                 return item;
             }
         }

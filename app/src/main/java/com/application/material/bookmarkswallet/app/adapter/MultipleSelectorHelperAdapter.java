@@ -5,18 +5,25 @@ import android.util.SparseBooleanArray;
 import android.view.ViewGroup;
 
 import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
+import com.lib.davidelm.filetreevisitorlibrary.adapter.TreeNodeAdapter;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.RealmObject;
 
 public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> extends
-        RealmRecyclerViewAdapter<Bookmark> {
+        TreeNodeAdapter {
+//        RealmRecyclerViewAdapter<Bookmark> {
     private final MultipleSelector multipleSelector;
 
-    MultipleSelectorHelperAdapter(WeakReference<Context> ctx) {
-        super(ctx);
+    MultipleSelectorHelperAdapter(WeakReference<OnNodeClickListener> lst) {
+        super(new ArrayList<>(), lst);
         multipleSelector = new MultipleSelector();
     }
 
@@ -57,8 +64,8 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
      *
      * @return
      */
-    public ArrayList<Bookmark> getSelectedItemList() {
-        ArrayList<Bookmark> selectedItemList = new ArrayList<>();
+    public ArrayList<TreeNodeInterface> getSelectedItemList() {
+        ArrayList<TreeNodeInterface> selectedItemList = new ArrayList<>();
         //inside multiple selector
         for (int i = 0; i < multipleSelector.getSelectedPosArraySize(); i++) {
             int itemPos = multipleSelector.getSelectedPosArray().keyAt(i);
@@ -71,7 +78,7 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
      *
      * @return
      */
-    public Bookmark getSelectedItem() {
+    public TreeNodeInterface getSelectedItem() {
         int itemPos = multipleSelector.getSelectedPosArray().keyAt(0);
         return getItem(itemPos);
     }
@@ -101,15 +108,15 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
         return multipleSelector.isSelectedPos(pos);
     }
 
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-    }
+//    @Override
+//    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//        return null;
+//    }
+//
+//    @Override
+//    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+//
+//    }
 
     /**
      * multiple selector handler

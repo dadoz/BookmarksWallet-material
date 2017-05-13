@@ -29,6 +29,7 @@ import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.SettingsActivity;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionModeCallback;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter.OnActionListenerInterface;
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
@@ -43,43 +44,37 @@ import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.observer.BookmarkListObserver;
-import com.application.material.bookmarkswallet.app.views.ContextRevealMenuView;
-import com.flurry.android.FlurryAgent;
+import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
 import com.lib.davidelm.filetreevisitorlibrary.views.BreadCrumbsView;
 import com.lib.davidelm.filetreevisitorlibrary.views.OnNavigationCallbacks;
 import com.lib.davidelm.filetreevisitorlibrary.views.TreeNodeView;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-import static android.content.ContentValues.TAG;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.EXPANDED_GRIDVIEW;
 
 //TODO refactor it
 public class BookmarkListFragment extends Fragment
         implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener,
-        BookmarkRecyclerViewAdapter.OnActionListenerInterface,
+        OnActionListenerInterface,
         SearchManagerCallbackInterface,
         AddBookmarkActivity.OnHandleBackPressed, ActionMenuRevealHelper.ActionMenuRevealCallbacks,
-        OnNavigationCallbacks {
+        OnNavigationCallbacks, OnNodeClickListener {
     public static final String FRAG_TAG = "LinksListFragment";
     @BindView(R.id.addBookmarkFabId)
     FloatingActionButton addNewFab;
     @BindView(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.bookmarkRecyclerViewId)
-    RecyclerView recyclerView;
+//    @BindView(R.id.bookmarkRecyclerViewId)
+//    RecyclerView recyclerView;
     @BindView(R.id.emptyLinkListViewId)
     View mEmptyLinkListView;
     @BindView(R.id.emptySearchResultLayoutId)
@@ -140,7 +135,7 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-        updateRecyclerView();
+//        updateRecyclerView();
     }
 
     @Override
@@ -149,8 +144,8 @@ public class BookmarkListFragment extends Fragment
             case R.id.importDefaultBookmarksButtonId:
                 Snackbar.make(mainView, getString(R.string.import_default_bookmarks),
                         Snackbar.LENGTH_SHORT).show();
-                DefaultBookmarkImportManager.handleImportDefaultBookmarks(new WeakReference<>(getContext()),
-                        mEmptyLinkListView, mSwipeRefreshLayout, recyclerView);
+//                DefaultBookmarkImportManager.handleImportDefaultBookmarks(new WeakReference<>(getContext()),
+//                        mEmptyLinkListView, mSwipeRefreshLayout, recyclerView);
                 break;
             case R.id.addBookmarkFabId:
                 mBookmarkActionSingleton.addBookmarkAction(new WeakReference<Fragment>(this));
@@ -160,14 +155,11 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
-                        .updateData(RealmUtils.getResults(Realm.getDefaultInstance()));
-                mSwipeRefreshLayout.setRefreshing(false);
-                recyclerView.getAdapter().notifyDataSetChanged();
-            }
+        new Handler().postDelayed(() -> {
+//            ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
+//                    .updateData(RealmUtils.getResults(Realm.getDefaultInstance()));
+            mSwipeRefreshLayout.setRefreshing(false);
+//            recyclerView.getAdapter().notifyDataSetChanged();
         }, 2000);
     }
 
@@ -185,7 +177,6 @@ public class BookmarkListFragment extends Fragment
     /**
      *
      */
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE) {
@@ -193,8 +184,8 @@ public class BookmarkListFragment extends Fragment
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.getAdapter().notifyDataSetChanged(); //TODO mv to inserted 0 only on insertion
-                    updateRecyclerView();
+//                    recyclerView.getAdapter().notifyDataSetChanged(); //TODO mv to inserted 0 only on insertion
+//                    updateRecyclerView();
                 }
             }, 500);
         }
@@ -207,12 +198,13 @@ public class BookmarkListFragment extends Fragment
     private void onInitView() {
         handleEmptyView();
         initPullToRefresh();
-        initRecyclerView();
+        displayNodeView.setAdapter(new BookmarkRecyclerViewAdapter(
+                new WeakReference<Context>(getContext()), new WeakReference<>(this),
+                new WeakReference<OnNodeClickListener>(this)));
+//        initRecyclerView();
         addNewFab.setOnClickListener(this);
-
         displayNodeView.setNavigationCallbacksListener(new WeakReference<>(this));
         displayNodeView.setBreadCrumbsView(breadCrumbsView);
-
     }
 
     /**
@@ -220,54 +212,54 @@ public class BookmarkListFragment extends Fragment
      * connected to main fragment app
      */
     private void initRecyclerView() {
-        expandedGridview = (boolean) SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
-                .getValue(EXPANDED_GRIDVIEW, false);
-        BookmarkRecyclerViewAdapter adapter =
-                new BookmarkRecyclerViewAdapter(new WeakReference<>(getContext()),
-                    new WeakReference<>(this));
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),
-                Utils.getCardNumberInRow(getContext(), expandedGridview)));
-        recyclerView.setAdapter(adapter);
-        actionMode = new EditBookmarkActionModeCallback(new WeakReference<>(getContext()), adapter);
-        registerDataObserver(adapter);
+//        expandedGridview = (boolean) SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
+//                .getValue(EXPANDED_GRIDVIEW, false);
+//        BookmarkRecyclerViewAdapter adapter =
+//                new BookmarkRecyclerViewAdapter(new WeakReference<>(getContext()),
+//                    new WeakReference<>(this), null);
+//        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),
+//                Utils.getCardNumberInRow(getContext(), expandedGridview)));
+//        recyclerView.setAdapter(adapter);
+//        actionMode = new EditBookmarkActionModeCallback(new WeakReference<>(getContext()), adapter);
+//        registerDataObserver(adapter);
     }
 
     /**
      *
      */
-    private void updateGridLayoutManager() {
-        if (recyclerView != null &&
-                recyclerView.getLayoutManager() != null) {
-            ((GridLayoutManager) recyclerView.getLayoutManager())
-                    .setSpanCount(Utils.getCardNumberInRow(getContext(), expandedGridview));
-        }
-
-    }
+//    private void updateGridLayoutManager() {
+//        if (recyclerView != null &&
+//                recyclerView.getLayoutManager() != null) {
+//            ((GridLayoutManager) recyclerView.getLayoutManager())
+//                    .setSpanCount(Utils.getCardNumberInRow(getContext(), expandedGridview));
+//        }
+//
+//    }
 
     /**
      *
      */
-    private void updateRecyclerView() {
-        if (recyclerView != null &&
-                    recyclerView.getAdapter() != null) {
-            ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
-                    .setIsFaviconIsEnabled(new WeakReference<>(getContext()));
-            recyclerView.smoothScrollToPosition(0);
-            recyclerView.getAdapter().notifyDataSetChanged();
-        }
-    }
+//    private void updateRecyclerView() {
+//        if (recyclerView != null &&
+//                    recyclerView.getAdapter() != null) {
+//            ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
+//                    .setIsFaviconIsEnabled(new WeakReference<>(getContext()));
+//            recyclerView.smoothScrollToPosition(0);
+//            recyclerView.getAdapter().notifyDataSetChanged();
+//        }
+//    }
 
     /**
      *
      * @param recyclerViewAdapter
      */
-    private void registerDataObserver(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
-        //TODO leak
-        BookmarkListObserver observer = new BookmarkListObserver(new View[] {recyclerView,
-                mEmptyLinkListView, emptySearchResultLayout}, searchManager);
-        recyclerViewAdapter.registerAdapterDataObserver(observer);
-        recyclerViewAdapter.notifyDataSetChanged();
-    }
+//    private void registerDataObserver(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
+//        //TODO leak
+//        BookmarkListObserver observer = new BookmarkListObserver(new View[] {recyclerView,
+//                mEmptyLinkListView, emptySearchResultLayout}, searchManager);
+//        recyclerViewAdapter.registerAdapterDataObserver(observer);
+//        recyclerViewAdapter.notifyDataSetChanged();
+//    }
 
     /**
      * pull to refresh init
@@ -284,35 +276,35 @@ public class BookmarkListFragment extends Fragment
             getActivity().startActionMode(actionMode);
         }
 
-        handleSelectItemByPos(position);
+//        handleSelectItemByPos(position);
         return true;
     }
 
     @Override
     public void onItemClick(View view, int position) {
         if (statusHelper.isEditMode()) {
-            handleSelectItemByPos(position);
+//            handleSelectItemByPos(position);
             return;
         }
-        Bookmark bookmark = ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).getItem(position);
-        mBookmarkActionSingleton.openLinkOnBrowser(bookmark.getUrl());
+//        TreeNodeRealm bookmark = (TreeNodeRealm) ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).getItem(position);
+//        mBookmarkActionSingleton.openLinkOnBrowser("bookmark.getUrl()");
     }
 
     /**
      *
      * @param position
      */
-    private void handleSelectItemByPos(int position) {
-        statusHelper.setEditMode();
-        BookmarkRecyclerViewAdapter adapter = ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter());
-        adapter.setSelectedItemPos(position);
-        recyclerView.getAdapter().notifyItemChanged(position);
-        actionMode.toggleVisibilityIconMenu(adapter.getSelectedItemListSize() <= 1);
-        actionMode.setSelectedItemCount(adapter.getSelectedItemListSize());
-        if (((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).isEmptySelectedPosArray()) {
-            actionMode.forceToFinish();
-        }
-    }
+//    private void handleSelectItemByPos(int position) {
+//        statusHelper.setEditMode();
+//        BookmarkRecyclerViewAdapter adapter = ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter());
+//        adapter.setSelectedItemPos(position);
+//        recyclerView.getAdapter().notifyItemChanged(position);
+//        actionMode.toggleVisibilityIconMenu(adapter.getSelectedItemListSize() <= 1);
+//        actionMode.setSelectedItemCount(adapter.getSelectedItemListSize());
+//        if (((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).isEmptySelectedPosArray()) {
+//            actionMode.forceToFinish();
+//        }
+//    }
 
     /**
      *
@@ -324,13 +316,13 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        updateGridLayoutManager();
+//        updateGridLayoutManager();
     }
 
     @Override
     public void updateSearchDataList(RealmResults list) {
-        ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).updateData(list);
-        recyclerView.getAdapter().notifyDataSetChanged();
+//        ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).updateData(list);
+//        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -393,7 +385,7 @@ public class BookmarkListFragment extends Fragment
                 .setValue(EXPANDED_GRIDVIEW, expandedGridview);
 
         int count = Utils.getCardNumberInRow(getContext(), expandedGridview);
-        ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(count);
+//        ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(count);
     }
 
     @Override
@@ -408,6 +400,16 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onFileNodeClickCb(int position, TreeNodeInterface node) {
+
+    }
+
+    @Override
+    public void onFolderNodeCLick(View v, int position, TreeNodeInterface node) {
+
+    }
+
+    @Override
+    public void onFileNodeCLick(View v, int position, TreeNodeInterface node) {
 
     }
 }

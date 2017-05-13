@@ -5,10 +5,6 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
-import com.lib.davidelm.filetreevisitorlibrary.strategies.RealmPersistence;
-
 import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;

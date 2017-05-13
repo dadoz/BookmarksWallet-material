@@ -9,6 +9,7 @@ import io.realm.RealmSchema;
 
 public class BookmarkRealmMigration implements RealmMigration {
     private static final String BOOKMARK_SCHEMA = "Bookmark";
+    private static final String TREENODE_SCHEMA = "TreeNodeRealm";
     public static long BOOKMARK_SCHEMA_VERSION = 0;
 
     @Override
@@ -22,5 +23,12 @@ public class BookmarkRealmMigration implements RealmMigration {
 //                    .setNullable("blobIcon", true);
 //
 //        }
+        if (oldVersion == 1) {
+            schema.get(TREENODE_SCHEMA)
+                    .addIndex("id")
+                    .setNullable("iconPath", true)
+                    .setNullable("blobIcon", true);
+
+        }
     }
 }

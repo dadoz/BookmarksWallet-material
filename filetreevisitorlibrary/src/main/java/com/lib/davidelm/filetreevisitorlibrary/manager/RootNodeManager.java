@@ -2,11 +2,10 @@ package com.lib.davidelm.filetreevisitorlibrary.manager;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeVisitCompleted;
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 import com.lib.davidelm.filetreevisitorlibrary.strategies.PersistenceStrategy;
 
@@ -27,7 +26,7 @@ public class RootNodeManager {
      * @param context
      */
     private RootNodeManager(WeakReference<Context> context) {
-        persistenceStrategy = new PersistenceStrategy(context, PersistenceStrategy.PersistenceType.SHARED_PREF);
+        persistenceStrategy = new PersistenceStrategy(context, PersistenceStrategy.PersistenceType.REALMIO);
 
         //check parsed node
         if ((root = persistenceStrategy.getStrategy().getPersistentNode()) == null) {
@@ -84,6 +83,7 @@ public class RootNodeManager {
         //update view
         removeNodeUpdateView(node);
     }
+
     /**
      * add node
      * not optimized
@@ -98,6 +98,31 @@ public class RootNodeManager {
         currentTreeNode.addChild(TreeNodeFactory
                 .getChildByPersistenceType(persistenceStrategy.getPersistenceType(), nodeName, folder, currentTreeNode.getLevel() + 1));
 
+        saveOnStorage();
+    }
+
+    /**
+     * add node
+     * not optimized
+     */
+    public void addNode(TreeNodeContent contentNode, boolean folder) throws IOException {
+        if (currentTreeNode == null ||
+                contentNode == null ||
+                contentNode.getName().equals("")) {
+            throw new IOException("not found");
+        }
+
+//        new TreeNodeRealm(nodeName, folder, currentTreeNode.getLevel() + 1);
+        currentTreeNode.addChild(TreeNodeFactory
+                .getChildByPersistenceType(persistenceStrategy.getPersistenceType(), contentNode, folder, currentTreeNode.getLevel() + 1));
+
+        saveOnStorage();
+    }
+
+    /**
+     * save on storage method
+     */
+    private void saveOnStorage() {
         //save on storage
         persistenceStrategy.getStrategy().setPersistentNode(root);
 

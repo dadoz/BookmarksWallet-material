@@ -18,6 +18,8 @@ import com.lib.davidelm.filetreevisitorlibrary.R;
 import com.lib.davidelm.filetreevisitorlibrary.adapter.TreeNodeAdapter;
 import com.lib.davidelm.filetreevisitorlibrary.decorator.SpaceItemDecorator;
 import com.lib.davidelm.filetreevisitorlibrary.manager.RootNodeManager;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 import java.io.IOException;
@@ -58,7 +60,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     /**
      * init view
      */
-    public void initView() {
+    private void initView() {
         inflate(getContext(), R.layout.tree_node_layout, this);
         treeNodeRecyclerView = (RecyclerView) findViewById(R.id.treeNodeRecyclerViewId);
         displayNodeListModel = RootNodeManager.getInstance(new WeakReference<>(getContext()));
@@ -76,7 +78,14 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     /**
      * add custom item view :)
      */
-    public void initRecyclerView() {
+    public void setAdapter(TreeNodeAdapter adapter) {
+        treeNodeRecyclerView.setAdapter(adapter);
+    }
+
+    /**
+     * add custom item view :)
+     */
+    private void initRecyclerView() {
         treeNodeRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         treeNodeRecyclerView.addItemDecoration(new SpaceItemDecorator(getResources().getDimensionPixelSize(R.dimen.grid_space)));
         treeNodeRecyclerView.setAdapter(new TreeNodeAdapter(new ArrayList<>(), new WeakReference<>(this)));
@@ -94,7 +103,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
 
     @Override
     public void setParentNode(TreeNodeInterface parentNode) {
-        Log.e(TAG, parentNode.getName() != null ? parentNode.getName().toString() : "root");
+        Log.e(TAG, parentNode.getNodeContent().getName() != null ? parentNode.getNodeContent().getName() : "root");
         rootNode = currentNode = parentNode;
     }
 
@@ -106,7 +115,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     @Override
     public void onFolderNodeCLick(View v, int position, TreeNodeInterface node) {
         //set breadcrumbs
-        breadCrumbsView.addBreadCrumb(node.getName().toString());
+        breadCrumbsView.addBreadCrumb(node.getNodeContent().getName());
 
         //update and set view
         updateCurrentNode(node);
@@ -146,7 +155,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      * on back pressed cb
      * @return
      */
-    public boolean onBackPressed() {
+    private boolean onBackPressed() {
         boolean isRootNode = updateCurrentNode(null);
         if (!isRootNode) {
             //update breadCrumbs
@@ -193,6 +202,17 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
             showError(0, e.getMessage());
         }
     }
+    /**
+     *
+     * @param nodeContent
+     */
+    public void addFolder(TreeNodeContent nodeContent) {
+        try {
+            displayNodeListModel.addNode(nodeContent, true);
+        } catch (IOException e) {
+            showError(0, e.getMessage());
+        }
+    }
 
     /**
      * show error cb
@@ -204,6 +224,17 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
             lst.get().onNodeError(type, currentNode, message);
     }
 
+    /**
+     *
+     * @param nodeContent
+     */
+    public void addFile(TreeNodeContent nodeContent) {
+        try {
+            displayNodeListModel.addNode(nodeContent, false);
+        } catch (IOException e) {
+            showError(1, e.getMessage());
+        }
+    }
     /**
      *
      * @param name

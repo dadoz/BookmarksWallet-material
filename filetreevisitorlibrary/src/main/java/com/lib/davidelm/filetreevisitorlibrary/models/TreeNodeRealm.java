@@ -2,6 +2,9 @@ package com.lib.davidelm.filetreevisitorlibrary.models;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -22,14 +25,14 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
     @Ignore
     private transient TreeNodeInterface mParent;
     private RealmList<TreeNodeRealm> children = new RealmList<>();
-    private String name;
     private boolean folder;
+    private TreeNodeContentRealm nodeContent;
 
     public TreeNodeRealm() {
     }
 
-    public TreeNodeRealm(String nodeName, boolean folder, int level) {
-        this.name = nodeName;
+    public TreeNodeRealm(TreeNodeContent nodeContent, boolean folder, int level) {
+        this.nodeContent = (TreeNodeContentRealm) nodeContent;
         this.folder = folder;
         this.level = level;
     }
@@ -89,9 +92,6 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
 
     public int getLevel() {
         int level = 0;
@@ -104,7 +104,7 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
     }
 
     public boolean isRoot() {
-        Log.e(TAG, "check parent node value" + name);
+//        Log.e(TAG, "check parent node value" + name);
         return mParent == null && level == ROOT_LEVEL;
     }
 
@@ -118,7 +118,7 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
 
     public TreeNodeInterface getChildByName(String name) {
         for (TreeNodeInterface item : children) {
-            if (item.getName().equals(name)) {
+            if (item.getNodeContent().getName().equals(name)) {
                 return item;
             }
         }
@@ -136,6 +136,11 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
         } catch (Exception e) {
             id = 0;
         }
+    }
+
+    @Override
+    public TreeNodeContent getNodeContent() {
+        return nodeContent;
     }
 
     public void removeChildren() {

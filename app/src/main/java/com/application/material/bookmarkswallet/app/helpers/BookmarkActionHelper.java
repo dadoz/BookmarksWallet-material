@@ -17,6 +17,8 @@ import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerView
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
+
 import io.realm.Realm;
 
 import java.lang.ref.WeakReference;
@@ -82,9 +84,9 @@ public class BookmarkActionHelper {
      * @param bookmark
      * @return
      */
-    private Intent getSharingBookmarkIntent(Bookmark bookmark) {
+    private Intent getSharingBookmarkIntent(TreeNodeInterface bookmark) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, Bookmark.Utils.stringify(bookmark));
+        shareIntent.putExtra(Intent.EXTRA_TEXT, ""); //Bookmark.Utils.stringify(bookmark));
         shareIntent.setType("text/plain");
         return shareIntent;
     }

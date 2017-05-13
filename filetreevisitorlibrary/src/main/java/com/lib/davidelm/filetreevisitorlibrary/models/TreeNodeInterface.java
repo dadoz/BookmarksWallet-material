@@ -16,8 +16,6 @@ public interface TreeNodeInterface {
 
     TreeNodeInterface addChild(TreeNodeInterface treeNode);
 
-    String getName();
-
     TreeNodeInterface getParent();
 
     boolean isFolder();
@@ -27,4 +25,6 @@ public interface TreeNodeInterface {
     TreeNodeInterface getChildByName(String name);
 
     void setId();
+
+    TreeNodeContent getNodeContent();
 }

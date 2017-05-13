@@ -12,6 +12,7 @@ import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.viewholder.BookmarkViewHolder;
+import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
 
 import java.lang.ref.WeakReference;
 
@@ -19,10 +20,12 @@ import java.lang.ref.WeakReference;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE;
 import static com.application.material.bookmarkswallet.app.models.Bookmark.Utils.getBookmarkNameWrapper;
 
-public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter implements ItemTouchHelperAdapter {
+public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter
+        implements ItemTouchHelperAdapter {
     private final WeakReference<Context> context;
     private final WeakReference<OnActionListenerInterface> listener;
     private final Bitmap defaultIcon;
+    private final WeakReference<OnNodeClickListener> listener2;
     private boolean isFaviconNotEnabled;
 
     /**
@@ -30,10 +33,11 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
      * @param ctx
      * @param lst
      */
-    public BookmarkRecyclerViewAdapter(WeakReference<Context> ctx, WeakReference<OnActionListenerInterface> lst) {
-        super(ctx);
+    public BookmarkRecyclerViewAdapter(WeakReference<Context> ctx, WeakReference<OnActionListenerInterface> lst, WeakReference<OnNodeClickListener> lst2) {
+        super(lst2);
         context = ctx;
         listener = lst;
+        listener2 = lst2;
         setIsFaviconIsEnabled(ctx);
         defaultIcon = BitmapFactory.decodeResource(context.get().getResources(),
                 R.drawable.ic_bookmark_black_48dp);
@@ -49,30 +53,30 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
 
 
 
-    @Override
-    public BookmarkViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bookmark_item, parent, false);
-        return new BookmarkViewHolder(view, listener);
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder rvh, int position) {
-        final BookmarkViewHolder holder = (BookmarkViewHolder) rvh;
-        final Bookmark bookmark = getItem(position);
-
-        holder.labelView.setText(getBookmarkNameWrapper(bookmark.getName()));
-        holder.urlView.setText(bookmark.getUrl());
-        holder.timestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark
-                .getTimestamp()));
-        holder.selectItem(isSelectedPos(position)); //TODO handle night mode
-        if (bookmark.getIconPath() != null) {
-            holder.setIcon(bookmark.getIconPath(), defaultIcon, isSelectedPos(position),
-                    isFaviconNotEnabled);
-            return;
-        }
-        holder.setIcon(Utils.getIconBitmap(bookmark.getBlobIcon(), (int) context.get().getResources().getDimension(R.dimen.medium_icon_size)), defaultIcon,
-                isSelectedPos(position), isFaviconNotEnabled);
-    }
+//    @Override
+//    public BookmarkViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bookmark_item, parent, false);
+//        return new BookmarkViewHolder(view, listener);
+//    }
+//
+//    @Override
+//    public void onBindViewHolder(RecyclerView.ViewHolder rvh, int position) {
+//        final BookmarkViewHolder holder = (BookmarkViewHolder) rvh;
+//        final Bookmark bookmark = getItem(position);
+//
+//        holder.labelView.setText(getBookmarkNameWrapper(bookmark.getName()));
+//        holder.urlView.setText(bookmark.getUrl());
+//        holder.timestampView.setText(Bookmark.Utils.getParsedTimestamp(bookmark
+//                .getTimestamp()));
+//        holder.selectItem(isSelectedPos(position)); //TODO handle night mode
+//        if (bookmark.getIconPath() != null) {
+//            holder.setIcon(bookmark.getIconPath(), defaultIcon, isSelectedPos(position),
+//                    isFaviconNotEnabled);
+//            return;
+//        }
+//        holder.setIcon(Utils.getIconBitmap(bookmark.getBlobIcon(), (int) context.get().getResources().getDimension(R.dimen.medium_icon_size)), defaultIcon,
+//                isSelectedPos(position), isFaviconNotEnabled);
+//    }
 
     /**
      *
