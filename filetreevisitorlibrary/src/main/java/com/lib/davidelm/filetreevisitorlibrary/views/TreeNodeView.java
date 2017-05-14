@@ -88,12 +88,18 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     public void setAdapter(TreeNodeAdapter adapter) {
         treeNodeFilesRecyclerView.setAdapter(adapter);
         treeNodeFolderRecyclerView.setAdapter(new TreeNodeAdapter(new ArrayList<>(), new WeakReference<>(this)));//TODO FIX it
-        treeNodeFolderRecyclerView.setEmptyView(findViewById(R.id.emptyViewId));
+        setEmptyRecyclerView();
         if (adapter.getItemCount() == 0) {
             //filter list -> files and folders
             addFolderNodes(rootNode.getChildren());
             addFileNodes(rootNode.getChildren());
         }
+    }
+
+    private void setEmptyRecyclerView() {
+        View view = findViewById(R.id.emptyViewId);
+        view.findViewById(R.id.addFolderButtonId).setOnClickListener(view1 -> lst.get().onAddFolderEmptyViewCb());
+        treeNodeFolderRecyclerView.setEmptyView(view);
     }
 
     /**
@@ -126,14 +132,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
                 .stream()
                 .filter(TreeNodeInterface::isFolder)
                 .iterator();
-
-        if (treeNodeFolderRecyclerView.getAdapter() == null)
-            initRecyclerViewImpl(treeNodeFolderRecyclerView);
-        //empty list
-        if (!foldersIterator.hasNext())
-            ((TreeNodeAdapter) treeNodeFolderRecyclerView.getAdapter()).addItems(new ArrayList<>());
-
-        foldersIterator.forEachRemaining(((TreeNodeAdapter) treeNodeFolderRecyclerView.getAdapter())::addItem);
+        setNodesOnAdapter(foldersIterator, treeNodeFolderRecyclerView);
     }
 
     /**
@@ -147,14 +146,26 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
                 .filter(obj -> !obj.isFolder())
                 .iterator();
 
-        if (treeNodeFilesRecyclerView.getAdapter() == null)
-            initRecyclerViewImpl(treeNodeFilesRecyclerView);
+        setNodesOnAdapter(foldersIterator, treeNodeFilesRecyclerView);
+    }
 
+    /**
+     *
+     * @param nodesIterator
+     * @param recyclerView
+     */
+    private void setNodesOnAdapter(Iterator<TreeNodeInterface> nodesIterator, RecyclerView recyclerView) {
+        if (recyclerView.getAdapter() == null)
+            initRecyclerViewImpl(recyclerView);
+
+        TreeNodeAdapter adapter = ((TreeNodeAdapter) recyclerView.getAdapter());
         //empty list
-        if (!foldersIterator.hasNext())
-            ((TreeNodeAdapter) treeNodeFilesRecyclerView.getAdapter()).addItems(new ArrayList<>());
+        if (!nodesIterator.hasNext())
+            adapter.addItems(new ArrayList<>());
 
-        foldersIterator.forEachRemaining(((TreeNodeAdapter) treeNodeFilesRecyclerView.getAdapter())::addItem);
+        adapter.clearItems();
+        nodesIterator.forEachRemaining(adapter::addItem);
+
     }
 
     @Override

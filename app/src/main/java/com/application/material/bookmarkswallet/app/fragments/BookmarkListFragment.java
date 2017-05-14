@@ -404,6 +404,11 @@ public class BookmarkListFragment extends Fragment
     }
 
     @Override
+    public void onAddFolderEmptyViewCb() {
+        displayNodeView.addFolder("test");
+    }
+
+    @Override
     public void onFolderNodeCLick(View v, int position, TreeNodeInterface node) {
 
     }

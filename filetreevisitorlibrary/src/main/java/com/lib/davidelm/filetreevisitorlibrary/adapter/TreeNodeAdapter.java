@@ -83,11 +83,15 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
      * @param list
      */
     public void addItems(List<TreeNodeInterface> list) {
-        items.clear();
+        items.clear(); //TODO fix it THIS IS WRONG
         items.addAll(list);
         notifyDataSetChanged();
     }
 
+    public void clearItems() {
+        items.clear();
+        notifyDataSetChanged();
+    }
     /**
      * remove item
      * @param childNode
