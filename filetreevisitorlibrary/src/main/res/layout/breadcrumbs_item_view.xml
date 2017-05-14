@@ -5,9 +5,9 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:background="?attr/selectableItemBackground"
-    android:paddingLeft="16dp"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp">
+    android:paddingLeft="@dimen/margin_16"
+    android:paddingTop="@dimen/margin_16"
+    android:paddingBottom="@dimen/margin_16">
     <TextView
         android:id="@+id/breadCrumbsLabelTextId"
         android:layout_width="wrap_content"

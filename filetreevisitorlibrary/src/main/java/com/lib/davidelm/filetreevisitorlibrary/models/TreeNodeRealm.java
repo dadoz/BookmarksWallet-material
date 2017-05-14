@@ -7,11 +7,13 @@ import com.google.gson.Gson;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
@@ -81,7 +83,9 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
 
     public List<TreeNodeInterface> getChildren() {
         //immutable types
-        return Collections.unmodifiableList(children);
+        List<TreeNodeInterface> list = Collections.unmodifiableList(children);
+//        list.sort((o1, o2) -> o1.isFolder() ? 0 : 1);
+        return list;
     }
 
     public TreeNodeInterface getParent() {

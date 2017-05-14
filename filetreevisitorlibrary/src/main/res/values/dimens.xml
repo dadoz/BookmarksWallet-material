@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="grid_space">8dp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
+    <dimen name="margin_16">16dp</dimen>
+    <dimen name="folder_icon_width">50dp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
+    <dimen name="margin_8">8sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
 </resources>

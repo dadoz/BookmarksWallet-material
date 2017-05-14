@@ -15,6 +15,7 @@ import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 import java.lang.ref.WeakReference;
+import java.text.BreakIterator;
 import java.util.List;
 
 
@@ -40,7 +41,9 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
         TreeNodeContent nodeContent = item.getNodeContent();
 
         holder.nodeLabelText.setText(nodeContent.getName());
-//        holder.nodeLabelText.setText(item.getDescription());
+
+//        holder.nodeDescriptionText.setVisibility(nodeContent.getDescription() == null ? View.GONE : View.VISIBLE);
+        holder.nodeDescriptionText.setText(nodeContent.getDescription());
         setIcon(holder.nodeIconImage, holder.itemView.getContext(), items.get(position).isFolder(), nodeContent);
 
         holder.itemView.setOnClickListener(v -> {
@@ -70,8 +73,7 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
      * add single item
      * @param node
      */
-    @Deprecated
-    public void addItem(TreeNode node) {
+    public void addItem(TreeNodeInterface node) {
         items.add(node);
         notifyDataSetChanged();
     }
@@ -122,10 +124,12 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView nodeLabelText;
         private final ImageView nodeIconImage;
+        private final TextView nodeDescriptionText;
 
         ViewHolder(View itemView) {
             super(itemView);
             nodeIconImage = (ImageView) itemView.findViewById(R.id.nodeIconImageId);
+            nodeDescriptionText = (TextView) itemView.findViewById(R.id.nodeDescriptionTextId);
             nodeLabelText = (TextView) itemView.findViewById(R.id.nodeLabelTextId);
         }
     }

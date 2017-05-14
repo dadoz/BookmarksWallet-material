@@ -410,6 +410,6 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onFileNodeCLick(View v, int position, TreeNodeInterface node) {
-
+        Snackbar.make(getView(), "hey open " + node.getNodeContent().getName(), Snackbar.LENGTH_SHORT).show();
     }
 }

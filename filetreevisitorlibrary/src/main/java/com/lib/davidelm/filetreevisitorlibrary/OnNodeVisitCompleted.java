@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface OnNodeVisitCompleted {
 
-    void addNodes(List<TreeNodeInterface> list);
     void addFolder(String name);
     void addFile(String name);
     void removeFolder(String name);
@@ -16,4 +15,6 @@ public interface OnNodeVisitCompleted {
     void setParentNode(TreeNodeInterface parentNode);
 
     void removeNode(TreeNodeInterface childNode);
+
+    void addNodes(List<TreeNodeInterface> children);
 }

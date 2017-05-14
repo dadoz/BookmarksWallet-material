@@ -25,17 +25,23 @@ import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Observer;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TreeNodeView extends FrameLayout implements OnNodeClickListener, OnNodeVisitCompleted,
         BreadCrumbsView.OnPopBackStackInterface {
-    private RecyclerView treeNodeRecyclerView;
     private String TAG = "TAG";
     private TreeNodeInterface currentNode;
     private TreeNodeInterface rootNode;
     private BreadCrumbsView breadCrumbsView;
     private RootNodeManager displayNodeListModel;
     private WeakReference<OnNavigationCallbacks> lst;
+    private RecyclerView treeNodeFolderRecyclerView;
+    private RecyclerView treeNodeFilesRecyclerView;
 
     public TreeNodeView(@NonNull Context context) {
         super(context);
@@ -62,7 +68,8 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      */
     private void initView() {
         inflate(getContext(), R.layout.tree_node_layout, this);
-        treeNodeRecyclerView = (RecyclerView) findViewById(R.id.treeNodeRecyclerViewId);
+        treeNodeFolderRecyclerView = (RecyclerView) findViewById(R.id.treeNodeFolderRecyclerViewId);
+        treeNodeFilesRecyclerView = (RecyclerView) findViewById(R.id.treeNodeFilesRecyclerViewId);
         displayNodeListModel = RootNodeManager.getInstance(new WeakReference<>(getContext()));
         displayNodeListModel.init(new WeakReference<>(this));
     }
@@ -79,26 +86,74 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      * add custom item view :)
      */
     public void setAdapter(TreeNodeAdapter adapter) {
-        treeNodeRecyclerView.setAdapter(adapter);
+        treeNodeFilesRecyclerView.setAdapter(adapter);
+        treeNodeFolderRecyclerView.setAdapter(new TreeNodeAdapter(new ArrayList<>(), new WeakReference<>(this)));//TODO FIX it
+        if (adapter.getItemCount() == 0) {
+            //filter list -> files and folders
+            addFolderNodes(rootNode.getChildren());
+            addFileNodes(rootNode.getChildren());
+        }
     }
 
     /**
      * add custom item view :)
      */
+    @Deprecated
     private void initRecyclerView() {
-        treeNodeRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        treeNodeRecyclerView.addItemDecoration(new SpaceItemDecorator(getResources().getDimensionPixelSize(R.dimen.grid_space)));
-        treeNodeRecyclerView.setAdapter(new TreeNodeAdapter(new ArrayList<>(), new WeakReference<>(this)));
+        initRecyclerViewImpl(treeNodeFilesRecyclerView);
+        initRecyclerViewImpl(treeNodeFolderRecyclerView);
+    }
+
+    /**
+     *
+     * @param recyclerView
+     */
+    private void initRecyclerViewImpl(RecyclerView recyclerView) {
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.addItemDecoration(new SpaceItemDecorator(getResources().getDimensionPixelSize(R.dimen.grid_space)));
+        recyclerView.setAdapter(new TreeNodeAdapter(new ArrayList<>(), new WeakReference<>(this)));
+    }
+
+
+    /**
+     *
+     * @param list
+     */
+    public void addFolderNodes(List<TreeNodeInterface> list) {
+        //filter list -> files and folders
+        Iterator<TreeNodeInterface> foldersIterator = list
+                .stream()
+                .filter(TreeNodeInterface::isFolder)
+                .iterator();
+
+        if (treeNodeFolderRecyclerView.getAdapter() == null)
+            initRecyclerViewImpl(treeNodeFolderRecyclerView);
+        //empty list
+        if (!foldersIterator.hasNext())
+            ((TreeNodeAdapter) treeNodeFolderRecyclerView.getAdapter()).addItems(new ArrayList<>());
+
+        foldersIterator.forEachRemaining(((TreeNodeAdapter) treeNodeFolderRecyclerView.getAdapter())::addItem);
     }
 
     /**
      *
      * @param list
      */
-    public void addNodes(List<TreeNodeInterface> list) {
-        if (treeNodeRecyclerView.getAdapter() == null)
-            initRecyclerView();
-        ((TreeNodeAdapter) treeNodeRecyclerView.getAdapter()).addItems(list);
+    public void addFileNodes(List<TreeNodeInterface> list) {
+        //filter list -> files and folders
+        Iterator<TreeNodeInterface> foldersIterator = list
+                .stream()
+                .filter(obj -> !obj.isFolder())
+                .iterator();
+
+        if (treeNodeFilesRecyclerView.getAdapter() == null)
+            initRecyclerViewImpl(treeNodeFilesRecyclerView);
+
+        //empty list
+        if (!foldersIterator.hasNext())
+            ((TreeNodeAdapter) treeNodeFilesRecyclerView.getAdapter()).addItems(new ArrayList<>());
+
+        foldersIterator.forEachRemaining(((TreeNodeAdapter) treeNodeFilesRecyclerView.getAdapter())::addItem);
     }
 
     @Override
@@ -109,7 +164,14 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
 
     @Override
     public void removeNode(TreeNodeInterface childNode) {
-        ((TreeNodeAdapter) treeNodeRecyclerView.getAdapter()).removeItem(childNode);
+        RecyclerView recyclerView = childNode.isFolder() ? treeNodeFolderRecyclerView : treeNodeFilesRecyclerView;
+        ((TreeNodeAdapter) recyclerView.getAdapter()).removeItem(childNode);
+    }
+
+    @Override
+    public void addNodes(List<TreeNodeInterface> children) {
+        addFolderNodes(children);
+        addFileNodes(children);
     }
 
     @Override
@@ -119,8 +181,9 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
 
         //update and set view
         updateCurrentNode(node);
-        ((TreeNodeAdapter) treeNodeRecyclerView.getAdapter()).addItems(node.getChildren());
-        treeNodeRecyclerView.getAdapter().notifyDataSetChanged();
+        addNodes(node.getChildren());
+        treeNodeFolderRecyclerView.getAdapter().notifyDataSetChanged();
+        treeNodeFilesRecyclerView.getAdapter().notifyDataSetChanged();
 
         if (lst != null && lst.get() != null)
             lst.get().onFolderNodeClickCb(position, node);
@@ -162,7 +225,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
             breadCrumbsView.removeLatestBreadCrumb();
 
             //update node viewsrr
-            ((TreeNodeAdapter) treeNodeRecyclerView.getAdapter()).addItems(currentNode.getChildren());
+            ((TreeNodeAdapter) treeNodeFolderRecyclerView.getAdapter()).addItems(currentNode.getChildren());
         }
         return !isRootNode;
     }
@@ -187,8 +250,9 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
             updateCurrentNode(currentNode.getParent());
         }
 
-        ((TreeNodeAdapter) treeNodeRecyclerView.getAdapter()).addItems(currentNode.getChildren());
-        treeNodeRecyclerView.getAdapter().notifyDataSetChanged();
+        addNodes(currentNode.getChildren());
+        treeNodeFolderRecyclerView.getAdapter().notifyDataSetChanged();
+        treeNodeFilesRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     /**
