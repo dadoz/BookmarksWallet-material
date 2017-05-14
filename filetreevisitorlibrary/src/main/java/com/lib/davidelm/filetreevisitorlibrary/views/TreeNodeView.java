@@ -40,8 +40,8 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     private BreadCrumbsView breadCrumbsView;
     private RootNodeManager displayNodeListModel;
     private WeakReference<OnNavigationCallbacks> lst;
-    private RecyclerView treeNodeFolderRecyclerView;
-    private RecyclerView treeNodeFilesRecyclerView;
+    private EmptyRecyclerView treeNodeFolderRecyclerView;
+    private EmptyRecyclerView treeNodeFilesRecyclerView;
 
     public TreeNodeView(@NonNull Context context) {
         super(context);
@@ -68,8 +68,8 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      */
     private void initView() {
         inflate(getContext(), R.layout.tree_node_layout, this);
-        treeNodeFolderRecyclerView = (RecyclerView) findViewById(R.id.treeNodeFolderRecyclerViewId);
-        treeNodeFilesRecyclerView = (RecyclerView) findViewById(R.id.treeNodeFilesRecyclerViewId);
+        treeNodeFolderRecyclerView = (EmptyRecyclerView) findViewById(R.id.treeNodeFolderRecyclerViewId);
+        treeNodeFilesRecyclerView = (EmptyRecyclerView) findViewById(R.id.treeNodeFilesRecyclerViewId);
         displayNodeListModel = RootNodeManager.getInstance(new WeakReference<>(getContext()));
         displayNodeListModel.init(new WeakReference<>(this));
     }
@@ -88,6 +88,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     public void setAdapter(TreeNodeAdapter adapter) {
         treeNodeFilesRecyclerView.setAdapter(adapter);
         treeNodeFolderRecyclerView.setAdapter(new TreeNodeAdapter(new ArrayList<>(), new WeakReference<>(this)));//TODO FIX it
+        treeNodeFolderRecyclerView.setEmptyView(findViewById(R.id.emptyViewId));
         if (adapter.getItemCount() == 0) {
             //filter list -> files and folders
             addFolderNodes(rootNode.getChildren());

@@ -6,15 +6,22 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_marginLeft="@dimen/margin_8"
-            android:layout_marginRight="@dimen/margin_8"
-            android:id="@+id/treeNodeFolderRecyclerViewId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <!---move in a view-->
+        <RelativeLayout
+            android:id="@+id/treeNodeFolderContainerId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.lib.davidelm.filetreevisitorlibrary.views.EmptyRecyclerView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_marginLeft="@dimen/margin_8"
+                android:layout_marginRight="@dimen/margin_8"
+                android:id="@+id/treeNodeFolderRecyclerViewId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <include layout="@layout/empty_folder_rv_view"/>
+        </RelativeLayout>
         <TextView
-            android:layout_below="@id/treeNodeFolderRecyclerViewId"
+            android:layout_below="@id/treeNodeFolderContainerId"
             android:layout_marginTop="@dimen/margin_8"
             android:layout_marginBottom="@dimen/margin_8"
             android:layout_marginLeft="@dimen/margin_16"
@@ -23,7 +30,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_24"
             android:text="Bookmarks"/>
-        <android.support.v7.widget.RecyclerView
+        <com.lib.davidelm.filetreevisitorlibrary.views.EmptyRecyclerView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_below="@id/filesLabelTextId"
             android:layout_marginLeft="@dimen/margin_8"
@@ -31,6 +38,8 @@
             android:id="@+id/treeNodeFilesRecyclerViewId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <include
+            layout="@layout/empty_file_rv_view"/>
 
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
