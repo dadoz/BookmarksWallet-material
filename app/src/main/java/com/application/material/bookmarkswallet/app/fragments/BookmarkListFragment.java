@@ -44,6 +44,8 @@ import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.observer.BookmarkListObserver;
+import com.application.material.bookmarkswallet.app.views.AddFolderView;
+import com.application.material.bookmarkswallet.app.views.AddFolderView.AddFolderCallbacks;
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
@@ -58,6 +60,7 @@ import java.lang.ref.WeakReference;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static android.content.ContentValues.TAG;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.EXPANDED_GRIDVIEW;
 
 //TODO refactor it
@@ -67,26 +70,24 @@ public class BookmarkListFragment extends Fragment
         OnActionListenerInterface,
         SearchManagerCallbackInterface,
         AddBookmarkActivity.OnHandleBackPressed, ActionMenuRevealHelper.ActionMenuRevealCallbacks,
-        OnNavigationCallbacks, OnNodeClickListener {
+        OnNavigationCallbacks, OnNodeClickListener, AddFolderCallbacks {
     public static final String FRAG_TAG = "LinksListFragment";
     @BindView(R.id.addBookmarkFabId)
     FloatingActionButton addNewFab;
     @BindView(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
-//    @BindView(R.id.bookmarkRecyclerViewId)
-//    RecyclerView recyclerView;
     @BindView(R.id.emptyLinkListViewId)
     View mEmptyLinkListView;
     @BindView(R.id.emptySearchResultLayoutId)
     View emptySearchResultLayout;
     @BindView(R.id.importDefaultBookmarksButtonId)
     View importDefaultBookmarksButton;
-    @BindView(R.id.fragmentBookmarkListMainFrameLayoutId)
-    View fragmentBookmarkListMainFrameLayout;
     @BindView(R.id.treeNodeViewId)
     TreeNodeView displayNodeView;
     @BindView(R.id.breadCrumbsViewId)
     BreadCrumbsView breadCrumbsView;
+    @BindView(R.id.addFolderViewId)
+    AddFolderView addFolderView;
 
     private SearchManager searchManager;
     private BookmarkActionHelper mBookmarkActionSingleton;
@@ -165,12 +166,11 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_open_menu:
-//                openMenuItem = item;
-//                optionMenuContainerRevealLayout.toggleRevealActionMenu();
-//                break;
-//        }
+        switch (item.getItemId()) {
+            case R.id.action_add_folder:
+                addFolderView.setVisibleAndUpdate(true);
+                break;
+        }
         return true;
     }
 
@@ -205,6 +205,7 @@ public class BookmarkListFragment extends Fragment
         addNewFab.setOnClickListener(this);
         displayNodeView.setNavigationCallbacksListener(new WeakReference<>(this));
         displayNodeView.setBreadCrumbsView(breadCrumbsView);
+        addFolderView.setListener(new WeakReference<>(this));
     }
 
     /**
@@ -403,10 +404,6 @@ public class BookmarkListFragment extends Fragment
 
     }
 
-    @Override
-    public void onAddFolderEmptyViewCb() {
-        displayNodeView.addFolder("test");
-    }
 
     @Override
     public void onFolderNodeCLick(View v, int position, TreeNodeInterface node) {
@@ -416,5 +413,20 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onFileNodeCLick(View v, int position, TreeNodeInterface node) {
         Snackbar.make(getView(), "hey open " + node.getNodeContent().getName(), Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onAddFolderEmptyViewCb() {
+        displayNodeView.addFolder("test");
+    }
+
+    @Override
+    public void addFolderActionCb(String name) {
+        displayNodeView.addFolder(name);
+    }
+
+    @Override
+    public void onUpdatedVisibility(boolean isVisible) {
+        //displayNodeView.setMarginTop(isVisible ? 100 : 0);
     }
 }

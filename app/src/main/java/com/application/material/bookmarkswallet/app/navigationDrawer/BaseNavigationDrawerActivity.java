@@ -30,6 +30,7 @@ import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -257,6 +258,24 @@ public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
                 .withIcon(R.drawable.ic_view_stream_black_48dp)
                 .withDescriptionTextColorRes(R.color.grey_400)
                 .withIdentifier(2)
+                .withSelectedTextColorRes(R.color.indigo_600)
+                .withSelectedColorRes(R.color.grey_100));
+        menuList.add(new DividerDrawerItem());
+        menuList.add(new PrimaryDrawerItem()
+                .withName("Settings")
+                .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
+                .withIcon(R.drawable.ic_settings_black_48dp)
+                .withDescriptionTextColorRes(R.color.grey_400)
+                .withIdentifier(3)
+                .withSelectedTextColorRes(R.color.indigo_600)
+                .withSelectedColorRes(R.color.grey_100));
+        menuList.add(new DividerDrawerItem());
+        menuList.add(new PrimaryDrawerItem()
+                .withName("Offer me a coffee")
+                .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
+                .withIcon(R.mipmap.ic_local_cafe)
+                .withDescriptionTextColorRes(R.color.grey_400)
+                .withIdentifier(4)
                 .withSelectedTextColorRes(R.color.indigo_600)
                 .withSelectedColorRes(R.color.grey_100));
         return menuList;

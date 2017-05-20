@@ -9,13 +9,9 @@
         app:showAsAction="always"
         android:title="Search"/>
 
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+    <item android:id="@+id/action_add_folder"
+        android:title="@string/action_add_folder"
         android:orderInCategory="100"
-        app:showAsAction="never" />
-    <!--<item android:id="@+id/action_open_menu"-->
-        <!--android:title="@string/action_settings"-->
-        <!--android:orderInCategory="100"-->
-        <!--android:icon="@drawable/ic_keyboard_arrow_down_black_24dp"-->
-        <!--app:showAsAction="always" />-->
+        android:icon="@drawable/ic_create_new_folder_action"
+        app:showAsAction="always" />
 </menu>

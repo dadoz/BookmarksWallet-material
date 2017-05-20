@@ -1,53 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- move in a view-->
-    <FrameLayout
-        android:id="@+id/fragmentBookmarkListMainFrameLayoutId"
+    <!-- main view-->
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.lib.davidelm.filetreevisitorlibrary.views.BreadCrumbsView
-            android:id="@+id/breadCrumbsViewId"
+        android:layout_height="match_parent">
+        <!--add folder view -->
+        <com.application.material.bookmarkswallet.app.views.AddFolderView
+            android:id="@+id/addFolderViewId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <!-- breadcrumbs -->
+        <com.lib.davidelm.filetreevisitorlibrary.views.BreadCrumbsView
+            android:id="@+id/breadCrumbsViewId"
+            android:layout_below="@id/addFolderViewId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- swipe view-->
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/mainContainerViewId"
-            android:layout_marginTop="60dp"
+            android:layout_below="@id/breadCrumbsViewId"
+            android:layout_marginTop="@dimen/margin_8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <!--<android.support.v7.widget.RecyclerView-->
-                <!--android:id="@+id/bookmarkRecyclerViewId"-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:paddingBottom="@dimen/fab_margin"-->
-                <!--android:clipToPadding="false"-->
-                <!--android:scrollbars="vertical"/>-->
             <com.lib.davidelm.filetreevisitorlibrary.views.TreeNodeView
                 android:id="@+id/treeNodeViewId"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-
         </android.support.v4.widget.SwipeRefreshLayout>
-
         <include layout="@layout/empty_bookmark_list_layout"/>
         <include layout="@layout/empty_search_result_layout"/>
+    </RelativeLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/addBookmarkFabId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_add_white_48dp"
-            app:elevation="4dp"
-            app:borderWidth="0dp"
-            android:layout_gravity="bottom|right"
-            app:layout_behavior="com.application.material.bookmarkswallet.app.behavior.FloatingActionButtonBehavior"
-            app:backgroundTint="@color/indigo_600"
-            app:fabSize="normal"/>
-
-    </FrameLayout>
-</android.support.design.widget.CoordinatorLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addBookmarkFabId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_add_white_48dp"
+        app:elevation="4dp"
+        app:borderWidth="0dp"
+        app:layout_behavior="com.application.material.bookmarkswallet.app.behavior.FloatingActionButtonBehavior"
+        app:backgroundTint="@color/indigo_600"
+        app:fabSize="normal"/>
+</FrameLayout>
