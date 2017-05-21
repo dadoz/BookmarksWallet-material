@@ -19,11 +19,10 @@ import io.realm.RealmObject;
 
 public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> extends
         TreeNodeAdapter {
-//        RealmRecyclerViewAdapter<Bookmark> {
     private final MultipleSelector multipleSelector;
 
-    MultipleSelectorHelperAdapter(WeakReference<OnNodeClickListener> lst) {
-        super(new ArrayList<>(), lst);
+    MultipleSelectorHelperAdapter() {
+        super(new ArrayList<>());
         multipleSelector = new MultipleSelector();
     }
 

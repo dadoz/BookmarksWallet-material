@@ -235,6 +235,16 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
             lst.get().onFileNodeClickCb(position, node);
     }
 
+    @Override
+    public void onFolderNodeLongCLick(View v, int position, TreeNodeInterface item) {
+        lst.get().onFolderNodeLongClickCb(position, item);
+    }
+
+    @Override
+    public void onFileNodeLongCLick(View v, int position, TreeNodeInterface item) {
+        lst.get().onFileNodeLongClickCb(position, item);
+    }
+
     /**
      * on back pressed cb
      * @return

@@ -10,5 +10,9 @@ public interface OnNavigationCallbacks {
     void onNodeError(int type, TreeNodeInterface currentNode, String message);
     void onFolderNodeClickCb(int position, TreeNodeInterface node);
     void onFileNodeClickCb(int position, TreeNodeInterface node);
+
+    void onFolderNodeLongClickCb(int position, TreeNodeInterface item);
+
+    void onFileNodeLongClickCb(int position, TreeNodeInterface item);
 //    void onAddFolderEmptyViewCb();
 }

@@ -14,6 +14,7 @@ import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,6 +26,9 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
     public TreeNodeAdapter(List<TreeNodeInterface> list, WeakReference<OnNodeClickListener> lst) {
         this.items = list;
         this.lst = lst;
+    }
+    public TreeNodeAdapter(List<TreeNodeInterface> list) {
+        this.items = list;
     }
 
     @Override
@@ -50,12 +54,22 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
         holder.nodeDescriptionText.setText(nodeContent.getDescription());
         setIcon(holder.nodeIconImage, holder.itemView.getContext(), items.get(position).isFolder(), nodeContent);
 
+        holder.itemView.setOnLongClickListener(v -> {
+            if (lst != null && lst.get() != null) {
+                if (item.isFolder())
+                    lst.get().onFolderNodeLongCLick(v, position, item);
+                else
+                    lst.get().onFileNodeLongCLick(v, position, item);
+            }
+            return true;
+        });
         holder.itemView.setOnClickListener(v -> {
-            if (lst.get() != null && item.isFolder())
-                lst.get().onFolderNodeCLick(v, position, item);
-
-            if (lst.get() != null && !item.isFolder())
-                lst.get().onFileNodeCLick(v, position, item);
+            if (lst != null && lst.get() != null) {
+                if (item.isFolder())
+                    lst.get().onFolderNodeCLick(v, position, item);
+                else
+                    lst.get().onFileNodeCLick(v, position, item);
+            }
         });
     }
 

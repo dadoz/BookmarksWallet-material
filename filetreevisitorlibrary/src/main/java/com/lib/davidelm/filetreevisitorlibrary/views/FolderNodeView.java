@@ -128,6 +128,16 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
         //THROW new exceptions
     }
 
+    @Override
+    public void onFolderNodeLongCLick(View v, int position, TreeNodeInterface item) {
+        //THROW new exceptions
+    }
+
+    @Override
+    public void onFileNodeLongCLick(View v, int position, TreeNodeInterface item) {
+
+    }
+
     public boolean isCurrentNodeRoot() {
         return currentNode.isRoot();
     }

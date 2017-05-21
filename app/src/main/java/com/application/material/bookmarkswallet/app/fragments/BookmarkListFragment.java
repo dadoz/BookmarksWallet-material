@@ -60,7 +60,6 @@ import java.lang.ref.WeakReference;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-import static android.content.ContentValues.TAG;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.EXPANDED_GRIDVIEW;
 
 //TODO refactor it
@@ -70,7 +69,7 @@ public class BookmarkListFragment extends Fragment
         OnActionListenerInterface,
         SearchManagerCallbackInterface,
         AddBookmarkActivity.OnHandleBackPressed, ActionMenuRevealHelper.ActionMenuRevealCallbacks,
-        OnNavigationCallbacks, OnNodeClickListener, AddFolderCallbacks {
+        OnNavigationCallbacks, AddFolderCallbacks {
     public static final String FRAG_TAG = "LinksListFragment";
     @BindView(R.id.addBookmarkFabId)
     FloatingActionButton addNewFab;
@@ -96,6 +95,7 @@ public class BookmarkListFragment extends Fragment
     private EditBookmarkActionModeCallback actionMode;
     private boolean expandedGridview;
     private MenuItem openMenuItem;
+    private String TAG ="BOOKmarklist";
 
     @Override
     public void onAttach(Context context) {
@@ -199,8 +199,7 @@ public class BookmarkListFragment extends Fragment
         handleEmptyView();
         initPullToRefresh();
         displayNodeView.setAdapter(new BookmarkRecyclerViewAdapter(
-                new WeakReference<Context>(getContext()), new WeakReference<>(this),
-                new WeakReference<OnNodeClickListener>(this)));
+                new WeakReference<>(getContext()), new WeakReference<>(this)));
 //        initRecyclerView();
         addNewFab.setOnClickListener(this);
         displayNodeView.setNavigationCallbacksListener(new WeakReference<>(this));
@@ -401,18 +400,16 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onFileNodeClickCb(int position, TreeNodeInterface node) {
-
-    }
-
-
-    @Override
-    public void onFolderNodeCLick(View v, int position, TreeNodeInterface node) {
-
-    }
-
-    @Override
-    public void onFileNodeCLick(View v, int position, TreeNodeInterface node) {
         Snackbar.make(getView(), "hey open " + node.getNodeContent().getName(), Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFolderNodeLongClickCb(int position, TreeNodeInterface item) {
+        Log.e(TAG, position + "");
+    }
+
+    @Override
+    public void onFileNodeLongClickCb(int position, TreeNodeInterface item) {
     }
 
 

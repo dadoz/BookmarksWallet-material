@@ -13,6 +13,7 @@ import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.viewholder.BookmarkViewHolder;
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 import java.lang.ref.WeakReference;
 
@@ -21,11 +22,10 @@ import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHel
 import static com.application.material.bookmarkswallet.app.models.Bookmark.Utils.getBookmarkNameWrapper;
 
 public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter
-        implements ItemTouchHelperAdapter {
+        implements ItemTouchHelperAdapter, OnNodeClickListener {
     private final WeakReference<Context> context;
     private final WeakReference<OnActionListenerInterface> listener;
     private final Bitmap defaultIcon;
-    private final WeakReference<OnNodeClickListener> listener2;
     private boolean isFaviconNotEnabled;
 
     /**
@@ -33,11 +33,11 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter
      * @param ctx
      * @param lst
      */
-    public BookmarkRecyclerViewAdapter(WeakReference<Context> ctx, WeakReference<OnActionListenerInterface> lst, WeakReference<OnNodeClickListener> lst2) {
-        super(lst2);
+    public BookmarkRecyclerViewAdapter(WeakReference<Context> ctx,
+                                       WeakReference<OnActionListenerInterface> lst) {
+        super();
         context = ctx;
         listener = lst;
-        listener2 = lst2;
         setIsFaviconIsEnabled(ctx);
         defaultIcon = BitmapFactory.decodeResource(context.get().getResources(),
                 R.drawable.ic_bookmark_black_48dp);
@@ -94,6 +94,26 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter
 
     @Override
     public void onItemDismiss(int position) {
+    }
+
+    @Override
+    public void onFolderNodeCLick(View v, int position, TreeNodeInterface node) {
+
+    }
+
+    @Override
+    public void onFileNodeCLick(View v, int position, TreeNodeInterface node) {
+
+    }
+
+    @Override
+    public void onFolderNodeLongCLick(View v, int position, TreeNodeInterface item) {
+
+    }
+
+    @Override
+    public void onFileNodeLongCLick(View v, int position, TreeNodeInterface item) {
+
     }
 
     /**
