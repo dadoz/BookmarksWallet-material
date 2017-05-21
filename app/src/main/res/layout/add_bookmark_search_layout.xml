@@ -3,7 +3,7 @@
     android:id="@+id/addBookmarkMainLayoutId"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -71,21 +71,49 @@
                         android:maxLength="50"
                         android:maxLines="2"/>
                 </android.support.design.widget.TextInputLayout>
-
-                <com.lib.davidelm.filetreevisitorlibrary.views.FolderNodeView
-                    android:id="@+id/addBookmarkFolderListViewId"
-                    android:layout_below="@id/addBookmarkTitleTextInputId"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"/>
                 <CheckBox
                     android:id="@+id/addBookmarkHttpsCheckboxId"
-                    android:layout_below="@id/addBookmarkFolderListViewId"
+                    android:layout_below="@id/addBookmarkTitleTextInputId"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding_16"
                     android:text="@string/https_checkbox_label"/>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
+
+        <!--folder view-->
+        <TextView
+            android:id="@+id/addBookmarkFolderTitleTextId"
+            android:layout_below="@id/addBookmarkCardLayoutId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_16"
+            android:layout_marginRight="@dimen/padding_16"
+            android:textSize="@dimen/text_size_24"
+            android:text="@string/select_folder"/>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="290dp"
+            android:layout_below="@id/addBookmarkFolderTitleTextId"
+            android:layout_margin="@dimen/padding_16"
+            android:padding="@dimen/padding_16">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.lib.davidelm.filetreevisitorlibrary.views.NavigateFolderUpView
+                    android:id="@+id/navigateUpFolderViewId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <com.lib.davidelm.filetreevisitorlibrary.views.FolderNodeView
+                    android:layout_below="@id/navigateUpFolderViewId"
+                    android:id="@+id/addBookmarkFolderListViewId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
         <Button
             android:visibility="gone"
             android:id="@+id/addBookmarkSearchButtonId"

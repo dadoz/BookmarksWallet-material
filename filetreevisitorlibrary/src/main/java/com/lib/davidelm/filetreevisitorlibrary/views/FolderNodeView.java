@@ -13,6 +13,7 @@ import com.lib.davidelm.filetreevisitorlibrary.R;
 import com.lib.davidelm.filetreevisitorlibrary.adapter.TreeNodeAdapter;
 import com.lib.davidelm.filetreevisitorlibrary.decorator.SpaceItemDecorator;
 import com.lib.davidelm.filetreevisitorlibrary.manager.RootNodeManager;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 import java.lang.ref.WeakReference;
@@ -30,6 +31,7 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
     private final boolean isCompact = true;
     private RootNodeManager displayNodeListModel = RootNodeManager.getInstance(new WeakReference<Context>(getContext()));
     private TreeNodeInterface rootNode;
+    private TreeNodeInterface currentNode;
 
     public FolderNodeView(Context context) {
         super(context);
@@ -52,7 +54,7 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
     }
 
     private void initView() {
-        rootNode = displayNodeListModel.getRoot();
+        currentNode = rootNode = displayNodeListModel.getRoot();
         initRecyclerView(isCompact);
     }
 
@@ -74,6 +76,30 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
 
     /**
      *
+     * @return
+     */
+    public int getCurrentNodeId() {
+        return currentNode != null ? currentNode.getId() : -1;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public void setParentNodeFolder() {
+        currentNode = currentNode != null ? currentNode.getParent() : rootNode;
+        updateRv();
+    }
+
+    private void updateRv() {
+        if (recyclerView != null) {
+            ((TreeNodeAdapter) recyclerView.getAdapter()).addItems(getFolderNodes(currentNode.getChildren()));
+            recyclerView.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    /**
+     *
      * @param list
      * @return
      */
@@ -87,17 +113,22 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
 
         //empty list
         if (nodesIterator.hasNext())
-            nodeList.add(nodesIterator.next());
+            nodesIterator.forEachRemaining(nodeList::add);
         return nodeList;
     }
 
     @Override
     public void onFolderNodeCLick(View v, int position, TreeNodeInterface node) {
-        Log.e(TAG, "click");
+        currentNode = node;
+        updateRv();
     }
 
     @Override
     public void onFileNodeCLick(View v, int position, TreeNodeInterface node) {
         //THROW new exceptions
+    }
+
+    public boolean isCurrentNodeRoot() {
+        return currentNode.isRoot();
     }
 }
