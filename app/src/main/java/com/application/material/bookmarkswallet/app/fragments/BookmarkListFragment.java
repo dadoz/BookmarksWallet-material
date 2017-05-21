@@ -415,10 +415,6 @@ public class BookmarkListFragment extends Fragment
         Snackbar.make(getView(), "hey open " + node.getNodeContent().getName(), Snackbar.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onAddFolderEmptyViewCb() {
-        displayNodeView.addFolder("test");
-    }
 
     @Override
     public void addFolderActionCb(String name) {

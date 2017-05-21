@@ -1,6 +1,5 @@
 package com.lib.davidelm.filetreevisitorlibrary.views;
 
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 /**
@@ -11,5 +10,5 @@ public interface OnNavigationCallbacks {
     void onNodeError(int type, TreeNodeInterface currentNode, String message);
     void onFolderNodeClickCb(int position, TreeNodeInterface node);
     void onFileNodeClickCb(int position, TreeNodeInterface node);
-    void onAddFolderEmptyViewCb();
+//    void onAddFolderEmptyViewCb();
 }

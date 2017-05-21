@@ -35,6 +35,11 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return items.get(position).isFolder() ? 0 : 1;
+    }
+
+    @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         TreeNodeInterface item = items.get(position);
         TreeNodeContent nodeContent = item.getNodeContent();

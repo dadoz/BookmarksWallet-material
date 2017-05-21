@@ -102,7 +102,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
 
     private void setEmptyRecyclerView() {
         View view = findViewById(R.id.emptyViewId);
-        view.findViewById(R.id.addFolderButtonId).setOnClickListener(view1 -> lst.get().onAddFolderEmptyViewCb());
+//        view.findViewById(R.id.addFolderButtonId).setOnClickListener(view1 -> lst.get().onAddFolderEmptyViewCb());
         treeNodeFolderRecyclerView.setEmptyView(view);
     }
 
