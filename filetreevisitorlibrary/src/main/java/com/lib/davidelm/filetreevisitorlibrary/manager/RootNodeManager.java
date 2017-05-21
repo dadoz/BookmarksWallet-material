@@ -17,7 +17,7 @@ public class RootNodeManager {
     private static final String TAG = "RootNodePersistence";
     private static RootNodeManager instance;
     private final PersistenceStrategy persistenceStrategy;
-    private TreeNodeInterface root;
+    protected TreeNodeInterface root;
     private WeakReference<OnNodeVisitCompleted> onNodeVisitCompletedLst;
     private TreeNodeInterface currentTreeNode; //TODO make it persistent
 
@@ -155,6 +155,13 @@ public class RootNodeManager {
      */
     public void setCurrentNode(TreeNodeInterface currentTreeNode) {
         this.currentTreeNode = currentTreeNode;
+    }
+
+    /**
+     *
+     */
+    public TreeNodeInterface getRoot() {
+        return root;
     }
 
 

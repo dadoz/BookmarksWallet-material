@@ -10,12 +10,10 @@ import android.widget.TextView;
 
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
 import com.lib.davidelm.filetreevisitorlibrary.R;
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 import java.lang.ref.WeakReference;
-import java.text.BreakIterator;
 import java.util.List;
 
 
@@ -25,13 +23,14 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
     private String TAG = "TreeNodeAdapter";
 
     public TreeNodeAdapter(List<TreeNodeInterface> list, WeakReference<OnNodeClickListener> lst) {
-        items = list;
+        this.items = list;
         this.lst = lst;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(parent.getContext(), R.layout.node_item, null);
+        int nodeLayoutRes = viewType == 0 ? R.layout.linear_node_item : R.layout.cardview_node_item;
+        View view = View.inflate(parent.getContext(), nodeLayoutRes, null);
         return new ViewHolder(view);
     }
 

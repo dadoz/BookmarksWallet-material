@@ -5,7 +5,9 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -107,19 +109,24 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     /**
      * add custom item view :)
      */
-    @Deprecated
-    private void initRecyclerView() {
-        initRecyclerViewImpl(treeNodeFilesRecyclerView);
-        initRecyclerViewImpl(treeNodeFolderRecyclerView);
-    }
+//    @Deprecated
+//    private void initRecyclerView() {
+//        initRecyclerView(treeNodeFilesRecyclerView, true);
+//        initRecyclerView(treeNodeFolderRecyclerView, false);
+//    }
 
     /**
      *
      * @param recyclerView
      */
-    private void initRecyclerViewImpl(RecyclerView recyclerView) {
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        recyclerView.addItemDecoration(new SpaceItemDecorator(getResources().getDimensionPixelSize(R.dimen.grid_space)));
+    private void initRecyclerView(RecyclerView recyclerView, boolean compactVisibility) {
+        if (compactVisibility) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+            recyclerView.addItemDecoration(new SpaceItemDecorator(getResources().getDimensionPixelSize(R.dimen.grid_space)));
+        }
         recyclerView.setAdapter(new TreeNodeAdapter(new ArrayList<>(), new WeakReference<>(this)));
     }
 
@@ -134,7 +141,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
                 .stream()
                 .filter(TreeNodeInterface::isFolder)
                 .iterator();
-        setNodesOnAdapter(foldersIterator, treeNodeFolderRecyclerView);
+        setNodesOnAdapter(foldersIterator, treeNodeFolderRecyclerView, true);
     }
 
     /**
@@ -148,7 +155,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
                 .filter(obj -> !obj.isFolder())
                 .iterator();
 
-        setNodesOnAdapter(foldersIterator, treeNodeFilesRecyclerView);
+        setNodesOnAdapter(foldersIterator, treeNodeFilesRecyclerView, false);
     }
 
     /**
@@ -156,9 +163,9 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      * @param nodesIterator
      * @param recyclerView
      */
-    private void setNodesOnAdapter(Iterator<TreeNodeInterface> nodesIterator, RecyclerView recyclerView) {
+    private void setNodesOnAdapter(Iterator<TreeNodeInterface> nodesIterator, RecyclerView recyclerView, boolean isCompactVisibility) {
         if (recyclerView.getAdapter() == null)
-            initRecyclerViewImpl(recyclerView);
+            initRecyclerView(recyclerView, isCompactVisibility);
 
         TreeNodeAdapter adapter = ((TreeNodeAdapter) recyclerView.getAdapter());
         //empty list

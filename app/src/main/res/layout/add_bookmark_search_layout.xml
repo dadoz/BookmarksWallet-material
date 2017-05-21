@@ -71,10 +71,15 @@
                         android:maxLength="50"
                         android:maxLines="2"/>
                 </android.support.design.widget.TextInputLayout>
-                <CheckBox
-                    android:visibility="gone"
-                    android:id="@+id/addBookmarkHttpsCheckboxId"
+
+                <com.lib.davidelm.filetreevisitorlibrary.views.FolderNodeView
+                    android:id="@+id/addBookmarkFolderListViewId"
                     android:layout_below="@id/addBookmarkTitleTextInputId"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"/>
+                <CheckBox
+                    android:id="@+id/addBookmarkHttpsCheckboxId"
+                    android:layout_below="@id/addBookmarkFolderListViewId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding_16"

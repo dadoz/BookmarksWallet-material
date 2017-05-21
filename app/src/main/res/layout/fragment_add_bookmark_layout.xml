@@ -12,7 +12,7 @@
         android:layout_below="@id/addBookmarkMainContainerLayoutId"
         android:layout_width="match_parent"
         android:layout_height="@dimen/add_bookmark_background_margin">
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>

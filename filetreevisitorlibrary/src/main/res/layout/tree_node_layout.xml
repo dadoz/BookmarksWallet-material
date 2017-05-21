@@ -6,20 +6,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <!---move in a view-->
-        <RelativeLayout
+        <com.lib.davidelm.filetreevisitorlibrary.views.FolderRecyclerView
             android:id="@+id/treeNodeFolderContainerId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <com.lib.davidelm.filetreevisitorlibrary.views.EmptyRecyclerView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_marginLeft="@dimen/margin_8"
-                android:layout_marginRight="@dimen/margin_8"
-                android:id="@+id/treeNodeFolderRecyclerViewId"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <include layout="@layout/empty_folder_rv_view"/>
-        </RelativeLayout>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <TextView
             android:layout_below="@id/treeNodeFolderContainerId"
             android:layout_marginTop="@dimen/margin_8"
@@ -33,13 +23,10 @@
         <com.lib.davidelm.filetreevisitorlibrary.views.EmptyRecyclerView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_below="@id/filesLabelTextId"
-            android:layout_marginLeft="@dimen/margin_8"
-            android:layout_marginRight="@dimen/margin_8"
             android:id="@+id/treeNodeFilesRecyclerViewId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <include
             layout="@layout/empty_file_rv_view"/>
-
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
