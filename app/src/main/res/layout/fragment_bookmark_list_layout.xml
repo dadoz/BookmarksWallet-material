@@ -25,7 +25,6 @@
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/mainContainerViewId"
             android:layout_below="@id/breadCrumbsViewId"
-            android:layout_marginTop="@dimen/margin_8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <com.lib.davidelm.filetreevisitorlibrary.views.TreeNodeView

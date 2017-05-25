@@ -6,19 +6,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v7.widget.CardView
-            android:id="@+id/treeNodeFolderContainerCardviewId"
+        <com.lib.davidelm.filetreevisitorlibrary.views.FolderRecyclerView
+            android:id="@+id/treeNodeFolderContainerId"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_16">
-            <com.lib.davidelm.filetreevisitorlibrary.views.FolderRecyclerView
-                android:id="@+id/treeNodeFolderContainerId"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"/>
 
-        </android.support.v7.widget.CardView>
         <TextView
-            android:layout_below="@id/treeNodeFolderContainerCardviewId"
+            android:layout_below="@id/treeNodeFolderContainerId"
             android:layout_marginTop="@dimen/margin_8"
             android:layout_marginBottom="@dimen/margin_8"
             android:layout_marginLeft="@dimen/margin_16"
