@@ -60,7 +60,7 @@
     </style>
 
     <style name="PasteClipboardButtonStyle">
-        <item name="backgroundTint">@color/indigo_600</item>
+        <item name="backgroundTint">@color/amber_600</item>
         <item name="android:src">@drawable/ic_content_paste_white_18dp</item>
     </style>
 

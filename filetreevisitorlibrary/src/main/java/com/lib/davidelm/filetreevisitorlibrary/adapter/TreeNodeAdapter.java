@@ -27,10 +27,14 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
         this.items = list;
         this.lst = lst;
     }
+
     public TreeNodeAdapter(List<TreeNodeInterface> list) {
         this.items = list;
     }
 
+    public void setOnNodeClickListener(OnNodeClickListener lst) {
+        this.lst = new WeakReference<>(lst);
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int nodeLayoutRes = viewType == 0 ? R.layout.linear_node_item : R.layout.cardview_node_item;
@@ -50,10 +54,11 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
 
         holder.nodeLabelText.setText(nodeContent.getName());
 
-//        holder.nodeDescriptionText.setVisibility(nodeContent.getDescription() == null ? View.GONE : View.VISIBLE);
+        holder.nodeDescriptionText.setVisibility(nodeContent.getDescription() == null ? View.GONE : View.VISIBLE);
         holder.nodeDescriptionText.setText(nodeContent.getDescription());
         setIcon(holder.nodeIconImage, holder.itemView.getContext(), items.get(position).isFolder(), nodeContent);
 
+        //set long click listner
         holder.itemView.setOnLongClickListener(v -> {
             if (lst != null && lst.get() != null) {
                 if (item.isFolder())
@@ -63,6 +68,8 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
             }
             return true;
         });
+
+        //set click listner
         holder.itemView.setOnClickListener(v -> {
             if (lst != null && lst.get() != null) {
                 if (item.isFolder())
@@ -71,6 +78,14 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
                     lst.get().onFileNodeCLick(v, position, item);
             }
         });
+
+        //set on more setting button click - only on linear views
+        if (getItemViewType(position) == 0) {
+            holder.nodeMoreSettingsButton.setOnClickListener(v -> {
+                if (lst != null && lst.get() != null)
+                    lst.get().onMoreSettingsClick(v, position, item);
+            });
+        }
     }
 
     @Override
@@ -147,9 +162,11 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
         private final TextView nodeLabelText;
         private final ImageView nodeIconImage;
         private final TextView nodeDescriptionText;
+        private final ImageView nodeMoreSettingsButton;
 
         ViewHolder(View itemView) {
             super(itemView);
+            nodeMoreSettingsButton = (ImageView) itemView.findViewById(R.id.nodeMoreSettingsButtonId);
             nodeIconImage = (ImageView) itemView.findViewById(R.id.nodeIconImageId);
             nodeDescriptionText = (TextView) itemView.findViewById(R.id.nodeDescriptionTextId);
             nodeLabelText = (TextView) itemView.findViewById(R.id.nodeLabelTextId);

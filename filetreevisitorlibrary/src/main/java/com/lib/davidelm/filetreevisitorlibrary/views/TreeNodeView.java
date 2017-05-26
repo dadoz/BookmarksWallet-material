@@ -8,9 +8,11 @@ import android.support.annotation.StyleRes;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -37,7 +39,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TreeNodeView extends FrameLayout implements OnNodeClickListener, OnNodeVisitCompleted,
-        BreadCrumbsView.OnPopBackStackInterface {
+        BreadCrumbsView.OnPopBackStackInterface, OnFolderMenuItemClickListener {
     private String TAG = "TAG";
     private TreeNodeInterface currentNode;
     private TreeNodeInterface rootNode;
@@ -245,6 +247,24 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
         lst.get().onFileNodeLongClickCb(position, item);
     }
 
+    @Override
+    public void onMoreSettingsClick(View v, int position, TreeNodeInterface item) {
+        showPopupMenu(v, item);
+    }
+
+
+    /**
+     *
+     * @param v
+     * @param node
+     */
+    private void showPopupMenu(View v, TreeNodeInterface node) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), v);
+        popupMenu.inflate(R.menu.folder_settings_menu);
+        popupMenu.setOnMenuItemClickListener(item -> onMenuItemClick(item, node));//OnFolderMenuItemClickListener::onFolderMenuItemClick);
+        popupMenu.show();
+    }
+
     /**
      * on back pressed cb
      * @return
@@ -346,9 +366,22 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      *
      * @param name
      */
+    @Deprecated
     public void removeFolder(String name) {
         try {
             displayNodeListModel.removeNode(currentNode.getChildByName(name));
+        } catch (IOException e) {
+            showError(2, e.getMessage());
+        }
+
+    }
+    /**
+     *
+     * @param node
+     */
+    public void removeFolder(TreeNodeInterface node) {
+        try {
+            displayNodeListModel.removeNode(node);
         } catch (IOException e) {
             showError(2, e.getMessage());
         }
@@ -372,4 +405,13 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
         lp.setMarginStart(marginTop);
         setLayoutParams(lp);
     }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item, TreeNodeInterface node) {
+        if (item.getItemId() == R.id.action_delete) {
+            removeFolder(node);
+        }
+        return false;
+    }
+
 }

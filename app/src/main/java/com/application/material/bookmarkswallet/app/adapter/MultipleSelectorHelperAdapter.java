@@ -1,45 +1,26 @@
 package com.application.material.bookmarkswallet.app.adapter;
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import android.graphics.Color;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.util.SparseBooleanArray;
-import android.view.ViewGroup;
+import android.view.View;
 
-import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.application.material.bookmarkswallet.app.R;
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
 import com.lib.davidelm.filetreevisitorlibrary.adapter.TreeNodeAdapter;
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
-
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.RealmObject;
 
 public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> extends
-        TreeNodeAdapter {
+        TreeNodeAdapter implements OnNodeClickListener {
     private final MultipleSelector multipleSelector;
 
     MultipleSelectorHelperAdapter() {
         super(new ArrayList<>());
         multipleSelector = new MultipleSelector();
-    }
-
-    /**
-     *
-     * @param position
-     */
-    public void setSelectedItemPos(int position) {
-        multipleSelector.setSelectedPos(position, !multipleSelector.isSelectedPos(position));
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean isEmptySelectedPosArray() {
-        return multipleSelector.getSelectedPosArraySize() == 0;
+        setOnNodeClickListener(this);
     }
 
     /**
@@ -64,7 +45,7 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
      * @return
      */
     public ArrayList<TreeNodeInterface> getSelectedItemList() {
-        ArrayList<TreeNodeInterface> selectedItemList = new ArrayList<>();
+        ArrayList<TreeNodeInterface> selectedItemList = new ArrayList<>(); //todo sparseArray
         //inside multiple selector
         for (int i = 0; i < multipleSelector.getSelectedPosArraySize(); i++) {
             int itemPos = multipleSelector.getSelectedPosArray().keyAt(i);
@@ -80,6 +61,22 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
     public TreeNodeInterface getSelectedItem() {
         int itemPos = multipleSelector.getSelectedPosArray().keyAt(0);
         return getItem(itemPos);
+    }
+
+    /**
+     *
+     * @param position
+     */
+    public void setSelectedItemPos(int position) {
+        multipleSelector.setSelectedPos(position, !multipleSelector.isSelectedPos(position));
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isEmptySelectedPosArray() {
+        return multipleSelector.getSelectedPosArraySize() == 0;
     }
 
     /**
@@ -107,15 +104,28 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
         return multipleSelector.isSelectedPos(pos);
     }
 
-//    @Override
-//    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        return null;
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-//
-//    }
+    public void onFileNodeCLick(View v, int position, TreeNodeInterface node) {
+        if (getSelectedItemListSize() != 0) {
+            onFileNodeLongCLick(v, position, node);
+            return;
+        }
+        Snackbar.make(v.getRootView(), node.getNodeContent().getName(), Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void onFileNodeLongCLick(View v, int position, TreeNodeInterface item) {
+        setSelectedItemPos(position);
+        int grey = ContextCompat.getColor(v.getContext(), R.color.grey_200);
+        v.setBackgroundColor(isSelectedPos(position) ? grey : Color.WHITE);
+    }
+
+    public void onFolderNodeCLick(View v, int position, TreeNodeInterface node) {
+    }
+
+    public void onFolderNodeLongCLick(View v, int position, TreeNodeInterface item) {
+    }
+
+    public void onMoreSettingsClick(View v, int position, TreeNodeInterface item) {
+    }
 
     /**
      * multiple selector handler

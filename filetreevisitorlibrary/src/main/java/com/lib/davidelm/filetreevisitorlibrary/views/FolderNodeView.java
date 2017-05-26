@@ -4,8 +4,10 @@ import android.content.Context;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
@@ -26,7 +28,8 @@ import java.util.List;
  * Created by davide on 21/05/2017.
  */
 
-public class FolderNodeView extends FolderRecyclerView implements OnNodeClickListener {
+public class FolderNodeView extends FolderRecyclerView implements OnNodeClickListener,
+        OnFolderMenuItemClickListener {
     private static final String TAG = "TAG";
     private final boolean isCompact = true;
     private RootNodeManager displayNodeListModel = RootNodeManager.getInstance(new WeakReference<Context>(getContext()));
@@ -116,11 +119,27 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
             nodesIterator.forEachRemaining(nodeList::add);
         return nodeList;
     }
+    @Override
+    public void onMoreSettingsClick(View v, int position, TreeNodeInterface item) {
+        showPopupMenu(v, item);
+    }
 
     @Override
     public void onFolderNodeCLick(View v, int position, TreeNodeInterface node) {
         currentNode = node;
         updateRv();
+    }
+
+    /**
+     *
+     * @param v
+     * @param node
+     */
+    private void showPopupMenu(View v, TreeNodeInterface node) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), v);
+        popupMenu.inflate(R.menu.folder_settings_menu);
+        popupMenu.setOnMenuItemClickListener(item -> onMenuItemClick(item, node));//OnFolderMenuItemClickListener::onFolderMenuItemClick);
+        popupMenu.show();
     }
 
     @Override
@@ -135,10 +154,19 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
 
     @Override
     public void onFileNodeLongCLick(View v, int position, TreeNodeInterface item) {
-
     }
+
 
     public boolean isCurrentNodeRoot() {
         return currentNode.isRoot();
+    }
+
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item, TreeNodeInterface node) {
+        if (item.getItemId() == R.id.action_delete) {
+            ((TreeNodeAdapter) recyclerView.getAdapter()).removeItem(node);
+        }
+        return false;
     }
 }

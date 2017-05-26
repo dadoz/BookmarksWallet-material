@@ -21,8 +21,7 @@ import java.lang.ref.WeakReference;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE;
 import static com.application.material.bookmarkswallet.app.models.Bookmark.Utils.getBookmarkNameWrapper;
 
-public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter
-        implements ItemTouchHelperAdapter, OnNodeClickListener {
+public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter {
     private final WeakReference<Context> context;
     private final WeakReference<OnActionListenerInterface> listener;
     private final Bitmap defaultIcon;
@@ -85,35 +84,6 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter
      */
     public boolean isSelectedPos(int position) {
         return super.isSelectedPos(position);
-    }
-
-
-    @Override
-    public void onItemMove(int fromPosition, int toPosition) {
-    }
-
-    @Override
-    public void onItemDismiss(int position) {
-    }
-
-    @Override
-    public void onFolderNodeCLick(View v, int position, TreeNodeInterface node) {
-
-    }
-
-    @Override
-    public void onFileNodeCLick(View v, int position, TreeNodeInterface node) {
-
-    }
-
-    @Override
-    public void onFolderNodeLongCLick(View v, int position, TreeNodeInterface item) {
-
-    }
-
-    @Override
-    public void onFileNodeLongCLick(View v, int position, TreeNodeInterface item) {
-
     }
 
     /**

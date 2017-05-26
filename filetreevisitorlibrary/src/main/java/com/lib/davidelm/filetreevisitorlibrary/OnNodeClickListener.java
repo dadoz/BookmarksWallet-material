@@ -11,6 +11,6 @@ public interface OnNodeClickListener {
     void onFolderNodeCLick(View v, int position, TreeNodeInterface node);
     void onFileNodeCLick(View v, int position, TreeNodeInterface node);
     void onFolderNodeLongCLick(View v, int position, TreeNodeInterface item);
-
     void onFileNodeLongCLick(View v, int position, TreeNodeInterface item);
+    void onMoreSettingsClick(View v, int position, TreeNodeInterface item);
 }

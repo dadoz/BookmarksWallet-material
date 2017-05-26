@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/addBookmarkRelativeLayoutId"
@@ -26,10 +26,11 @@
         android:id="@+id/pasteClipboardFabId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="32dp"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="@dimen/margin_16"
         app:elevation="4dp"
         app:borderWidth="0dp"
+
         style="@style/PasteClipboardButtonStyle"
-        app:fabSize="mini"/>
-</RelativeLayout>
+        app:fabSize="normal"/>
+</FrameLayout>
