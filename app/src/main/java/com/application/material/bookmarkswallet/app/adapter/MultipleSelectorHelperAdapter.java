@@ -6,9 +6,12 @@ import android.util.SparseBooleanArray;
 import android.view.View;
 
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionModeCallback;
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
 import com.lib.davidelm.filetreevisitorlibrary.adapter.TreeNodeAdapter;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import io.realm.RealmObject;
@@ -114,7 +117,7 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
 
     public void onFileNodeLongCLick(View v, int position, TreeNodeInterface item) {
         setSelectedItemPos(position);
-        int grey = ContextCompat.getColor(v.getContext(), R.color.grey_200);
+        int grey = ContextCompat.getColor(v.getContext(), R.color.indigo_300);
         v.setBackgroundColor(isSelectedPos(position) ? grey : Color.WHITE);
     }
 

@@ -5,7 +5,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.*;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
@@ -17,8 +16,8 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
 
     private final StatusManager statusHelper;
     private final WeakReference<Context> ctx;
-    private final int colorPrimaryDarkSelected;
-    private final int colorPrimaryDark;
+//    private final int colorPrimaryDarkSelected;
+//    private final int colorPrimaryDark;
     private BookmarkActionHelper mBookmarkActionSingleton;
     private BookmarkRecyclerViewAdapter adapter;
     private ActionMode actionMode;
@@ -33,8 +32,8 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
         adapter = adp;
         mBookmarkActionSingleton = BookmarkActionHelper.getInstance(context);
         statusHelper = StatusManager.getInstance(); 
-        colorPrimaryDark = ContextCompat.getColor(ctx.get(), R.color.yellow_600);
-        colorPrimaryDarkSelected = ContextCompat.getColor(ctx.get(), R.color.yellow_400);
+//        colorPrimaryDark = ContextCompat.getColor(ctx.get(), R.color.yellow_600);
+//        colorPrimaryDarkSelected = ContextCompat.getColor(ctx.get(), R.color.yellow_400);
     }
 
     /**

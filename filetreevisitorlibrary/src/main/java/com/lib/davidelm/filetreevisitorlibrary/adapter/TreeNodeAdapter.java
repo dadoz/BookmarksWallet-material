@@ -22,10 +22,12 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
     private final List<TreeNodeInterface> items;
     private WeakReference<OnNodeClickListener> lst;
     private String TAG = "TreeNodeAdapter";
+    private boolean showMoreSettingButton;
 
-    public TreeNodeAdapter(List<TreeNodeInterface> list, WeakReference<OnNodeClickListener> lst) {
+    public TreeNodeAdapter(List<TreeNodeInterface> list, WeakReference<OnNodeClickListener> lst, boolean showMoreSettingButton) {
         this.items = list;
         this.lst = lst;
+        this.showMoreSettingButton = showMoreSettingButton;
     }
 
     public TreeNodeAdapter(List<TreeNodeInterface> list) {
@@ -81,6 +83,8 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
 
         //set on more setting button click - only on linear views
         if (getItemViewType(position) == 0) {
+            holder.nodeMoreSettingsButton.setVisibility(showMoreSettingButton ?View.VISIBLE : View.GONE);
+
             holder.nodeMoreSettingsButton.setOnClickListener(v -> {
                 if (lst != null && lst.get() != null)
                     lst.get().onMoreSettingsClick(v, position, item);
@@ -144,10 +148,11 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
      */
     private void setIcon(ImageView imageView, Context context, boolean isFolder, TreeNodeContent nodeContent) {
         try {
-            int folderResource = nodeContent.getFolderResource() == -1 ? R.mipmap.ic_folder : nodeContent.getFolderResource();
+            //FIXME ignoring folder nodeContent property
+//            int folderResource = nodeContent.getFolderResource() == -1 ? R.mipmap.ic_folder : nodeContent.getFolderResource();
             int fileResource = nodeContent.getFileResource() == -1 ? R.mipmap.ic_file : nodeContent.getFileResource();
             imageView.setImageDrawable(ContextCompat.getDrawable(context,
-                    isFolder ? folderResource : fileResource));
+                    isFolder ? R.mipmap.ic_folder : fileResource));
         } catch (Exception e) {
             imageView.setImageDrawable(ContextCompat.getDrawable(context,
                     isFolder ? R.mipmap.ic_folder : R.mipmap.ic_file));

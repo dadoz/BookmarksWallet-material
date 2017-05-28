@@ -74,7 +74,7 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
         }
 
         if (rootNode != null)
-            recyclerView.setAdapter(new TreeNodeAdapter(getFolderNodes(rootNode.getChildren()), new WeakReference<>(this)));
+            recyclerView.setAdapter(new TreeNodeAdapter(getFolderNodes(rootNode.getChildren()), new WeakReference<>(this), false));
     }
 
     /**

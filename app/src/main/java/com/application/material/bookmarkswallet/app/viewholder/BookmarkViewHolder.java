@@ -22,9 +22,7 @@ import java.lang.ref.WeakReference;
  * Created by davide on 25/04/2017.
  */
 
-public class BookmarkViewHolder extends RecyclerView.ViewHolder
-        implements View.OnLongClickListener, View.OnClickListener {
-    private final WeakReference<BookmarkRecyclerViewAdapter.OnActionListenerInterface> listener;
+public class BookmarkViewHolder extends RecyclerView.ViewHolder {
     public ImageView iconView;
     public TextView labelView;
     public TextView timestampView;
@@ -35,28 +33,25 @@ public class BookmarkViewHolder extends RecyclerView.ViewHolder
     private static int darkGreyNight;
     private static int lightGreyNight;
 
-    public BookmarkViewHolder(View v, WeakReference<BookmarkRecyclerViewAdapter.OnActionListenerInterface> lst) {
+    public BookmarkViewHolder(View v) {
         super(v);
-        listener = lst;
         iconView = (ImageView) v.findViewById(R.id.linkIconId);
         labelView = (TextView) v.findViewById(R.id.linkTitleId);
         urlView = (TextView) v.findViewById(R.id.linkUrlId);
         timestampView = (TextView) v.findViewById(R.id.linkTimestampId);
-        itemView.setOnLongClickListener(this);
-        itemView.setOnClickListener(this);
         initColors(itemView.getContext());
     }
 
-    @Override
-    public boolean onLongClick(View view) {
-        return listener.get().onLongItemClick(view, getAdapterPosition());
-    }
-
-    @Override
-    public void onClick(View view) {
-        listener.get().onItemClick(view, getAdapterPosition());
-    }
-
+//    @Override
+//    public boolean onLongClick(View view) {
+//        return listener.get().onLongItemClick(view, getAdapterPosition());
+//    }
+//
+//    @Override
+//    public void onClick(View view) {
+//        listener.get().onItemClick(view, getAdapterPosition());
+//    }
+//
     /**
      *
      * @param selected
