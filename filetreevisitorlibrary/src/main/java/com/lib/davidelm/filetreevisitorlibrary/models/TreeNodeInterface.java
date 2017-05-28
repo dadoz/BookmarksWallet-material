@@ -22,7 +22,8 @@ public interface TreeNodeInterface {
 
     boolean isRoot();
 
-    TreeNodeInterface getChildByName(String name);
+//    TreeNodeInterface getChildByName(String name);
+    TreeNodeInterface getChildById(long id);
 
     void setId();
 

@@ -120,9 +120,20 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
         mParent = parent;
     }
 
-    public TreeNodeInterface getChildByName(String name) {
+//    @Deprecated
+//    public TreeNodeInterface getChildByName(String name) {
+//        for (TreeNodeInterface item : children) {
+//            if (item.getNodeContent().getName().equals(name)) {
+//                return item;
+//            }
+//        }
+//        return null;
+//    }
+
+    @Deprecated
+    public TreeNodeInterface getChildById(long id) {
         for (TreeNodeInterface item : children) {
-            if (item.getNodeContent().getName().equals(name)) {
+            if (item.getId() == id) {
                 return item;
             }
         }

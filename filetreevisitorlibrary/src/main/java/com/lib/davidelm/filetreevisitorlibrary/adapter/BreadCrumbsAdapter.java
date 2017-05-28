@@ -10,6 +10,7 @@ import com.lib.davidelm.filetreevisitorlibrary.R;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class BreadCrumbsAdapter extends RecyclerView.Adapter<BreadCrumbsAdapter.ViewHolder> {
     private final ArrayList<String> items;
@@ -55,13 +56,8 @@ public class BreadCrumbsAdapter extends RecyclerView.Adapter<BreadCrumbsAdapter.
     }
 
     public void removeItemTillPosition(int position) {
-        //TODO move to ID :O
-        ArrayList<String> removableList = new ArrayList<String>();
-        for (int i = position + 1; i < items.size(); i++) {
-            removableList.add(items.get(i));
-        }
-
-        items.removeAll(removableList);
+        for (int i = items.size() -1; i > position; i --)
+            items.remove(i);
         notifyDataSetChanged();
     }
 
@@ -69,8 +65,8 @@ public class BreadCrumbsAdapter extends RecyclerView.Adapter<BreadCrumbsAdapter.
     /**
      * view holder
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView labelTextView;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView labelTextView;
 
         ViewHolder(View itemView) {
             super(itemView);

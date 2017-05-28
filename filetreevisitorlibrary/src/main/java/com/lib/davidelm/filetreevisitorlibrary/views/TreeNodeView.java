@@ -364,19 +364,6 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
 
     /**
      *
-     * @param name
-     */
-    @Deprecated
-    public void removeFolder(String name) {
-        try {
-            displayNodeListModel.removeNode(currentNode.getChildByName(name));
-        } catch (IOException e) {
-            showError(2, e.getMessage());
-        }
-
-    }
-    /**
-     *
      * @param node
      */
     public void removeFolder(TreeNodeInterface node) {

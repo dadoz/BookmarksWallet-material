@@ -1,8 +1,4 @@
 package com.lib.davidelm.filetreevisitorlibrary.models;
-
-
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -106,6 +102,10 @@ public class TreeNode implements Serializable, TreeNodeInterface {
     public boolean isRoot() {
 //        Log.e(TAG, "check parent node value" + mValue);
         return mParent == null && level == ROOT_LEVEL;
+    }
+
+    public TreeNodeInterface getChildById(long id) {
+        return this.id == id ? this : null;
     }
 
     public boolean isFolder() {
