@@ -3,6 +3,9 @@ package com.application.material.bookmarkswallet.app.utlis;
 import android.support.annotation.NonNull;
 
 import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
 
 import java.util.ArrayList;
 import java.util.UUID;

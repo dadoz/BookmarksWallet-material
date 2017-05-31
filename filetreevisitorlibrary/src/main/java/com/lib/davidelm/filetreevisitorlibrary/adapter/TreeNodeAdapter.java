@@ -138,6 +138,10 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
         items.remove(position);
         notifyDataSetChanged();
     }
+    public void removeItem(int position) {
+        items.remove(position);
+        notifyDataSetChanged();
+    }
 
     /**
      *
@@ -163,7 +167,7 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
     /**
      * view holder
      */
-    class ViewHolder extends RecyclerView.ViewHolder {
+    protected class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView nodeLabelText;
         private final ImageView nodeIconImage;
         private final TextView nodeDescriptionText;

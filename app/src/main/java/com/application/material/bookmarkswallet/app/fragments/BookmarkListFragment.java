@@ -28,7 +28,9 @@ import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.SettingsActivity;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionModeCallback;
+import com.application.material.bookmarkswallet.app.actionMode.OnActionModeCallbacks;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.adapter.OnMultipleSelectorCallback;
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
@@ -60,14 +62,11 @@ import butterknife.Unbinder;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.EXPANDED_GRIDVIEW;
-
-//TODO refactor it
 public class BookmarkListFragment extends Fragment
         implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener,
         SearchManagerCallbackInterface,
-        AddBookmarkActivity.OnHandleBackPressed, ActionMenuRevealHelper.ActionMenuRevealCallbacks {
+        AddBookmarkActivity.OnHandleBackPressed, OnMultipleSelectorCallback, OnActionModeCallbacks {
     public static final String FRAG_TAG = "LinksListFragment";
     @BindView(R.id.addBookmarkFabId)
     FloatingActionButton addNewFab;
@@ -88,20 +87,17 @@ public class BookmarkListFragment extends Fragment
 
     private SearchManager searchManager;
     private BookmarkActionHelper mBookmarkActionSingleton;
-    private StatusManager statusManager;
-    private EditBookmarkActionModeCallback actionModeCallback;
-    private boolean expandedGridview;
-    private MenuItem openMenuItem;
     private String TAG ="BOOKmarklist";
     private Unbinder unbinder;
+    private EditBookmarkActionModeCallback actionModeCallback;
+    private BookmarkRecyclerViewAdapter adapter;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        statusManager = StatusManager.getInstance();
         mBookmarkActionSingleton = BookmarkActionHelper.getInstance(new WeakReference<>(getContext()));
         searchManager = SearchManager.getInstance(new WeakReference<>(getContext()),
-                Realm.getDefaultInstance(), new WeakReference<SearchManagerCallbackInterface>(this));
+                Realm.getDefaultInstance(), new WeakReference<>(this));
     }
 
     @Override
@@ -126,16 +122,16 @@ public class BookmarkListFragment extends Fragment
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-//        updateRecyclerView();
-    }
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//    }
+//
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+////        updateRecyclerView();
+//    }
 
     @Override
     public void onClick(View v) {
@@ -179,12 +175,9 @@ public class BookmarkListFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE) {
 //            initSingletonInstances();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
+            new Handler().postDelayed(() -> {
 //                    recyclerView.getAdapter().notifyDataSetChanged(); //TODO mv to inserted 0 only on insertion
 //                    updateRecyclerView();
-                }
             }, 500);
         }
     }
@@ -205,15 +198,35 @@ public class BookmarkListFragment extends Fragment
         addNewFab.setOnClickListener(this);
 
         //init display node view
-        BookmarkRecyclerViewAdapter adapter = new BookmarkRecyclerViewAdapter(getContext());
+        adapter = new BookmarkRecyclerViewAdapter(getContext(),
+                this);
         displayNodeView.setAdapter(adapter);
 //        displayNodeView.setNavigationCallbacksListener(new WeakReference<>(this));
         displayNodeView.setBreadCrumbsView(breadCrumbsView);
-
+        displayNodeView.addFile("blaalallddd");
+        displayNodeView.addFile("blaalallddd");
+        displayNodeView.addFile("blaalallddd");
+        displayNodeView.addFile("blaalallddd");
+        displayNodeView.addFile("blaalallddd");
+        displayNodeView.addFile("blaalallddd");
         //add folder view
 //        addFolderView.setListener(new WeakReference<>(this));
-        actionModeCallback = new EditBookmarkActionModeCallback(new WeakReference<>(getContext()), adapter);
-        getActivity().startActionMode(actionModeCallback);
+        actionModeCallback =
+                new EditBookmarkActionModeCallback(new WeakReference<>(getContext()), new WeakReference<OnActionModeCallbacks>(this));
+    }
+
+    @Override
+    public void onFileNodeClickCb(View v, int position, TreeNodeInterface node) {
+        if (getView() != null)
+            Snackbar.make(getView(), node.getNodeContent().getName(), Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFileNodeLongClickCb(View v, int position, TreeNodeInterface item) {
+        if (!StatusManager.getInstance().isEditMode()) {
+            getActivity().startActionMode(actionModeCallback);
+            StatusManager.getInstance().setEditMode();
+        }
     }
 
     @Override
@@ -240,65 +253,79 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public boolean handleBackPressed() {
-        StatusManager status = StatusManager.getInstance();
-        if (status.isOnActionMenuMode() ||
-                status.isSearchActionbarMode()) {
-            status.unsetStatus();
-            addNewFab.setVisibility(View.VISIBLE);
-            if (searchManager.getSearchView() != null)
-                searchManager.getSearchView().closeSearch();
-            return true;
-        }
         return false;
+//        StatusManager status = StatusManager.getInstance();
+//        if (status.isOnActionMenuMode() ||
+//                status.isSearchActionbarMode()) {
+//            status.unsetStatus();
+//            addNewFab.setVisibility(View.VISIBLE);
+//            if (searchManager.getSearchView() != null)
+//                searchManager.getSearchView().closeSearch();
+//            return true;
+//        }
+//        return false;
     }
 
-
     @Override
-    public void onToggleRevealCb(boolean isShowing) {
-        if (openMenuItem != null) {
-            openMenuItem.setIcon(ContextCompat.getDrawable(getContext(),
-                    ActionMenuRevealHelper.getIconByShowingStatus(isShowing)));
+    public void deleteActionModeCb() {
+        StatusManager.getInstance().unsetStatus();
+
+        //remove all selected files
+        if (adapter != null) {
+            //TODO clone object and return it - in the while clean obj
+            displayNodeView.removeFiles(adapter.getSelectedItemIdArray());
+            adapter.clearSelectedItemPosArray();
         }
 
-        //animate viewAnimation not object animation welll done
-        addNewFab.setVisibility(isShowing ? View.GONE : View.VISIBLE);
-    }
-
-    /**
-     * context menu
-     */
-    @Override
-    public void hanldeExportContextMenu() {
-        ExportStrategy
-                .buildInstance(new WeakReference<>(getContext()), getView())
-                .checkAndRequestPermission();
-    }
-
-    /**
-     * handle setting option - open up a new activity with all preferences available
-     */
-    @Override
-    public void hanldeSettingsContextMenu() {
-        statusManager.unsetStatus();
-        ActionbarHelper.setDefaultHomeEnambled(getActivity(), true);
-        startActivity(new Intent(getActivity(), SettingsActivity.class));
+        if (getView() != null)
+            Snackbar.make(getView(), "delete bookmark", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
-    public void hanldeExportGridviewResizeMenu() {
-        expandedGridview = !expandedGridview;
-        SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
-                .setValue(EXPANDED_GRIDVIEW, expandedGridview);
+    public void selectAllActionModeCb() {
+        if (getView() != null)
+            Snackbar.make(getView(), "select bookmark", Snackbar.LENGTH_SHORT).show();
+        if (adapter != null)
+            adapter.setSelectedAllItemPos();
+    }
 
-        int count = Utils.getCardNumberInRow(getContext(), expandedGridview);
+
+//    @Override
+//    public void onToggleRevealCb(boolean isShowing) {
+//        if (openMenuItem != null) {
+//            openMenuItem.setIcon(ContextCompat.getDrawable(getContext(),
+//                    ActionMenuRevealHelper.getIconByShowingStatus(isShowing)));
+//        }
+//
+//        //animate viewAnimation not object animation welll done
+//        addNewFab.setVisibility(isShowing ? View.GONE : View.VISIBLE);
+//    }
+//    /**
+//     * context menu
+//     */
+//    @Override
+//    public void hanldeExportContextMenu() {
+//        ExportStrategy
+//                .buildInstance(new WeakReference<>(getContext()), getView())
+//                .checkAndRequestPermission();
+//    }
+//    @Override
+//    public void hanldeSettingsContextMenu() {
+//        statusManager.unsetStatus();
+//        ActionbarHelper.setDefaultHomeEnambled(getActivity(), true);
+//        startActivity(new Intent(getActivity(), SettingsActivity.class));
+//    }
+//    @Override
+//    public void hanldeExportGridviewResizeMenu() {
+//        expandedGridview = !expandedGridview;
+//        SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
+//                .setValue(EXPANDED_GRIDVIEW, expandedGridview);
+//
+//        int count = Utils.getCardNumberInRow(getContext(), expandedGridview);
 //        ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(count);
-    }
+//    }
 
-    /**
-     * init view on recyclerView - setup adapter and other stuff
-     * connected to main fragment app
-     */
-    private void initRecyclerView() {
+//    private void initRecyclerView() {
 //        expandedGridview = (boolean) SharedPrefHelper.getInstance(new WeakReference<>(getContext()))
 //                .getValue(EXPANDED_GRIDVIEW, false);
 //        BookmarkRecyclerViewAdapter adapter =
@@ -309,11 +336,8 @@ public class BookmarkListFragment extends Fragment
 //        recyclerView.setAdapter(adapter);
 //        actionMode = new EditBookmarkActionModeCallback(new WeakReference<>(getContext()), adapter);
 //        registerDataObserver(adapter);
-    }
+//    }
 
-    /**
-     *
-     */
 //    private void updateGridLayoutManager() {
 //        if (recyclerView != null &&
 //                recyclerView.getLayoutManager() != null) {
@@ -323,9 +347,6 @@ public class BookmarkListFragment extends Fragment
 //
 //    }
 
-    /**
-     *
-     */
 //    private void updateRecyclerView() {
 //        if (recyclerView != null &&
 //                    recyclerView.getAdapter() != null) {
@@ -336,10 +357,6 @@ public class BookmarkListFragment extends Fragment
 //        }
 //    }
 
-    /**
-     *
-     * @param recyclerViewAdapter
-     */
 //    private void registerDataObserver(BookmarkRecyclerViewAdapter recyclerViewAdapter) {
 //        //TODO leak
 //        BookmarkListObserver observer = new BookmarkListObserver(new View[] {recyclerView,
@@ -349,9 +366,6 @@ public class BookmarkListFragment extends Fragment
 //    }
 
 
-    /**
-     *
-     */
 //    private void handleSelectItemByPos(int position) {
 //        statusManager.setEditMode();
 //        BookmarkRecyclerViewAdapter adapter = ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter());

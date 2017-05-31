@@ -75,7 +75,7 @@ public class BookmarkActionHelper {
      * @param adapter
      */
     public void deleteAction(final BookmarkRecyclerViewAdapter adapter) {
-        RealmUtils.deleteListFromRealm(mRealm, adapter.getSelectedItemList());
+//        RealmUtils.deleteListFromRealm(mRealm, adapter.getSelectedItemList());
         adapter.notifyRemovedSelectedItems(); //NEVER TRIGGERED
     }
 

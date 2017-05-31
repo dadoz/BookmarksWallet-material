@@ -69,7 +69,8 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
     }
 
     public int deleteChild(TreeNodeInterface child) {
-        if (children.size() == 0)
+        if (children.size() == 0 ||
+                child == null)
             return -1;
 
         for (int i = 0; i < children.size(); i++) {

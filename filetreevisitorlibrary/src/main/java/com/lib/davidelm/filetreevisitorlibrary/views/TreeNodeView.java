@@ -12,6 +12,9 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseBooleanArray;
+import android.util.SparseIntArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +30,16 @@ import com.lib.davidelm.filetreevisitorlibrary.manager.RootNodeManager;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
 import java.util.Observer;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -189,6 +196,11 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     public void removeNode(TreeNodeInterface childNode) {
         RecyclerView recyclerView = childNode.isFolder() ? treeNodeFolderRecyclerView : treeNodeFilesRecyclerView;
         ((TreeNodeAdapter) recyclerView.getAdapter()).removeItem(childNode);
+    }
+
+    public void removeNode(int pos, boolean isFolder) {
+        RecyclerView recyclerView = isFolder ? treeNodeFolderRecyclerView : treeNodeFilesRecyclerView;
+        ((TreeNodeAdapter) recyclerView.getAdapter()).removeItem(pos);
     }
 
     @Override
@@ -373,6 +385,28 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
             showError(2, e.getMessage());
         }
 
+    }
+
+    /**
+     *
+     * @param position
+     */
+    public void removeFile(int position) {
+        try {
+            displayNodeListModel.removeNode(currentNode.getChildren().get(position));
+        } catch (IOException e) {
+            showError(2, e.getMessage());
+        }
+    }
+
+    public synchronized void removeFiles(SparseIntArray selectedItemIdList) {
+        for (int i = 0; i < selectedItemIdList.size(); i++) {
+            try {
+                displayNodeListModel.removeNodeById(selectedItemIdList.keyAt(i));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**

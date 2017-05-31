@@ -1,11 +1,8 @@
 package com.application.material.bookmarkswallet.app.actionMode;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.view.*;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
@@ -18,20 +15,17 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
     private final WeakReference<Context> ctx;
 //    private final int colorPrimaryDarkSelected;
 //    private final int colorPrimaryDark;
-    private BookmarkActionHelper mBookmarkActionSingleton;
-    private BookmarkRecyclerViewAdapter adapter;
     private ActionMode actionMode;
+    private WeakReference<OnActionModeCallbacks> lst;
 
     /**
      *
      * @param
      */
-    public EditBookmarkActionModeCallback(WeakReference<Context> context,
-                                          BookmarkRecyclerViewAdapter adp) {
+    public EditBookmarkActionModeCallback(WeakReference<Context> context, WeakReference<OnActionModeCallbacks> lst) {
         ctx = context;
-        adapter = adp;
-        mBookmarkActionSingleton = BookmarkActionHelper.getInstance(context);
-        statusHelper = StatusManager.getInstance(); 
+        this.lst = lst;
+        statusHelper = StatusManager.getInstance();
 //        colorPrimaryDark = ContextCompat.getColor(ctx.get(), R.color.yellow_600);
 //        colorPrimaryDarkSelected = ContextCompat.getColor(ctx.get(), R.color.yellow_400);
     }
@@ -41,8 +35,6 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
      * @param color
      */
     private void initActionMode(int color) {
-        actionMode.getMenu().findItem(R.id.action_share).setIcon(Utils
-                .getColoredIcon(ctx.get(), actionMode.getMenu().findItem(R.id.action_share).getIcon(), color));
         actionMode.getMenu().findItem(R.id.action_delete).setIcon(Utils
                 .getColoredIcon(ctx.get(), actionMode.getMenu().findItem(R.id.action_delete).getIcon(), color));
         actionMode.getMenu().findItem(R.id.action_select_all).setIcon(Utils
@@ -64,20 +56,17 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+//                actionMode = mode; //TODO this is not initialized but why???
         switch (item.getItemId()) {
-            case R.id.action_share:
-                mBookmarkActionSingleton.shareAction(adapter);
-                mode.finish();
-                return true;
             case R.id.action_delete:
-                mBookmarkActionSingleton.deleteAction(adapter);
+//                mBookmarkActionSingleton.deleteAction(adapter);
                 mode.finish();
+                lst.get().deleteActionModeCb();
                 return true;
             case R.id.action_select_all:
-                actionMode = mode; //TODO this is not initialized but why???
-                setSelectedItemCount(adapter.getItemCount());
-                toggleVisibilityIconMenu(false);
-                mBookmarkActionSingleton.selectAllAction(adapter);
+//                setSelectedItemCount(adapter.getItemCount());
+//                mBookmarkActionSingleton.selectAllAction(adapter);
+                lst.get().selectAllActionModeCb();
                 return true;
         }
         return false;
@@ -96,6 +85,7 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
      *
      * @param isVisible
      */
+    @Deprecated
     public void toggleVisibilityIconMenu(boolean isVisible) {
         actionMode.getMenu().findItem(R.id.action_share).setVisible(isVisible);
     }
@@ -105,8 +95,8 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
      */
     private void unsetEditItem() {
         statusHelper.unsetStatus();
-        adapter.clearSelectedItemPosArray();
-        adapter.notifyDataSetChanged();
+//        adapter.clearSelectedItemPosArray();
+//        adapter.notifyDataSetChanged();
     }
 
     @Override

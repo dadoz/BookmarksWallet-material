@@ -85,6 +85,26 @@ public class RootNodeManager {
     }
 
     /**
+     *
+     * @param id
+     * @throws IOException
+     */
+    public void removeNodeById(int id) throws IOException {
+        if (currentTreeNode == null ||
+                id == -1) {
+            throw new IOException("not found");
+        }
+
+        TreeNodeInterface node = currentTreeNode.getChildById(id);
+        currentTreeNode.deleteChild(node);
+        //save on storage
+        persistenceStrategy.getStrategy().setPersistentNode(root);
+        //update view
+        removeNodeUpdateView(node);
+
+    }
+
+    /**
      * add node
      * not optimized
      */
