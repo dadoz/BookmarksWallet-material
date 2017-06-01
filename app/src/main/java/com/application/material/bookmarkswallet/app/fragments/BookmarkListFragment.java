@@ -212,7 +212,9 @@ public class BookmarkListFragment extends Fragment
         //add folder view
 //        addFolderView.setListener(new WeakReference<>(this));
         actionModeCallback =
-                new EditBookmarkActionModeCallback(new WeakReference<>(getContext()), new WeakReference<OnActionModeCallbacks>(this));
+                new EditBookmarkActionModeCallback(new WeakReference<>(getContext()),
+                        new WeakReference<>(getActivity()),
+                        new WeakReference<>(this));
     }
 
     @Override
@@ -223,9 +225,17 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onFileNodeLongClickCb(View v, int position, TreeNodeInterface item) {
+        //select adapter
         if (!StatusManager.getInstance().isEditMode()) {
             getActivity().startActionMode(actionModeCallback);
             StatusManager.getInstance().setEditMode();
+        }
+
+        //unselect adapter
+        if (adapter != null &&
+                adapter.getSelectedItemListSize() == 0) {
+            StatusManager.getInstance().unsetStatus();
+            actionModeCallback.forceToFinish();
         }
     }
 
@@ -277,16 +287,37 @@ public class BookmarkListFragment extends Fragment
             adapter.clearSelectedItemPosArray();
         }
 
-        if (getView() != null)
-            Snackbar.make(getView(), "delete bookmark", Snackbar.LENGTH_SHORT).show();
+        notifyToUser("delete bookmark");
     }
 
     @Override
     public void selectAllActionModeCb() {
-        if (getView() != null)
-            Snackbar.make(getView(), "select bookmark", Snackbar.LENGTH_SHORT).show();
-        if (adapter != null)
+        if (adapter != null) {
             adapter.setSelectedAllItemPos();
+            adapter.notifyDataSetChanged();
+        }
+
+        notifyToUser("select bookmark");
+    }
+
+    @Override
+    public void onDestroyActionModeCb() {
+        StatusManager.getInstance().unsetStatus();
+
+        //remove all selected files
+        if (adapter != null) {
+            adapter.clearSelectedItemPosArray();
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * notify to user
+     * @param message
+     */
+    private void notifyToUser(String message) {
+        if (getView() != null)
+            Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
     }
 
 

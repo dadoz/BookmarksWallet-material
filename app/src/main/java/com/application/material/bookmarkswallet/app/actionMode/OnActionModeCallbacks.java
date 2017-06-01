@@ -7,4 +7,5 @@ package com.application.material.bookmarkswallet.app.actionMode;
 public interface OnActionModeCallbacks {
     void deleteActionModeCb();
     void selectAllActionModeCb();
+    void onDestroyActionModeCb();
 }

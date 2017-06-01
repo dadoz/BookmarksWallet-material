@@ -3,9 +3,13 @@ package com.application.material.bookmarkswallet.app.helpers;
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+
 public class ActionbarHelper {
 
     static final float elevation = 10f;
@@ -25,6 +29,15 @@ public class ActionbarHelper {
             activity.getActionBar().setDisplayShowHomeEnabled(isEnabled);
         }
 
+    }
+
+    public static void setStatusBarColor(Activity activity, int color) {
+        if (Build.VERSION.SDK_INT >= 21) {
+            Window window = activity.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(color);
+        }
     }
 
 //    /**

@@ -6,6 +6,7 @@ import android.util.SparseIntArray;
 import android.view.View;
 
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
 import com.lib.davidelm.filetreevisitorlibrary.adapter.TreeNodeAdapter;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
@@ -70,7 +71,7 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
         super.onBindViewHolder(holder, position);
 
         int selectedColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.indigo_300);
-        holder.itemView.setBackgroundColor(false ? selectedColor : Color.WHITE);
+        holder.itemView.setBackgroundColor(isSelectedPos(position) ? selectedColor : Color.WHITE);
     }
 
     /**
@@ -101,6 +102,7 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
      *
      */
     public void setSelectedAllItemPos() {
+        //TODO implement it
     }
 
     /**
@@ -129,6 +131,7 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
             onFileNodeLongCLick(v, position, node);
             return;
         }
+
         if (lst != null && lst.get() != null)
             lst.get().onFileNodeClickCb(v, position, node);
     }
@@ -219,7 +222,7 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
         }
 
         public boolean isSelectedPos(int position) {
-            return true;
+            return selectedPosArray.indexOfValue(position) != -1;
         }
     }
 }
