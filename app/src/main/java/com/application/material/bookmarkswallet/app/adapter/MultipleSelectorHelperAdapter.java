@@ -1,14 +1,13 @@
 package com.application.material.bookmarkswallet.app.adapter;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
-import android.util.SparseBooleanArray;
 import android.util.SparseIntArray;
 import android.view.View;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
 import com.lib.davidelm.filetreevisitorlibrary.adapter.TreeNodeAdapter;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 import java.lang.ref.WeakReference;
@@ -79,6 +78,10 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
      * @param id
      */
     public void toggleSelectedItemPos(int id, int position) {
+        multipleSelector.toggleSelectedId(id, position);
+    }
+
+    private void setSelectedItemPos(int id, int position) {
         multipleSelector.setSelectedId(id, position);
     }
 
@@ -100,10 +103,15 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
 
     /**
      *
+     * @param files
      */
-    public void setSelectedAllItemPos() {
-        //TODO implement it
+    public void setSelectedAllItemPos(ArrayList<TreeNodeInterface> files) {
+        if (files != null)
+            for (int i = 0; i < files.size(); i++) {
+                setSelectedItemPos(files.get(i).getId(), i);
+            }
     }
+
 
     /**
      *
@@ -167,10 +175,10 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
         /**
          *
          * @param id
-         * @param selected
+         * @param position
          */
-        protected void setSelectedId(int id, int position, boolean selected) {
-            if (!selected) {
+        protected void toggleSelectedId(int id, int position) {
+            if (!isSelectedId(id)) {
                 selectedPosArray.put(id, position);
                 return;
             }
@@ -182,11 +190,7 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
          * @param position
          */
         protected void setSelectedId(int id, int position) {
-            if (!isSelectedId(id)) {
-                selectedPosArray.put(id, position);
-                return;
-            }
-            selectedPosArray.delete(id);
+            selectedPosArray.put(id, position);
         }
 
         /**

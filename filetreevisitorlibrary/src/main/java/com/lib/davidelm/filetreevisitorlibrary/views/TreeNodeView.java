@@ -435,4 +435,16 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
         return false;
     }
 
+    public ArrayList<TreeNodeInterface> getFiles() {
+        if (currentNode != null) {
+            ArrayList<TreeNodeInterface> list = new ArrayList<>();
+            Iterator<TreeNodeInterface> foldersIterator = currentNode.getChildren()
+                    .stream()
+                    .filter(item -> !item.isFolder())
+                    .iterator();
+            foldersIterator.forEachRemaining(list::add);
+            return list;
+        }
+        return null;
+    }
 }

@@ -4,18 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.*;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
@@ -120,8 +116,8 @@ public class BookmarkActionHelper {
      *
      * @param adapter
      */
-    public void selectAllAction(BookmarkRecyclerViewAdapter adapter) {
-        adapter.setSelectedAllItemPos();
-        adapter.notifyDataSetChanged();
-    }
+//    public void selectAllAction(BookmarkRecyclerViewAdapter adapter) {
+//        adapter.setSelectedAllItemPos(displayNodeView.getFiles());
+//        adapter.notifyDataSetChanged();
+//    }
 }

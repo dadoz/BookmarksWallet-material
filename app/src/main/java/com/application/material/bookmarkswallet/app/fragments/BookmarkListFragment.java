@@ -198,21 +198,11 @@ public class BookmarkListFragment extends Fragment
         addNewFab.setOnClickListener(this);
 
         //init display node view
-        adapter = new BookmarkRecyclerViewAdapter(getContext(),
-                this);
+        adapter = new BookmarkRecyclerViewAdapter(getContext(), this);
         displayNodeView.setAdapter(adapter);
-//        displayNodeView.setNavigationCallbacksListener(new WeakReference<>(this));
         displayNodeView.setBreadCrumbsView(breadCrumbsView);
-        displayNodeView.addFile("blaalallddd");
-        displayNodeView.addFile("blaalallddd");
-        displayNodeView.addFile("blaalallddd");
-        displayNodeView.addFile("blaalallddd");
-        displayNodeView.addFile("blaalallddd");
-        displayNodeView.addFile("blaalallddd");
-        //add folder view
-//        addFolderView.setListener(new WeakReference<>(this));
-        actionModeCallback =
-                new EditBookmarkActionModeCallback(new WeakReference<>(getContext()),
+        //set action mode
+        actionModeCallback = new EditBookmarkActionModeCallback(new WeakReference<>(getContext()),
                         new WeakReference<>(getActivity()),
                         new WeakReference<>(this));
     }
@@ -279,7 +269,6 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void deleteActionModeCb() {
         StatusManager.getInstance().unsetStatus();
-
         //remove all selected files
         if (adapter != null) {
             //TODO clone object and return it - in the while clean obj
@@ -292,8 +281,9 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void selectAllActionModeCb() {
+        StatusManager.getInstance().setEditMode();
         if (adapter != null) {
-            adapter.setSelectedAllItemPos();
+            adapter.setSelectedAllItemPos(displayNodeView.getFiles());
             adapter.notifyDataSetChanged();
         }
 
@@ -304,7 +294,7 @@ public class BookmarkListFragment extends Fragment
     public void onDestroyActionModeCb() {
         StatusManager.getInstance().unsetStatus();
 
-        //remove all selected files
+//        remove all selected files
         if (adapter != null) {
             adapter.clearSelectedItemPosArray();
             adapter.notifyDataSetChanged();

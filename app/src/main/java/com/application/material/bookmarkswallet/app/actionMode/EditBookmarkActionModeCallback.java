@@ -64,8 +64,8 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                mode.finish();
                 lst.get().deleteActionModeCb();
+                mode.finish();
                 return true;
             case R.id.action_select_all:
                 lst.get().selectAllActionModeCb();
