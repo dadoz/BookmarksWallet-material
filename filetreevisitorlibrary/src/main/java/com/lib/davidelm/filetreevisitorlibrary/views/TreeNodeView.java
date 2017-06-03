@@ -322,9 +322,9 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      *
      * @param name
      */
-    public void addFolder(String name) {
+    public void addFolder(String name, int parentNodeId) {
         try {
-            displayNodeListModel.addNode(name, true);
+            displayNodeListModel.addNode(name, parentNodeId, true);
         } catch (IOException e) {
             showError(0, e.getMessage());
         }
@@ -333,9 +333,9 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      *
      * @param nodeContent
      */
-    public void addFolder(TreeNodeContent nodeContent) {
+    public void addFolder(TreeNodeContent nodeContent, int parentNodeId) {
         try {
-            displayNodeListModel.addNode(nodeContent, true);
+            displayNodeListModel.addNode(nodeContent, parentNodeId, true);
         } catch (IOException e) {
             showError(0, e.getMessage());
         }
@@ -355,9 +355,9 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      *
      * @param nodeContent
      */
-    public void addFile(TreeNodeContent nodeContent) {
+    public void addFile(TreeNodeContent nodeContent, int parentNodeId) {
         try {
-            displayNodeListModel.addNode(nodeContent, false);
+            displayNodeListModel.addNode(nodeContent, parentNodeId, false);
         } catch (IOException e) {
             showError(1, e.getMessage());
         }
@@ -366,9 +366,9 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      *
      * @param name
      */
-    public void addFile(String name) {
+    public void addFile(String name, int parentNodeId) {
         try {
-            displayNodeListModel.addNode(name, false);
+            displayNodeListModel.addNode(name, parentNodeId, false);
         } catch (IOException e) {
             showError(1, e.getMessage());
         }
@@ -378,7 +378,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      *
      * @param node
      */
-    public void removeFolder(TreeNodeInterface node) {
+    public synchronized void removeFolder(TreeNodeInterface node) {
         try {
             displayNodeListModel.removeNode(node);
         } catch (IOException e) {
@@ -391,7 +391,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      *
      * @param position
      */
-    public void removeFile(int position) {
+    public synchronized void removeFile(int position) {
         try {
             displayNodeListModel.removeNode(currentNode.getChildren().get(position));
         } catch (IOException e) {

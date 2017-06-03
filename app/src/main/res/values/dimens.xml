@@ -48,4 +48,5 @@
     <dimen name="padding_8">8dp</dimen>
     <dimen name="padding_2">2dp</dimen>
     <dimen name="add_bookmark_background_margin">100dp</dimen>
+    <dimen name="folder_layout_height">300dp</dimen>
 </resources>

@@ -1,5 +1,4 @@
 package com.lib.davidelm.filetreevisitorlibrary.models;
-
 import io.realm.RealmObject;
 
 /**
@@ -9,6 +8,8 @@ import io.realm.RealmObject;
 public class TreeNodeContentRealm extends RealmObject implements TreeNodeContent  {
     private String name;
     private String description;
+    private String fileURI;
+    private byte[] fileBlob;
     private int fileResource;
     private int folderResource;
     public TreeNodeContentRealm() {}
@@ -28,6 +29,16 @@ public class TreeNodeContentRealm extends RealmObject implements TreeNodeContent
     @Override
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public String getFileUri() {
+        return fileURI;
+    }
+
+    @Override
+    public byte[] getFileBlob() {
+        return fileBlob;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.application.material.bookmarkswallet.app.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,6 +39,7 @@ import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.manager.DefaultBookmarkImportManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager.SearchManagerCallbackInterface;
 import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper;
+import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
@@ -46,9 +48,10 @@ import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.observer.BookmarkListObserver;
 import com.application.material.bookmarkswallet.app.views.AddFolderView;
-import com.application.material.bookmarkswallet.app.views.AddFolderView.AddFolderCallbacks;
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContentRealm;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
 import com.lib.davidelm.filetreevisitorlibrary.views.BreadCrumbsView;
@@ -57,6 +60,7 @@ import com.lib.davidelm.filetreevisitorlibrary.views.TreeNodeView;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.lang.ref.WeakReference;
+import java.net.URI;
 
 import butterknife.Unbinder;
 import io.realm.Realm;
@@ -66,7 +70,7 @@ public class BookmarkListFragment extends Fragment
         implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener,
         SearchManagerCallbackInterface,
-        AddBookmarkActivity.OnHandleBackPressed, OnMultipleSelectorCallback, OnActionModeCallbacks {
+        AddBookmarkActivity.OnHandleBackPressed, OnMultipleSelectorCallback, OnActionModeCallbacks, AddFolderView.AddFolderCallbacks {
     public static final String FRAG_TAG = "LinksListFragment";
     @BindView(R.id.addBookmarkFabId)
     FloatingActionButton addNewFab;
@@ -174,12 +178,25 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE) {
-//            initSingletonInstances();
-            new Handler().postDelayed(() -> {
-//                    recyclerView.getAdapter().notifyDataSetChanged(); //TODO mv to inserted 0 only on insertion
-//                    updateRecyclerView();
-            }, 500);
+            //adding bookmarks
+            if (data != null &&
+                    data.getExtras() != null) {
+                addBookmarksAction(data);
+            }
         }
+    }
+
+    /**
+     *
+     * @param data
+     */
+    private void addBookmarksAction(Intent data) {
+        SparseArrayParcelable searchParamsArray = ((SparseArrayParcelable) data.getExtras()
+                .get("search_params_add_bookmark"));
+
+        displayNodeView.addFile(Utils.createContentNode(searchParamsArray),
+                Integer.valueOf(searchParamsArray.get(2).toString()));
+
     }
 
     /**
@@ -205,6 +222,8 @@ public class BookmarkListFragment extends Fragment
         actionModeCallback = new EditBookmarkActionModeCallback(new WeakReference<>(getContext()),
                         new WeakReference<>(getActivity()),
                         new WeakReference<>(this));
+        //add folder view
+        addFolderView.setListener(new WeakReference<>(this));
     }
 
     @Override
@@ -308,6 +327,15 @@ public class BookmarkListFragment extends Fragment
     private void notifyToUser(String message) {
         if (getView() != null)
             Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void addFolderActionCb(String name) {
+        displayNodeView.addFolder(name, -1);
+    }
+
+    @Override
+    public void onUpdatedVisibility(boolean isVisible) {
     }
 
 

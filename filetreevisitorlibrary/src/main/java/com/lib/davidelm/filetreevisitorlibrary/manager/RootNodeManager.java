@@ -7,6 +7,7 @@ import com.lib.davidelm.filetreevisitorlibrary.OnNodeVisitCompleted;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
 import com.lib.davidelm.filetreevisitorlibrary.strategies.PersistenceStrategy;
 
 import java.io.IOException;
@@ -108,36 +109,50 @@ public class RootNodeManager {
      * add node
      * not optimized
      */
-    public void addNode(String nodeName, boolean folder) throws IOException {
+    public void addNode(Object nodeAttribute,int parentNodeId, boolean folder) throws IOException {
         if (currentTreeNode == null ||
-                nodeName.equals("")) {
+                nodeAttribute == null) {
             throw new IOException("not found");
         }
 
-//        new TreeNodeRealm(nodeName, folder, currentTreeNode.getLevel() + 1);
-        currentTreeNode.addChild(TreeNodeFactory
-                .getChildByPersistenceType(persistenceStrategy.getPersistenceType(), nodeName, folder, currentTreeNode.getLevel() + 1));
+        //set local node
+        TreeNodeInterface localNode = findNodeById(currentTreeNode, parentNodeId);
+        if (localNode == null)
+            localNode = currentTreeNode;
+
+        if (nodeAttribute instanceof String) {
+            localNode.addChild(TreeNodeFactory
+                    .getChildByPersistenceType(persistenceStrategy.getPersistenceType(),
+                            (String) nodeAttribute, folder, localNode.getLevel() + 1));
+        }
+
+        if (nodeAttribute instanceof TreeNodeContent) {
+            localNode.addChild(TreeNodeFactory
+                    .getChildByPersistenceType(persistenceStrategy.getPersistenceType(),
+                            (TreeNodeContent) nodeAttribute, folder, localNode.getLevel() + 1));
+        }
 
         saveOnStorage();
     }
 
     /**
-     * add node
-     * not optimized
+     * TODO please take care of this - RECURSIVE
+     * @param node
+     * @param nodeId
+     * @return
      */
-    public void addNode(TreeNodeContent contentNode, boolean folder) throws IOException {
-        if (currentTreeNode == null ||
-                contentNode == null ||
-                contentNode.getName().equals("")) {
-            throw new IOException("not found");
+    private TreeNodeInterface findNodeById(TreeNodeInterface node,int nodeId) {
+        if (node.getChildren() == null ||
+                nodeId == -1) {
+            return node.getChildById(nodeId);
         }
 
-//        new TreeNodeRealm(nodeName, folder, currentTreeNode.getLevel() + 1);
-        currentTreeNode.addChild(TreeNodeFactory
-                .getChildByPersistenceType(persistenceStrategy.getPersistenceType(), contentNode, folder, currentTreeNode.getLevel() + 1));
-
-        saveOnStorage();
+        for (TreeNodeInterface parent : node.getChildren()) {
+            findNodeById(parent, nodeId);
+        }
+        return node.getChildById(nodeId);
     }
+    
 
     /**
      * save on storage method

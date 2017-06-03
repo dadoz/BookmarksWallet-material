@@ -72,8 +72,8 @@
 
     <!-- BUTTON STYLE-->
     <style name="customMaterialButtonStyle" parent="@style/Widget.AppCompat.Button.Colored">
-        <item name="backgroundTint">@color/yellow_400</item>
-        <item name="android:textColor">@color/indigo_600</item>
+        <item name="backgroundTint">@color/amber_600</item>
+        <item name="android:textColor">@color/grey_50</item>
     </style>
 
     <style name="AddBookmarkSearchBoxCollapseIcons">

@@ -13,6 +13,7 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -34,7 +35,8 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
     }
 
     public TreeNodeRealm(TreeNodeContent nodeContent, boolean folder, int level) {
-        this.nodeContent = (TreeNodeContentRealm) nodeContent;
+        //TODO mv to copy obj
+        this.nodeContent = new TreeNodeContentRealm(nodeContent.getName(), nodeContent.getDescription(), nodeContent.getFileResource(), nodeContent.getFolderResource());
         this.folder = folder;
         this.level = level;
     }
@@ -48,7 +50,9 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
         if (childNode instanceof TreeNodeRealm) {
             childNode.setParent(this);
             childNode.setId();
+            Realm.getDefaultInstance().beginTransaction();
             children.add((TreeNodeRealm) childNode);
+            Realm.getDefaultInstance().commitTransaction();
         }
         return this;
     }
@@ -121,23 +125,10 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
         mParent = parent;
     }
 
-//    @Deprecated
-//    public TreeNodeInterface getChildByName(String name) {
-//        for (TreeNodeInterface item : children) {
-//            if (item.getNodeContent().getName().equals(name)) {
-//                return item;
-//            }
-//        }
-//        return null;
-//    }
-
-    @Deprecated
     public TreeNodeInterface getChildById(long id) {
-        for (TreeNodeInterface item : children) {
-            if (item.getId() == id) {
-                return item;
-            }
-        }
+        for (TreeNodeInterface child : children)
+            if (child.getId() == id)
+                return child;
         return null;
     }
 

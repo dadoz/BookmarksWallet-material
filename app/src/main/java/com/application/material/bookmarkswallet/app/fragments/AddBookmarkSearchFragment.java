@@ -17,6 +17,7 @@ import com.application.material.bookmarkswallet.app.application.BookmarksWalletA
 import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
+import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.views.AddBookmarkSearchLayout;
@@ -63,18 +64,20 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
         View mainView = inflater.inflate(R.layout.fragment_add_bookmark_layout, container, false);
         ButterKnife.bind(this, mainView);
         setHasOptionsMenu(true);
-        initView(savedInstance);
+        initView();
         return mainView;
     }
 
     /**
      *
-     * @param savedInstanceState
      */
-    public void initView(Bundle savedInstanceState) {
-        addBookmarkSearchLayout.initView(savedInstanceState);
-        pasteClipboardFab.setOnClickListener(this);
+    public void initView() {
+        addBookmarkSearchLayout.initView();
         addBookmarkSearchLayout.getUrlEditTextView().setOnEditorActionListener(this);
+        addBookmarkSearchLayout.setPasteClipboardFab(pasteClipboardFab);
+
+        //init view
+        pasteClipboardFab.setOnClickListener(this);
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setColorSchemeResources(R.color.indigo_600, R.color.yellow_400);
         addBookmarkSearchButton.setOnClickListener(this);
@@ -120,7 +123,7 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
      */
     public void searchAction() {
         boolean isConnected = ConnectionUtils.isConnected(getContext());
-        SparseArray<String> searchParamsArray = addBookmarkSearchLayout.getSearchParamsArray();
+        SparseArrayParcelable<String> searchParamsArray = addBookmarkSearchLayout.getSearchParamsArray();
         if (isConnected &&
                 SearchManager.search(searchParamsArray.get(0))) {
             onSearchSuccess(searchParamsArray);
@@ -147,7 +150,7 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
      * search success ui
      * @param searchParamsArray
      */
-    private void onSearchSuccess(SparseArray<String> searchParamsArray) {
+    private void onSearchSuccess(SparseArrayParcelable<String> searchParamsArray) {
         StatusManager.getInstance().setOnResultMode();
         ((BookmarksWalletApplication) getActivity().getApplication())
                 .setSearchParamsArray(searchParamsArray);

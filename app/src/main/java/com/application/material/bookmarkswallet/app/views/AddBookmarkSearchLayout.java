@@ -24,7 +24,11 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
+import com.lib.davidelm.filetreevisitorlibrary.views.FolderNodeView;
+
+import java.lang.ref.WeakReference;
 
 import icepick.State;
 
@@ -39,6 +43,8 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements View.OnCl
     private CheckBox addBookmarkHttpsCheckbox;
     private ViewSwitcher toggleNameViewSwitcher;
     private TextInputLayout addBookmarkTitleTextInput;
+    private WeakReference<FloatingActionButton> pasteClipboardFabRef;
+    private FolderNodeView addBookmarkFolderListView;
 
 
     public AddBookmarkSearchLayout(Context context) {
@@ -71,16 +77,13 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements View.OnCl
         toggleNameViewSwitcher = (ViewSwitcher) view.findViewById(R.id.toggleNameViewSwitcherId);
         addBookmarkTitleTextInput = (TextInputLayout) view.findViewById(R.id.addBookmarkTitleTextInputId);
         addBookmarkSearchButton = view.findViewById(R.id.addBookmarkSearchButtonId);
-
+        addBookmarkFolderListView = (FolderNodeView) view.findViewById(R.id.addBookmarkFolderListViewId);
     }
 
     /**
      *
-     * @param savedInstanceState
      */
-    public void initView(Bundle savedInstanceState) {
-//        searchBookmarkHelper.init(new View[] { urlEditText, pasteClipboardFab,
-//                addBookmarkSearchButton, addBookmarkUrlTextInput });
+    public void initView() {
         addBookmarkSearchButton.setOnClickListener(this);
         toggleNameViewSwitcher.setOnClickListener(this);
         urlEditText.addTextChangedListener(this);
@@ -90,10 +93,11 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements View.OnCl
     /**
      * get search params
      */
-    public SparseArray<String> getSearchParamsArray() {
-        SparseArray<String> searchParamsArray = new SparseArray<>();
+    public SparseArrayParcelable<String> getSearchParamsArray() {
+        SparseArrayParcelable<String> searchParamsArray = new SparseArrayParcelable<>();
         searchParamsArray.put(0, Utils.buildUrl(urlEditText.getText().toString(), addBookmarkHttpsCheckbox.isChecked()));
         searchParamsArray.put(1, addBookmarkTitleEditText.getText().toString());
+        searchParamsArray.put(2, Integer.toString(addBookmarkFolderListView.getCurrentNodeId()));
         return searchParamsArray;
     }
 
@@ -139,8 +143,10 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements View.OnCl
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         showErrorOnUrlEditText(false);
         boolean isQueryEmpty = charSequence.length() == 0;
-//        clipboardFabButton.setVisibility(isQueryEmpty ? View.VISIBLE : View.GONE);
         addBookmarkSearchButton.setVisibility(isQueryEmpty ? View.GONE : View.VISIBLE);
+         if (pasteClipboardFabRef != null &&
+                pasteClipboardFabRef.get() != null)
+            pasteClipboardFabRef.get().setVisibility(isQueryEmpty ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -157,5 +163,9 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements View.OnCl
 
     public EditText getUrlEditTextView() {
         return urlEditText;
+    }
+
+    public void setPasteClipboardFab(FloatingActionButton pasteClipboardFab) {
+        pasteClipboardFabRef = new WeakReference<>(pasteClipboardFab);
     }
 }

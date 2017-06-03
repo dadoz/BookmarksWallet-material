@@ -20,6 +20,8 @@ import android.widget.ImageView;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -311,5 +313,39 @@ public class Utils {
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, isError ?
                         R.color.red_400 : R.color.indigo_600));
         return snackbar;
+    }
+
+    public static TreeNodeContent createContentNode(SparseArrayParcelable searchParamsArray) {
+       return new TreeNodeContent() {
+            @Override
+            public String getName() {
+                return searchParamsArray.get(0).toString();
+            }
+
+            @Override
+            public String getDescription() {
+                return searchParamsArray.get(0).toString();
+            }
+
+            @Override
+            public String getFileUri() {
+                return "www.google.it";
+            }
+
+            @Override
+            public byte[] getFileBlob() {
+                return null;
+            }
+
+            @Override
+            public int getFileResource() {
+                return 0;
+            }
+
+            @Override
+            public int getFolderResource() {
+                return 0;
+            }
+        };
     }
 }

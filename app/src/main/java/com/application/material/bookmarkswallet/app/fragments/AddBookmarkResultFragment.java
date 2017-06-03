@@ -39,6 +39,7 @@ import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
 import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
+import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.presenter.SearchBookmarkPresenter;
 import com.application.material.bookmarkswallet.app.presenter.SearchResultPresenter;
 import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
@@ -56,6 +57,9 @@ import icepick.Icepick;
 import icepick.State;
 import io.realm.Realm;
 
+import static android.icu.text.DateTimePatternGenerator.PatternInfo.OK;
+import static com.application.material.bookmarkswallet.app.utlis.Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE;
+
 public class AddBookmarkResultFragment extends Fragment implements
         View.OnClickListener,
         RetrieveIconHelper.OnRetrieveIconInterface, AddBookmarkActivity.OnHandleBackPressed {
@@ -70,7 +74,7 @@ public class AddBookmarkResultFragment extends Fragment implements
 
     private StatusManager statusManager;
     private RetrieveIconHelper retrieveIconHelper;
-    private SparseArray<String> searchParamsArray;
+    private SparseArrayParcelable<String> searchParamsArray;
     private Unbinder unbinder;
 
     @Override
@@ -179,13 +183,16 @@ public class AddBookmarkResultFragment extends Fragment implements
      * add bookmark on orm db
      */
     private void addBookmark() {
-//        statusManager.setOnSearchMode();
         String url = searchParamsArray.get(0);
         String title = searchParamsArray.get(1);
+        int folderId = Integer.valueOf(searchParamsArray.get(2));
 
-        RealmUtils.addItemOnRealm(Realm.getDefaultInstance(), title, null,
-                Utils.convertBitmapToByteArray(addBookmarkResultView.getIconBitmap()), url);
+//        RealmUtils.addItemOnRealm(Realm.getDefaultInstance(), title, null,
+//                Utils.convertBitmapToByteArray(addBookmarkResultView.getIconBitmap()), url);
         if (getActivity() != null) {
+            Intent intent = new Intent();
+            intent.putExtra("search_params_add_bookmark", searchParamsArray);
+            getActivity().setResult(ADD_BOOKMARK_ACTIVITY_REQ_CODE, intent);
             getActivity().finish();
         }
     }

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.SparseArray;
 
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.realm.migrations.BookmarkRealmMigration;
 import com.flurry.android.FlurryAgent;
 
@@ -12,7 +13,7 @@ import io.realm.RealmConfiguration;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class BookmarksWalletApplication extends Application {
-    private SparseArray<String> searchParamsArray;
+    private SparseArrayParcelable<String> searchParamsArray;
     private RealmConfiguration realmConfig;
 
     @Override
@@ -52,7 +53,7 @@ public class BookmarksWalletApplication extends Application {
      *
      * @return
      */
-    public SparseArray<String> getSearchParamsArray() {
+    public SparseArrayParcelable<String> getSearchParamsArray() {
         return searchParamsArray;
     }
 
@@ -60,7 +61,7 @@ public class BookmarksWalletApplication extends Application {
      *
      * @param searchParamsArray
      */
-    public void setSearchParamsArray(SparseArray<String> searchParamsArray) {
+    public void setSearchParamsArray(SparseArrayParcelable<String> searchParamsArray) {
         this.searchParamsArray = searchParamsArray;
     }
 }
