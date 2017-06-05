@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.application.material.bookmarkswallet.app.MainActivity;
@@ -35,8 +36,6 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
     public final static String FRAG_TAG = "AddBookmarkSearchFragment";
     @BindView(R.id.addBookmarkSearchLayoutId)
     AddBookmarkSearchLayout addBookmarkSearchLayout;
-    @BindView(R.id.pasteClipboardFabId)
-    FloatingActionButton pasteClipboardFab;
     @BindView(R.id.addBookmarkRefreshLayoutId)
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.addBookmarkSearchButtonId)
@@ -75,7 +74,6 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
         addBookmarkSearchLayout.setOnEditorActionLst(this);
 
         //init view
-        pasteClipboardFab.setOnClickListener(this);
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setColorSchemeResources(R.color.indigo_600, R.color.yellow_400);
         addBookmarkSearchButton.setOnClickListener(this);
@@ -100,11 +98,6 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
         switch (v.getId()) {
             case R.id.addBookmarkSearchButtonId:
                 searchAction();
-                break;
-            case R.id.pasteClipboardFabId:
-                String url = ClipboardManager.getInstance(new WeakReference<>(getContext()))
-                        .getTextFromClipboard();
-                addBookmarkSearchLayout.setUrl(url);
                 break;
         }
     }

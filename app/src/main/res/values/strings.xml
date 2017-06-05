@@ -77,4 +77,5 @@
     <string name="select_folder">Select Folder</string>
     <string name="up_folder">up folder</string>
     <string name="search_bookmark">Search bookmarks</string>
+    <string name="paste_clipboard">PASTE</string>
 </resources>

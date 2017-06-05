@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
 import com.lib.davidelm.filetreevisitorlibrary.views.FolderNodeView;
 
 import java.lang.ref.WeakReference;
@@ -36,7 +38,7 @@ public class SearchCardviewBoxView extends FrameLayout implements View.OnClickLi
     private EditText addBookmarkTitleEditText;
     private CheckBox addBookmarkHttpsCheckbox;
     private TextInputLayout addBookmarkTitleTextInput;
-    private FloatingActionButton pasteClipboardFab;
+    private Button pasteClipboardFab;
     @State
     public boolean isTitleViewVisible = false;
     private WeakReference<OnTextChangedCb> lst;
@@ -67,11 +69,12 @@ public class SearchCardviewBoxView extends FrameLayout implements View.OnClickLi
         addBookmarkTitleEditText = (EditText) findViewById(R.id.titleEditTextId);
         addBookmarkHttpsCheckbox = (CheckBox) findViewById(R.id.addBookmarkHttpsCheckboxId);
         addBookmarkTitleTextInput = (TextInputLayout) findViewById(R.id.addBookmarkTitleTextInputId);
-//        pasteClipboardFab = (FloatingActionButton) findViewById(R.id.pasteClipboardFabId);
+        pasteClipboardFab = (Button) findViewById(R.id.pasteClipboardFabId);
 
         toggleNameViewSwitcher.setOnClickListener(this);
         urlEditText.addTextChangedListener(this);
         urlEditText.setOnEditorActionListener(this);
+        pasteClipboardFab.setOnClickListener(this);
     }
 
     @Override
@@ -79,6 +82,11 @@ public class SearchCardviewBoxView extends FrameLayout implements View.OnClickLi
         switch (view.getId()) {
             case R.id.toggleNameViewSwitcherId:
                 toggleTitleVisibility();
+                break;
+            case R.id.pasteClipboardFabId:
+                String url = ClipboardManager.getInstance(new WeakReference<>(getContext()))
+                        .getTextFromClipboard();
+                setUrl(url);
                 break;
         }
 
@@ -114,7 +122,7 @@ public class SearchCardviewBoxView extends FrameLayout implements View.OnClickLi
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         showErrorOnUrlEditText(false);
         boolean isQueryEmpty = charSequence.length() == 0;
-//        pasteClipboardFab.setVisibility(isQueryEmpty ? View.VISIBLE : View.GONE);
+        pasteClipboardFab.setVisibility(isQueryEmpty ? View.VISIBLE : View.GONE);
 
         //set cb
         if (lst != null &&
