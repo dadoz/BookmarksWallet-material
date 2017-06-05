@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 import icepick.Icepick;
 
 public class AddBookmarkSearchFragment extends Fragment implements View.OnClickListener,
-        SwipeRefreshLayout.OnRefreshListener, TextView.OnEditorActionListener {
+        SwipeRefreshLayout.OnRefreshListener, AddBookmarkSearchLayout.OnEditorActionListenerCallbacks {
     public final static String FRAG_TAG = "AddBookmarkSearchFragment";
     @BindView(R.id.addBookmarkSearchLayoutId)
     AddBookmarkSearchLayout addBookmarkSearchLayout;
@@ -72,9 +72,7 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
      *
      */
     public void initView() {
-        addBookmarkSearchLayout.initView();
-        addBookmarkSearchLayout.getUrlEditTextView().setOnEditorActionListener(this);
-        addBookmarkSearchLayout.setPasteClipboardFab(pasteClipboardFab);
+        addBookmarkSearchLayout.setOnEditorActionLst(this);
 
         //init view
         pasteClipboardFab.setOnClickListener(this);
@@ -93,7 +91,7 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
     private void handleArguments() {
         if (getArguments().getString(MainActivity.SHARED_URL_EXTRA_KEY) != null) {
             String sharedUrl = getArguments().getString(MainActivity.SHARED_URL_EXTRA_KEY);
-            addBookmarkSearchLayout.getUrlEditTextView().setText(sharedUrl);
+            addBookmarkSearchLayout.setUrl(sharedUrl);
         }
     }
 
@@ -106,15 +104,9 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
             case R.id.pasteClipboardFabId:
                 String url = ClipboardManager.getInstance(new WeakReference<>(getContext()))
                         .getTextFromClipboard();
-                addBookmarkSearchLayout.getUrlEditTextView().setText(url);
+                addBookmarkSearchLayout.setUrl(url);
                 break;
         }
-    }
-
-    @Override
-    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-        searchAction();
-        return true;
     }
 
 
@@ -124,13 +116,16 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
     public void searchAction() {
         boolean isConnected = ConnectionUtils.isConnected(getContext());
         SparseArrayParcelable<String> searchParamsArray = addBookmarkSearchLayout.getSearchParamsArray();
-        if (isConnected &&
-                SearchManager.search(searchParamsArray.get(0))) {
-            onSearchSuccess(searchParamsArray);
+
+        //handle error
+        if (!isConnected ||
+                !SearchManager.isSearchValid(searchParamsArray.get(0))) {
+            onSearchError(isConnected);
             return;
         }
 
-        onSearchError(isConnected);
+        //handle success
+        onSearchSuccess(searchParamsArray);
     }
 
     /**
@@ -167,5 +162,10 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
     @Override
     public void onRefresh() {
         refreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onEditorActionCb(TextView textView) {
+        searchAction();
     }
 }

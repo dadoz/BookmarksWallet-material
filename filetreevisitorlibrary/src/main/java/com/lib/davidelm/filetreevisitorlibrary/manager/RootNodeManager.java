@@ -144,7 +144,7 @@ public class RootNodeManager {
     private TreeNodeInterface findNodeById(TreeNodeInterface node,int nodeId) {
         if (node.getChildren() == null ||
                 nodeId == -1) {
-            return node.getChildById(nodeId);
+            return null;
         }
 
         for (TreeNodeInterface parent : node.getChildren()) {
@@ -152,7 +152,7 @@ public class RootNodeManager {
         }
         return node.getChildById(nodeId);
     }
-    
+
 
     /**
      * save on storage method

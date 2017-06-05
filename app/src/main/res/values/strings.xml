@@ -76,4 +76,5 @@
     <string name="action_add_folder">add folder</string>
     <string name="select_folder">Select Folder</string>
     <string name="up_folder">up folder</string>
+    <string name="search_bookmark">Search bookmarks</string>
 </resources>

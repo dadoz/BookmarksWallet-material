@@ -61,7 +61,7 @@ public class SearchManager implements Filterable,
      * @param query
      * @return
      */
-    public static boolean search(String query) {
+    public static boolean isSearchValid(String query) {
             return (Utils.isValidUrl(query)); //&& pingUrl(query);
     }
 

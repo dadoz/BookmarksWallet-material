@@ -10,4 +10,5 @@
     <dimen name="text_size_8">8sp</dimen>
     <dimen name="text_size_12">12sp</dimen>
     <dimen name="small_folder_icon_width">32dp</dimen>
+    <dimen name="folder_layout_height">150dp</dimen>
 </resources>

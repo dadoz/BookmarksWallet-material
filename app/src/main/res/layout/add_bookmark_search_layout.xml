@@ -1,128 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    android:id="@+id/addBookmarkMainLayoutId"
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent">
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:id="@+id/addBookmarkMainLayoutId">
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:id="@+id/addBookmarkSearchButtonId"
+        android:background="@color/amber_600"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_18"
+        android:gravity="right"
+        android:textColor="@color/grey_50"
+        android:padding="@dimen/margin_16"
+        android:text="@string/search_label"/>
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/addBookmarkCardLayoutId"
-            android:layout_margin="@dimen/padding_16"
+    <ScrollView
+        android:layout_above="@id/addBookmarkSearchButtonId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/yellow_400">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <RelativeLayout
-                android:id="@+id/addBookmarkMainContainerLayoutId"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.lib.davidelm.filetreevisitorlibrary.views.FolderCardviewView
+                android:id="@+id/addBookmarkFolderCardviewId"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <!--folder view-->
+            <TextView
+                android:id="@+id/addBookmarkFolderTitleTextId"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/padding_16">
+                android:layout_marginLeft="@dimen/padding_16"
+                android:layout_marginRight="@dimen/padding_16"
+                android:textSize="@dimen/text_size_24"
+                android:text="@string/search_bookmark"/>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/addBookmarkUrlTextInputId"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    style="@style/TextInputLayoutStyle">
-                    <android.support.v7.widget.AppCompatEditText
-                        android:id="@+id/urlEditTextId"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textUri"
-                        android:imeOptions="actionSend"
-                        android:maxLines="3"
-                        android:hint="@string/url_hint">
-                    </android.support.v7.widget.AppCompatEditText>
-                </android.support.design.widget.TextInputLayout>
-
-                <ViewSwitcher
-                    android:id="@+id/toggleNameViewSwitcherId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/addBookmarkUrlTextInputId"
-                    android:background="?attr/selectableItemBackground"
-                    android:layout_alignParentRight="true">
-                    <ImageView
-                        android:layout_width="@dimen/small_icon_size"
-                        android:layout_height="@dimen/small_icon_size"
-                        style="@style/AddBookmarkSearchBoxCollapseIcons"/>
-                    <ImageView
-                        android:layout_width="@dimen/small_icon_size"
-                        android:layout_height="@dimen/small_icon_size"
-                        style="@style/AddBookmarkSearchBoxExpandIcons"/>
-                </ViewSwitcher>
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/addBookmarkTitleTextInputId"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:layout_below="@id/toggleNameViewSwitcherId"
-                    style="@style/TextInputLayoutStyle">
-                    <android.support.v7.widget.AppCompatEditText
-                        android:id="@+id/titleEditTextId"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:hint="@string/title_hint"
-                        android:maxLength="50"
-                        android:maxLines="2"/>
-                </android.support.design.widget.TextInputLayout>
-                <CheckBox
-                    android:id="@+id/addBookmarkHttpsCheckboxId"
-                    android:layout_below="@id/addBookmarkTitleTextInputId"
-                    android:visibility="gone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding_16"
-                    android:text="@string/https_checkbox_label"/>
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
-
-        <!--folder view-->
-        <TextView
-            android:id="@+id/addBookmarkFolderTitleTextId"
-            android:layout_below="@id/addBookmarkCardLayoutId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/padding_16"
-            android:layout_marginRight="@dimen/padding_16"
-            android:textSize="@dimen/text_size_24"
-            android:text="@string/select_folder"/>
-        <android.support.v7.widget.CardView
-            android:id="@+id/folderCardviewId"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/folder_layout_height"
-            android:layout_below="@id/addBookmarkFolderTitleTextId"
-            android:layout_margin="@dimen/padding_16"
-            android:padding="@dimen/padding_16">
-            <RelativeLayout
+            <com.application.material.bookmarkswallet.app.views.SearchCardviewBoxView
+                android:id="@+id/addBookmarkSearchCardviewBoxId"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.lib.davidelm.filetreevisitorlibrary.views.NavigateFolderUpView
-                    android:id="@+id/navigateUpFolderViewId"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <com.lib.davidelm.filetreevisitorlibrary.views.FolderNodeView
-                    android:layout_below="@id/navigateUpFolderViewId"
-                    android:id="@+id/addBookmarkFolderListViewId"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
+                android:layout_height="wrap_content"/>
 
-        </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
 
-        <Button
-            android:id="@+id/addBookmarkSearchButtonId"
-            android:layout_below="@id/folderCardviewId"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/customMaterialButtonStyle"
-            android:text="@string/search_label"/>
 
-    </RelativeLayout>
-</ScrollView>
+</RelativeLayout>
