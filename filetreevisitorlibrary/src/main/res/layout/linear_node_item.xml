@@ -27,7 +27,13 @@
         android:layout_below="@id/nodeLabelTextId"
         android:textSize="@dimen/text_size_12"
         android:text="node name"/>
+    <com.lib.davidelm.filetreevisitorlibrary.views.ExclusiveSelectionButton
+        android:id="@+id/nodeMoreSelectButtonId"
+        android:layout_alignParentRight="true"
+        android:layout_width="@dimen/small_folder_icon_width"
+        android:layout_height="@dimen/small_folder_icon_width" />
     <ImageView
+        android:visibility="gone"
         android:id="@+id/nodeMoreSettingsButtonId"
         android:layout_alignParentRight="true"
         android:src="@mipmap/ic_more_vertical"

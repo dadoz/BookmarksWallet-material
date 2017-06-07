@@ -264,6 +264,11 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
         showPopupMenu(v, item);
     }
 
+    @Override
+    public void onSelectButtonClick(View v, int position, TreeNodeInterface item) {
+        Log.e(TAG, "hey selefction item");
+    }
+
 
     /**
      *

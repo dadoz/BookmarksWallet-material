@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,9 +13,9 @@ import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
 import com.lib.davidelm.filetreevisitorlibrary.R;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
+import com.lib.davidelm.filetreevisitorlibrary.views.ExclusiveSelectionButton;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,6 +29,7 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
         this.items = list;
         this.lst = lst;
         this.showMoreSettingButton = showMoreSettingButton;
+
     }
 
     public TreeNodeAdapter(List<TreeNodeInterface> list) {
@@ -61,6 +63,95 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
         setIcon(holder.nodeIconImage, holder.itemView.getContext(), items.get(position).isFolder(), nodeContent);
 
         //set long click listner
+        setLongClickListener(holder, position, item);
+
+        //set click listner
+        setClickListener(holder, position, item);
+
+        //set on more setting button click - only on linear views
+        setMoreSettingClickListener(holder, position, item);
+
+        //handle set select button click
+        setSelectClickListener(holder, position, item);
+    }
+
+    /**
+     *
+     * @param holder
+     * @param position
+     * @param item
+     */
+    private void setSelectClickListener(ViewHolder holder, final int position, TreeNodeInterface item) {
+        if (getItemViewType(position) == 0) {
+            holder.nodeSelectButton.setVisibility(!showMoreSettingButton ?View.VISIBLE : View.GONE);
+            holder.nodeSelectButton.setSelected(item.isSelected());
+
+            holder.nodeSelectButton.setOnClickListener(v -> {
+                exclusiveItemSelection(item);
+                notifyDataSetChanged();
+
+                //set cbs
+                if (lst != null && lst.get() != null)
+                    lst.get().onSelectButtonClick(v, position, item);
+            });
+        }
+    }
+
+    /**
+     * unselecte the other keep this one TODO please rm it
+     * @param item
+     */
+    private void exclusiveItemSelection(TreeNodeInterface item) {
+        //unslect the others
+        for (TreeNodeInterface temp : items)
+            temp.setSelected(false);
+
+        //select current item
+        item.setSelected(true);
+    }
+
+    /**
+     *
+     * @param holder
+     * @param position
+     * @param item
+     */
+    private void setMoreSettingClickListener(ViewHolder holder, int position, TreeNodeInterface item) {
+        if (getItemViewType(position) == 0) {
+            holder.nodeMoreSettingsButton.setVisibility(showMoreSettingButton ?View.VISIBLE : View.GONE);
+            holder.nodeMoreSettingsButton.setOnClickListener(v -> {
+                if (lst != null && lst.get() != null)
+                    lst.get().onMoreSettingsClick(v, position, item);
+            });
+        }
+
+    }
+
+    /**
+     *
+     * @param holder
+     * @param position
+     * @param item
+     */
+    private void setClickListener(ViewHolder holder, int position, TreeNodeInterface item) {
+        holder.itemView.setOnClickListener(v -> {
+            if (lst != null && lst.get() != null) {
+                if (item.isFolder())
+                    lst.get().onFolderNodeCLick(v, position, item);
+                else
+                    lst.get().onFileNodeCLick(v, position, item);
+            }
+        });
+
+    }
+
+    /**
+     *
+     * @param holder
+     * @param position
+     * @param item
+     */
+    private void setLongClickListener(ViewHolder holder, int position, TreeNodeInterface item) {
         holder.itemView.setOnLongClickListener(v -> {
             if (lst != null && lst.get() != null) {
                 if (item.isFolder())
@@ -71,25 +162,6 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
             return true;
         });
 
-        //set click listner
-        holder.itemView.setOnClickListener(v -> {
-            if (lst != null && lst.get() != null) {
-                if (item.isFolder())
-                    lst.get().onFolderNodeCLick(v, position, item);
-                else
-                    lst.get().onFileNodeCLick(v, position, item);
-            }
-        });
-
-        //set on more setting button click - only on linear views
-        if (getItemViewType(position) == 0) {
-            holder.nodeMoreSettingsButton.setVisibility(showMoreSettingButton ?View.VISIBLE : View.GONE);
-
-            holder.nodeMoreSettingsButton.setOnClickListener(v -> {
-                if (lst != null && lst.get() != null)
-                    lst.get().onMoreSettingsClick(v, position, item);
-            });
-        }
     }
 
     @Override
@@ -163,6 +235,12 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
         }
     }
 
+    public void clearSelectedItem() {
+        for (TreeNodeInterface item : items)
+            item.setSelected(false);
+        notifyDataSetChanged();
+    }
+
 
     /**
      * view holder
@@ -172,9 +250,11 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
         private final ImageView nodeIconImage;
         private final TextView nodeDescriptionText;
         private final ImageView nodeMoreSettingsButton;
+        private final ExclusiveSelectionButton nodeSelectButton;
 
         ViewHolder(View itemView) {
             super(itemView);
+            nodeSelectButton = (ExclusiveSelectionButton) itemView.findViewById(R.id.nodeMoreSelectButtonId);
             nodeMoreSettingsButton = (ImageView) itemView.findViewById(R.id.nodeMoreSettingsButtonId);
             nodeIconImage = (ImageView) itemView.findViewById(R.id.nodeIconImageId);
             nodeDescriptionText = (TextView) itemView.findViewById(R.id.nodeDescriptionTextId);

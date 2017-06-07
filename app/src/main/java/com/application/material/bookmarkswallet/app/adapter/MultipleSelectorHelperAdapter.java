@@ -166,6 +166,9 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
     public void onMoreSettingsClick(View v, int position, TreeNodeInterface item) {
     }
 
+    public void onSelectButtonClick(View v, int position, TreeNodeInterface item) {
+    }
+
     /**
      * multiple selector handler
      */

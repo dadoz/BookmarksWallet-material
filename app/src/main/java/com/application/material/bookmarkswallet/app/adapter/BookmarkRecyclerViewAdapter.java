@@ -45,4 +45,5 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter {
     public void setIsFaviconIsEnabled(WeakReference<Context> ctx) {
         isFaviconNotEnabled = (boolean) SharedPrefHelper.getInstance(ctx).getValue(NO_FAVICON_MODE, false);
     }
+
 }

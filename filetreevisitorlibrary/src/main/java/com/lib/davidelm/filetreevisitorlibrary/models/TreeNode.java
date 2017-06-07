@@ -14,6 +14,7 @@ public class TreeNode implements Serializable, TreeNodeInterface {
     private transient TreeNodeInterface mParent;
     private List<TreeNode> children = new ArrayList<>();
     private boolean folder;
+    private boolean selected;
     private int MAX_ID = 0; //TODO handle it
 
     private TreeNodeContent nodeContent;
@@ -127,5 +128,13 @@ public class TreeNode implements Serializable, TreeNodeInterface {
 
     public void removeChildren() {
         children.clear();
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

@@ -30,6 +30,7 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
     private RealmList<TreeNodeRealm> children = new RealmList<>();
     private boolean folder;
     private TreeNodeContentRealm nodeContent;
+    private boolean selected;
 
     public TreeNodeRealm() {
     }
@@ -152,5 +153,13 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
 
     public void removeChildren() {
         children.clear();
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

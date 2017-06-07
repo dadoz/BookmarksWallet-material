@@ -1,7 +1,6 @@
 package com.lib.davidelm.filetreevisitorlibrary.views;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -58,5 +57,10 @@ public class FolderCardviewView extends FrameLayout {
 
     public FolderNodeView getFolderListView() {
         return addBookmarkFolderListView;
+    }
+
+    public void init() {
+        if (getFolderListView() != null)
+            getFolderListView().clearSelectedItem();
     }
 }

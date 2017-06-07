@@ -50,6 +50,8 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCar
         searchCardviewBox = (SearchCardviewBoxView) view.findViewById(R.id.addBookmarkSearchCardviewBoxId);
         addBookmarkFolderCardview = (FolderCardviewView) view.findViewById(R.id.addBookmarkFolderCardviewId);
         searchCardviewBox.setListenerCb(new WeakReference<>(this));
+
+        addBookmarkFolderCardview.init();
     }
 
     /**
@@ -61,7 +63,7 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCar
                 searchCardviewBox.isHttpsChecked()));
         searchParamsArray.put(1, searchCardviewBox.getTitle());
         searchParamsArray.put(2, Integer.toString(addBookmarkFolderCardview.getFolderListView()
-                .getCurrentNodeId()));
+                .getSelectedNodeId()));
         return searchParamsArray;
     }
 

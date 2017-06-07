@@ -28,4 +28,7 @@ public interface TreeNodeInterface {
     void setId();
 
     TreeNodeContent getNodeContent();
+
+    boolean isSelected();
+    void setSelected(boolean selected);
 }
