@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.lib.davidelm.filetreevisitorlibrary.R;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 import java.lang.ref.WeakReference;
 
@@ -16,9 +17,9 @@ import java.lang.ref.WeakReference;
  * Created by davide on 21/05/2017.
  */
 
-public class NavigateFolderUpView extends LinearLayout implements View.OnClickListener {
+public class NavigateFolderUpView extends LinearLayout {
     String TAG = "NavigateFolderUpView";
-    private WeakReference<FolderNodeView> folderNodeViewRef;
+    private WeakReference<OnClickListener> lst;
 
     public NavigateFolderUpView(Context context) {
         super(context);
@@ -42,28 +43,9 @@ public class NavigateFolderUpView extends LinearLayout implements View.OnClickLi
 
     private void initView() {
         inflate(getContext(), R.layout.navigate_folder_up_view, this);
-        setOnClickListener(this);
     }
 
-    /**
-     *
-     * @param view
-     */
-    public void setFolderNodeViewRef(FolderNodeView view) {
-        folderNodeViewRef = new WeakReference<>(view);
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        Log.e(TAG, "navigate folder up");
-
-        if (folderNodeViewRef.get() != null &&
-                folderNodeViewRef.get().isCurrentNodeRoot())
-            return;
-
-        if (folderNodeViewRef != null &&
-                folderNodeViewRef.get() != null)
-            folderNodeViewRef.get().setParentNodeFolder();
+    public void setLst(OnClickListener lst) {
+        setOnClickListener(lst);
     }
 }

@@ -39,6 +39,7 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
     private RootNodeManager displayNodeListModel = RootNodeManager.getInstance(new WeakReference<Context>(getContext()));
     private TreeNodeInterface rootNode;
     private TreeNodeInterface currentNode;
+    private WeakReference<OnFolderNodeClickCallbacks> listener;
 
     public FolderNodeView(Context context) {
         super(context);
@@ -138,6 +139,9 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
     public void onFolderNodeCLick(View v, int position, TreeNodeInterface node) {
         currentNode = node;
         updateRv();
+        if (listener != null &&
+                listener.get() != null)
+            listener.get().onFolderNodeClickCb(v, isCurrentNodeRoot());
     }
 
     /**
@@ -191,5 +195,15 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
 
     public void clearSelectedItem() {
         ((TreeNodeAdapter) recyclerView.getAdapter()).clearSelectedItem();
+    }
+
+    public void setOnNodeFolderClickLst(OnFolderNodeClickCallbacks lst) {
+        listener = new WeakReference<>(lst);
+    }
+
+    public boolean isParentCurrentNodeRoot() {
+        return currentNode != null &&
+                currentNode.getParent() != null &&
+                currentNode.getParent().isRoot();
     }
 }

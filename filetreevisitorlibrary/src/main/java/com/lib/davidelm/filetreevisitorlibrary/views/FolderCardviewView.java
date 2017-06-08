@@ -7,12 +7,14 @@ import android.widget.FrameLayout;
 
 import com.lib.davidelm.filetreevisitorlibrary.R;
 
+import java.lang.ref.WeakReference;
+
 
 /**
  * Created by davide on 21/05/2017.
  */
 
-public class FolderCardviewView extends FrameLayout {
+public class FolderCardviewView extends FrameLayout implements OnFolderNodeClickCallbacks, View.OnClickListener {
 
     private NavigateFolderUpView navigateUpFolderView;
     private FolderNodeView addBookmarkFolderListView;
@@ -37,22 +39,8 @@ public class FolderCardviewView extends FrameLayout {
         inflate(getContext(), R.layout.folder_cardview_view, this);
         navigateUpFolderView = (NavigateFolderUpView) findViewById(R.id.navigateUpFolderViewId);
         addBookmarkFolderListView = (FolderNodeView) findViewById(R.id.addBookmarkFolderListViewId);
-    }
-
-    public View getAddBookmarkFolderListView() {
-        return addBookmarkFolderListView;
-    }
-
-    public void setAddBookmarkFolderListView(FolderNodeView addBookmarkFolderListView) {
-        this.addBookmarkFolderListView = addBookmarkFolderListView;
-    }
-
-    public View getNavigateUpFolderView() {
-        return navigateUpFolderView;
-    }
-
-    public void setNavigateUpFolderView(NavigateFolderUpView navigateUpFolderView) {
-        this.navigateUpFolderView = navigateUpFolderView;
+        navigateUpFolderView.setOnClickListener(this);
+        addBookmarkFolderListView.setOnNodeFolderClickLst(this);
     }
 
     public FolderNodeView getFolderListView() {
@@ -60,6 +48,30 @@ public class FolderCardviewView extends FrameLayout {
     }
 
     public void init() {
+        navigateUpFolderView.setVisibility(GONE);
+        clearSelectedItems();
+    }
+
+    @Override
+    public void onFolderNodeClickCb(View v, boolean isRootNode) {
+        navigateUpFolderView.setVisibility(isRootNode ? GONE : VISIBLE);
+        clearSelectedItems();
+    }
+
+    @Override
+    public void onClick(View v) {
+        setVisibility(View.VISIBLE);
+        if (!addBookmarkFolderListView.isCurrentNodeRoot()) {
+            //paren current root node
+            if (addBookmarkFolderListView.isParentCurrentNodeRoot())
+                navigateUpFolderView.setVisibility(GONE);
+
+            addBookmarkFolderListView.setParentNodeFolder();
+            clearSelectedItems();
+        }
+    }
+
+    public void clearSelectedItems() {
         if (getFolderListView() != null)
             getFolderListView().clearSelectedItem();
     }

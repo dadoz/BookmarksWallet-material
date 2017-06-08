@@ -40,10 +40,6 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.addBookmarkSearchButtonId)
     View addBookmarkSearchButton;
-    @BindView(R.id.navigateUpFolderViewId)
-    NavigateFolderUpView navigateUpFolderView;
-    @BindView(R.id.addBookmarkFolderListViewId)
-    FolderNodeView addBookmarkFolderListViewId;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstance) {
@@ -77,7 +73,6 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setColorSchemeResources(R.color.indigo_600, R.color.yellow_400);
         addBookmarkSearchButton.setOnClickListener(this);
-        navigateUpFolderView.setFolderNodeViewRef(addBookmarkFolderListViewId);
         if (getArguments() != null) {
             handleArguments();
         }
