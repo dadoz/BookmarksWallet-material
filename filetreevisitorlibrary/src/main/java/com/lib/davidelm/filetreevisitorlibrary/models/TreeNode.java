@@ -1,4 +1,7 @@
 package com.lib.davidelm.filetreevisitorlibrary.models;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +15,7 @@ public class TreeNode implements Serializable, TreeNodeInterface {
 
     private int id;
     private transient TreeNodeInterface mParent;
+    @NonNull
     private List<TreeNode> children = new ArrayList<>();
     private boolean folder;
     private boolean selected;
@@ -28,11 +32,13 @@ public class TreeNode implements Serializable, TreeNodeInterface {
         this.level = level;
     }
 
+    @NonNull
     public static TreeNode root() {
         return new TreeNode(null, false, -1);
     }
 
 
+    @NonNull
     public TreeNodeInterface addChild(TreeNodeInterface childNode) {
         if (childNode instanceof TreeNode) {
             childNode.setParent(this);
@@ -50,21 +56,23 @@ public class TreeNode implements Serializable, TreeNodeInterface {
         return nodeContent;
     }
 
-    public TreeNodeInterface addChildren(TreeNodeInterface... nodes) {
+    @NonNull
+    public TreeNodeInterface addChildren(@NonNull TreeNodeInterface... nodes) {
         for (TreeNodeInterface n : nodes) {
             addChild(n);
         }
         return this;
     }
 
-    public TreeNode addChildren(Collection<TreeNodeInterface> nodes) {
+    @NonNull
+    public TreeNode addChildren(@NonNull Collection<TreeNodeInterface> nodes) {
         for (TreeNodeInterface n : nodes) {
             addChild(n);
         }
         return this;
     }
 
-    public int deleteChild(TreeNodeInterface child) {
+    public int deleteChild(@NonNull TreeNodeInterface child) {
         if (children.size() == 0)
             return -1;
 
@@ -105,6 +113,7 @@ public class TreeNode implements Serializable, TreeNodeInterface {
         return mParent == null && level == ROOT_LEVEL;
     }
 
+    @Nullable
     public TreeNodeInterface getChildById(long id) {
         return this.id == id ? this : null;
     }
@@ -117,6 +126,7 @@ public class TreeNode implements Serializable, TreeNodeInterface {
          this.mParent = parent;
     }
 
+    @Nullable
     public TreeNodeInterface getChildByName(String name) {
         for (TreeNodeInterface item : children) {
             if (item.getNodeContent().getName().equals(name)) {
@@ -136,5 +146,8 @@ public class TreeNode implements Serializable, TreeNodeInterface {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+    public void toggleSelected() {
+        selected = !selected;
     }
 }

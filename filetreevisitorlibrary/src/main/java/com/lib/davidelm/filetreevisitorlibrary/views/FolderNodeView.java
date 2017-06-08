@@ -3,6 +3,7 @@ package com.lib.davidelm.filetreevisitorlibrary.views;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
@@ -111,7 +112,8 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
      * @param list
      * @return
      */
-    public ArrayList<TreeNodeInterface> getFolderNodes(List<TreeNodeInterface> list) {
+    @NonNull
+    public ArrayList<TreeNodeInterface> getFolderNodes(@NonNull List<TreeNodeInterface> list) {
         ArrayList<TreeNodeInterface> nodeList = new ArrayList<>();
         //filter list -> files and folders
         Iterator<TreeNodeInterface> nodesIterator = list
@@ -125,7 +127,7 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
         return nodeList;
     }
     @Override
-    public void onMoreSettingsClick(View v, int position, TreeNodeInterface item) {
+    public void onMoreSettingsClick(@NonNull View v, int position, TreeNodeInterface item) {
         showPopupMenu(v, item);
     }
 
@@ -149,7 +151,7 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
      * @param v
      * @param node
      */
-    private void showPopupMenu(View v, TreeNodeInterface node) {
+    private void showPopupMenu(@NonNull View v, TreeNodeInterface node) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
         popupMenu.inflate(R.menu.folder_settings_menu);
         popupMenu.setOnMenuItemClickListener(item -> onMenuItemClick(item, node));//OnFolderMenuItemClickListener::onFolderMenuItemClick);
@@ -177,7 +179,7 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
 
 
     @Override
-    public boolean onMenuItemClick(MenuItem item, TreeNodeInterface node) {
+    public boolean onMenuItemClick(@NonNull MenuItem item, TreeNodeInterface node) {
         if (item.getItemId() == R.id.action_delete) {
             ((TreeNodeAdapter) recyclerView.getAdapter()).removeItem(node);
         }

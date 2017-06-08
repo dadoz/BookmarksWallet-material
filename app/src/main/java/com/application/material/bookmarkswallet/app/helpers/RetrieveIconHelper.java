@@ -21,7 +21,7 @@ public class RetrieveIconHelper {
     private RetrieveIconThread threadIcon;
     private RetrieveIconThread threadTitle;
 
-    private enum JobTypeEnum {BOOKMARK_ICON_URL, BOOKMARK_TITLE};
+    private enum JobTypeEnum {BOOKMARK_ICON_URL, BOOKMARK_TITLE}
 
     public static RetrieveIconHelper getInstance(WeakReference<OnRetrieveIconInterface> lst) {
         listener = lst;

@@ -1,6 +1,7 @@
 package com.lib.davidelm.filetreevisitorlibrary;
 
 
+import android.support.annotation.Nullable;
 import android.util.SparseIntArray;
 
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
@@ -19,6 +20,7 @@ public interface OnNodeVisitCompleted {
     void removeFile(int position);
     void removeFiles(SparseIntArray selectedItemIdList);
 
+    @Nullable
     ArrayList<TreeNodeInterface> getFiles();
 
     void setParentNode(TreeNodeInterface parentNode);

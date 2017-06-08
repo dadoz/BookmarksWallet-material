@@ -1,5 +1,6 @@
 package com.lib.davidelm.filetreevisitorlibrary.adapter;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +22,15 @@ public class BreadCrumbsAdapter extends RecyclerView.Adapter<BreadCrumbsAdapter.
         this.lst = lst;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = View.inflate(parent.getContext(), R.layout.breadcrumbs_item_view, null);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.itemView.setOnClickListener(v -> lst.get().onItemClick(v, position));
         holder.labelTextView.setText(items.get(position));
     }
@@ -68,7 +70,7 @@ public class BreadCrumbsAdapter extends RecyclerView.Adapter<BreadCrumbsAdapter.
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView labelTextView;
 
-        ViewHolder(View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             labelTextView = (TextView) itemView.findViewById(R.id.breadCrumbsLabelTextId);
         }

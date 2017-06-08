@@ -3,6 +3,8 @@ package com.lib.davidelm.filetreevisitorlibrary.strategies;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -20,6 +22,7 @@ public class SharedPrefPersistence implements PersistenceStrategyInterface {
     /**
      * reading on local storage
      */
+    @Nullable
     @Override
     public TreeNodeInterface getPersistentNode() {
         Log.e(TAG, "hey get node");
@@ -46,7 +49,7 @@ public class SharedPrefPersistence implements PersistenceStrategyInterface {
 
     public enum SharedPrefKeysEnum { TREE_NODE }
 
-    public SharedPrefPersistence(WeakReference<Context> ctx) {
+    public SharedPrefPersistence(@NonNull WeakReference<Context> ctx) {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(ctx.get());
     }
 
@@ -55,7 +58,8 @@ public class SharedPrefPersistence implements PersistenceStrategyInterface {
      * @param defValue
      * @return
      */
-    private Object getValue(SharedPrefKeysEnum key, Object defValue) {
+    @Nullable
+    private Object getValue(@NonNull SharedPrefKeysEnum key, Object defValue) {
         String temp = sharedPref.getString(key.name(), (String) defValue);
         Log.e(TAG, temp);
         return temp;
@@ -65,7 +69,7 @@ public class SharedPrefPersistence implements PersistenceStrategyInterface {
      * @param key
      * @param value
      */
-    private void setValue(SharedPrefKeysEnum key, Object value) {
+    private void setValue(@NonNull SharedPrefKeysEnum key, Object value) {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(key.name(), (String) value);
         editor.apply();

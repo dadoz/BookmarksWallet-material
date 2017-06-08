@@ -1,6 +1,8 @@
 package com.lib.davidelm.filetreevisitorlibrary.strategies;
 
 
+import android.support.annotation.Nullable;
+
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
@@ -10,6 +12,7 @@ import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 public interface PersistenceStrategyInterface {
 
+    @Nullable
     TreeNodeInterface getPersistentNode();
 
     void setPersistentNode(TreeNodeInterface node);

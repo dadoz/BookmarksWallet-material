@@ -1,6 +1,7 @@
 package com.lib.davidelm.filetreevisitorlibrary.views;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -11,6 +12,7 @@ import android.view.View;
  */
 
 public class EmptyRecyclerView extends RecyclerView {
+    @Nullable
     private View emptyView = null;
 
     public EmptyRecyclerView(Context context) {
@@ -30,7 +32,7 @@ public class EmptyRecyclerView extends RecyclerView {
     }
 
     @Override
-    public void setAdapter(Adapter adapter) {
+    public void setAdapter(@NonNull Adapter adapter) {
         super.setAdapter(adapter);
         adapter.registerAdapterDataObserver(adapterDataObserver);
     }
@@ -38,6 +40,7 @@ public class EmptyRecyclerView extends RecyclerView {
     /**
      * data observer
      */
+    @NonNull
     AdapterDataObserver adapterDataObserver = new AdapterDataObserver() {
         @Override
         public void onChanged() {

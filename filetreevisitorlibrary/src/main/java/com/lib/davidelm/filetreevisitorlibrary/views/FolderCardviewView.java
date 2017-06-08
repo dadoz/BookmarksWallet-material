@@ -1,6 +1,7 @@
 package com.lib.davidelm.filetreevisitorlibrary.views;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -19,17 +20,17 @@ public class FolderCardviewView extends FrameLayout implements OnFolderNodeClick
     private NavigateFolderUpView navigateUpFolderView;
     private FolderNodeView addBookmarkFolderListView;
 
-    public FolderCardviewView(Context context) {
+    public FolderCardviewView(@NonNull Context context) {
         super(context);
         initView();
     }
 
-    public FolderCardviewView(Context context, AttributeSet attrs) {
+    public FolderCardviewView(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
     }
 
-    public FolderCardviewView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FolderCardviewView(@NonNull Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView();
     }

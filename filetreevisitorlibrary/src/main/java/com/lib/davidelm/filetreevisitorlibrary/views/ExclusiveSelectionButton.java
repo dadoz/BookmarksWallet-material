@@ -3,6 +3,7 @@ package com.lib.davidelm.filetreevisitorlibrary.views;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
@@ -18,17 +19,17 @@ public class ExclusiveSelectionButton extends AppCompatImageView {
     private static Drawable checkCircleGrey;
     private static Drawable checkCircle;
 
-    public ExclusiveSelectionButton(Context context) {
+    public ExclusiveSelectionButton(@NonNull Context context) {
         super(context);
         initView();
     }
 
-    public ExclusiveSelectionButton(Context context, @Nullable AttributeSet attrs) {
+    public ExclusiveSelectionButton(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initView();
     }
 
-    public ExclusiveSelectionButton(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ExclusiveSelectionButton(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView();
     }

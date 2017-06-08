@@ -1,6 +1,7 @@
 package com.lib.davidelm.filetreevisitorlibrary.strategies;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import java.lang.ref.WeakReference;
 
@@ -13,7 +14,7 @@ public class PersistenceStrategy {
 
     public enum PersistenceType {SHARED_PREF, FIREBASE, REALMIO, UNDEFINED}
 
-    public PersistenceStrategy(WeakReference<Context> context, PersistenceType type) {
+    public PersistenceStrategy(WeakReference<Context> context, @NonNull PersistenceType type) {
         this.context = context;
         setStrategy(type);
     }
@@ -22,6 +23,7 @@ public class PersistenceStrategy {
         return strategy;
     }
 
+    @NonNull
     public PersistenceType getPersistenceType() {
         if (strategy instanceof SharedPrefPersistence)
             return PersistenceType.SHARED_PREF;
@@ -32,7 +34,7 @@ public class PersistenceStrategy {
         return UNDEFINED;
     }
 
-    void setStrategy(PersistenceType type) {
+    void setStrategy(@NonNull PersistenceType type) {
         switch (type.name()) {
             case "SHARED_PREF":
                 this.strategy = new SharedPrefPersistence(context);

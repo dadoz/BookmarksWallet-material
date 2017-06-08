@@ -2,6 +2,8 @@ package com.lib.davidelm.filetreevisitorlibrary.manager;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeVisitCompleted;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
@@ -17,9 +19,12 @@ import java.util.List;
 public class RootNodeManager {
     private static final String TAG = "RootNodePersistence";
     private static RootNodeManager instance;
+    @NonNull
     private final PersistenceStrategy persistenceStrategy;
+    @Nullable
     protected TreeNodeInterface root;
     private WeakReference<OnNodeVisitCompleted> onNodeVisitCompletedLst;
+    @Nullable
     private TreeNodeInterface currentTreeNode; //TODO make it persistent
 
     /**
@@ -46,6 +51,7 @@ public class RootNodeManager {
      * init root node
      * @return
      */
+    @Nullable
     private TreeNodeInterface initRootNode() {
         return TreeNodeFactory
                 .getChildByPersistenceType(persistenceStrategy.getPersistenceType(), "ROOT", false, TreeNode.ROOT_LEVEL);
@@ -64,6 +70,7 @@ public class RootNodeManager {
      *
      * @return
      */
+    @NonNull
     public static RootNodeManager getInstance(WeakReference<Context> context) {
         return instance == null ? instance = new RootNodeManager(context) : instance;
     }
@@ -72,7 +79,7 @@ public class RootNodeManager {
      * add node
      * not optimized
      */
-    public void removeNode(TreeNodeInterface node) throws IOException {
+    public void removeNode(@Nullable TreeNodeInterface node) throws IOException {
         if (currentTreeNode == null ||
                 node == null) {
             throw new IOException("not found");
@@ -109,7 +116,7 @@ public class RootNodeManager {
      * add node
      * not optimized
      */
-    public void addNode(Object nodeAttribute,int parentNodeId, boolean folder) throws IOException {
+    public void addNode(@Nullable Object nodeAttribute, int parentNodeId, boolean folder) throws IOException {
         if (currentTreeNode == null ||
                 nodeAttribute == null) {
             throw new IOException("not found");
@@ -141,7 +148,7 @@ public class RootNodeManager {
      * @param nodeId
      * @return
      */
-    private TreeNodeInterface findNodeById(TreeNodeInterface node,int nodeId) {
+    private TreeNodeInterface findNodeById(@NonNull TreeNodeInterface node, int nodeId) {
         if (node.getChildren() == null ||
                 nodeId == -1) {
             return null;
@@ -195,6 +202,7 @@ public class RootNodeManager {
     /**
      *
      */
+    @Nullable
     public TreeNodeInterface getRoot() {
         return root;
     }
@@ -205,7 +213,7 @@ public class RootNodeManager {
      * @param currentTreeNode
      * @param level
      */
-    private void updateParentOnCurrentNode(TreeNodeInterface currentTreeNode, int level) {
+    private void updateParentOnCurrentNode(@NonNull TreeNodeInterface currentTreeNode, int level) {
         level += 1;
         List<TreeNodeInterface> list;
         if ((list = currentTreeNode.getChildren()) != null) {

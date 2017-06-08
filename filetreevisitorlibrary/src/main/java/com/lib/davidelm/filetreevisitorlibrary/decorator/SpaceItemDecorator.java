@@ -1,6 +1,7 @@
 package com.lib.davidelm.filetreevisitorlibrary.decorator;
 
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -12,7 +13,7 @@ public class SpaceItemDecorator extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view,
+    public void getItemOffsets(@NonNull Rect outRect, View view,
                                RecyclerView parent, RecyclerView.State state) {
         outRect.left = space;
         outRect.right = space;

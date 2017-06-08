@@ -1,6 +1,8 @@
 package com.lib.davidelm.filetreevisitorlibrary.strategies;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
@@ -14,12 +16,13 @@ import io.realm.RealmResults;
 public class RealmPersistence implements PersistenceStrategyInterface {
     private static final String TAG = "RealmPersistence";
 
-    RealmPersistence(WeakReference<Context> context) {
+    RealmPersistence(@NonNull WeakReference<Context> context) {
         Realm.init(context.get());
     }
     /**
      * reading on local storage
      */
+    @Nullable
     @Override
     public TreeNodeInterface getPersistentNode() {
         Realm realm = Realm.getDefaultInstance();

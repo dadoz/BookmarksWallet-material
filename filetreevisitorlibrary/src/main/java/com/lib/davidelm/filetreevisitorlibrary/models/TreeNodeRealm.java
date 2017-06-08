@@ -1,5 +1,7 @@
 package com.lib.davidelm.filetreevisitorlibrary.models;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -27,6 +29,7 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
     private int id;
     @Ignore
     private transient TreeNodeInterface mParent;
+    @NonNull
     private RealmList<TreeNodeRealm> children = new RealmList<>();
     private boolean folder;
     private TreeNodeContentRealm nodeContent;
@@ -35,18 +38,20 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
     public TreeNodeRealm() {
     }
 
-    public TreeNodeRealm(TreeNodeContent nodeContent, boolean folder, int level) {
+    public TreeNodeRealm(@NonNull TreeNodeContent nodeContent, boolean folder, int level) {
         //TODO mv to copy obj
         this.nodeContent = new TreeNodeContentRealm(nodeContent.getName(), nodeContent.getDescription(), nodeContent.getFileResource(), nodeContent.getFolderResource());
         this.folder = folder;
         this.level = level;
     }
 
+    @NonNull
     public static TreeNode root() {
         return new TreeNode(null, false, -1);
     }
 
 
+    @NonNull
     public TreeNodeInterface addChild(TreeNodeInterface childNode) {
         if (childNode instanceof TreeNodeRealm) {
             childNode.setParent(this);
@@ -59,21 +64,23 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
     }
 
 
-    public TreeNodeInterface addChildren(TreeNode... nodes) {
+    @NonNull
+    public TreeNodeInterface addChildren(@NonNull TreeNode... nodes) {
         for (TreeNode n : nodes) {
             addChild(n);
         }
         return this;
     }
 
-    public TreeNodeInterface addChildren(Collection<TreeNodeInterface> nodes) {
+    @NonNull
+    public TreeNodeInterface addChildren(@NonNull Collection<TreeNodeInterface> nodes) {
         for (TreeNodeInterface n : nodes) {
             addChild(n);
         }
         return this;
     }
 
-    public int deleteChild(TreeNodeInterface child) {
+    public int deleteChild(@Nullable TreeNodeInterface child) {
         if (children.size() == 0 ||
                 child == null)
             return -1;
@@ -126,6 +133,7 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
         mParent = parent;
     }
 
+    @Nullable
     public TreeNodeInterface getChildById(long id) {
         for (TreeNodeInterface child : children)
             if (child.getId() == id)
@@ -162,4 +170,9 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
     public void setSelected(boolean selected) {
         this.selected = selected;
     }
+
+    public void toggleSelected() {
+        selected = !selected;
+    }
+
 }

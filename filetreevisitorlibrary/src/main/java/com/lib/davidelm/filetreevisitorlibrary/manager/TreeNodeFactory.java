@@ -1,5 +1,7 @@
 package com.lib.davidelm.filetreevisitorlibrary.manager;
 
+import android.support.annotation.NonNull;
+
 import com.lib.davidelm.filetreevisitorlibrary.R;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
@@ -25,7 +27,7 @@ class TreeNodeFactory {
     }
 
     public static TreeNodeInterface getChildByPersistenceType(PersistenceType persistenceType,
-                                                              TreeNodeContent nodeContent,
+                                                              @NonNull TreeNodeContent nodeContent,
                                                               boolean folder, int i) {
 
         if (persistenceType == PersistenceType.FIREBASE)

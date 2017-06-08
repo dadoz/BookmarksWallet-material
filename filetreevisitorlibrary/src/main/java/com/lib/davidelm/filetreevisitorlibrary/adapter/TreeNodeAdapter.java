@@ -1,6 +1,7 @@
 package com.lib.davidelm.filetreevisitorlibrary.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -22,6 +23,7 @@ import java.util.List;
 public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHolder> {
     private final List<TreeNodeInterface> items;
     private WeakReference<OnNodeClickListener> lst;
+    @NonNull
     private String TAG = "TreeNodeAdapter";
     private boolean showMoreSettingButton;
 
@@ -39,8 +41,9 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
     public void setOnNodeClickListener(OnNodeClickListener lst) {
         this.lst = new WeakReference<>(lst);
     }
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         int nodeLayoutRes = viewType == 0 ? R.layout.linear_node_item : R.layout.cardview_node_item;
         View view = View.inflate(parent.getContext(), nodeLayoutRes, null);
         return new ViewHolder(view);
@@ -52,7 +55,7 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TreeNodeInterface item = items.get(position);
         TreeNodeContent nodeContent = item.getNodeContent();
 
@@ -81,13 +84,13 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
      * @param position
      * @param item
      */
-    private void setSelectClickListener(ViewHolder holder, final int position, TreeNodeInterface item) {
+    private void setSelectClickListener(@NonNull ViewHolder holder, final int position, @NonNull TreeNodeInterface item) {
         if (getItemViewType(position) == 0) {
             holder.nodeSelectButton.setVisibility(!showMoreSettingButton ?View.VISIBLE : View.GONE);
             holder.nodeSelectButton.setSelected(item.isSelected());
 
             holder.nodeSelectButton.setOnClickListener(v -> {
-                exclusiveItemSelection(item);
+                exclusiveItemToggleSelection(item);
                 notifyDataSetChanged();
 
                 //set cbs
@@ -101,7 +104,7 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
      * unselecte the other keep this one TODO please rm it
      * @param item
      */
-    private void exclusiveItemSelection(TreeNodeInterface item) {
+    private void exclusiveItemSelection(@NonNull TreeNodeInterface item) {
         //unslect the others
         for (TreeNodeInterface temp : items)
             temp.setSelected(false);
@@ -112,11 +115,25 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
 
     /**
      *
+     * @param item
+     */
+    private void exclusiveItemToggleSelection(@NonNull TreeNodeInterface item) {
+        //unslect the others
+        for (TreeNodeInterface temp : items)
+            if (item.getId() != temp.getId())
+                temp.setSelected(false);
+
+        //select current item
+        item.toggleSelected();
+    }
+
+    /**
+     *
      * @param holder
      * @param position
      * @param item
      */
-    private void setMoreSettingClickListener(ViewHolder holder, int position, TreeNodeInterface item) {
+    private void setMoreSettingClickListener(@NonNull ViewHolder holder, int position, TreeNodeInterface item) {
         if (getItemViewType(position) == 0) {
             holder.nodeMoreSettingsButton.setVisibility(showMoreSettingButton ?View.VISIBLE : View.GONE);
             holder.nodeMoreSettingsButton.setOnClickListener(v -> {
@@ -133,7 +150,7 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
      * @param position
      * @param item
      */
-    private void setClickListener(ViewHolder holder, int position, TreeNodeInterface item) {
+    private void setClickListener(@NonNull ViewHolder holder, int position, @NonNull TreeNodeInterface item) {
         holder.itemView.setOnClickListener(v -> {
             if (lst != null && lst.get() != null) {
                 if (item.isFolder())
@@ -151,7 +168,7 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
      * @param position
      * @param item
      */
-    private void setLongClickListener(ViewHolder holder, int position, TreeNodeInterface item) {
+    private void setLongClickListener(@NonNull ViewHolder holder, int position, @NonNull TreeNodeInterface item) {
         holder.itemView.setOnLongClickListener(v -> {
             if (lst != null && lst.get() != null) {
                 if (item.isFolder())
@@ -191,7 +208,7 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
      * add items
      * @param list
      */
-    public void addItems(List<TreeNodeInterface> list) {
+    public void addItems(@NonNull List<TreeNodeInterface> list) {
         items.clear(); //TODO fix it THIS IS WRONG
         items.addAll(list);
         notifyDataSetChanged();
@@ -222,7 +239,7 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
      * @param isFolder
      * @param nodeContent
      */
-    private void setIcon(ImageView imageView, Context context, boolean isFolder, TreeNodeContent nodeContent) {
+    private void setIcon(@NonNull ImageView imageView, @NonNull Context context, boolean isFolder, @NonNull TreeNodeContent nodeContent) {
         try {
             //FIXME ignoring folder nodeContent property
 //            int folderResource = nodeContent.getFolderResource() == -1 ? R.mipmap.ic_folder : nodeContent.getFolderResource();
@@ -246,13 +263,18 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
      * view holder
      */
     protected class ViewHolder extends RecyclerView.ViewHolder {
+        @NonNull
         private final TextView nodeLabelText;
+        @NonNull
         private final ImageView nodeIconImage;
+        @NonNull
         private final TextView nodeDescriptionText;
+        @NonNull
         private final ImageView nodeMoreSettingsButton;
+        @NonNull
         private final ExclusiveSelectionButton nodeSelectButton;
 
-        ViewHolder(View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             nodeSelectButton = (ExclusiveSelectionButton) itemView.findViewById(R.id.nodeMoreSelectButtonId);
             nodeMoreSettingsButton = (ImageView) itemView.findViewById(R.id.nodeMoreSettingsButtonId);

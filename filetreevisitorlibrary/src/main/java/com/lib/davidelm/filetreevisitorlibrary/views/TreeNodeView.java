@@ -47,7 +47,9 @@ import java.util.stream.Stream;
 
 public class TreeNodeView extends FrameLayout implements OnNodeClickListener, OnNodeVisitCompleted,
         BreadCrumbsView.OnPopBackStackInterface, OnFolderMenuItemClickListener {
+    @NonNull
     private String TAG = "TAG";
+    @Nullable
     private TreeNodeInterface currentNode;
     private TreeNodeInterface rootNode;
     private BreadCrumbsView breadCrumbsView;
@@ -98,7 +100,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     /**
      * add custom item view :)
      */
-    public void setAdapter(TreeNodeAdapter adapter) {
+    public void setAdapter(@NonNull TreeNodeAdapter adapter) {
         treeNodeFilesRecyclerView.setAdapter(adapter);
         treeNodeFolderRecyclerView.setAdapter(new TreeNodeAdapter(new ArrayList<>(), new WeakReference<>(this), true));//TODO FIX it
         setEmptyRecyclerView();
@@ -128,7 +130,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      *
      * @param recyclerView
      */
-    private void initRecyclerView(RecyclerView recyclerView, boolean compactVisibility) {
+    private void initRecyclerView(@NonNull RecyclerView recyclerView, boolean compactVisibility) {
         if (compactVisibility) {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
@@ -144,7 +146,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      *
      * @param list
      */
-    public void addFolderNodes(List<TreeNodeInterface> list) {
+    public void addFolderNodes(@NonNull List<TreeNodeInterface> list) {
         //filter list -> files and folders
         Iterator<TreeNodeInterface> foldersIterator = list
                 .stream()
@@ -157,7 +159,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      *
      * @param list
      */
-    public void addFileNodes(List<TreeNodeInterface> list) {
+    public void addFileNodes(@NonNull List<TreeNodeInterface> list) {
         //filter list -> files and folders
         Iterator<TreeNodeInterface> foldersIterator = list
                 .stream()
@@ -172,7 +174,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      * @param nodesIterator
      * @param recyclerView
      */
-    private void setNodesOnAdapter(Iterator<TreeNodeInterface> nodesIterator, RecyclerView recyclerView, boolean isCompactVisibility) {
+    private void setNodesOnAdapter(@NonNull Iterator<TreeNodeInterface> nodesIterator, @NonNull RecyclerView recyclerView, boolean isCompactVisibility) {
         if (recyclerView.getAdapter() == null)
             initRecyclerView(recyclerView, isCompactVisibility);
 
@@ -187,13 +189,13 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     }
 
     @Override
-    public void setParentNode(TreeNodeInterface parentNode) {
+    public void setParentNode(@NonNull TreeNodeInterface parentNode) {
         Log.e(TAG, parentNode.getNodeContent().getName() != null ? parentNode.getNodeContent().getName() : "root");
         rootNode = currentNode = parentNode;
     }
 
     @Override
-    public void removeNode(TreeNodeInterface childNode) {
+    public void removeNode(@NonNull TreeNodeInterface childNode) {
         RecyclerView recyclerView = childNode.isFolder() ? treeNodeFolderRecyclerView : treeNodeFilesRecyclerView;
         ((TreeNodeAdapter) recyclerView.getAdapter()).removeItem(childNode);
     }
@@ -204,13 +206,13 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     }
 
     @Override
-    public void addNodes(List<TreeNodeInterface> children) {
+    public void addNodes(@NonNull List<TreeNodeInterface> children) {
         addFolderNodes(children);
         addFileNodes(children);
     }
 
     @Override
-    public void onFolderNodeCLick(View v, int position, TreeNodeInterface node) {
+    public void onFolderNodeCLick(View v, int position, @NonNull TreeNodeInterface node) {
         //set breadcrumbs
         breadCrumbsView.addBreadCrumb(node.getNodeContent().getName());
 
@@ -228,7 +230,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      *
      * @param node
      */
-    private boolean updateCurrentNode(TreeNodeInterface node) {
+    private boolean updateCurrentNode(@Nullable TreeNodeInterface node) {
         //check if isRootNode
         boolean isRootNode = currentNode.isRoot();
 
@@ -260,7 +262,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     }
 
     @Override
-    public void onMoreSettingsClick(View v, int position, TreeNodeInterface item) {
+    public void onMoreSettingsClick(@NonNull View v, int position, TreeNodeInterface item) {
         showPopupMenu(v, item);
     }
 
@@ -275,7 +277,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      * @param v
      * @param node
      */
-    private void showPopupMenu(View v, TreeNodeInterface node) {
+    private void showPopupMenu(@NonNull View v, TreeNodeInterface node) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
         popupMenu.inflate(R.menu.folder_settings_menu);
         popupMenu.setOnMenuItemClickListener(item -> onMenuItemClick(item, node));//OnFolderMenuItemClickListener::onFolderMenuItemClick);
@@ -302,7 +304,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      *
      * @param breadCrumbsView
      */
-    public void setBreadCrumbsView(BreadCrumbsView breadCrumbsView) {
+    public void setBreadCrumbsView(@NonNull BreadCrumbsView breadCrumbsView) {
         this.breadCrumbsView = breadCrumbsView;
         breadCrumbsView.setLst(new WeakReference<>(this));
     }
@@ -404,7 +406,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
         }
     }
 
-    public synchronized void removeFiles(SparseIntArray selectedItemIdList) {
+    public synchronized void removeFiles(@NonNull SparseIntArray selectedItemIdList) {
         for (int i = 0; i < selectedItemIdList.size(); i++) {
             try {
                 displayNodeListModel.removeNodeById(selectedItemIdList.keyAt(i));
@@ -433,13 +435,14 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item, TreeNodeInterface node) {
+    public boolean onMenuItemClick(@NonNull MenuItem item, TreeNodeInterface node) {
         if (item.getItemId() == R.id.action_delete) {
             removeFolder(node);
         }
         return false;
     }
 
+    @Nullable
     public ArrayList<TreeNodeInterface> getFiles() {
         if (currentNode != null) {
             ArrayList<TreeNodeInterface> list = new ArrayList<>();

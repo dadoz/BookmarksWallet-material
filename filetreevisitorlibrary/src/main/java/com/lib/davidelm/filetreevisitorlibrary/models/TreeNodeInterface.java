@@ -1,5 +1,8 @@
 package com.lib.davidelm.filetreevisitorlibrary.models;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import java.util.List;
 
 public interface TreeNodeInterface {
@@ -14,6 +17,7 @@ public interface TreeNodeInterface {
 
     void setParent(TreeNodeInterface currentTreeNode);
 
+    @NonNull
     TreeNodeInterface addChild(TreeNodeInterface treeNode);
 
     TreeNodeInterface getParent();
@@ -31,4 +35,6 @@ public interface TreeNodeInterface {
 
     boolean isSelected();
     void setSelected(boolean selected);
+
+    void toggleSelected();
 }
