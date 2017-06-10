@@ -36,16 +36,43 @@
         <include layout="@layout/empty_search_result_layout"/>
     </RelativeLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addBookmarkFabId"
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/addBookmarkFabId"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|right"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--android:src="@drawable/ic_add_white_48dp"-->
+        <!--app:elevation="4dp"-->
+        <!--app:borderWidth="0dp"-->
+        <!--app:layout_behavior="com.application.material.bookmarkswallet.app.behavior.FloatingActionButtonBehavior"-->
+        <!--app:backgroundTint="@color/indigo_600"-->
+        <!--app:fabSize="normal"/>-->
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/addBookmarkMenuFabId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add_white_48dp"
-        app:elevation="4dp"
-        app:borderWidth="0dp"
+        app:fab_addButtonColorNormal="@color/indigo_600"
+        app:fab_addButtonColorPressed="@color/indigo_800"
         app:layout_behavior="com.application.material.bookmarkswallet.app.behavior.FloatingActionButtonBehavior"
-        app:backgroundTint="@color/indigo_600"
-        app:fabSize="normal"/>
+        android:layout_margin="@dimen/padding_16">
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/offerMeACoffeeFabId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@mipmap/ic_local_cafe"
+            app:fab_colorNormal="@color/grey_50"
+            app:fab_colorPressed="@color/grey_200"
+            app:fab_size="mini"/>
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addBookmarkFabId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/amber_600"
+            app:fab_colorPressed="@color/amber_800"
+            app:fab_size="mini"
+            app:fab_icon="@mipmap/ic_bookmark_border"/>
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </FrameLayout>

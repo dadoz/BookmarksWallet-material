@@ -3,77 +3,57 @@ package com.application.material.bookmarkswallet.app.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.*;
-import android.view.animation.Animation;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.SettingsActivity;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionModeCallback;
 import com.application.material.bookmarkswallet.app.actionMode.OnActionModeCallbacks;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.OnMultipleSelectorCallback;
-import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
-import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
-import com.application.material.bookmarkswallet.app.manager.DefaultBookmarkImportManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager.SearchManagerCallbackInterface;
-import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
-import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
-import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
-import com.application.material.bookmarkswallet.app.observer.BookmarkListObserver;
 import com.application.material.bookmarkswallet.app.views.AddFolderView;
-import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContentRealm;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
 import com.lib.davidelm.filetreevisitorlibrary.views.BreadCrumbsView;
-import com.lib.davidelm.filetreevisitorlibrary.views.OnNavigationCallbacks;
 import com.lib.davidelm.filetreevisitorlibrary.views.TreeNodeView;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.lang.ref.WeakReference;
-import java.net.URI;
 
 import butterknife.Unbinder;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static com.application.material.bookmarkswallet.app.BuildConfig.KOFI_DAVE_URL;
+
 public class BookmarkListFragment extends Fragment
         implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener,
         SearchManagerCallbackInterface,
-        AddBookmarkActivity.OnHandleBackPressed, OnMultipleSelectorCallback, OnActionModeCallbacks, AddFolderView.AddFolderCallbacks {
+        AddBookmarkActivity.OnHandleBackPressed, OnMultipleSelectorCallback, OnActionModeCallbacks,
+        AddFolderView.AddFolderCallbacks {
     public static final String FRAG_TAG = "LinksListFragment";
+    @BindView(R.id.addBookmarkMenuFabId)
+    FloatingActionsMenu addBookmarkMenuFab;
     @BindView(R.id.addBookmarkFabId)
-    FloatingActionButton addNewFab;
+    FloatingActionButton addBookmarkFab;
+    @BindView(R.id.offerMeACoffeeFabId)
+    FloatingActionButton offerMeACoffeeFab;
     @BindView(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.emptyLinkListViewId)
@@ -122,15 +102,17 @@ public class BookmarkListFragment extends Fragment
 
         MaterialSearchView searchView = ((MaterialSearchView) getView().getRootView()
                 .findViewById(R.id.searchViewId));
-        searchManager.initSearchView(menu, new View[] {searchView, addNewFab});
+        searchManager.initSearchView(menu, new View[] {searchView, addBookmarkMenuFab});
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//    }
-//
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (unbinder != null)
+            unbinder.unbind();
+    }
+
 //    @Override
 //    public void onStart() {
 //        super.onStart();
@@ -147,7 +129,12 @@ public class BookmarkListFragment extends Fragment
 //                        mEmptyLinkListView, mSwipeRefreshLayout, recyclerView);
                 break;
             case R.id.addBookmarkFabId:
+//                addBookmarkMenuFab.collapse();
                 mBookmarkActionSingleton.addBookmarkAction(new WeakReference<>(this));
+                break;
+            case R.id.offerMeACoffeeFabId:
+                addBookmarkMenuFab.collapse();
+                mBookmarkActionSingleton.openLinkOnBrowser(KOFI_DAVE_URL);
                 break;
         }
     }
@@ -212,7 +199,8 @@ public class BookmarkListFragment extends Fragment
         importDefaultBookmarksButton.setOnClickListener(this);
 
         //add buton
-        addNewFab.setOnClickListener(this);
+        addBookmarkFab.setOnClickListener(this);
+        offerMeACoffeeFab.setOnClickListener(this);
 
         //init display node view
         adapter = new BookmarkRecyclerViewAdapter(getContext(), this);
@@ -228,8 +216,7 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onFileNodeClickCb(View v, int position, TreeNodeInterface node) {
-        if (getView() != null)
-            Snackbar.make(getView(), node.getNodeContent().getName(), Snackbar.LENGTH_SHORT).show();
+        mBookmarkActionSingleton.openLinkOnBrowser(node.getNodeContent().getFileUri());
     }
 
     @Override
@@ -277,7 +264,7 @@ public class BookmarkListFragment extends Fragment
 //        if (status.isOnActionMenuMode() ||
 //                status.isSearchActionbarMode()) {
 //            status.unsetStatus();
-//            addNewFab.setVisibility(View.VISIBLE);
+//            addBookmarkFab.setVisibility(View.VISIBLE);
 //            if (searchManager.getSearchView() != null)
 //                searchManager.getSearchView().closeSearch();
 //            return true;
@@ -347,7 +334,7 @@ public class BookmarkListFragment extends Fragment
 //        }
 //
 //        //animate viewAnimation not object animation welll done
-//        addNewFab.setVisibility(isShowing ? View.GONE : View.VISIBLE);
+//        addBookmarkFab.setVisibility(isShowing ? View.GONE : View.VISIBLE);
 //    }
 //    /**
 //     * context menu

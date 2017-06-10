@@ -243,12 +243,12 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
         try {
             //FIXME ignoring folder nodeContent property
 //            int folderResource = nodeContent.getFolderResource() == -1 ? R.mipmap.ic_folder : nodeContent.getFolderResource();
-            int fileResource = nodeContent.getFileResource() == -1 ? R.mipmap.ic_file : nodeContent.getFileResource();
+            int fileResource = nodeContent.getFileResource() == -1 ? R.mipmap.ic_bookmark_border_dark : nodeContent.getFileResource();
             imageView.setImageDrawable(ContextCompat.getDrawable(context,
                     isFolder ? R.mipmap.ic_folder : fileResource));
         } catch (Exception e) {
             imageView.setImageDrawable(ContextCompat.getDrawable(context,
-                    isFolder ? R.mipmap.ic_folder : R.mipmap.ic_file));
+                    isFolder ? R.mipmap.ic_folder : R.mipmap.ic_bookmark_border_dark));
         }
     }
 

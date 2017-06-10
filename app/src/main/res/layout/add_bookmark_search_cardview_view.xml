@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:layout_below="@id/toggleNameViewSwitcherId"
+            android:layout_below="@id/pasteClipboardFabId"
             style="@style/TextInputLayoutStyle">
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/titleEditTextId"

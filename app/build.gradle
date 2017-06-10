@@ -45,12 +45,14 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
+            buildConfigField "String", "KOFI_DAVE_URL", "\"https://ko-fi.com/A5431GAR\""
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             zipAlignEnabled true
+            buildConfigField "String", "KOFI_DAVE_URL", "\"https://ko-fi.com/A5431GAR\""
         }
     }
     lintOptions {
@@ -110,6 +112,7 @@ dependencies {
     compile 'com.android.support:design:25.3.0'
     compile 'com.google.android.gms:play-services-appindexing:9.8.0' //8.4.0'
 
+    compile 'com.getbase:floatingactionbutton:1.10.1'
     //menu drawer
     compile('com.mikepenz:materialdrawer:5.8.1@aar') {
         transitive = true

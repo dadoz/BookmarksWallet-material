@@ -1,10 +1,8 @@
 package com.application.material.bookmarkswallet.app.manager;
 
-import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +15,8 @@ import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.lang.ref.WeakReference;
@@ -151,6 +151,8 @@ public class SearchManager implements Filterable,
      *
      */
     public void handleMenuItemActionCollapsedLayout(@NonNull View[] views) {
+        //TODO leak - weak please
+        ((FloatingActionsMenu) views[0]).collapse();
         AnimatorBuilder.getInstance(context).collapseViews(views[0], true);
     }
 
@@ -159,6 +161,8 @@ public class SearchManager implements Filterable,
      *
      */
     public void handleMenuItemActionExpandLayout(@NonNull View[] views) {
+        //TODO leak - weak please
+        ((FloatingActionsMenu) views[0]).collapse();
         AnimatorBuilder.getInstance(context).collapseViews(views[0], false);
     }
 
