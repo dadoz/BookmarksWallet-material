@@ -2,22 +2,18 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <!-- main view-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <!--add folder view -->
-        <com.application.material.bookmarkswallet.app.views.AddFolderView
-            android:id="@+id/addFolderViewId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
         <!-- breadcrumbs -->
         <com.lib.davidelm.filetreevisitorlibrary.views.BreadCrumbsView
             android:id="@+id/breadCrumbsViewId"
-            android:layout_below="@id/addFolderViewId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -37,17 +33,22 @@
     </RelativeLayout>
 
     <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/addBookmarkFabId"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|right"-->
-        <!--android:layout_margin="@dimen/fab_margin"-->
-        <!--android:src="@drawable/ic_add_white_48dp"-->
-        <!--app:elevation="4dp"-->
-        <!--app:borderWidth="0dp"-->
-        <!--app:layout_behavior="com.application.material.bookmarkswallet.app.behavior.FloatingActionButtonBehavior"-->
-        <!--app:backgroundTint="@color/indigo_600"-->
-        <!--app:fabSize="normal"/>-->
+    <!--android:id="@+id/addBookmarkFabId"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="bottom|right"-->
+    <!--android:layout_margin="@dimen/fab_margin"-->
+    <!--android:src="@drawable/ic_add_white_48dp"-->
+    <!--app:elevation="4dp"-->
+    <!--app:borderWidth="0dp"-->
+    <!--app:layout_behavior="com.application.material.bookmarkswallet.app.behavior.FloatingActionButtonBehavior"-->
+    <!--app:backgroundTint="@color/indigo_600"-->
+    <!--app:fabSize="normal"/>-->
+    <!--add folder view -->
+    <com.application.material.bookmarkswallet.app.views.AddFolderView
+        android:id="@+id/addFolderViewId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/addBookmarkMenuFabId"
@@ -56,7 +57,6 @@
         android:layout_gravity="bottom|right"
         app:fab_addButtonColorNormal="@color/indigo_600"
         app:fab_addButtonColorPressed="@color/indigo_800"
-        app:layout_behavior="com.application.material.bookmarkswallet.app.behavior.FloatingActionButtonBehavior"
         android:layout_margin="@dimen/padding_16">
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/offerMeACoffeeFabId"
@@ -75,4 +75,5 @@
             app:fab_size="mini"
             app:fab_icon="@mipmap/ic_bookmark_border"/>
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
 </FrameLayout>

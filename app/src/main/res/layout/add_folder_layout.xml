@@ -1,36 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingTop="@dimen/padding_16"
-    android:paddingLeft="@dimen/padding_16"
-    android:paddingRight="@dimen/padding_16"
-    android:paddingBottom="@dimen/padding_8"
-    android:baselineAligned="false"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/yellow_400">
-    <Button
-        android:id="@+id/addFolderButtonId"
-        android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ADD FOLDER"
-        android:backgroundTint="@color/md_white_1000"
-        android:layout_marginLeft="@dimen/padding_16"/>
-    <EditText
-        android:id="@+id/addFolderEditTextId"
-        android:hint="folder name"
+    android:clipToPadding="true"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+    android:background="@color/grey_50">
+    <RelativeLayout
+        android:paddingTop="@dimen/padding_16"
+        android:paddingLeft="@dimen/padding_16"
+        android:paddingRight="@dimen/padding_16"
+        android:paddingBottom="@dimen/padding_8"
+        android:baselineAligned="false"
         android:layout_width="match_parent"
-        android:layout_toLeftOf="@id/addFolderButtonId"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"/>
-    <ImageView
-        android:id="@+id/closeAddFolderButtonId"
-        android:layout_below="@id/addFolderEditTextId"
-        android:layout_alignParentRight="true"
-        android:background="?attr/selectableItemBackground"
-        android:layout_marginTop="@dimen/margin_8"
-        android:layout_width="@dimen/small_icon_size"
-        android:layout_height="@dimen/small_icon_size"
-        android:src="@mipmap/ic_expand_less"/>
-</RelativeLayout>
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/addFolderLabelTextId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_24"
+            android:text="@string/action_add_folder"
+            android:layout_marginBottom="@dimen/margin_8"/>
+        <Button
+            android:layout_below="@id/addFolderLabelTextId"
+            android:id="@+id/addFolderButtonId"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_16"
+            android:text="ADD FOLDER"
+            android:backgroundTint="@color/md_white_1000"
+            android:layout_marginLeft="@dimen/padding_16"/>
+        <EditText
+            android:layout_below="@id/addFolderLabelTextId"
+            android:id="@+id/addFolderEditTextId"
+            android:hint="folder name"
+            android:layout_width="match_parent"
+            android:layout_toLeftOf="@id/addFolderButtonId"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/closeAddFolderButtonId"
+            android:layout_below="@id/addFolderEditTextId"
+            android:layout_alignParentRight="true"
+            android:background="?attr/selectableItemBackground"
+            android:layout_marginTop="@dimen/margin_8"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="@dimen/small_icon_size"
+            android:src="@mipmap/ic_expand_less"/>
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

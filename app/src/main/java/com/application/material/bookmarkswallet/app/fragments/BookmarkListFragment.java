@@ -130,7 +130,7 @@ public class BookmarkListFragment extends Fragment
 //                        mEmptyLinkListView, mSwipeRefreshLayout, recyclerView);
                 break;
             case R.id.addBookmarkFabId:
-//                addBookmarkMenuFab.collapse();
+                addBookmarkMenuFab.collapseImmediately();
                 bookmarkActionHelper.addBookmarkAction(new WeakReference<>(this));
                 break;
             case R.id.offerMeACoffeeFabId:
@@ -325,6 +325,17 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onUpdatedVisibility(boolean isVisible) {
+    }
+
+    @Override
+    public void onAddFolderCollapsed(View bottomSheet) {
+        addBookmarkMenuFab.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onAddFolderExpanded(View bottomSheet) {
+        addBookmarkMenuFab.setVisibility(View.GONE);
+
     }
 
 
