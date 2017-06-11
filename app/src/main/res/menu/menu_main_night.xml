@@ -12,7 +12,7 @@
     <item android:id="@+id/action_add_folder"
         android:title="@string/action_add_folder"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_folder_open_black_48dp"
+        android:icon="@drawable/ic_view_stream_black_48dp"
         app:showAsAction="always" />
 
 </menu>

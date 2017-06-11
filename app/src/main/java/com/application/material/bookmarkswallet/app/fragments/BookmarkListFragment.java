@@ -150,15 +150,15 @@ public class BookmarkListFragment extends Fragment
         }, 2000);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_add_folder:
-                addFolderView.setVisibleAndUpdate(true);
-                break;
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.action_add_folder:
+//                addFolderView.setVisibleAndUpdate(true);
+//                break;
+//        }
+//        return true;
+//    }
 
     /**
      *
