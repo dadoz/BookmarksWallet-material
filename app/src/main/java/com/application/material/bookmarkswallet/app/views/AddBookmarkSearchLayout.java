@@ -62,7 +62,8 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCar
         searchParamsArray.put(0, Utils.buildUrl(searchCardviewBox.getUrl(),
                 searchCardviewBox.isHttpsChecked()));
         searchParamsArray.put(1, searchCardviewBox.getTitle());
-        searchParamsArray.put(2, Integer.toString(addBookmarkFolderCardview.getFolderListView()
+        searchParamsArray.put(2, null);//pos 2 empty to set icon url
+        searchParamsArray.put(3, Integer.toString(addBookmarkFolderCardview.getFolderListView()
                 .getSelectedNodeId()));
         return searchParamsArray;
     }

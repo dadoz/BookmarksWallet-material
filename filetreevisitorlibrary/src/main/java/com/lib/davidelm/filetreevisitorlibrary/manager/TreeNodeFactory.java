@@ -19,10 +19,10 @@ class TreeNodeFactory {
             throw new UnsupportedOperationException("not implemented");
         if (persistenceType == PersistenceType.REALMIO)
             return new TreeNodeRealm(new TreeNodeContentRealm(nodeName, "fake description",
-                    R.mipmap.ic_chevron_right, R.mipmap.ic_folder), folder, i);
+                    R.mipmap.ic_chevron_right, R.mipmap.ic_folder, null), folder, i);
         if (persistenceType == PersistenceType.SHARED_PREF)
             return new TreeNode(new TreeNodeContentRealm(nodeName, "fake description",
-                    R.mipmap.ic_chevron_right, R.mipmap.ic_folder), folder, i);
+                    R.mipmap.ic_chevron_right, R.mipmap.ic_folder, null), folder, i);
         return null;
     }
 

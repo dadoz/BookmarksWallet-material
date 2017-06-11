@@ -3,6 +3,7 @@ package com.application.material.bookmarkswallet.app.fragments;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -74,7 +75,7 @@ public class AddBookmarkResultFragment extends Fragment implements
 
     private StatusManager statusManager;
     private RetrieveIconHelper retrieveIconHelper;
-    private SparseArrayParcelable<String> searchParamsArray;
+    private SparseArrayParcelable<String> searchParamsArray; //TODO?? LEAK
     private Unbinder unbinder;
 
     @Override
@@ -89,7 +90,7 @@ public class AddBookmarkResultFragment extends Fragment implements
         Icepick.restoreInstanceState(this, savedInstance);
         statusManager = StatusManager.getInstance();
         retrieveIconHelper = RetrieveIconHelper
-                .getInstance(new WeakReference<RetrieveIconHelper.OnRetrieveIconInterface>(this));
+                .getInstance(new WeakReference<>(this));
         searchParamsArray = ((BookmarksWalletApplication) getActivity().getApplication())
                 .getSearchParamsArray();
     }
@@ -124,8 +125,6 @@ public class AddBookmarkResultFragment extends Fragment implements
      * @param savedInstanceState
      */
     private void onInitView(Bundle savedInstanceState) {
-//        searchResultPresenter.init(new View[] {addBookmarkMainLayout, addBookmarkResultLayout,
-//                addBookmarkRelativeLayout});
         refreshLayout.setRefreshing(true);
         statusManager.setOnResultMode();
         Utils.hideKeyboard(getActivity());
@@ -183,12 +182,6 @@ public class AddBookmarkResultFragment extends Fragment implements
      * add bookmark on orm db
      */
     private void addBookmark() {
-        String url = searchParamsArray.get(0);
-        String title = searchParamsArray.get(1);
-        int folderId = Integer.valueOf(searchParamsArray.get(2));
-
-//        RealmUtils.addItemOnRealm(Realm.getDefaultInstance(), title, null,
-//                Utils.convertBitmapToByteArray(addBookmarkResultView.getIconBitmap()), url);
         if (getActivity() != null) {
             Intent intent = new Intent();
             intent.putExtra("search_params_add_bookmark", searchParamsArray);
@@ -206,12 +199,10 @@ public class AddBookmarkResultFragment extends Fragment implements
             return;
         }
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(false);
-                addBookmarkResultView.setIconByUrl(url);
-            }
+        getActivity().runOnUiThread(() -> {
+            refreshLayout.setRefreshing(false);
+            addBookmarkResultView.setIconByUrl(url);
+            searchParamsArray.put(2, url);
         });
     }
 
@@ -222,24 +213,16 @@ public class AddBookmarkResultFragment extends Fragment implements
         }
 
         searchParamsArray.put(1, title);
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                addBookmarkResultView.setTitle(title);
-            }
-        });
+        getActivity().runOnUiThread(() -> addBookmarkResultView.setTitle(title));
     }
 
     @Override
     public void onRetrieveIconFailure(final String error) {
         if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    addBookmarkResultView.setTitle(getString(R.string.no_title));
-                    refreshLayout.setRefreshing(false);
-                    Utils.buildSnackbar(error, getView(), getActivity().getApplicationContext(), true).show();
-                }
+            getActivity().runOnUiThread(() -> {
+//                addBookmarkResultView.setTitle(getString(R.string.no_title));
+                refreshLayout.setRefreshing(false);
+                Utils.buildSnackbar(error, getView(), getActivity().getApplicationContext(), true).show();
             });
         }
     }
@@ -247,7 +230,6 @@ public class AddBookmarkResultFragment extends Fragment implements
     @Override
     public boolean handleBackPressed() {
         if (statusManager.isOnResultMode()) {
-//            searchResultPresenter.hideResultView();
             statusManager.setOnSearchMode();
             getActivity().getSupportFragmentManager().popBackStack();
             return true;

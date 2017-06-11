@@ -40,7 +40,8 @@ public class TreeNodeRealm extends RealmObject implements TreeNodeInterface {
 
     public TreeNodeRealm(@NonNull TreeNodeContent nodeContent, boolean folder, int level) {
         //TODO mv to copy obj
-        this.nodeContent = new TreeNodeContentRealm(nodeContent.getName(), nodeContent.getDescription(), nodeContent.getFileResource(), nodeContent.getFolderResource());
+        this.nodeContent = new TreeNodeContentRealm(nodeContent.getName(), nodeContent.getDescription(),
+                nodeContent.getFileResource(), nodeContent.getFolderResource(), nodeContent.getFileUri());
         this.folder = folder;
         this.level = level;
     }

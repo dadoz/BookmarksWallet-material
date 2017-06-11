@@ -334,7 +334,7 @@ public class Utils {
 
             @Override
             public String getFileUri() {
-                return searchParamsArray.get(0).toString();
+                return searchParamsArray.get(2).toString();
             }
 
             @Override

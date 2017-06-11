@@ -14,11 +14,12 @@ public class TreeNodeContentRealm extends RealmObject implements TreeNodeContent
     private int folderResource;
     public TreeNodeContentRealm() {}
 
-    public TreeNodeContentRealm(String name, String description, int fileResource, int folderResource) {
+    public TreeNodeContentRealm(String name, String description, int fileResource, int folderResource, String fileURI) {
         this.name = name;
         this.description = description;
         this.fileResource = fileResource;
         this.folderResource = folderResource;
+        this.fileURI = fileURI;
     }
 
     @Override

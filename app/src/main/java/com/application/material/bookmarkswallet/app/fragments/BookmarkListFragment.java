@@ -183,7 +183,7 @@ public class BookmarkListFragment extends Fragment
                 .get("search_params_add_bookmark"));
 
         displayNodeView.addFile(Utils.createContentNode(searchParamsArray),
-                Integer.valueOf(searchParamsArray.get(2).toString()));
+                Integer.valueOf(searchParamsArray.get(3).toString()));
 
     }
 

@@ -1,15 +1,22 @@
 package com.lib.davidelm.filetreevisitorlibrary.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.Volley;
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
 import com.lib.davidelm.filetreevisitorlibrary.R;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
@@ -241,15 +248,37 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
      */
     private void setIcon(@NonNull ImageView imageView, @NonNull Context context, boolean isFolder, @NonNull TreeNodeContent nodeContent) {
         try {
-            //FIXME ignoring folder nodeContent property
-//            int folderResource = nodeContent.getFolderResource() == -1 ? R.mipmap.ic_folder : nodeContent.getFolderResource();
-            int fileResource = nodeContent.getFileResource() == -1 ? R.mipmap.ic_bookmark_border_dark : nodeContent.getFileResource();
-            imageView.setImageDrawable(ContextCompat.getDrawable(context,
-                    isFolder ? R.mipmap.ic_folder : fileResource));
+            imageView.setImageDrawable(isFolder ? ContextCompat.getDrawable(context, R.mipmap.ic_folder) :
+                    getFileIcon(nodeContent, context));
+
+            //update image with icon one
+            if (!isFolder && nodeContent.getFileUri() != null) {
+                RequestQueue queue = Volley.newRequestQueue(context);
+                ImageRequest imageRequest = new ImageRequest(nodeContent.getFileUri(),
+                        imageView::setImageBitmap,
+                        0, 0, ImageView.ScaleType.CENTER_CROP,
+                        Bitmap.Config.ARGB_8888,
+                        error -> imageView.setImageDrawable(ContextCompat.getDrawable(context,
+                                R.mipmap.ic_bookmark_border_dark)));
+                queue.add(imageRequest);
+            }
+
         } catch (Exception e) {
             imageView.setImageDrawable(ContextCompat.getDrawable(context,
                     isFolder ? R.mipmap.ic_folder : R.mipmap.ic_bookmark_border_dark));
         }
+    }
+
+    /***
+     *  @param nodeContent
+     * @param context
+     */
+    private Drawable getFileIcon(TreeNodeContent nodeContent, Context context) throws Exception {
+        if (nodeContent.getFileResource() != -1 &&
+                nodeContent.getFileResource() != 0) {
+            return ContextCompat.getDrawable(context, nodeContent.getFileResource());
+        }
+        return ContextCompat.getDrawable(context, R.mipmap.ic_bookmark_border_dark);
     }
 
     public void clearSelectedItem() {
