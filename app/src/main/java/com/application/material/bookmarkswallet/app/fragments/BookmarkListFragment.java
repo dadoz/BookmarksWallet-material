@@ -69,17 +69,18 @@ public class BookmarkListFragment extends Fragment
     @BindView(R.id.addFolderViewId)
     AddFolderView addFolderView;
 
-    private SearchManager searchManager;
-    private BookmarkActionHelper mBookmarkActionSingleton;
-    private String TAG ="BOOKmarklist";
+    private String TAG ="BookmarkListFragment";
     private Unbinder unbinder;
+
     private EditBookmarkActionModeCallback actionModeCallback;
     private BookmarkRecyclerViewAdapter adapter;
+    private SearchManager searchManager;
+    private BookmarkActionHelper bookmarkActionHelper;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mBookmarkActionSingleton = BookmarkActionHelper.getInstance(new WeakReference<>(getContext()));
+        bookmarkActionHelper = new BookmarkActionHelper(getContext());
         searchManager = SearchManager.getInstance(new WeakReference<>(getContext()),
                 Realm.getDefaultInstance(), new WeakReference<>(this));
     }
@@ -130,11 +131,11 @@ public class BookmarkListFragment extends Fragment
                 break;
             case R.id.addBookmarkFabId:
 //                addBookmarkMenuFab.collapse();
-                mBookmarkActionSingleton.addBookmarkAction(new WeakReference<>(this));
+                bookmarkActionHelper.addBookmarkAction(new WeakReference<>(this));
                 break;
             case R.id.offerMeACoffeeFabId:
                 addBookmarkMenuFab.collapse();
-                mBookmarkActionSingleton.openLinkOnBrowser(KOFI_DAVE_URL);
+                bookmarkActionHelper.openLinkOnBrowser(KOFI_DAVE_URL, getView());
                 break;
         }
     }
@@ -216,7 +217,8 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onFileNodeClickCb(View v, int position, TreeNodeInterface node) {
-        mBookmarkActionSingleton.openLinkOnBrowser(node.getNodeContent().getFileUri());
+        //FIXME fileUri not saved
+        bookmarkActionHelper.openLinkOnBrowser(node.getNodeContent().getDescription(), getView());
     }
 
     @Override

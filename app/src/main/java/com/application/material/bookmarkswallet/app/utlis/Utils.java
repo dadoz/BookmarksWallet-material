@@ -315,11 +315,16 @@ public class Utils {
         return snackbar;
     }
 
+    /**
+     *
+     * @param searchParamsArray
+     * @return
+     */
     public static TreeNodeContent createContentNode(SparseArrayParcelable searchParamsArray) {
        return new TreeNodeContent() {
             @Override
             public String getName() {
-                return searchParamsArray.get(0).toString();
+                return searchParamsArray.get(1).toString();
             }
 
             @Override
@@ -329,7 +334,7 @@ public class Utils {
 
             @Override
             public String getFileUri() {
-                return "www.google.it";
+                return searchParamsArray.get(0).toString();
             }
 
             @Override
