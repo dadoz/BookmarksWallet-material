@@ -1,12 +1,18 @@
 package com.application.material.bookmarkswallet.app.application;
 
 import android.app.Application;
-import android.util.SparseArray;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.widget.ImageView;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.realm.migrations.BookmarkRealmMigration;
 import com.flurry.android.FlurryAgent;
+import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
+import com.mikepenz.materialdrawer.util.DrawerImageLoader;
+import com.squareup.picasso.Picasso;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -15,6 +21,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 public class BookmarksWalletApplication extends Application {
     private SparseArrayParcelable<String> searchParamsArray;
     private RealmConfiguration realmConfig;
+    private DrawerImageLoader drawerImageLoader;
 
     @Override
     public void onCreate() {
@@ -31,6 +38,44 @@ public class BookmarksWalletApplication extends Application {
                 .build());
 
         setRealmDefaultConfiguration();
+        setDrawerImageLoader();
+    }
+
+    private void setDrawerImageLoader() {
+        drawerImageLoader = DrawerImageLoader.init(new AbstractDrawerImageLoader() {
+
+            @Override
+            public void set(ImageView imageView, Uri uri, Drawable placeholder) {
+                Picasso.with(getApplicationContext())
+                        .load(uri)
+                        .placeholder(placeholder)
+                        .into(imageView);
+            }
+
+            @Override
+            public void set(ImageView imageView, Uri uri, Drawable placeholder, String tag) {
+                Picasso.with(getApplicationContext())
+                        .load(uri)
+                        .placeholder(placeholder)
+                        .into(imageView);
+            }
+
+            @Override
+            public void cancel(ImageView imageView) {
+                Picasso.with(getApplicationContext())
+                        .cancelRequest(imageView);
+            }
+
+            @Override
+            public Drawable placeholder(Context ctx) {
+                return null;
+            }
+
+            @Override
+            public Drawable placeholder(Context ctx, String tag) {
+                return null;
+            }
+        });
     }
 
     /**
@@ -63,5 +108,9 @@ public class BookmarksWalletApplication extends Application {
      */
     public void setSearchParamsArray(SparseArrayParcelable<String> searchParamsArray) {
         this.searchParamsArray = searchParamsArray;
+    }
+
+    public DrawerImageLoader getDrawerImageLoader() {
+        return drawerImageLoader;
     }
 }

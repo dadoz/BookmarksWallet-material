@@ -14,8 +14,8 @@
             android:padding="@dimen/padding_16">
             <ImageView
                 android:id="@+id/imageViewId1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
                 android:src="@drawable/ic_archive_black_48dp"/>
             <TextView
                 android:id="@+id/exportTitleTextId"

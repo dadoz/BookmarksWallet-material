@@ -7,35 +7,36 @@ package com.application.material.bookmarkswallet.app.navigationDrawer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.application.BookmarksWalletApplication;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
+import com.application.material.bookmarkswallet.app.fragments.ExportFragment;
+import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
+import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.flurry.android.FlurryAgent;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.util.DrawerImageLoader;
-import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -46,12 +47,15 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static com.application.material.bookmarkswallet.app.BuildConfig.KOFI_DAVE_URL;
 import static com.application.material.bookmarkswallet.app.MainActivity.SHARED_URL_EXTRA_KEY;
 import static com.application.material.bookmarkswallet.app.helpers.ExportHelper.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
 
 
 public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
     private static final String TAG = "BaseActivity";
+//    private static final String HEADER_URL = "https://mir-s3-cdn-cf.behance.net/project_modules/max_3840/2120db18526001.569bc37d9869f.png";
+    private static final String HEADER_URL = "https://raw.githubusercontent.com/Dahnark/Navigation-Drawer-Android-Design-Support-Library/master/app/src/main/res/drawable/header.jpg";
     private final int resourceLayoutId;
     @BindView(R.id.drawerLayoutId)
     DrawerLayout mDrawerLayout;
@@ -59,7 +63,6 @@ public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.drawerNavigationViewId)
     NavigationView drawerNavigationView;
-    public String title = "";
     private Unbinder unbinder;
 
     @Override
@@ -74,6 +77,10 @@ public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
      */
     abstract public boolean onItemMenuSelectedCallback(int position);
 
+    /**
+     *
+     * @param resourceLayoutId
+     */
     protected BaseNavigationDrawerActivity(int resourceLayoutId) {
         this.resourceLayoutId = resourceLayoutId;
     }
@@ -92,7 +99,7 @@ public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
         initActionbar();
 
         //first handle frag
-        onInitFragment();
+        onInjectFragment(new BookmarkListFragment(), BookmarkListFragment.FRAG_TAG);
 
         //then handleSharedIntent
         if (handleSharedIntent() != null) {
@@ -108,11 +115,16 @@ public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
     /**
      * init fragment function
      */
-    public void onInitFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainerFrameLayoutId,
-                        new BookmarkListFragment(), BookmarkListFragment.FRAG_TAG)
-                .commit();
+    public void onInjectFragment(Fragment frag, String tag) {
+        boolean isSameFrag = ActivityUtils.isSameFrag(getSupportFragmentManager(), frag);
+        frag = isSameFrag ? ActivityUtils.findLastFragment(getSupportFragmentManager()) : frag;
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainerFrameLayoutId, frag, tag);
+        if (!isSameFrag &&
+                !(frag instanceof BookmarkListFragment))
+            transaction.addToBackStack(tag);
+        transaction.commit();
     }
 
     @Override
@@ -172,17 +184,17 @@ public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
      * init view
      */
     private void initNavigationView() {
-        Drawer drawerMenu = new DrawerBuilder().withActivity(this)
+        new DrawerBuilder().withActivity(this)
+                .withCloseOnClick(true)
                 .withAccountHeader(getHeaderView())
                 .withDrawerItems(getMenuList())
                 .withFooterDivider(true)
-                .withStickyDrawerItems(getFooterItems())
+//                .withStickyDrawerItems(getFooterItems())
                 .withStickyFooterShadow(false)
                 .withStickyFooterDivider(true)
                 .withToolbar(toolbar)
-//                .withOnDrawerItemClickListener((view, position, drawerItem) -> view.getId() != 999L && onItemMenuSelected(position))
+                .withOnDrawerItemClickListener((view, position, drawerItem) -> onItemMenuSelected(position))
                 .build();
-//        drawerMenu.setActionBarDrawerToggle(new ActionBarDrawerToggle(this, drawerMenu.getDrawerLayout(), toolbar, 0, 0));
     }
 
 
@@ -194,46 +206,23 @@ public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
     public AccountHeader getHeaderView() {
         AccountHeader accountHeader = new AccountHeaderBuilder()
                 .withActivity(this)
+                .withHeaderBackground(R.drawable.ic_archive_black_48dp)
                 .addProfiles(new ProfileDrawerItem()
-                        .withName(getString(R.string.bsd2_name))
-                        .withEmail(getString(R.string.send_feedback_email))
-                        .withIcon(ContextCompat.getDrawable(this, R.drawable.ic_cloud_off_black_48dp)))
+                        .withTextColorRes(R.color.md_white_1000)
+                        .withDisabledTextColorRes(R.color.md_white_1000)
+                        .withNameShown(false))
                 .withSelectionListEnabledForSingleProfile(false) //ADD multiple profile
                 .withTextColorRes(R.color.indigo_600)
                 .withDividerBelowHeader(true)
                 .build();
 
-        DrawerImageLoader.init(new DrawerImageLoader.IDrawerImageLoader() {
-            @Override
-            public void set(ImageView imageView, Uri uri, Drawable placeholder) {
-                Picasso.with(getApplicationContext())
-                        .load(uri)
-                        .placeholder(placeholder)
-                        .into(imageView);
-            }
-
-            @Override
-            public void set(ImageView imageView, Uri uri, Drawable placeholder, String tag) {
-
-            }
-
-            @Override
-            public void cancel(ImageView imageView) {
-                Picasso.with(getApplicationContext())
-                        .cancelRequest(imageView);
-            }
-
-            @Override
-            public Drawable placeholder(Context ctx) {
-                return null;
-            }
-
-            @Override
-            public Drawable placeholder(Context ctx, String tag) {
-                return null;
-            }
-        })
-                .setImage(accountHeader.getHeaderBackgroundView(), Uri.parse("http://www.google.it"), "tag");
+        //set drawerImage
+        if (getApplication() != null) {
+            ((BookmarksWalletApplication) getApplication())
+                    .getDrawerImageLoader()
+                    .setImage(accountHeader.getHeaderBackgroundView(),
+                            Uri.parse(HEADER_URL), "tag");
+        }
         return accountHeader;
     }
 
@@ -243,7 +232,8 @@ public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
     public List<IDrawerItem> getMenuList() {
         List<IDrawerItem> menuList = new ArrayList<>();
         menuList.add(new PrimaryDrawerItem()
-                .withName("Export Bookmarks")
+                .withName(R.string.export_bookmarks)
+                .withSelectable(false)
 //                .withDescription("descriptions bla bla bla")
                 .withDescriptionTextColorRes(R.color.grey_400)
                 .withIdentifier(1)
@@ -252,63 +242,48 @@ public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
                 .withSelectedTextColorRes(R.color.indigo_600)
                 .withSelectedColorRes(R.color.grey_100));
         menuList.add(new PrimaryDrawerItem()
-                .withName("Minify/Expanded")
-//                .withDescription("Expand or minifiy view description")
-                .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
-                .withIcon(R.drawable.ic_view_stream_black_48dp)
+                .withName(R.string.history)
+                .withSelectable(false)
+                .withEnabled(false)
+                .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.grey_200))
+                .withIcon(R.mipmap.ic_history)
+                .withDescription(R.string.available_soon)
                 .withDescriptionTextColorRes(R.color.grey_400)
                 .withIdentifier(2)
                 .withSelectedTextColorRes(R.color.indigo_600)
                 .withSelectedColorRes(R.color.grey_100));
-        menuList.add(new DividerDrawerItem());
         menuList.add(new PrimaryDrawerItem()
-                .withName("Settings")
-                .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
-                .withIcon(R.drawable.ic_settings_black_48dp)
+                .withName(R.string.setting_cloud_sync)
+                .withSelectable(false)
+                .withEnabled(false)
+                .withDescription(R.string.available_soon)
+                .withIcon(R.drawable.ic_cloud_off_black_48dp)
+                .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.grey_200))
                 .withDescriptionTextColorRes(R.color.grey_400)
                 .withIdentifier(3)
                 .withSelectedTextColorRes(R.color.indigo_600)
                 .withSelectedColorRes(R.color.grey_100));
         menuList.add(new DividerDrawerItem());
         menuList.add(new PrimaryDrawerItem()
-                .withName("Offer me a coffee")
+                .withName(R.string.settings)
+                .withSelectable(false)
+                .withIcon(R.drawable.ic_settings_black_48dp)
                 .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
-                .withIcon(R.mipmap.ic_local_cafe)
                 .withDescriptionTextColorRes(R.color.grey_400)
                 .withIdentifier(4)
                 .withSelectedTextColorRes(R.color.indigo_600)
                 .withSelectedColorRes(R.color.grey_100));
+        menuList.add(new DividerDrawerItem());
+        menuList.add(new PrimaryDrawerItem()
+                .withName(R.string.offer_me_coffee)
+                .withSelectable(false)
+                .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
+                .withIcon(R.mipmap.ic_local_cafe)
+                .withDescriptionTextColorRes(R.color.grey_400)
+                .withIdentifier(5)
+                .withSelectedTextColorRes(R.color.indigo_600)
+                .withSelectedColorRes(R.color.grey_100));
         return menuList;
-    }
-
-    /**
-     * @return
-     */
-    public List<IDrawerItem> getFooterItems() {
-        List<IDrawerItem> list = new ArrayList<>();
-//        list.add(new PrimaryDrawerItem().withName(R.string.about_title)
-//                .withTextColorRes(R.color.grey_700)
-//                .withIcon(R.drawable.ic_info_black_18dp)
-//                .withSelectedTextColorRes(R.color.grey_700)
-//                .withSelectedColorRes(R.color.grey_100)
-//                .withSelectable(false)
-//                .withIdentifier(999)
-//                .withOnDrawerItemClickListener((view, position, drawerItem) -> {
-//                    ActivityUtils.showAboutDialog(this);
-//                    return false;
-//                }));
-//        list.add(new PrimaryDrawerItem().withName(R.string.logout)
-//                .withTextColorRes(R.color.grey_700)
-//                .withIcon(R.drawable.ic_exit_to_app_black_18dp)
-//                .withSelectedTextColorRes(R.color.grey_700)
-//                .withSelectedColorRes(R.color.grey_100)
-//                .withSelectable(false)
-//                .withIdentifier(999)
-//                .withOnDrawerItemClickListener((view, position, drawerItem) -> {
-//                    LogoutHelper.logout(new WeakReference<>(this));
-//                    return false;
-//                }));
-        return list;
     }
 
 
@@ -317,8 +292,19 @@ public abstract class BaseNavigationDrawerActivity extends AppCompatActivity {
      * @param position
      */
     public boolean onItemMenuSelected(int position) {
-        Log.e(TAG, "Hey click " + position);
-        return true;
+        Log.e(TAG, "position" + position);
+        switch (position) {
+            case 1:
+                onInjectFragment(new ExportFragment(), ExportFragment.FRAG_TAG);
+                break;
+            case 5:
+                onInjectFragment(new SettingsFragment(), SettingsFragment.FRAG_TAG);
+                break;
+            case 7:
+                new BookmarkActionHelper(getApplicationContext()).openLinkOnBrowser(KOFI_DAVE_URL, null);
+                break;
+        }
+        return false;
     }
 
 }

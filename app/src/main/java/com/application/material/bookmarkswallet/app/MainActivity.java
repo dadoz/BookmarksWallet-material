@@ -1,8 +1,11 @@
 package com.application.material.bookmarkswallet.app;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -49,12 +52,15 @@ public class MainActivity extends BaseNavigationDrawerActivity {
 
     @Override
     public void onBackPressed() {
-        boolean backPressHandled = ((OnHandleBackPressed) getSupportFragmentManager()
-                .findFragmentByTag(BookmarkListFragment.FRAG_TAG))
-                .handleBackPressed();
-        if (!backPressHandled) {
-            super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            android.support.v4.app.FragmentManager.BackStackEntry frag = (getSupportFragmentManager()
+                    .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1));
+//        boolean backPressHandled = ((OnHandleBackPressed) frag.getId()).handleBackPressed();
+//        if (!backPressHandled) {
+//            super.onBackPressed();
+//        }
         }
+        super.onBackPressed();
     }
 
     //    /**

@@ -47,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings_layout);
+        setContentView(R.layout.settings_layout);
         unbinder = ButterKnife.bind(this);
 
         NightModeHelper.getInstance(this).setConfigurationMode();
