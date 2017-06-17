@@ -84,4 +84,5 @@
     <string name="offer_me_coffee">Offer me a coffee</string>
     <string name="export_bookmarks">Export Bookmarks</string>
     <string name="guest_user">Guest</string>
+    <string name="send_feedback_label">Send me a feedback</string>
 </resources>

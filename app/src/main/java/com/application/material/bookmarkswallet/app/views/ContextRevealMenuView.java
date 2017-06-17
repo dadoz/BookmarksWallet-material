@@ -1,23 +1,23 @@
 package com.application.material.bookmarkswallet.app.views;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper;
 import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper.ActionMenuRevealCallbacks;
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
-import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.flurry.android.FlurryAgent;
 
 import java.lang.ref.WeakReference;
 
-public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout implements View.OnClickListener {
+public class ContextRevealMenuView extends FrameLayout implements View.OnClickListener {
     private ImageView exportIcon;
     private ImageView settingsIcon;
     private ImageView gridviewResizeIcon;

@@ -1,22 +1,15 @@
 package com.application.material.bookmarkswallet.app;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 
-import com.application.material.bookmarkswallet.app.AddBookmarkActivity.OnHandleBackPressed;
-import com.application.material.bookmarkswallet.app.navigationDrawer.BaseNavigationDrawerActivity;
-import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
+import com.application.material.bookmarkswallet.app.navigationDrawer.NavigationDrawerActivity;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
-public class MainActivity extends BaseNavigationDrawerActivity {
+public class MainActivity extends NavigationDrawerActivity {
     private String TAG = "MainActivity";
     public static String SHARED_URL_EXTRA_KEY = "SHARED_URL_EXTRA_KEY";
 
@@ -27,11 +20,6 @@ public class MainActivity extends BaseNavigationDrawerActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-    @Override
-    public boolean onItemMenuSelectedCallback(int position) {
-        return false;
     }
 
     @Override

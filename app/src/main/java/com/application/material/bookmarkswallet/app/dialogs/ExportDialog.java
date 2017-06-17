@@ -9,19 +9,15 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.helpers.CSVExportHelper;
 import com.application.material.bookmarkswallet.app.helpers.HtmlExportHelper;
 import com.application.material.bookmarkswallet.app.helpers.OnExportResultCallback;
-import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 public class ExportDialog implements DialogInterface.OnClickListener,
         CompoundButton.OnCheckedChangeListener, OnExportResultCallback, View.OnClickListener {
@@ -32,7 +28,6 @@ public class ExportDialog implements DialogInterface.OnClickListener,
 
     public ExportDialog(WeakReference<Context> context, View v) {
         ctx = context;
-//        exportBookmarkList = list;
         view = v;
     }
 
@@ -131,6 +126,7 @@ public class ExportDialog implements DialogInterface.OnClickListener,
     @Override
     public void onClick(View view) {
         //TODO switch on ids
-        ctx.get().startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+        if (ctx.get() != null)
+            ctx.get().startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
     }
 }

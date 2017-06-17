@@ -15,7 +15,6 @@ import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Setting;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
-import com.willowtreeapps.saguaro.android.Saguaro;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -70,9 +69,6 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
             case 0:
                 goToMarket();
                 break;
-            case 3:
-                startActivity(Saguaro.getSendFeedbackIntent(getContext()));
-                break;
         }
     }
 
@@ -109,22 +105,7 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
                 getResources().getString(R.string.setting_no_favicon_description),
                 SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE, View.VISIBLE,
                 (Boolean) sharedPrefHelper.getValue(SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE, false)));
-
-//        settingList.add(new Setting(getResources().getString(R.string.setting_cloud_sync),
-//                getResources().getString(R.string.setting_cloud_sync_description),
-//                SharedPrefHelper.SharedPrefKeysEnum.CLOUD_SYNC,
-//                View.VISIBLE, (Boolean) sharedPrefHelper
-//                .getValue(SharedPrefHelper.SharedPrefKeysEnum.CLOUD_SYNC, false)));
-
-//        settingList.add(new Setting(getResources().getString(R.string.setting_night_mode),
-//                getResources().getString(R.string.setting_night_mode_description),
-//                SharedPrefHelper.SharedPrefKeysEnum.NIGHT_MODE,
-//                View.VISIBLE, (int) sharedPrefHelper.getValue(SharedPrefHelper.SharedPrefKeysEnum.NIGHT_MODE,
-//                AppCompatDelegate.MODE_NIGHT_AUTO) == AppCompatDelegate.MODE_NIGHT_YES));
-
-        settingList.add(new Setting(getResources().getString(R.string.setting_feedback_label),
-                null, null, View.GONE, false));
-
+        
         settingList.add(new Setting(getResources().getString(R.string.setting_build_version_label),
                 Utils.getVersionName(new WeakReference<>(getContext())),
                 null, View.GONE, false));

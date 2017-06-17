@@ -4,21 +4,16 @@ import android.content.Context;
 import android.view.View;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 
 import java.lang.ref.WeakReference;
-
+@Deprecated
 public class ActionMenuRevealHelper {
     /**
      * move in a presenter?
      */
     public static void toggleRevealActionMenu(WeakReference<Context> ctx, View view, boolean isShowing,
                                               WeakReference<ActionMenuRevealCallbacks> listener) {
-        AnimatorBuilder.getInstance(new WeakReference<>(ctx.get()))
-                .buildRevealAnimation(view, isShowing,//actionMenuView, isShowing,
-                        new WeakReference<AnimatorBuilder.OnRevealAnimationListener>(null))
-                .start();
         setStatus(isShowing);
         if (listener.get() != null)
             listener.get().onToggleRevealCb(isShowing);
