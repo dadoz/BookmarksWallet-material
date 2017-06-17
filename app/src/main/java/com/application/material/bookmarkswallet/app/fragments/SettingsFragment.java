@@ -105,7 +105,7 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
                 getResources().getString(R.string.setting_no_favicon_description),
                 SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE, View.VISIBLE,
                 (Boolean) sharedPrefHelper.getValue(SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE, false)));
-        
+
         settingList.add(new Setting(getResources().getString(R.string.setting_build_version_label),
                 Utils.getVersionName(new WeakReference<>(getContext())),
                 null, View.GONE, false));
