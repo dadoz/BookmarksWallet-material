@@ -37,7 +37,7 @@ public class ExportDialog implements DialogInterface.OnClickListener,
     public void dialogHandler() {
         AlertDialog dialog = new AlertDialog.Builder(ctx.get(), R.style.CustomLollipopDialogStyle)
                 .setTitle(ctx.get().getString(R.string.export_dialog_title))
-                .setView(R.layout.dialog_export_bookmarks_layout)
+                .setView(R.layout.export_bookmarks_checkboxes_layout)
                 .setNegativeButton(ctx.get().getString(android.R.string.cancel), this)
                 .setPositiveButton(ctx.get().getString(android.R.string.yes), this)
                 .create();

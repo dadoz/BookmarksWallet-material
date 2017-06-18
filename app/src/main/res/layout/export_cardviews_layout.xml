@@ -3,28 +3,44 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <include android:id="@+id/exportLayoutId"
-        layout="@layout/dialog_export_bookmarks_layout"/>
+    <com.application.material.bookmarkswallet.app.views.ExportCheckboxesView
+        android:id="@+id/exportCheckboxesViewId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_below="@id/exportCheckboxesViewId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+        <TextView
+            android:layout_margin="@dimen/margin_16"
+            android:textAlignment="center"
+            android:id="@+id/exportDescriptionTextId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_16"
+            android:text="@string/export_description"/>
+        <ImageView
+            android:id="@+id/downloadBookamrksimageViewId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_bookmark_outline_black_48dp"/>
+        <com.application.material.bookmarkswallet.app.views.ExportInfoView
+            android:id="@+id/exportBookmarksInfoLayoutId"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+    </LinearLayout>
 
-    <ImageView
-        android:visibility="gone"
-        android:id="@+id/imageViewId1"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_archive_black_48dp"/>
-
-    <TextView
-        android:layout_below="@id/exportLayoutId"
+    <Button
+        android:layout_alignParentBottom="true"
         android:id="@+id/exportCardviewButtonId"
-        android:background="@color/amber_600"
+        android:backgroundTint="@color/amber_600"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_18"
-        android:gravity="right"
         android:textColor="@color/grey_50"
-        android:padding="@dimen/margin_16"
         android:text="@string/export_button_label"/>
-
 
 </RelativeLayout>
