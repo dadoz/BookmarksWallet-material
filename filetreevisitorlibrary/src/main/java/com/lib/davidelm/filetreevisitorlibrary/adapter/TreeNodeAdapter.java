@@ -11,10 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
@@ -311,6 +308,10 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
             nodeDescriptionText = (TextView) itemView.findViewById(R.id.nodeDescriptionTextId);
             nodeLabelText = (TextView) itemView.findViewById(R.id.nodeLabelTextId);
         }
+    }
+
+    public List<TreeNodeInterface> getItems() {
+        return items;
     }
 
 }

@@ -7,13 +7,16 @@ import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable
 import com.application.material.bookmarkswallet.app.realm.migrations.BookmarkRealmMigration;
 import com.flurry.android.FlurryAgent;
 
+import java.util.List;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-public class BookmarksWalletApplication extends Application {
+public class MaterialBookmarkApplication extends Application {
     private SparseArrayParcelable<String> searchParamsArray;
     private RealmConfiguration realmConfig;
+    private List bookmarksList;
 
     @Override
     public void onCreate() {
@@ -79,5 +82,13 @@ public class BookmarksWalletApplication extends Application {
      */
     public void setSearchParamsArray(SparseArrayParcelable<String> searchParamsArray) {
         this.searchParamsArray = searchParamsArray;
+    }
+
+    public void setBookmarksList(List bookmarksList) {
+        this.bookmarksList = bookmarksList;
+    }
+
+    public List getBookmarksList() {
+        return bookmarksList;
     }
 }

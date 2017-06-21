@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,14 +11,10 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.SparseArray;
-import android.util.SparseBooleanArray;
 import android.util.SparseIntArray;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeVisitCompleted;
@@ -27,23 +22,14 @@ import com.lib.davidelm.filetreevisitorlibrary.R;
 import com.lib.davidelm.filetreevisitorlibrary.adapter.TreeNodeAdapter;
 import com.lib.davidelm.filetreevisitorlibrary.decorator.SpaceItemDecorator;
 import com.lib.davidelm.filetreevisitorlibrary.manager.RootNodeManager;
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class TreeNodeView extends FrameLayout implements OnNodeClickListener, OnNodeVisitCompleted,
         BreadCrumbsView.OnPopBackStackInterface, OnFolderMenuItemClickListener {
@@ -57,6 +43,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     private WeakReference<OnNavigationCallbacks> lst;
     private EmptyRecyclerView treeNodeFolderRecyclerView;
     private EmptyRecyclerView treeNodeFilesRecyclerView;
+    private WeakReference<OnItemsChangedCallbacks> lst2;
 
     public TreeNodeView(@NonNull Context context) {
         super(context);
@@ -70,11 +57,6 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
 
     public TreeNodeView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView();
-    }
-
-    public TreeNodeView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         initView();
     }
 
@@ -102,6 +84,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      */
     public void setAdapter(@NonNull TreeNodeAdapter adapter) {
         treeNodeFilesRecyclerView.setAdapter(adapter);
+        adapter.registerAdapterDataObserver(new CustomAdapterDataObserver(adapter, lst2 != null ? lst2.get() : null));
         treeNodeFolderRecyclerView.setAdapter(new TreeNodeAdapter(new ArrayList<>(), new WeakReference<>(this), true));//TODO FIX it
         setEmptyRecyclerView();
         if (adapter.getItemCount() == 0) {
@@ -454,5 +437,34 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
             return list;
         }
         return null;
+    }
+
+    public void setOnItemsChangedCallbacksListener(OnItemsChangedCallbacks lst2) {
+        this.lst2 = new WeakReference<>(lst2);
+    }
+
+    /**
+     * move in external class
+     */
+    public static class CustomAdapterDataObserver extends RecyclerView.AdapterDataObserver {
+        private final TreeNodeAdapter adapter;
+        private final WeakReference<OnItemsChangedCallbacks> lst;
+        private String TAG = "CustomAdapterData";
+
+        public CustomAdapterDataObserver(TreeNodeAdapter adapter, OnItemsChangedCallbacks lst) {
+            this.adapter = adapter;
+            this.lst = new WeakReference<>(lst);
+        }
+
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            if (lst.get() != null)
+                lst.get().onItemsChangedCb(adapter.getItems());
+        }
+    }
+
+    public interface OnItemsChangedCallbacks {
+        void onItemsChangedCb(List list);
     }
 }

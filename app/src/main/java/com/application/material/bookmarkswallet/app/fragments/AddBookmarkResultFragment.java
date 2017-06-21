@@ -1,53 +1,23 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
-import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.SparseArray;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
-import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.application.BookmarksWalletApplication;
-import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
+import com.application.material.bookmarkswallet.app.application.MaterialBookmarkApplication;
 import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
-import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
-import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
-import com.application.material.bookmarkswallet.app.presenter.SearchBookmarkPresenter;
-import com.application.material.bookmarkswallet.app.presenter.SearchResultPresenter;
-import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
-import com.application.material.bookmarkswallet.app.utlis.RealmUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.views.AddBookmarkResultLayout;
-import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 
@@ -55,10 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import icepick.Icepick;
-import icepick.State;
-import io.realm.Realm;
 
-import static android.icu.text.DateTimePatternGenerator.PatternInfo.OK;
 import static com.application.material.bookmarkswallet.app.utlis.Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE;
 
 public class AddBookmarkResultFragment extends Fragment implements
@@ -91,7 +58,7 @@ public class AddBookmarkResultFragment extends Fragment implements
         statusManager = StatusManager.getInstance();
         retrieveIconHelper = RetrieveIconHelper
                 .getInstance(new WeakReference<>(this));
-        searchParamsArray = ((BookmarksWalletApplication) getActivity().getApplication())
+        searchParamsArray = ((MaterialBookmarkApplication) getActivity().getApplication())
                 .getSearchParamsArray();
     }
 

@@ -1,22 +1,26 @@
-package com.application.material.bookmarkswallet.app.helpers;
+package com.application.material.bookmarkswallet.app.strategies;
 
 import android.content.Context;
 import android.os.Environment;
 import android.view.View;
 
+import com.application.material.bookmarkswallet.app.helpers.OnExportResultCallback;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 
-public class CSVExportHelper  extends ExportHelper {
+public class CSVExport extends BaseExport {
 
-    public CSVExportHelper(WeakReference<Context> ctx, View view) {
+    public CSVExport(WeakReference<Context> ctx, View view) {
         super(ctx, view);
     }
 
@@ -29,7 +33,7 @@ public class CSVExportHelper  extends ExportHelper {
      * @return
      */
     @Override
-    public boolean createFile(ArrayList<Bookmark> list) {
+    public boolean createFile(List<Bookmark> list) {
         try {
             File path = Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -44,7 +48,7 @@ public class CSVExportHelper  extends ExportHelper {
                 csvPrinter.close();
                 return true;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -56,7 +60,7 @@ public class CSVExportHelper  extends ExportHelper {
      * @param list
      * @return
      */
-    public static ArrayList<String> prepareListToCSV(ArrayList<Bookmark> list) {
+    public static ArrayList<String> prepareListToCSV(List<Bookmark> list) throws Exception {
         ArrayList<String> listTmp = new ArrayList<>();
         for (Bookmark item : list) {
             listTmp.add(item.getUrl() + ';' + item.getTimestamp() + ';' +

@@ -11,10 +11,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.helpers.CSVExportHelper;
-import com.application.material.bookmarkswallet.app.helpers.HtmlExportHelper;
 import com.application.material.bookmarkswallet.app.helpers.OnExportResultCallback;
-import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import java.lang.ref.WeakReference;
@@ -77,15 +74,15 @@ public class ExportDialog implements DialogInterface.OnClickListener,
      * TODO async
      */
     private void handlePositiveButton() {
-        if (csvCheckbox.isChecked()) {
-            ((CSVExportHelper) ExportStrategy
-                    .setExportStrategy(ExportStrategy.ExportTypeEnum.CSV))
-                    .createFileAsync(new WeakReference<OnExportResultCallback>(this));
-            return;
-        }
-        ((HtmlExportHelper) ExportStrategy
-                .setExportStrategy(ExportStrategy.ExportTypeEnum.HTML))
-                .createFileAsync(new WeakReference<OnExportResultCallback>(this));
+//        if (csvCheckbox.isChecked()) {
+//            ((CSVExport) ExportStrategy
+//                    .setExportStrategy(ExportStrategy.ExportTypeEnum.CSV))
+//                    .createFileAsync(new WeakReference<OnExportResultCallback>(this));
+//            return;
+//        }
+//        ((HtmlExport) ExportStrategy
+//                .setExportStrategy(ExportStrategy.ExportTypeEnum.HTML))
+//                .createFileAsync(new WeakReference<OnExportResultCallback>(this));
     }
 
     /**

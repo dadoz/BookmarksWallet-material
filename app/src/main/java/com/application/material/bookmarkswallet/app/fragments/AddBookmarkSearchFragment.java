@@ -1,31 +1,22 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.SparseArray;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.application.BookmarksWalletApplication;
-import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
+import com.application.material.bookmarkswallet.app.application.MaterialBookmarkApplication;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.views.AddBookmarkSearchLayout;
-import com.lib.davidelm.filetreevisitorlibrary.views.FolderNodeView;
-import com.lib.davidelm.filetreevisitorlibrary.views.NavigateFolderUpView;
-
-import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -135,7 +126,7 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
      */
     private void onSearchSuccess(SparseArrayParcelable<String> searchParamsArray) {
         StatusManager.getInstance().setOnResultMode();
-        ((BookmarksWalletApplication) getActivity().getApplication())
+        ((MaterialBookmarkApplication) getActivity().getApplication())
                 .setSearchParamsArray(searchParamsArray);
 
         //change frag

@@ -1,11 +1,11 @@
-package com.application.material.bookmarkswallet.app.helpers;
+package com.application.material.bookmarkswallet.app.strategies;
 
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 
+import com.application.material.bookmarkswallet.app.helpers.OnExportResultCallback;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
@@ -13,11 +13,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
+import java.util.List;
 
-public class HtmlExportHelper extends ExportHelper {
+public class HtmlExport extends BaseExport {
 
-    public HtmlExportHelper(WeakReference<Context> ctx, View view) {
+    public HtmlExport(WeakReference<Context> ctx, View view) {
         super(ctx, view);
     }
 
@@ -27,7 +27,7 @@ public class HtmlExportHelper extends ExportHelper {
     }
 
     @Override
-    public boolean createFile(ArrayList<Bookmark> list) {
+    public boolean createFile(List<Bookmark> list) {
         try {
             File path = Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);

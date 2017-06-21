@@ -8,9 +8,11 @@ import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.*;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
@@ -18,12 +20,13 @@ import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActio
 import com.application.material.bookmarkswallet.app.actionMode.OnActionModeCallbacks;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.OnMultipleSelectorCallback;
+import com.application.material.bookmarkswallet.app.application.MaterialBookmarkApplication;
 import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
-import com.application.material.bookmarkswallet.app.manager.SearchManager.SearchManagerCallbackInterface;
-import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
-import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
+import com.application.material.bookmarkswallet.app.manager.SearchManager.SearchManagerCallbackInterface;
+import com.application.material.bookmarkswallet.app.manager.StatusManager;
+import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.views.AddFolderView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -34,7 +37,10 @@ import com.lib.davidelm.filetreevisitorlibrary.views.TreeNodeView;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -46,7 +52,7 @@ public class BookmarkListFragment extends Fragment
         SwipeRefreshLayout.OnRefreshListener,
         SearchManagerCallbackInterface,
         AddBookmarkActivity.OnHandleBackPressed, OnMultipleSelectorCallback, OnActionModeCallbacks,
-        AddFolderView.AddFolderCallbacks {
+        AddFolderView.AddFolderCallbacks, TreeNodeView.OnItemsChangedCallbacks {
     public static final String FRAG_TAG = "LinksListFragment";
     @BindView(R.id.addBookmarkMenuFabId)
     FloatingActionsMenu addBookmarkMenuFab;
@@ -207,6 +213,7 @@ public class BookmarkListFragment extends Fragment
         adapter = new BookmarkRecyclerViewAdapter(getContext(), this);
         displayNodeView.setAdapter(adapter);
         displayNodeView.setBreadCrumbsView(breadCrumbsView);
+        displayNodeView.setOnItemsChangedCallbacksListener(this);
         //set action mode
         actionModeCallback = new EditBookmarkActionModeCallback(new WeakReference<>(getContext()),
                         new WeakReference<>(getActivity()),
@@ -336,6 +343,13 @@ public class BookmarkListFragment extends Fragment
     public void onAddFolderExpanded(View bottomSheet) {
         addBookmarkMenuFab.setVisibility(View.GONE);
 
+    }
+
+    @Override
+    public void onItemsChangedCb(List list) {
+        if (getActivity() != null &&
+                getActivity().getApplication() != null)
+            ((MaterialBookmarkApplication) getActivity().getApplication()).setBookmarksList(list);
     }
 
 
