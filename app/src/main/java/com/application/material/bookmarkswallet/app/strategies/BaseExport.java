@@ -45,7 +45,7 @@ public abstract class BaseExport {
      * @param list
      * @return
      */
-    public abstract boolean createFile(List<Bookmark> list);
+    public abstract boolean createFile(List<?> list);
 
     /**
      *

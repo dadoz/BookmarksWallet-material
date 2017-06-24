@@ -165,7 +165,6 @@ public abstract class NavigationDrawerActivity extends AppCompatActivity {
         menuList.add(new PrimaryDrawerItem()
                 .withName(R.string.export_bookmarks)
                 .withSelectable(false)
-//                .withDescription("descriptions bla bla bla")
                 .withDescriptionTextColorRes(R.color.grey_400)
                 .withIdentifier(1)
                 .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))

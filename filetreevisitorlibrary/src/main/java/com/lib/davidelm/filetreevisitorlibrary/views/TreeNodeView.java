@@ -84,7 +84,6 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      */
     public void setAdapter(@NonNull TreeNodeAdapter adapter) {
         treeNodeFilesRecyclerView.setAdapter(adapter);
-        adapter.registerAdapterDataObserver(new CustomAdapterDataObserver(adapter, lst2 != null ? lst2.get() : null));
         treeNodeFolderRecyclerView.setAdapter(new TreeNodeAdapter(new ArrayList<>(), new WeakReference<>(this), true));//TODO FIX it
         setEmptyRecyclerView();
         if (adapter.getItemCount() == 0) {
@@ -441,6 +440,10 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
 
     public void setOnItemsChangedCallbacksListener(OnItemsChangedCallbacks lst2) {
         this.lst2 = new WeakReference<>(lst2);
+        RecyclerView.Adapter adapter = treeNodeFilesRecyclerView.getAdapter();
+        if (adapter != null &&
+                adapter instanceof TreeNodeAdapter)
+            adapter.registerAdapterDataObserver(new CustomAdapterDataObserver((TreeNodeAdapter) adapter, lst2));
     }
 
     /**

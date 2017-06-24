@@ -1,8 +1,6 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
-import android.Manifest;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -21,7 +19,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.application.material.bookmarkswallet.app.strategies.BaseExport.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
 
 
@@ -38,7 +39,7 @@ public class ExportFragment extends BaseFragment implements View.OnClickListener
     private ExportStrategy exportStrategy;
 
     {
-        layoutId = R.layout.export_cardviews_layout;
+        layoutId = R.layout.export_layout;
     }
 
     @Override
@@ -75,27 +76,38 @@ public class ExportFragment extends BaseFragment implements View.OnClickListener
         exportCardviewButton.setOnClickListener(this);
     }
 
+    @Override
+    public void onClick(View v) {
+        requestWriteExternalStoragePermissions();
+    }
+
+    @AfterPermissionGranted(MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE)
+    private void requestWriteExternalStoragePermissions() {
+        if (EasyPermissions.hasPermissions(getContext(), WRITE_EXTERNAL_STORAGE)) {
+            handleExportAction();
+            return;
+        }
+
+        EasyPermissions.requestPermissions(getActivity(), getString(R.string.action_rename),
+                MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE);
+    }
+
     /**
+     * TODO move in presenter
      * handle export action
      */
     private void handleExportAction() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getActivity().requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+        try {
+            //get bookmarkList
+            List<Bookmark> list = getActivity() != null ?
+                    ((MaterialBookmarkApplication) getActivity().getApplication()).getBookmarksList() : null;
+
+            exportStrategy.setExportStrategy(exportCheckboxesView.getStatus());
+            exportStrategy.createFile(list);
+            onExportResultSuccess(getString(R.string.export_bookmarks_success));
+        } catch (Exception e) {
+            onExportResultError(e.getMessage());
         }
-
-        //get bookmarkList
-        List<Bookmark> list = getActivity() != null ?
-                ((MaterialBookmarkApplication) getActivity().getApplication()).getBookmarksList() : null;
-
-        exportStrategy.setExportStrategy(exportCheckboxesView.getStatus());
-        exportStrategy.createFile(list);
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        handleExportAction();
     }
 
     @Override

@@ -214,6 +214,7 @@ public class BookmarkListFragment extends Fragment
         displayNodeView.setAdapter(adapter);
         displayNodeView.setBreadCrumbsView(breadCrumbsView);
         displayNodeView.setOnItemsChangedCallbacksListener(this);
+
         //set action mode
         actionModeCallback = new EditBookmarkActionModeCallback(new WeakReference<>(getContext()),
                         new WeakReference<>(getActivity()),

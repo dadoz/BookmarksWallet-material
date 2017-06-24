@@ -6,8 +6,9 @@ import android.os.Environment;
 import android.view.View;
 
 import com.application.material.bookmarkswallet.app.helpers.OnExportResultCallback;
-import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.application.material.bookmarkswallet.app.utlis.TreeNodeContentUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,7 +28,7 @@ public class HtmlExport extends BaseExport {
     }
 
     @Override
-    public boolean createFile(List<Bookmark> list) {
+    public boolean createFile(List<?> list) {
         try {
             File path = Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -46,12 +47,13 @@ public class HtmlExport extends BaseExport {
                         "<DT><H3 ADD_DATE=\"1472893318090001\">Bookmark list</H3>\n" +
                         "<DL><p>\n");
 
-                for (Bookmark item : list) {
+                for (Object item : list) {
                     osw.write("<DT><A HREF=" +
-                            Utils.buildUrl(item.getUrl(), false) +
+                            Utils.buildUrl(((TreeNodeRealm) item).getNodeContent().getDescription(), false) +
                             " ADD_DATE=" +
-                            item.getTimestamp() + ">" +
-                            Utils.getNameByBookmark(item) +
+                            ((TreeNodeRealm) item).getNodeContent().getFileUri() + ">" +
+                            TreeNodeContentUtils.getBookmarkName(((TreeNodeRealm) item)
+                                    .getNodeContent().getName()) +
                             "</A>\n");
                 }
 

@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
  * Created by davide on 13/06/2017.
  */
 
-class ActivityUtils {
+public class ActivityUtils {
 
     /**
      * handle static

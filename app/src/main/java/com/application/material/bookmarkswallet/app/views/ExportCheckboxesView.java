@@ -22,7 +22,7 @@ public class ExportCheckboxesView extends FrameLayout implements CompoundButton.
     private WeakReference<OnCheckCSVorHTMLCallbacks> lst;
     private CheckBox exportCSVCheckbox;
     private CheckBox exportHTMLCheckbox;
-    private ExportStrategy.ExportTypeEnum status;
+    private ExportStrategy.ExportTypeEnum status = ExportStrategy.ExportTypeEnum.HTML; //DEFAULT
 
     public ExportStrategy.ExportTypeEnum getStatus() {
         return status;

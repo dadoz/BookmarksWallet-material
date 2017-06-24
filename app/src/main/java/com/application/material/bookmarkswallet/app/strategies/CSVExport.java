@@ -5,8 +5,8 @@ import android.os.Environment;
 import android.view.View;
 
 import com.application.material.bookmarkswallet.app.helpers.OnExportResultCallback;
-import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.utlis.Utils;
+import com.application.material.bookmarkswallet.app.utlis.TreeNodeContentUtils;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -33,7 +33,7 @@ public class CSVExport extends BaseExport {
      * @return
      */
     @Override
-    public boolean createFile(List<Bookmark> list) {
+    public boolean createFile(List<?> list) {
         try {
             File path = Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -60,11 +60,13 @@ public class CSVExport extends BaseExport {
      * @param list
      * @return
      */
-    public static ArrayList<String> prepareListToCSV(List<Bookmark> list) throws Exception {
+    public static ArrayList<String> prepareListToCSV(List<?> list) throws Exception {
         ArrayList<String> listTmp = new ArrayList<>();
-        for (Bookmark item : list) {
-            listTmp.add(item.getUrl() + ';' + item.getTimestamp() + ';' +
-                    Utils.getNameByBookmark(item) + ';' );
+        for (Object item : list) {
+            if (item instanceof TreeNodeRealm)
+                listTmp.add(((TreeNodeRealm) item).getNodeContent().getDescription() + ';' +
+                        ((TreeNodeRealm) item).getNodeContent().getFileUri() + ';' +
+                        TreeNodeContentUtils.getBookmarkName(((TreeNodeRealm) item).getNodeContent().getName()) + ';' );
         }
 
         return listTmp;
