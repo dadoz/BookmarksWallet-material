@@ -22,8 +22,6 @@ public class ActivityUtils {
     public static Fragment findLastFragment(FragmentManager supportFragmentManager) {
         try {
             int index = supportFragmentManager.getBackStackEntryCount() -1;
-            if (index < supportFragmentManager.getBackStackEntryCount())
-                return null;
             String tag = supportFragmentManager.getBackStackEntryAt(index).getName();
             return supportFragmentManager.findFragmentByTag(tag);
         } catch (Exception e) {
@@ -49,9 +47,13 @@ public class ActivityUtils {
      * @return
      */
     static OnBackPressedHandlerInterface getBackPressedHandler(FragmentManager fragmentManager) {
-        Fragment frag = fragmentManager.findFragmentByTag(BookmarkListFragment.FRAG_TAG);
-        return frag != null && frag instanceof OnBackPressedHandlerInterface ?
-                ((OnBackPressedHandlerInterface) frag) : null;
+        Fragment lastFrag = findLastFragment(fragmentManager);
+        if (lastFrag == null || lastFrag instanceof BookmarkListFragment) {
+            Fragment frag = fragmentManager.findFragmentByTag(BookmarkListFragment.FRAG_TAG);
+            return frag != null && frag instanceof OnBackPressedHandlerInterface ?
+                    ((OnBackPressedHandlerInterface) frag) : null;
+        }
+        return null;
     }
 
     /**
