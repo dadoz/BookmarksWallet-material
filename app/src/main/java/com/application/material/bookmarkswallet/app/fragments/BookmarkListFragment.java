@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionModeCallback;
 import com.application.material.bookmarkswallet.app.actionMode.OnActionModeCallbacks;
@@ -27,6 +26,7 @@ import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager.SearchManagerCallbackInterface;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
+import com.application.material.bookmarkswallet.app.navigationDrawer.BaseActivity;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.views.AddFolderView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -51,7 +51,7 @@ public class BookmarkListFragment extends Fragment
         implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener,
         SearchManagerCallbackInterface,
-        AddBookmarkActivity.OnHandleBackPressed, OnMultipleSelectorCallback, OnActionModeCallbacks,
+        BaseActivity.OnBackPressedHandlerInterface, OnMultipleSelectorCallback, OnActionModeCallbacks,
         AddFolderView.AddFolderCallbacks, TreeNodeView.OnItemsChangedCallbacks {
     public static final String FRAG_TAG = "LinksListFragment";
     @BindView(R.id.addBookmarkMenuFabId)
@@ -269,17 +269,7 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public boolean handleBackPressed() {
-        return false;
-//        StatusManager status = StatusManager.getInstance();
-//        if (status.isOnActionMenuMode() ||
-//                status.isSearchActionbarMode()) {
-//            status.unsetStatus();
-//            addBookmarkFab.setVisibility(View.VISIBLE);
-//            if (searchManager.getSearchView() != null)
-//                searchManager.getSearchView().closeSearch();
-//            return true;
-//        }
-//        return false;
+        return displayNodeView.onBackPressed();
     }
 
     @Override

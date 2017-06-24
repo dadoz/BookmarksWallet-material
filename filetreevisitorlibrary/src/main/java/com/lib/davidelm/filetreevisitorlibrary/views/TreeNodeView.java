@@ -270,14 +270,15 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      * on back pressed cb
      * @return
      */
-    private boolean onBackPressed() {
+    public boolean onBackPressed() {
         boolean isRootNode = updateCurrentNode(null);
         if (!isRootNode) {
             //update breadCrumbs
             breadCrumbsView.removeLatestBreadCrumb();
 
             //update node viewsrr
-            ((TreeNodeAdapter) treeNodeFolderRecyclerView.getAdapter()).addItems(currentNode.getChildren());
+            addFolderNodes(currentNode.getChildren());
+            addFileNodes(currentNode.getChildren());
         }
         return !isRootNode;
     }

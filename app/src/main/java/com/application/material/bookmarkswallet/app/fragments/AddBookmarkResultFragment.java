@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.application.MaterialBookmarkApplication;
 import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
+import com.application.material.bookmarkswallet.app.navigationDrawer.BaseActivity;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.views.AddBookmarkResultLayout;
 
@@ -30,7 +30,7 @@ import static com.application.material.bookmarkswallet.app.utlis.Utils.ADD_BOOKM
 
 public class AddBookmarkResultFragment extends Fragment implements
         View.OnClickListener,
-        RetrieveIconHelper.OnRetrieveIconInterface, AddBookmarkActivity.OnHandleBackPressed {
+        RetrieveIconHelper.OnRetrieveIconInterface, BaseActivity.OnBackPressedHandlerInterface {
     public static final String FRAG_TAG = "AddBookmarkFragmentTAG";
     private static final String TAG = "AddBookmarkFragment";
     @BindView(R.id.addBookmarkResultViewId)

@@ -7,11 +7,8 @@ package com.application.material.bookmarkswallet.app.navigationDrawer;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -41,7 +38,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import static com.application.material.bookmarkswallet.app.BuildConfig.KOFI_DAVE_URL;
 
 
-public abstract class NavigationDrawerActivity extends AppCompatActivity {
+public abstract class NavigationDrawerActivity extends BaseActivity {
     private static final String TAG = "BaseActivity";
     private final int resourceLayoutId;
     @BindView(R.id.drawerLayoutId)
@@ -72,7 +69,8 @@ public abstract class NavigationDrawerActivity extends AppCompatActivity {
         unbinder = ButterKnife.bind(this);
 
         //first handle frag
-        onChangeFragment(new BookmarkListFragment(), BookmarkListFragment.FRAG_TAG);
+        ActivityUtils.onChangeFragment(getSupportFragmentManager(),
+                new BookmarkListFragment(), BookmarkListFragment.FRAG_TAG);
 
         //init actionbar
         initActionbar();
@@ -81,21 +79,6 @@ public abstract class NavigationDrawerActivity extends AppCompatActivity {
         initNavigationView();
     }
 
-    /**
-     * TODO move smwhere
-     * init fragment function
-     */
-    public void onChangeFragment(Fragment frag, String tag) {
-        boolean isSameFrag = ActivityUtils.isSameFrag(getSupportFragmentManager(), frag);
-        frag = isSameFrag ? ActivityUtils.findLastFragment(getSupportFragmentManager()) : frag;
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentContainerFrameLayoutId, frag, tag);
-        if (!isSameFrag &&
-                !(frag instanceof BookmarkListFragment))
-            transaction.addToBackStack(tag);
-        transaction.commit();
-    }
 
     @Override
     protected void onDestroy() {
@@ -232,13 +215,15 @@ public abstract class NavigationDrawerActivity extends AppCompatActivity {
         Log.e(TAG, "position" + position);
         switch (position) {
             case 1:
-                onChangeFragment(new ExportFragment(), ExportFragment.FRAG_TAG);
+                ActivityUtils.onChangeFragment(getSupportFragmentManager(), new ExportFragment(),
+                        ExportFragment.FRAG_TAG);
                 break;
             case 2:
                 startActivity(Saguaro.getSendFeedbackIntent(getApplicationContext()));
                 break;
             case 6:
-                onChangeFragment(new SettingsFragment(), SettingsFragment.FRAG_TAG);
+                ActivityUtils.onChangeFragment(getSupportFragmentManager(), new SettingsFragment(),
+                        SettingsFragment.FRAG_TAG);
                 break;
             case 8:
                 new BookmarkActionHelper(getApplicationContext()).openLinkOnBrowser(KOFI_DAVE_URL, null);

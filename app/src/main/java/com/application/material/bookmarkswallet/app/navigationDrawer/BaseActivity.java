@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
@@ -71,5 +72,47 @@ public abstract class BaseActivity extends AppCompatActivity {
         return null;
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        OnBackPressedHandlerInterface backPressedHandler = ActivityUtils
+                .getBackPressedHandler(getSupportFragmentManager());
+        if (backPressedHandler != null &&
+                backPressedHandler.handleBackPressed()) {
+            return;
+        }
+        super.onBackPressed();
+    }
+
+//search mode
+//        StatusManager status = StatusManager.getInstance();
+//        if (status.isOnActionMenuMode() ||
+//                status.isSearchActionbarMode()) {
+//            status.unsetStatus();
+//            addBookmarkFab.setVisibility(View.VISIBLE);
+//            if (searchManager.getSearchView() != null)
+//                searchManager.getSearchView().closeSearch();
+//            return true;
+//        }
+//        return false;
+
+
+    /**
+     *
+     */
+    public interface OnBackPressedHandlerInterface {
+        boolean handleBackPressed();
+    }
 
 }

@@ -2,6 +2,11 @@ package com.application.material.bookmarkswallet.app.navigationDrawer;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+
+import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
+import com.application.material.bookmarkswallet.app.navigationDrawer.BaseActivity.OnBackPressedHandlerInterface;
 
 /**
  * Created by davide on 13/06/2017.
@@ -38,4 +43,33 @@ public class ActivityUtils {
         return lastFrag != null &&
                 lastFrag.getClass().equals(fragment.getClass());
     }
+
+    /**
+     * handling back pressed
+     * @return
+     */
+    static OnBackPressedHandlerInterface getBackPressedHandler(FragmentManager fragmentManager) {
+        Fragment frag = fragmentManager.findFragmentByTag(BookmarkListFragment.FRAG_TAG);
+        return frag != null && frag instanceof OnBackPressedHandlerInterface ?
+                ((OnBackPressedHandlerInterface) frag) : null;
+    }
+
+    /**
+     * TODO move smwhere
+     * init fragment function
+     */
+    public static void onChangeFragment(FragmentManager fragmentManager, Fragment frag, String tag) {
+        boolean isSameFrag = isSameFrag(fragmentManager, frag);
+        frag = isSameFrag ? findLastFragment(fragmentManager) : frag;
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragmentContainerFrameLayoutId, frag, tag);
+
+        if (!isSameFrag &&
+                !(frag instanceof BookmarkListFragment))
+            transaction.addToBackStack(tag);
+        transaction.commit();
+    }
+
+
 }
