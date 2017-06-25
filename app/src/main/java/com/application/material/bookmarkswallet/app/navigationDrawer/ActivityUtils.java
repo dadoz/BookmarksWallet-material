@@ -21,6 +21,9 @@ public class ActivityUtils {
      */
     public static Fragment findLastFragment(FragmentManager supportFragmentManager) {
         try {
+            if (supportFragmentManager.getBackStackEntryCount() == 0)
+                return null;
+
             int index = supportFragmentManager.getBackStackEntryCount() -1;
             String tag = supportFragmentManager.getBackStackEntryAt(index).getName();
             return supportFragmentManager.findFragmentByTag(tag);

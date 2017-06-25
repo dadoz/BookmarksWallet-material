@@ -79,6 +79,12 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
         this.lst = lst;
     }
 
+    public void initOnRootNode() {
+        currentNode = rootNode;
+        addFolderNodes(rootNode.getChildren());
+        addFileNodes(rootNode.getChildren());
+    }
+
     /**
      * add custom item view :)
      */
@@ -445,6 +451,10 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
         if (adapter != null &&
                 adapter instanceof TreeNodeAdapter)
             adapter.registerAdapterDataObserver(new CustomAdapterDataObserver((TreeNodeAdapter) adapter, lst2));
+    }
+
+    public List<TreeNodeInterface> searchNode(String searchValue, boolean caseSensitive) {
+        return currentNode.getChildren();
     }
 
     /**

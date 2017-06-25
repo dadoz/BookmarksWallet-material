@@ -4,8 +4,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
-import com.application.material.bookmarkswallet.app.R;
+
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.manager.StatusManager.StatusEnum;
@@ -59,12 +58,7 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
      */
     private void handleListView() {
 //        mEmptyLinkListView.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mEmptyLinkListView.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
-            }
-        }, 200);
+        new Handler().postDelayed(() -> mEmptyLinkListView.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE), 200);
 
     }
 
@@ -72,9 +66,9 @@ public class BookmarkListObserver extends RecyclerView.AdapterDataObserver {
      * handle empty listview
      */
     private void handleSearchView() {
-        mEmptySearchResultLayout.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
-        ((TextView) mEmptySearchResultLayout.findViewById(R.id.searchResultQueryTextId))
-                .setText(searchManager.getFilterString());
+//        mEmptySearchResultLayout.setVisibility(isEmptyData() ? View.VISIBLE : View.GONE);
+//        ((TextView) mEmptySearchResultLayout.findViewById(R.id.searchResultQueryTextId))
+//                .setText(searchManager.getFilterString());
     }
 
     /**

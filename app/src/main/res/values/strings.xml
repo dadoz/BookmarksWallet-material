@@ -86,4 +86,5 @@
     <string name="guest_user">Guest</string>
     <string name="send_feedback_label">Send me a feedback</string>
     <string name="export_bookmarks_success">Bookmarks exported with success!</string>
+    <string name="action_about">About</string>
 </resources>

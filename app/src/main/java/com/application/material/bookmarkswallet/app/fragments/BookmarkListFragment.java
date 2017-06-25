@@ -26,6 +26,7 @@ import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager.SearchManagerCallbackInterface;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
+import com.application.material.bookmarkswallet.app.navigationDrawer.ActivityUtils;
 import com.application.material.bookmarkswallet.app.navigationDrawer.BaseActivity;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.views.AddFolderView;
@@ -42,8 +43,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 import static com.application.material.bookmarkswallet.app.BuildConfig.KOFI_DAVE_URL;
 
@@ -87,8 +86,8 @@ public class BookmarkListFragment extends Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         bookmarkActionHelper = new BookmarkActionHelper(getContext());
-        searchManager = SearchManager.getInstance(new WeakReference<>(getContext()),
-                Realm.getDefaultInstance(), new WeakReference<>(this));
+        searchManager = SearchManager.getInstance();
+        searchManager.setListener(this);
     }
 
     @Override
@@ -107,10 +106,19 @@ public class BookmarkListFragment extends Fragment
         inflater.inflate(NightModeHelper.getInstance().isNightMode() ? R.menu.menu_main_night :
                 R.menu.menu_main, menu);
 
-        MaterialSearchView searchView = ((MaterialSearchView) getView().getRootView()
-                .findViewById(R.id.searchViewId));
-        searchManager.initSearchView(menu, new View[] {searchView, addBookmarkMenuFab});
+        initSearchView(menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //init search manager
+        if (searchManager != null && searchManager.getSearchView() != null) {
+            searchManager.getSearchView().closeSearch();
+            searchManager.setListener(this);
+        }
+
     }
 
     @Override
@@ -119,12 +127,6 @@ public class BookmarkListFragment extends Fragment
         if (unbinder != null)
             unbinder.unbind();
     }
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-////        updateRecyclerView();
-//    }
 
     @Override
     public void onClick(View v) {
@@ -148,6 +150,9 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onRefresh() {
+        //init view -> sync
+        displayNodeView.initOnRootNode();
+
         new Handler().postDelayed(() -> {
 //            ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter())
 //                    .updateData(RealmUtils.getResults(Realm.getDefaultInstance()));
@@ -251,21 +256,6 @@ public class BookmarkListFragment extends Fragment
 //        updateGridLayoutManager();
     }
 
-    @Override
-    public void updateSearchDataList(RealmResults list) {
-//        ((BookmarkRecyclerViewAdapter) recyclerView.getAdapter()).updateData(list);
-//        recyclerView.getAdapter().notifyDataSetChanged();
-    }
-
-    @Override
-    public void onOpenSearchView() {
-        StatusManager.getInstance().setSearchActionbarMode(true);
-    }
-
-    @Override
-    public void onCloseSearchView() {
-        emptySearchResultLayout.setVisibility(View.GONE);
-    }
 
     @Override
     public boolean handleBackPressed() {
@@ -343,6 +333,34 @@ public class BookmarkListFragment extends Fragment
             ((MaterialBookmarkApplication) getActivity().getApplication()).setBookmarksList(list);
     }
 
+
+    /**
+     * search view
+     * @param menu
+     */
+    private void initSearchView(Menu menu) {
+        MaterialSearchView searchView = ((MaterialSearchView) getView().getRootView()
+                .findViewById(R.id.searchViewId));
+        searchManager.initSearchView(menu, searchView);
+    }
+    @Override
+    public void onOpenSearchView() {
+        StatusManager.getInstance().setSearchActionbarMode(true);
+        ActivityUtils.onChangeFragment(getFragmentManager(), new SearchFragment(),
+                SearchFragment.FRAG_TAG);
+    }
+
+    @Override
+    public void onCloseSearchView() {
+//        emptySearchResultLayout.setVisibility(View.GONE);
+        addBookmarkMenuFab.collapse();
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void searchBy(String searchValue, boolean caseSensitive) {
+        //TODO not implemented
+    }
 
 //    @Override
 //    public void onToggleRevealCb(boolean isShowing) {
