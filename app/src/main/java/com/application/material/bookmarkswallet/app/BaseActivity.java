@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.navigationDrawer;
+package com.application.material.bookmarkswallet.app;
 
 /**
  * Created by davide on 25/04/2017.
@@ -11,10 +11,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
+import com.application.material.bookmarkswallet.app.navigationDrawer.ActivityUtils;
+import com.application.material.bookmarkswallet.app.utlis.FlurryUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
-import com.flurry.android.FlurryAgent;
 
 import pub.devrel.easypermissions.EasyPermissions;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -34,8 +34,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //flurry
+        FlurryUtils.flurryStartSession(getApplicationContext());
 
-        FlurryAgent.onStartSession(this);
+        //nightmode
         NightModeHelper.getInstance(this).setConfigurationMode();
 
         //then handleSharedIntent
@@ -95,7 +97,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-//search mode
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        FlurryUtils.flurryStopSession(getApplicationContext());
+    }
+
+    //search mode
 //        StatusManager status = StatusManager.getInstance();
 //        if (status.isOnActionMenuMode() ||
 //                status.isSearchActionbarMode()) {

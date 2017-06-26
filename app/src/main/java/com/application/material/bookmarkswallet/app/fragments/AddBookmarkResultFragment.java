@@ -15,7 +15,7 @@ import com.application.material.bookmarkswallet.app.application.MaterialBookmark
 import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
-import com.application.material.bookmarkswallet.app.navigationDrawer.BaseActivity;
+import com.application.material.bookmarkswallet.app.BaseActivity;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.views.AddBookmarkResultLayout;
 

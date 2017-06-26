@@ -14,12 +14,12 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.application.material.bookmarkswallet.app.BaseActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionModeCallback;
 import com.application.material.bookmarkswallet.app.actionMode.OnActionModeCallbacks;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.OnMultipleSelectorCallback;
-import com.application.material.bookmarkswallet.app.application.MaterialBookmarkApplication;
 import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
@@ -27,7 +27,6 @@ import com.application.material.bookmarkswallet.app.manager.SearchManager.Search
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.navigationDrawer.ActivityUtils;
-import com.application.material.bookmarkswallet.app.navigationDrawer.BaseActivity;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.views.AddFolderView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -328,9 +327,7 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onItemsChangedCb(List list) {
-        if (getActivity() != null &&
-                getActivity().getApplication() != null)
-            ((MaterialBookmarkApplication) getActivity().getApplication()).setBookmarksList(list);
+        //TODO do smthing with list
     }
 
 

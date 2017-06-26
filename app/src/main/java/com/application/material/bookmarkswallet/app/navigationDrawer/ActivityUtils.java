@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
-import com.application.material.bookmarkswallet.app.navigationDrawer.BaseActivity.OnBackPressedHandlerInterface;
+import com.application.material.bookmarkswallet.app.BaseActivity.OnBackPressedHandlerInterface;
 
 /**
  * Created by davide on 13/06/2017.
@@ -49,7 +49,7 @@ public class ActivityUtils {
      * handling back pressed
      * @return
      */
-    static OnBackPressedHandlerInterface getBackPressedHandler(FragmentManager fragmentManager) {
+    public static OnBackPressedHandlerInterface getBackPressedHandler(FragmentManager fragmentManager) {
         Fragment lastFrag = findLastFragment(fragmentManager);
         if (lastFrag == null || lastFrag instanceof BookmarkListFragment) {
             Fragment frag = fragmentManager.findFragmentByTag(BookmarkListFragment.FRAG_TAG);

@@ -1,10 +1,6 @@
 package com.application.material.bookmarkswallet.app;
 
-import android.content.Context;
-
 import com.application.material.bookmarkswallet.app.navigationDrawer.NavigationDrawerActivity;
-
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class MainActivity extends NavigationDrawerActivity {
@@ -13,10 +9,5 @@ public class MainActivity extends NavigationDrawerActivity {
 
     protected MainActivity() {
         super(R.layout.activity_main_drawer_layout);
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

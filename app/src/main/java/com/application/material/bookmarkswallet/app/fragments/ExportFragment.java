@@ -8,13 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.application.MaterialBookmarkApplication;
 import com.application.material.bookmarkswallet.app.helpers.OnExportResultCallback;
-import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.views.ExportCheckboxesView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -99,8 +97,8 @@ public class ExportFragment extends BaseFragment implements View.OnClickListener
     private void handleExportAction() {
         try {
             //get bookmarkList
-            List<Bookmark> list = getActivity() != null ?
-                    ((MaterialBookmarkApplication) getActivity().getApplication()).getBookmarksList() : null;
+            //component.getBookmarksList();
+            ArrayList list = new ArrayList<>();
 
             exportStrategy.setExportStrategy(exportCheckboxesView.getStatus());
             exportStrategy.createFile(list);
