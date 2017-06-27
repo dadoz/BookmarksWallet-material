@@ -8,9 +8,12 @@ import android.widget.Filterable;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchManager implements Filterable,
         MaterialSearchView.OnQueryTextListener, MaterialSearchView.SearchViewListener {
@@ -18,9 +21,7 @@ public class SearchManager implements Filterable,
     private MenuItem searchItem;
     private WeakReference<SearchManagerCallbackInterface> listener;
     private MaterialSearchView searchView;
-
-    public SearchManager() {
-    }
+    private List<Object> list;
 
     /**
      * 
@@ -94,24 +95,6 @@ public class SearchManager implements Filterable,
         return true;
     }
 
-//    /**
-//     *  @param views
-//     *
-//     */
-//    public void handleMenuItemActionCollapsedLayout(@NonNull View[] views) {
-//        ((FloatingActionsMenu) views[0]).collapse();
-//        AnimatorBuilder.getInstance(context).collapseViews(views[0], true);
-//    }
-//
-//    /**
-//     *  @param views
-//     *
-//     */
-//    public void handleMenuItemActionExpandLayout(@NonNull View[] views) {
-//        ((FloatingActionsMenu) views[0]).collapse();
-//        AnimatorBuilder.getInstance(context).collapseViews(views[0], false);
-//    }
-
     @Override
     public void onSearchViewShown() {
         StatusManager.getInstance().setSearchActionbarMode(true);
@@ -134,6 +117,10 @@ public class SearchManager implements Filterable,
         return searchView;
     }
 
+    public void setList(List<Object> list) {
+        this.list = list;
+    }
+
 
     /**
      * filter class handled by search
@@ -153,19 +140,24 @@ public class SearchManager implements Filterable,
         }
 
         @Override
-        protected void publishResults(final CharSequence query, FilterResults results) {
-            listener.get().searchBy(query.toString().trim().toLowerCase(), mCaseSensitive);
-//            //TODO add callback
-//            ((Activity) context.get()).runOnUiThread(() -> {
-//                try {
-//                    String searchValue = ((String) constraint).trim().toLowerCase();
-////                    RealmResults list = searchValue.equals("") ?
-////                            RealmUtils.getResults(mRealm) : getFilteredList(searchValue, mCaseSensitive);
-////                    listener.get().searchBy(searchValue, mCaseSensitive);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            });
+        protected void publishResults(CharSequence query, FilterResults results) {
+            //replace with rx
+            List<TreeNodeInterface> filteredList = new ArrayList<>();
+            if (list != null) {
+                Object[] items = list.stream()
+                        .filter(item -> ((TreeNodeInterface) item).getNodeContent().getName().contains(query))
+                        .toArray();
+
+                if (items.length > 0)
+                    filteredList.clear();
+
+                for (Object item : items) {
+                    filteredList.add((TreeNodeInterface) item);
+                }
+            }
+
+            if (listener.get() != null)
+                listener.get().publishResultCb(query, filteredList);
         }
 
     }
@@ -176,6 +168,6 @@ public class SearchManager implements Filterable,
     public interface SearchManagerCallbackInterface {
         void onOpenSearchView();
         void onCloseSearchView();
-        void searchBy(String searchValue, boolean mCaseSensitive);
+        void publishResultCb(CharSequence query, List<TreeNodeInterface> filteredList);
     }
 }

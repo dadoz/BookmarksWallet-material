@@ -356,9 +356,10 @@ public class BookmarkListFragment extends Fragment
     }
 
     @Override
-    public void searchBy(String searchValue, boolean caseSensitive) {
+    public void publishResultCb(CharSequence query, List<TreeNodeInterface> filteredList) {
         //TODO not implemented
     }
+
 
 //    @Override
 //    public void onToggleRevealCb(boolean isShowing) {

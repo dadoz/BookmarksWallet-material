@@ -87,4 +87,5 @@
     <string name="send_feedback_label">Send me a feedback</string>
     <string name="export_bookmarks_success">Bookmarks exported with success!</string>
     <string name="action_about">About</string>
+    <string name="search_empty_label">Ops. No result found: %s</string>
 </resources>

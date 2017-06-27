@@ -4,10 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ImageView
+        android:id="@+id/searchBookmarksIconId"
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_bookmark_border_dark"/>
+    <TextView
+        android:id="@+id/searchBookmarksNotFoundTextId"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/margin_16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/search_empty_label"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/searchResultRecyclerViewId"
         android:layout_width="match_parent"

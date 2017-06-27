@@ -27,7 +27,9 @@ class SearchFragment extends BaseFragment implements SearchManager.SearchManager
     private static final String TAG = "SearchFrag";
     private SearchManager searchManager;
     private RecyclerView searchResultRecyclerView;
-    private List<Object> list;
+    private View searchBookmarksIcon;
+    private TextView searchBookmarksNotFoundText;
+    private String base;
 
     {
         layoutId = R.layout.fragment_search_layout;
@@ -38,8 +40,7 @@ class SearchFragment extends BaseFragment implements SearchManager.SearchManager
         super.onAttach(context);
         searchManager = SearchManager.getInstance();
         searchManager.setListener(this);
-        list = NodeListManager.getInstance(getActivity()).getNodeList();
-
+        searchManager.setList(NodeListManager.getInstance(getActivity()).getNodeList());
     }
 
     @Override
@@ -58,9 +59,12 @@ class SearchFragment extends BaseFragment implements SearchManager.SearchManager
      * @param view
      */
     private void onInitView(View view) {
+        searchBookmarksIcon = view.findViewById(R.id.searchBookmarksIconId);
+        searchBookmarksNotFoundText = (TextView) view.findViewById(R.id.searchBookmarksNotFoundTextId);
         searchResultRecyclerView = (RecyclerView) view.findViewById(R.id.searchResultRecyclerViewId);
         searchResultRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         searchResultRecyclerView.setAdapter(new SearchResultAdapter(new ArrayList<>()));
+        base = searchBookmarksNotFoundText.getText().toString();
     }
 
     @Override
@@ -69,30 +73,21 @@ class SearchFragment extends BaseFragment implements SearchManager.SearchManager
 
     @Override
     public void onCloseSearchView() {
-        list = null;
         if (getActivity() != null)
             getActivity().getSupportFragmentManager().popBackStack();
     }
 
     @Override
-    public void searchBy(String searchValue, boolean mCaseSensitive) {
-        //replace with rx
-        List<TreeNodeInterface> filteredList = new ArrayList<>();
-        if (list != null) {
-            Object[] items = list.stream()
-                    .filter(item -> ((TreeNodeInterface) item).getNodeContent().getName().contains(searchValue))
-                    .toArray();
+    public void publishResultCb(CharSequence query, List<TreeNodeInterface> filteredList) {
+        //empty string
+        searchBookmarksNotFoundText.setVisibility(filteredList.size() > 0 ? View.GONE : View.VISIBLE);
+        searchBookmarksNotFoundText.setText(String.format(base, query));
+        searchBookmarksIcon.setVisibility(filteredList.size() > 0 ? View.GONE : View.VISIBLE);
 
-            if (items.length > 0)
-                filteredList.clear();
-
-            for (Object item : items) {
-                filteredList.add((TreeNodeInterface) item);
-            }
-        }
-
-        ((SearchResultAdapter) searchResultRecyclerView.getAdapter()).setItems(filteredList);
+        //set result
+        ((SearchFragment.SearchResultAdapter) searchResultRecyclerView.getAdapter()).setItems(filteredList);
     }
+
 
     /**
      * Adapter
