@@ -113,7 +113,8 @@ public class BookmarkListFragment extends Fragment
     public void onResume() {
         super.onResume();
         //init search manager
-        if (searchManager != null && searchManager.getSearchView() != null) {
+        if (searchManager != null &&
+                searchManager.getSearchView() != null) {
             searchManager.getSearchView().closeSearch();
             searchManager.setListener(this);
         }

@@ -19,11 +19,10 @@ import com.application.material.bookmarkswallet.app.utlis.Utils;
 import pub.devrel.easypermissions.EasyPermissions;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import static com.application.material.bookmarkswallet.app.MainActivity.SHARED_URL_EXTRA_KEY;
 
 
 public abstract class BaseActivity extends AppCompatActivity {
-    private static final String TAG = "BaseActivity";
+    public static String SHARED_URL_EXTRA_KEY = "SHARED_URL_EXTRA_KEY";
 
     @Override
     protected void attachBaseContext(Context newBase) {

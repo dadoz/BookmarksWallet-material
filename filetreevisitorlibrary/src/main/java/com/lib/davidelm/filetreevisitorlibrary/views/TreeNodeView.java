@@ -178,7 +178,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
 
     @Override
     public void setParentNode(@NonNull TreeNodeInterface parentNode) {
-        Log.e(TAG, parentNode.getNodeContent().getName() != null ? parentNode.getNodeContent().getName() : "root");
+//        Log.e(TAG, parentNode.getNodeContent().getName() != null ? parentNode.getNodeContent().getName() : "root");
         rootNode = currentNode = parentNode;
     }
 
