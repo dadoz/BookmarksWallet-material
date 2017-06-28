@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_bookmark_border_dark"/>
     <TextView
+        android:visibility="gone"
         android:id="@+id/searchBookmarksNotFoundTextId"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/margin_16"

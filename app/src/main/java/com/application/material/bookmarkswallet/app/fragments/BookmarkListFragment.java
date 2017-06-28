@@ -61,12 +61,8 @@ public class BookmarkListFragment extends Fragment
     FloatingActionButton offerMeACoffeeFab;
     @BindView(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.emptyLinkListViewId)
-    View mEmptyLinkListView;
-    @BindView(R.id.emptySearchResultLayoutId)
-    View emptySearchResultLayout;
-    @BindView(R.id.importDefaultBookmarksButtonId)
-    View importDefaultBookmarksButton;
+//    @BindView(R.id.emptyLinkListViewId)
+//    View importDefaultBookmarksButton;
     @BindView(R.id.treeNodeViewId)
     TreeNodeView displayNodeView;
     @BindView(R.id.breadCrumbsViewId)
@@ -131,8 +127,7 @@ public class BookmarkListFragment extends Fragment
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.importDefaultBookmarksButtonId:
-                Snackbar.make(getView(), getString(R.string.import_default_bookmarks),
-                        Snackbar.LENGTH_SHORT).show();
+                notifyToUser(getString(R.string.import_default_bookmarks));
 //                DefaultBookmarkImportManager.handleImportDefaultBookmarks(new WeakReference<>(getContext()),
 //                        mEmptyLinkListView, mSwipeRefreshLayout, recyclerView);
                 break;
@@ -208,7 +203,7 @@ public class BookmarkListFragment extends Fragment
         mSwipeRefreshLayout.setColorSchemeResources(R.color.indigo_600);
 
         //import
-        importDefaultBookmarksButton.setOnClickListener(this);
+//        importDefaultBookmarksButton.setOnClickListener(this);
 
         //add buton
         addBookmarkFab.setOnClickListener(this);

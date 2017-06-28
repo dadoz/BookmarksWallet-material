@@ -28,8 +28,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </android.support.v4.widget.SwipeRefreshLayout>
-        <include layout="@layout/empty_bookmark_list_layout"/>
-        <include layout="@layout/empty_search_result_layout"/>
     </RelativeLayout>
 
     <!--<android.support.design.widget.FloatingActionButton-->
