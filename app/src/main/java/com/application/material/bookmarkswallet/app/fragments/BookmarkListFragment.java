@@ -14,19 +14,20 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.BaseActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.actionMode.EditBookmarkActionModeCallback;
 import com.application.material.bookmarkswallet.app.actionMode.OnActionModeCallbacks;
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.OnMultipleSelectorCallback;
-import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager.SearchManagerCallbackInterface;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.navigationDrawer.ActivityUtils;
+import com.application.material.bookmarkswallet.app.utlis.BrowserUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.views.AddFolderView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -79,12 +80,10 @@ public class BookmarkListFragment extends Fragment
     private EditBookmarkActionModeCallback actionModeCallback;
     private BookmarkRecyclerViewAdapter adapter;
     private SearchManager searchManager;
-    private BookmarkActionHelper bookmarkActionHelper;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        bookmarkActionHelper = new BookmarkActionHelper(getContext());
         searchManager = SearchManager.getInstance();
         searchManager.setListener(this);
     }
@@ -139,11 +138,12 @@ public class BookmarkListFragment extends Fragment
                 break;
             case R.id.addBookmarkFabId:
                 addBookmarkMenuFab.collapseImmediately();
-                bookmarkActionHelper.addBookmarkAction(new WeakReference<>(this));
+                Intent intent = new Intent(getContext(), AddBookmarkActivity.class);
+                startActivityForResult(intent, Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE);
                 break;
             case R.id.offerMeACoffeeFabId:
                 addBookmarkMenuFab.collapse();
-                bookmarkActionHelper.openLinkOnBrowser(KOFI_DAVE_URL, getView());
+                BrowserUtils.openUrl(KOFI_DAVE_URL, getContext());
                 break;
         }
     }
@@ -230,8 +230,7 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onFileNodeClickCb(View v, int position, TreeNodeInterface node) {
-        //FIXME fileUri not saved
-        bookmarkActionHelper.openLinkOnBrowser(node.getNodeContent().getDescription(), getView());
+        BrowserUtils.openUrl(node.getNodeContent().getDescription(), getContext());
     }
 
     @Override

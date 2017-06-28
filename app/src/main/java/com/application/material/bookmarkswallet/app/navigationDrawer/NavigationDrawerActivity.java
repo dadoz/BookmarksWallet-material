@@ -18,7 +18,7 @@ import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.fragments.ExportFragment;
 import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
-import com.application.material.bookmarkswallet.app.helpers.BookmarkActionHelper;
+import com.application.material.bookmarkswallet.app.utlis.BrowserUtils;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -227,7 +227,7 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
                         SettingsFragment.FRAG_TAG);
                 break;
             case 8:
-                new BookmarkActionHelper(getApplicationContext()).openLinkOnBrowser(KOFI_DAVE_URL, null);
+                BrowserUtils.openUrl(KOFI_DAVE_URL, getApplicationContext());
                 break;
         }
         return false;

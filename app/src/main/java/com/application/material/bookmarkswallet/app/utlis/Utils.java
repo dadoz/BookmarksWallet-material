@@ -32,8 +32,6 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Utils {
     public static final int ADD_BOOKMARK_ACTIVITY_REQ_CODE = 99;
@@ -43,19 +41,7 @@ public class Utils {
     private static final String HTTPS_PROTOCOL = "https://";
     public static final int MAX_CARD_COUNT= 2;
 
-    /**
-     * @param url
-     * @return
-     */
-    public static boolean isValidUrl(String url) {
-        Pattern p = Pattern.
-                compile("(@)?(href=')?(HREF=')?(HREF=\")?(href=\")?(http://)?(https://)?(ftp://)?[a-zA-Z_0-9\\-]+(\\.\\w[a-zA-Z_0-9\\-]+)+(/([#&\\n\\-=?\\+\\%/\\.\\w]+)?)?");
 
-        Matcher m = p.matcher(url);
-        return ! url.equals("") &&
-                m.matches();
-
-    }
 
     /**
      * hide Keyboard

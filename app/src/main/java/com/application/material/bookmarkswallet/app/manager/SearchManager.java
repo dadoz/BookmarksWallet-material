@@ -7,7 +7,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.utlis.Utils;
+import com.application.material.bookmarkswallet.app.utlis.BrowserUtils;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
@@ -43,7 +43,7 @@ public class SearchManager implements Filterable,
      * @return
      */
     public static boolean isSearchValid(String query) {
-            return (Utils.isValidUrl(query)); //&& pingUrl(query);
+            return (BrowserUtils.isValidUrl(query)); //&& pingUrl(query);
     }
 
     /**
