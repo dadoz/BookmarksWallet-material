@@ -4,13 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.application.material.bookmarkswallet.app.utlis.Utils;
-
 import java.lang.ref.WeakReference;
 
 public class SharedPrefHelper {
     private static SharedPrefHelper instance;
     private static SharedPreferences sharedPref;
+
+    public static boolean isNightModeTag(String s) {
+        return SharedPrefKeysEnum.valueOf(s).equals(SharedPrefKeysEnum.NIGHT_MODE);
+    }
 
     public enum SharedPrefKeysEnum {TUTORIAL_DONE, SYNC_STATUS, NO_FAVICON_MODE, SEARCH_URL_MODE, IMPORT_KEEP_NOTIFIED,
         IMPORT_ACCOUNT_NOTIFIED, EXPANDED_GRIDVIEW, CLOUD_SYNC, NIGHT_MODE
@@ -46,10 +48,20 @@ public class SharedPrefHelper {
     }
 
     /**
+     * @param tag
+     * @param value
+     */
+    public void setValue(String tag, Object value) {
+        SharedPrefKeysEnum key = SharedPrefKeysEnum.valueOf(tag);
+        setValue(key, value);
+    }
+
+    /**
+     *
      * @param key
      * @param value
      */
-    public void setValue(SharedPrefKeysEnum key, Object value) {
+    public void setValue(SharedPrefHelper.SharedPrefKeysEnum key, Object value) {
         //TODO check type
         SharedPreferences.Editor editor = sharedPref.edit();
         if (value instanceof Boolean) {

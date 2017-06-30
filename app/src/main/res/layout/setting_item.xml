@@ -12,20 +12,25 @@
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-    <TextView
-        android:id="@+id/settingLabelTextId"
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="sasdfa sdfasdf"
-        android:textSize="@dimen/text_size_20"/>
-    <TextView
-        android:id="@+id/settingDescriptionTextId"
-        android:layout_below="@id/settingLabelTextId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_8"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/settingLabelTextId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sasdfa sdfasdf"
+            android:textSize="@dimen/text_size_14"/>
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/settingDescriptionTextId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/DescriptionSecondaryTextColorStyle"
+            android:text="sdfasdfa sdf asd"
+            android:textSize="@dimen/text_size_14"/>
+    </LinearLayout>
 
-        style="@style/DescriptionSecondaryTextColorStyle"
-        android:text="sdfasdfa sdf asd"
-        android:textSize="@dimen/text_size_14"/>
 </RelativeLayout>

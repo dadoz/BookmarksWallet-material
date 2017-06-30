@@ -91,4 +91,8 @@
         <!-- Change hint text color for edit text -->
         <item name="android:textColorHint">@color/indigo_600</item>
     </style>
+
+    <style name="settingsBackgroundStyle">
+        <item name="android:background">@color/grey_50</item>
+    </style>
 </resources>

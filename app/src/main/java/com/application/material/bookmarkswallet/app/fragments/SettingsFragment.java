@@ -29,8 +29,10 @@ import butterknife.Unbinder;
 public class SettingsFragment extends BaseFragment implements CompoundButton.OnCheckedChangeListener,
         AdapterView.OnItemClickListener {
     public static String FRAG_TAG = "SettingsFragment";
-    @BindView(R.id.settingsListId)
-    public ListView listView;
+    @BindView(R.id.generalSettingListViewId)
+    public ListView generalSettingListView;
+    @BindView(R.id.extraFeatureSettingListViewId)
+    public ListView extraFeatureSettingListView;
     private Unbinder unbinder;
 
     {
@@ -48,11 +50,17 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
      * init view
      */
     private void onInitView() {
-        ArrayAdapter<Setting> adapter = new SettingListAdapter(getContext(),
-                R.layout.setting_item, getSettingList(),
-                new WeakReference<>(this));
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
+        //general
+        ArrayAdapter<Setting> adapter = new SettingListAdapter(0, getContext(),
+                R.layout.setting_item, getGeneralSettingList(), new WeakReference<>(this));
+        generalSettingListView.setAdapter(adapter);
+        generalSettingListView.setOnItemClickListener(this);
+
+        //extra feature
+        ArrayAdapter<Setting> adapter2 = new SettingListAdapter(1, getContext(),
+                R.layout.setting_item, getSettingList(), new WeakReference<>(this));
+        extraFeatureSettingListView.setAdapter(adapter2);
+        extraFeatureSettingListView.setOnItemClickListener(this);
     }
 
     @Override
@@ -73,15 +81,17 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
     }
 
     /**
-     * TODO modify to get also type on fx
+     * TODO modify to get also type on fx - add customer lst
      * @param buttonView
      * @param isChecked
      */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        sharedPrefHelper.setValue(SharedPrefHelper.SharedPrefKeysEnum.valueOf(buttonView.getTag().toString()), isChecked);
-        if (SharedPrefHelper.SharedPrefKeysEnum.valueOf((String) buttonView.getTag()) == SharedPrefHelper.SharedPrefKeysEnum.NIGHT_MODE) {
-            NightModeHelper.getInstance(getActivity()).toggle();
+        if (buttonView.getTag() != null) {
+            sharedPrefHelper.setValue(buttonView.getTag().toString(), isChecked);
+            if (SharedPrefHelper.isNightModeTag(buttonView.getTag().toString())) {
+                NightModeHelper.getInstance(getActivity()).toggle();
+            }
         }
     }
 
@@ -93,8 +103,6 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
      */
     public ArrayList<Setting> getSettingList() {
         ArrayList<Setting> settingList = new ArrayList<>();
-        settingList.add(new Setting(getResources().getString(R.string.setting_rate_label), null,
-                null, View.GONE, false));
 
         settingList.add(new Setting(getResources().getString(R.string.setting_url_search_label),
                 getResources().getString(R.string.setting_url_search_description),
@@ -105,10 +113,6 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
                 getResources().getString(R.string.setting_no_favicon_description),
                 SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE, View.VISIBLE,
                 (Boolean) sharedPrefHelper.getValue(SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE, false)));
-
-        settingList.add(new Setting(getResources().getString(R.string.setting_build_version_label),
-                Utils.getVersionName(new WeakReference<>(getContext())),
-                null, View.GONE, false));
 
         return settingList;
     }
@@ -124,4 +128,15 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
         }
     }
 
+    public ArrayList<Setting> getGeneralSettingList() {
+        ArrayList<Setting> settingList = new ArrayList<>();
+        settingList.add(new Setting(getResources().getString(R.string.setting_rate_label), null,
+                null, View.GONE, false));
+        settingList.add(new Setting(getResources().getString(R.string.setting_build_version_label),
+                Utils.getVersionName(new WeakReference<>(getContext())),
+                null, View.GONE, false));
+
+        return settingList;
+
+    }
 }

@@ -59,5 +59,9 @@
         <item name="android:textColor">@color/indigo_400</item>
     </style>
 
+    <style name="settingsBackgroundStyle">
+        <item name="android:background">@color/grey_50</item>
+    </style>
+
 
 </resources>

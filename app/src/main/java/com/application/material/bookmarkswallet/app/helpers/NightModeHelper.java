@@ -1,5 +1,4 @@
 package com.application.material.bookmarkswallet.app.helpers;
-import java.lang.ref.WeakReference;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +6,8 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+
+import java.lang.ref.WeakReference;
 
 
 /**

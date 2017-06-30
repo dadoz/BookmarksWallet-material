@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    style="@style/settingsBackgroundStyle"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_16"
+        android:paddingRight="@dimen/margin_16"
+        android:paddingBottom="@dimen/margin_8"
+        android:paddingTop="@dimen/margin_16"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@color/amber_600"
+        android:text="General"/>
     <ListView
-        android:id="@+id/settingsListId"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:paddingLeft="@dimen/padding_16"
-        android:paddingRight="@dimen/padding_16"/>
-</FrameLayout>
+        android:id="@+id/generalSettingListViewId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_16"
+        android:paddingRight="@dimen/margin_16"
+        android:paddingBottom="@dimen/margin_8"
+        android:paddingTop="@dimen/margin_16"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@color/amber_600"
+        android:text="Extra Feature"/>
+    <ListView
+        android:id="@+id/extraFeatureSettingListViewId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
