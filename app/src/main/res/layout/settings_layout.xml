@@ -14,7 +14,7 @@
         android:paddingTop="@dimen/margin_16"
         android:textSize="@dimen/text_size_18"
         android:textColor="@color/amber_600"
-        android:text="General"/>
+        android:text="@string/general"/>
     <ListView
         android:id="@+id/generalSettingListViewId"
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
         android:paddingTop="@dimen/margin_16"
         android:textSize="@dimen/text_size_18"
         android:textColor="@color/amber_600"
-        android:text="Extra Feature"/>
+        android:text="@string/extra_feature"/>
     <ListView
         android:id="@+id/extraFeatureSettingListViewId"
         android:layout_width="match_parent"

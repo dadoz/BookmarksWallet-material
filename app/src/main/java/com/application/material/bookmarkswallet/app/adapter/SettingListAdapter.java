@@ -19,7 +19,6 @@ public class SettingListAdapter extends ArrayAdapter<Setting> {
     private final ArrayList<Setting> settingList;
     private final WeakReference<CompoundButton.OnCheckedChangeListener> listener;
     private final int type;
-    private final static String TAG = "SettingListAdapter";
 
     /**
      *
@@ -29,10 +28,10 @@ public class SettingListAdapter extends ArrayAdapter<Setting> {
      * @param lst
      */
     public SettingListAdapter(int type, Context context, int resource, ArrayList<Setting> settingList,
-                              WeakReference<CompoundButton.OnCheckedChangeListener> lst) {
+                              CompoundButton.OnCheckedChangeListener lst) {
         super(context, resource, settingList);
         this.settingList = settingList;
-        this.listener = lst;
+        this.listener = new WeakReference<>(lst);
         this.type = type;
     }
 
@@ -45,16 +44,14 @@ public class SettingListAdapter extends ArrayAdapter<Setting> {
      */
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.setting_item, parent, false);
-        }
+        convertView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.setting_item, parent, false);
         Setting settingObj = settingList.get(position);
         ListViewHolder viewHolder = new ListViewHolder(convertView);
 
-//        if (type == 0 &&
-//                position == 1)
-//            viewHolder.itemView.setOnClickListener(null);
+        if (type == 0 &&
+                position == 1)
+            viewHolder.itemView.setOnClickListener(null);
 
         //to handle type of button
         viewHolder.switchCompat.setTag(settingObj.getType() != null ? settingObj.getType().name() : null);
@@ -69,12 +66,14 @@ public class SettingListAdapter extends ArrayAdapter<Setting> {
         return convertView;
     }
 
-    class ListViewHolder {
-        public final SwitchCompat switchCompat;
-        public final TextView label;
-        public final TextView description;
+    private class ListViewHolder {
+        final SwitchCompat switchCompat;
+        final TextView label;
+        final TextView description;
+        final View itemView;
 
         ListViewHolder(View convertView) {
+            itemView = convertView;
             label = (TextView) convertView.findViewById(R.id.settingLabelTextId);
             description = ((TextView) convertView.findViewById(R.id.settingDescriptionTextId));
             switchCompat = ((SwitchCompat) convertView.findViewById(R.id.settingSwitchId));

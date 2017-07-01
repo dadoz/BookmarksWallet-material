@@ -52,13 +52,13 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
     private void onInitView() {
         //general
         ArrayAdapter<Setting> adapter = new SettingListAdapter(0, getContext(),
-                R.layout.setting_item, getGeneralSettingList(), new WeakReference<>(this));
+                R.layout.setting_item, getGeneralSettingList(), this);
         generalSettingListView.setAdapter(adapter);
         generalSettingListView.setOnItemClickListener(this);
 
         //extra feature
         ArrayAdapter<Setting> adapter2 = new SettingListAdapter(1, getContext(),
-                R.layout.setting_item, getSettingList(), new WeakReference<>(this));
+                R.layout.setting_item, getSettingList(), this);
         extraFeatureSettingListView.setAdapter(adapter2);
         extraFeatureSettingListView.setOnItemClickListener(this);
     }
