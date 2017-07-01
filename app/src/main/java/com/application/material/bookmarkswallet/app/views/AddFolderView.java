@@ -67,27 +67,39 @@ public class AddFolderView extends CoordinatorLayout implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bottomSheetContainerLayoutId:
-                setExpanded();
-                if (lst != null && lst.get() != null)
-                    lst.get().onAddFolderExpanded(bottomSheetContainerLayout);
+                toggle();
                 break;
             case R.id.addFolderButtonId:
-                String folderName = addFolderTextInputLayout.getEditText().getText().toString();
-                //check empty
-                if (folderName.equals("")) {
-                    showError();
-                    return;
-                }
-
-                Utils.hideKeyboard(getContext());
-                new Handler().postDelayed(() -> {
-                    setCollapsed();
-                    if (lst != null && lst.get() != null) {
-                        lst.get().addFolderActionCb(folderName);
-                    }
-                }, 200);
+                add();
                 break;
         }
+    }
+
+    private void add() {
+        String folderName = addFolderTextInputLayout.getEditText().getText().toString();
+        //check empty
+        if (folderName.equals("")) {
+            showError();
+            return;
+        }
+
+        setCollapsed();
+        if (lst != null && lst.get() != null) {
+            lst.get().addFolderActionCb(folderName);
+        }
+    }
+
+    private void toggle() {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+            setExpanded();
+            if (lst != null && lst.get() != null)
+                lst.get().onAddFolderExpanded(bottomSheetContainerLayout);
+            return;
+        }
+
+        setCollapsed();
+        if (lst != null && lst.get() != null)
+            lst.get().onAddFolderCollapsed(bottomSheetContainerLayout);
     }
 
     private void showError() {
@@ -120,8 +132,13 @@ public class AddFolderView extends CoordinatorLayout implements View.OnClickList
      * set collapsed
      */
     public void setCollapsed() {
-        bottomSheetBehavior.setPeekHeight(150);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        Utils.hideKeyboard(getContext());
+        addFolderTextInputLayout.getEditText().setText("");
+        new Handler().postDelayed(() -> {
+            bottomSheetBehavior.setPeekHeight(150);
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }, 100);
+
     }
 
     @Override
