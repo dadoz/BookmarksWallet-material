@@ -1,21 +1,19 @@
 package com.application.material.bookmarkswallet.app.views;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import java.lang.ref.WeakReference;
 
@@ -25,10 +23,10 @@ import java.lang.ref.WeakReference;
 
 public class AddFolderView extends CoordinatorLayout implements View.OnClickListener, TextWatcher {
     private View addFolderButton;
-    private EditText addFolderEditText;
+    private TextInputLayout addFolderTextInputLayout;
     private WeakReference<AddFolderCallbacks> lst;
-    private ImageView closeAddFolderButton;
     private BottomSheetBehavior bottomSheetBehavior;
+    private View bottomSheetContainerLayout;
 
     public AddFolderView(Context context) {
         super(context);
@@ -47,12 +45,12 @@ public class AddFolderView extends CoordinatorLayout implements View.OnClickList
 
     private void initView() {
         inflate(getContext(), R.layout.add_folder_layout, this);
+        bottomSheetContainerLayout = findViewById(R.id.bottomSheetContainerLayoutId);
         addFolderButton = findViewById(R.id.addFolderButtonId);
-        addFolderEditText = (EditText) findViewById(R.id.addFolderEditTextId);
-        closeAddFolderButton = (ImageView) findViewById(R.id.closeAddFolderButtonId);
+        addFolderTextInputLayout = (TextInputLayout) findViewById(R.id.addFolderTextInputLayoutId);
         addFolderButton.setOnClickListener(this);
-        closeAddFolderButton.setOnClickListener(this);
-        addFolderEditText.addTextChangedListener(this);
+        bottomSheetContainerLayout.setOnClickListener(this);
+        addFolderTextInputLayout.getEditText().addTextChangedListener(this);
 
         //set bottom sheet behavior
         bottomSheetBehavior = BottomSheetBehavior.from(getChildAt(0));
@@ -68,19 +66,37 @@ public class AddFolderView extends CoordinatorLayout implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.bottomSheetContainerLayoutId:
+                setExpanded();
+                if (lst != null && lst.get() != null)
+                    lst.get().onAddFolderExpanded(bottomSheetContainerLayout);
+                break;
             case R.id.addFolderButtonId:
-                String folderName = addFolderEditText.getText().toString();
-                setCollapsed();
-                if (lst != null && lst.get() != null &&
-                        !folderName.equals(""))
-                    lst.get().addFolderActionCb(folderName);
+                String folderName = addFolderTextInputLayout.getEditText().getText().toString();
+                //check empty
+                if (folderName.equals("")) {
+                    showError();
+                    return;
+                }
+
+                Utils.hideKeyboard(getContext());
+                new Handler().postDelayed(() -> {
+                    setCollapsed();
+                    if (lst != null && lst.get() != null) {
+                        lst.get().addFolderActionCb(folderName);
+                    }
+                }, 200);
                 break;
         }
     }
 
+    private void showError() {
+        addFolderTextInputLayout.setError(getContext().getString(R.string.empty_folder));
+    }
+
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+        addFolderTextInputLayout.setError(null);
     }
 
     @Override
@@ -93,13 +109,17 @@ public class AddFolderView extends CoordinatorLayout implements View.OnClickList
 
     }
 
-
+    /**
+     * set expanded
+     */
     public void setExpanded() {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
+    /**
+     * set collapsed
+     */
     public void setCollapsed() {
-
         bottomSheetBehavior.setPeekHeight(150);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
@@ -127,7 +147,6 @@ public class AddFolderView extends CoordinatorLayout implements View.OnClickList
 
     public interface AddFolderCallbacks {
         void addFolderActionCb(String v);
-        void onUpdatedVisibility(boolean isVisible);
 
         void onAddFolderCollapsed(View bottomSheet);
 

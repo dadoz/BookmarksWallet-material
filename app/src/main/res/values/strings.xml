@@ -90,4 +90,6 @@
     <string name="search_empty_label">Ops. No result found: %s</string>
     <string name="extra_feature">Extra Features</string>
     <string name="general">General</string>
+    <string name="empty_folder">Empty folder name</string>
+    <string name="add_folder">Add new folder</string>
 </resources>

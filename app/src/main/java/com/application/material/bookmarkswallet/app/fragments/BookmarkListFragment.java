@@ -51,7 +51,7 @@ public class BookmarkListFragment extends Fragment
         SwipeRefreshLayout.OnRefreshListener,
         SearchManagerCallbackInterface,
         BaseActivity.OnBackPressedHandlerInterface, OnMultipleSelectorCallback, OnActionModeCallbacks,
-        AddFolderView.AddFolderCallbacks, TreeNodeView.OnItemsChangedCallbacks {
+        AddFolderView.AddFolderCallbacks {
     public static final String FRAG_TAG = "LinksListFragment";
     @BindView(R.id.addBookmarkMenuFabId)
     FloatingActionsMenu addBookmarkMenuFab;
@@ -70,7 +70,6 @@ public class BookmarkListFragment extends Fragment
     @BindView(R.id.addFolderViewId)
     AddFolderView addFolderView;
 
-    private String TAG ="BookmarkListFragment";
     private Unbinder unbinder;
 
     private EditBookmarkActionModeCallback actionModeCallback;
@@ -213,7 +212,6 @@ public class BookmarkListFragment extends Fragment
         adapter = new BookmarkRecyclerViewAdapter(getContext(), this);
         displayNodeView.setAdapter(adapter);
         displayNodeView.setBreadCrumbsView(breadCrumbsView);
-        displayNodeView.setOnItemsChangedCallbacksListener(this);
 
         //set action mode
         actionModeCallback = new EditBookmarkActionModeCallback(new WeakReference<>(getContext()),
@@ -306,10 +304,6 @@ public class BookmarkListFragment extends Fragment
     }
 
     @Override
-    public void onUpdatedVisibility(boolean isVisible) {
-    }
-
-    @Override
     public void onAddFolderCollapsed(View bottomSheet) {
         addBookmarkMenuFab.setVisibility(View.VISIBLE);
     }
@@ -317,14 +311,7 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onAddFolderExpanded(View bottomSheet) {
         addBookmarkMenuFab.setVisibility(View.GONE);
-
     }
-
-    @Override
-    public void onItemsChangedCb(List list) {
-        //TODO do smthing with list
-    }
-
 
     /**
      * search view
