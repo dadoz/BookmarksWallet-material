@@ -10,7 +10,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.application.material.bookmarkswallet.app.BaseActivity;
@@ -147,8 +146,16 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
     public List<IDrawerItem> getMenuList() {
         List<IDrawerItem> menuList = new ArrayList<>();
         menuList.add(new PrimaryDrawerItem()
+                .withName(R.string.bookmark_list_label)
+                .withSelectable(true)
+                .withIdentifier(0)
+                .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
+                .withIcon(R.mipmap.ic_bookmark_border_dark)
+                .withSelectedTextColorRes(R.color.indigo_600)
+                .withSelectedColorRes(R.color.grey_100));
+        menuList.add(new PrimaryDrawerItem()
                 .withName(R.string.export_bookmarks)
-                .withSelectable(false)
+                .withSelectable(true)
                 .withDescriptionTextColorRes(R.color.grey_400)
                 .withIdentifier(1)
                 .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
@@ -213,20 +220,23 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
      * @param position
      */
     public boolean onItemMenuSelected(int position) {
-        Log.e(TAG, "position" + position);
         switch (position) {
             case 1:
+                ActivityUtils.onChangeFragment(getSupportFragmentManager(), new BookmarkListFragment(),
+                        BookmarkListFragment.FRAG_TAG);
+                break;
+            case 2:
                 ActivityUtils.onChangeFragment(getSupportFragmentManager(), new ExportFragment(),
                         ExportFragment.FRAG_TAG);
                 break;
-            case 2:
+            case 3:
                 startActivity(Saguaro.getSendFeedbackIntent(getApplicationContext()));
                 break;
-            case 6:
+            case 7:
                 ActivityUtils.onChangeFragment(getSupportFragmentManager(), new SettingsFragment(),
                         SettingsFragment.FRAG_TAG);
                 break;
-            case 8:
+            case 9:
                 BrowserUtils.openUrl(KOFI_DAVE_URL, getApplicationContext());
                 break;
         }

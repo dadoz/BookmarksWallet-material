@@ -75,6 +75,9 @@ public class AddFolderView extends CoordinatorLayout implements View.OnClickList
         }
     }
 
+    /**
+     *
+     */
     private void add() {
         String folderName = addFolderTextInputLayout.getEditText().getText().toString();
         //check empty
@@ -83,12 +86,15 @@ public class AddFolderView extends CoordinatorLayout implements View.OnClickList
             return;
         }
 
-        setCollapsed();
+        setCollapsed(true);
         if (lst != null && lst.get() != null) {
             lst.get().addFolderActionCb(folderName);
         }
     }
 
+    /**
+     *
+     */
     private void toggle() {
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
             setExpanded();
@@ -97,11 +103,14 @@ public class AddFolderView extends CoordinatorLayout implements View.OnClickList
             return;
         }
 
-        setCollapsed();
+        setCollapsed(true);
         if (lst != null && lst.get() != null)
             lst.get().onAddFolderCollapsed(bottomSheetContainerLayout);
     }
 
+    /**
+     *
+     */
     private void showError() {
         addFolderTextInputLayout.setError(getContext().getString(R.string.empty_folder));
     }
@@ -132,12 +141,18 @@ public class AddFolderView extends CoordinatorLayout implements View.OnClickList
      * set collapsed
      */
     public void setCollapsed() {
+        setCollapsed(false);
+    }
+    /**
+     * set collapsed
+     */
+    public void setCollapsed(boolean hasDelay) {
         Utils.hideKeyboard(getContext());
         addFolderTextInputLayout.getEditText().setText("");
         new Handler().postDelayed(() -> {
             bottomSheetBehavior.setPeekHeight(150);
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }, 100);
+        }, hasDelay ? 100 : 0);
 
     }
 

@@ -67,6 +67,9 @@ public class ActivityUtils {
         boolean isSameFrag = isSameFrag(fragmentManager, frag);
         frag = isSameFrag ? findLastFragment(fragmentManager) : frag;
 
+        if (frag instanceof BookmarkListFragment)
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragmentContainerFrameLayoutId, frag, tag);
 
