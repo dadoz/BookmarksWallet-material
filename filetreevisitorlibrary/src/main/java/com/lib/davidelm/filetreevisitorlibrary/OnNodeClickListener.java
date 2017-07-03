@@ -3,7 +3,6 @@ package com.lib.davidelm.filetreevisitorlibrary;
 
 import android.view.View;
 
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 

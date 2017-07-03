@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 
 import java.lang.ref.WeakReference;
-
-
 /**
      * Night Mode Helper
      *

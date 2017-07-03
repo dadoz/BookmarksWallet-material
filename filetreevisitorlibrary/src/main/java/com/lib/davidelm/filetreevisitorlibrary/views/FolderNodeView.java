@@ -1,10 +1,7 @@
 package com.lib.davidelm.filetreevisitorlibrary.views;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,19 +10,16 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
 import com.lib.davidelm.filetreevisitorlibrary.R;
 import com.lib.davidelm.filetreevisitorlibrary.adapter.TreeNodeAdapter;
 import com.lib.davidelm.filetreevisitorlibrary.decorator.SpaceItemDecorator;
 import com.lib.davidelm.filetreevisitorlibrary.manager.RootNodeManager;
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -80,7 +74,8 @@ public class FolderNodeView extends FolderRecyclerView implements OnNodeClickLis
         }
 
         if (rootNode != null)
-            recyclerView.setAdapter(new TreeNodeAdapter(getFolderNodes(rootNode.getChildren()), new WeakReference<>(this), false));
+            recyclerView.setAdapter(new TreeNodeAdapter(getFolderNodes(rootNode.getChildren()),
+                    new WeakReference<>(this), getContext(), false, false));
     }
 
     /**

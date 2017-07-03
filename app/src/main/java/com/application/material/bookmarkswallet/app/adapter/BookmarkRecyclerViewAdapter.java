@@ -19,9 +19,10 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter {
     /**
      *
      * @param ctx
+     * @param noFaviconMode
      */
-    public BookmarkRecyclerViewAdapter(Context ctx, OnMultipleSelectorCallback lst) {
-        super(lst);
+    public BookmarkRecyclerViewAdapter(Context ctx, OnMultipleSelectorCallback lst, boolean noFaviconMode) {
+        super(lst, noFaviconMode);
         context = new WeakReference<> (ctx);
         setIsFaviconIsEnabled(context);
         defaultIcon = BitmapFactory.decodeResource(context.get().getResources(),

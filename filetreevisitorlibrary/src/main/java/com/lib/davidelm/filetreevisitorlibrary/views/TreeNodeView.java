@@ -90,7 +90,8 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      */
     public void setAdapter(@NonNull TreeNodeAdapter adapter) {
         treeNodeFilesRecyclerView.setAdapter(adapter);
-        treeNodeFolderRecyclerView.setAdapter(new TreeNodeAdapter(new ArrayList<>(), new WeakReference<>(this), true));//TODO FIX it
+        treeNodeFolderRecyclerView.setAdapter(new TreeNodeAdapter(new ArrayList<>(), new WeakReference<>(this),
+                getContext(), true, false));//TODO FIX it
         setEmptyRecyclerView();
         if (adapter.getItemCount() == 0) {
             //filter list -> files and folders
@@ -126,7 +127,8 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
             recyclerView.addItemDecoration(new SpaceItemDecorator(getResources().getDimensionPixelSize(R.dimen.grid_space)));
         }
-        recyclerView.setAdapter(new TreeNodeAdapter(new ArrayList<>(), new WeakReference<>(this), true));
+        recyclerView.setAdapter(new TreeNodeAdapter(new ArrayList<>(), new WeakReference<>(this),
+                getContext(), true, false));
     }
 
 

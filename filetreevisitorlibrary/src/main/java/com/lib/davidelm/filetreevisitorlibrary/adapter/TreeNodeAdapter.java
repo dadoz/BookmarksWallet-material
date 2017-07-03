@@ -26,26 +26,26 @@ import java.util.List;
 
 public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHolder> {
     private final List<TreeNodeInterface> items;
+    private RequestQueue volleyQueue;
     private WeakReference<OnNodeClickListener> lst;
-    @NonNull
-    private String TAG = "TreeNodeAdapter";
     private boolean showMoreSettingButton;
+    private final boolean noFaviconMode;
 
-    public TreeNodeAdapter(List<TreeNodeInterface> list, WeakReference<OnNodeClickListener> lst, boolean showMoreSettingButton) {
+    public TreeNodeAdapter(List<TreeNodeInterface> list, WeakReference<OnNodeClickListener> lst,
+                           Context context, boolean showMoreSettingButton, boolean noFaviconMode) {
         this.items = list;
         this.lst = lst;
+        this.noFaviconMode = noFaviconMode;
         this.showMoreSettingButton = showMoreSettingButton;
+        volleyQueue = Volley.newRequestQueue(context);
 
     }
 
-    public TreeNodeAdapter(List<TreeNodeInterface> list) {
+    public TreeNodeAdapter(List<TreeNodeInterface> list, boolean noFaviconMode) {
         this.items = list;
+        this.noFaviconMode = noFaviconMode;
     }
 
-    public void setOnNodeClickListener(OnNodeClickListener lst) {
-        this.lst = new WeakReference<>(lst);
-    }
-    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         int nodeLayoutRes = viewType == 0 ? R.layout.linear_node_item : R.layout.cardview_node_item;
@@ -84,6 +84,14 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
 
     /**
      *
+     * @param lst
+     */
+    public void setOnNodeClickListener(OnNodeClickListener lst) {
+        this.lst = new WeakReference<>(lst);
+    }
+
+    /**
+     *
      * @param holder
      * @param position
      * @param item
@@ -102,19 +110,6 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
                     lst.get().onSelectButtonClick(v, position, item);
             });
         }
-    }
-
-    /**
-     * unselecte the other keep this one TODO please rm it
-     * @param item
-     */
-    private void exclusiveItemSelection(@NonNull TreeNodeInterface item) {
-        //unslect the others
-        for (TreeNodeInterface temp : items)
-            temp.setSelected(false);
-
-        //select current item
-        item.setSelected(true);
     }
 
     /**
@@ -218,10 +213,14 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
         notifyDataSetChanged();
     }
 
+    /**
+     *
+     */
     public void clearItems() {
         items.clear();
         notifyDataSetChanged();
     }
+
     /**
      * remove item
      * @param childNode
@@ -231,6 +230,11 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
         items.remove(position);
         notifyDataSetChanged();
     }
+
+    /**
+     *
+     * @param position
+     */
     public void removeItem(int position) {
         items.remove(position);
         notifyDataSetChanged();
@@ -249,21 +253,29 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
                     getFileIcon(nodeContent, context));
 
             //update image with icon one
-            if (!isFolder && nodeContent.getFileUri() != null) {
-                RequestQueue queue = Volley.newRequestQueue(context);
-                ImageRequest imageRequest = new ImageRequest(nodeContent.getFileUri(),
-                        imageView::setImageBitmap,
-                        0, 0, ImageView.ScaleType.CENTER_CROP,
-                        Bitmap.Config.ARGB_8888,
-                        error -> imageView.setImageDrawable(ContextCompat.getDrawable(context,
-                                R.mipmap.ic_bookmark_border_dark)));
-                queue.add(imageRequest);
+            if (!noFaviconMode &&
+                    !isFolder &&
+                    nodeContent.getFileUri() != null) {
+                volleyIconRequest(context, nodeContent, imageView);
             }
 
         } catch (Exception e) {
             imageView.setImageDrawable(ContextCompat.getDrawable(context,
                     isFolder ? R.mipmap.ic_folder : R.mipmap.ic_bookmark_border_dark));
         }
+    }
+
+    /**
+     *
+     * @throws Exception
+     */
+    private void volleyIconRequest(Context context, TreeNodeContent nodeContent, ImageView imageView) throws Exception {
+        volleyQueue.add(new ImageRequest(nodeContent.getFileUri(),
+                imageView::setImageBitmap,
+                0, 0, ImageView.ScaleType.CENTER_CROP,
+                Bitmap.Config.ARGB_8888,
+                error -> imageView.setImageDrawable(ContextCompat.getDrawable(context,
+                        R.mipmap.ic_bookmark_border_dark))));
     }
 
     /***
@@ -278,6 +290,9 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
         return ContextCompat.getDrawable(context, R.mipmap.ic_bookmark_border_dark);
     }
 
+    /**
+     *
+     */
     public void clearSelectedItem() {
         for (TreeNodeInterface item : items)
             item.setSelected(false);

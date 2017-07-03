@@ -22,6 +22,7 @@ import com.application.material.bookmarkswallet.app.actionMode.OnActionModeCallb
 import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
 import com.application.material.bookmarkswallet.app.adapter.OnMultipleSelectorCallback;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
+import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager.SearchManagerCallbackInterface;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
@@ -45,6 +46,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static com.application.material.bookmarkswallet.app.BuildConfig.KOFI_DAVE_URL;
+import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE;
 
 public class BookmarkListFragment extends Fragment
         implements View.OnClickListener,
@@ -209,7 +211,10 @@ public class BookmarkListFragment extends Fragment
         offerMeACoffeeFab.setOnClickListener(this);
 
         //init display node view
-        adapter = new BookmarkRecyclerViewAdapter(getContext(), this);
+
+        boolean noFaviconMode = (boolean) SharedPrefHelper.getInstance(new WeakReference<Context>(getContext()))
+                .getValue(NO_FAVICON_MODE, false);
+        adapter = new BookmarkRecyclerViewAdapter(getContext(), this, noFaviconMode);
         displayNodeView.setAdapter(adapter);
         displayNodeView.setBreadCrumbsView(breadCrumbsView);
 

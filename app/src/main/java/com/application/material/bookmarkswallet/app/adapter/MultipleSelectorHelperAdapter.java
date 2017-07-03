@@ -7,7 +7,6 @@ import android.view.View;
 import com.application.material.bookmarkswallet.app.R;
 import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
 import com.lib.davidelm.filetreevisitorlibrary.adapter.TreeNodeAdapter;
-import com.lib.davidelm.filetreevisitorlibrary.models.TreeNode;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 import java.lang.ref.WeakReference;
@@ -23,23 +22,15 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
     /**
      *
      * @param lst
+     * @param noFaviconMode
      */
-    MultipleSelectorHelperAdapter(OnMultipleSelectorCallback lst) {
-        super(new ArrayList<>());
+    MultipleSelectorHelperAdapter(OnMultipleSelectorCallback lst, boolean noFaviconMode) {
+        super(new ArrayList<>(), noFaviconMode);
         this.lst = new WeakReference<>(lst);
         multipleSelector = new MultipleSelector();
         setOnNodeClickListener(this);
     }
 
-    /**
-     *
-     */
-    public void notifyRemovedSelectedItems() {
-        for (int i = 0; i < multipleSelector.getSelectedIdArraySize(); i++) {
-            int itemId = multipleSelector.getSelectedIdArray().keyAt(i);
-//            notifyItemRemoved(itemPos);
-        }
-    }
 
     /**
      *
@@ -56,14 +47,7 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
         return multipleSelector.getSelectedIdArray();
     }
 
-    /**
-     *
-     * @return
-     */
-    public TreeNodeInterface getSelectedItem() {
-        int itemPos = multipleSelector.getSelectedIdArray().keyAt(0);
-        return getItem(itemPos);
-    }
+
 
     @Override
     public void onBindViewHolder(TreeNodeAdapter.ViewHolder holder, int position) {
@@ -85,13 +69,6 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
         multipleSelector.setSelectedId(id, position);
     }
 
-    /**
-     *
-     * @return
-     */
-    public boolean isEmptySelectedPosArray() {
-        return multipleSelector.getSelectedIdArraySize() == 0;
-    }
 
     /**
      *
@@ -121,12 +98,6 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
         return multipleSelector.isSelectedPos(position);
     }
 
-    /**
-     *
-     */
-    public void removeSelectedItems() {
-        clearSelectedItemPosArray();
-    }
 
     /**
      *

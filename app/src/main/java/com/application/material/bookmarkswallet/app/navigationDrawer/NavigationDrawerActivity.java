@@ -163,10 +163,17 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
                 .withSelectedTextColorRes(R.color.indigo_600)
                 .withSelectedColorRes(R.color.grey_100));
         menuList.add(new PrimaryDrawerItem()
+                .withName(R.string.setting_night_mode)
+                .withSelectable(false)
+                .withIcon(R.mipmap.ic_night_mode)
+                .withIdentifier(4)
+                .withSelectedTextColorRes(R.color.indigo_600)
+                .withSelectedColorRes(R.color.grey_100));
+        menuList.add(new PrimaryDrawerItem()
                 .withName(R.string.send_feedback_label)
                 .withSelectable(false)
                 .withIcon(R.mipmap.ic_feedback)
-                .withIdentifier(4)
+                .withIdentifier(5)
                 .withSelectedTextColorRes(R.color.indigo_600)
                 .withSelectedColorRes(R.color.grey_100));
         menuList.add(new PrimaryDrawerItem()
@@ -177,7 +184,7 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
                 .withIcon(R.mipmap.ic_history)
                 .withDescription(R.string.available_soon)
                 .withDescriptionTextColorRes(R.color.grey_400)
-                .withIdentifier(2)
+                .withIdentifier(6)
                 .withSelectedTextColorRes(R.color.indigo_600)
                 .withSelectedColorRes(R.color.grey_100));
         menuList.add(new PrimaryDrawerItem()
@@ -188,17 +195,17 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
                 .withIcon(R.drawable.ic_cloud_off_black_48dp)
                 .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.grey_200))
                 .withDescriptionTextColorRes(R.color.grey_400)
-                .withIdentifier(3)
+                .withIdentifier(7)
                 .withSelectedTextColorRes(R.color.indigo_600)
                 .withSelectedColorRes(R.color.grey_100));
         menuList.add(new DividerDrawerItem());
         menuList.add(new PrimaryDrawerItem()
                 .withName(R.string.settings)
-                .withSelectable(false)
+                .withSelectable(true)
                 .withIcon(R.drawable.ic_settings_black_48dp)
                 .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
                 .withDescriptionTextColorRes(R.color.grey_400)
-                .withIdentifier(5)
+                .withIdentifier(8)
                 .withSelectedTextColorRes(R.color.indigo_600)
                 .withSelectedColorRes(R.color.grey_100));
         menuList.add(new DividerDrawerItem());
@@ -208,7 +215,7 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
                 .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
                 .withIcon(R.mipmap.ic_local_cafe)
                 .withDescriptionTextColorRes(R.color.grey_400)
-                .withIdentifier(6)
+                .withIdentifier(9)
                 .withSelectedTextColorRes(R.color.indigo_600)
                 .withSelectedColorRes(R.color.grey_100));
         return menuList;
@@ -229,14 +236,14 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
                 ActivityUtils.onChangeFragment(getSupportFragmentManager(), new ExportFragment(),
                         ExportFragment.FRAG_TAG);
                 break;
-            case 3:
+            case 4:
                 startActivity(Saguaro.getSendFeedbackIntent(getApplicationContext()));
                 break;
-            case 7:
+            case 8:
                 ActivityUtils.onChangeFragment(getSupportFragmentManager(), new SettingsFragment(),
                         SettingsFragment.FRAG_TAG);
                 break;
-            case 9:
+            case 10:
                 BrowserUtils.openUrl(KOFI_DAVE_URL, getApplicationContext());
                 break;
         }
