@@ -13,7 +13,7 @@ import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 
 import java.lang.ref.WeakReference;
-
+@Deprecated
 public class SearchResultPresenter implements ViewTreeObserver.OnGlobalLayoutListener {
     private static final long MIN_DELAY = 1000;
     private static View resultLayout;

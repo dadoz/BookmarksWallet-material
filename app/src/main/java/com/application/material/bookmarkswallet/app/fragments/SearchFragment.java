@@ -25,7 +25,9 @@ import java.util.List;
  * Created by davide on 24/06/2017.
  */
 
-class SearchFragment extends BaseFragment implements SearchManager.SearchManagerCallbackInterface, OnSearchItemClickListener {
+public class SearchFragment extends BaseFragment implements SearchManager.SearchManagerCallbackInterface,
+        SearchManager.SearchManagerPublishResultCallbackInterface,
+        OnSearchItemClickListener {
     private static final String TAG = "SearchFrag";
     private SearchManager searchManager;
     private RecyclerView searchResultRecyclerView;

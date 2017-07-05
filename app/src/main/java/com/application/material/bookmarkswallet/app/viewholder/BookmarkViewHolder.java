@@ -11,12 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.adapter.BookmarkRecyclerViewAdapter;
-import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.squareup.picasso.Picasso;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Created by davide on 25/04/2017.
@@ -56,11 +52,11 @@ public class BookmarkViewHolder extends RecyclerView.ViewHolder {
      *
      * @param selected
      */
-    public void selectItem(boolean selected) {
-        int darkColor = NightModeHelper.getInstance().isNightMode() ? darkGreyNight : darkGrey;
-        int lightColor = NightModeHelper.getInstance().isNightMode() ? lightGreyNight : lightGrey;
-        itemView.setBackgroundColor(selected ? darkColor : lightColor);
-    }
+//    public void selectItem(boolean selected) {
+//        int darkColor = NightModeHelper.getInstance().isNightMode() ? darkGreyNight : darkGrey;
+//        int lightColor = NightModeHelper.getInstance().isNightMode() ? lightGreyNight : lightGrey;
+//        itemView.setBackgroundColor(selected ? darkColor : lightColor);
+//    }
 
     /**
      *

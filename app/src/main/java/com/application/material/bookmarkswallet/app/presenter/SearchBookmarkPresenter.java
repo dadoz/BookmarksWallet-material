@@ -1,25 +1,13 @@
 package com.application.material.bookmarkswallet.app.presenter;
 
-import android.animation.Animator;
-import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 
-import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
-
-import java.lang.ref.WeakReference;
-
+@Deprecated
 public class SearchBookmarkPresenter implements TextWatcher {
     private static SearchBookmarkPresenter instance;
     private AppCompatEditText urlEditTextView;

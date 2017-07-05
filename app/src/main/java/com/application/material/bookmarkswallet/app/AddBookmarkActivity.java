@@ -1,5 +1,6 @@
 package com.application.material.bookmarkswallet.app;
 
+import android.app.UiModeManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -22,7 +23,7 @@ public class AddBookmarkActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_main_layout);
-        NightModeHelper.getInstance(this).setConfigurationMode();
+        NightModeHelper.setMode(UiModeManager.MODE_NIGHT_NO, getApplicationContext());
         initActionbar();
         changeFrag();
     }

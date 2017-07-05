@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import java.lang.ref.WeakReference;
-
 public class SharedPrefHelper {
     private static SharedPrefHelper instance;
     private static SharedPreferences sharedPref;
@@ -18,8 +16,8 @@ public class SharedPrefHelper {
         IMPORT_ACCOUNT_NOTIFIED, EXPANDED_GRIDVIEW, CLOUD_SYNC, NIGHT_MODE
     }
 
-    private SharedPrefHelper(WeakReference<Context> ctx) {
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctx.get());
+    private SharedPrefHelper(Context ctx) {
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctx);
     }
 
     /**
@@ -27,7 +25,7 @@ public class SharedPrefHelper {
      * @param ctx
      * @return
      */
-    public static SharedPrefHelper getInstance(WeakReference<Context> ctx) {
+    public static SharedPrefHelper getInstance(Context ctx) {
         return instance == null ?
                 instance = new SharedPrefHelper(ctx) : instance;
     }

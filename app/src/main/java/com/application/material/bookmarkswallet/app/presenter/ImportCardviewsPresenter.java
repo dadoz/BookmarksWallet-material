@@ -11,11 +11,14 @@ import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.flurry.android.FlurryAgent;
 
 import java.lang.ref.WeakReference;
-import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.*;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.IMPORT_ACCOUNT_NOTIFIED;
+import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.IMPORT_KEEP_NOTIFIED;
+
+@Deprecated
 public class ImportCardviewsPresenter implements View.OnClickListener {
     private final WeakReference<Context> context;
     private final View view;
@@ -65,7 +68,7 @@ public class ImportCardviewsPresenter implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.importFromKeepButtonId:
             case R.id.importFromKeepDismissButtonId:
-                SharedPrefHelper.getInstance(new WeakReference<>(context.get()))
+                SharedPrefHelper.getInstance(context.get())
                         .setValue(IMPORT_KEEP_NOTIFIED, true);
                 hideViewAnimator(importFromKeepCardviewLayout);
 //                recyclerView.scrollToPosition(0);
@@ -73,7 +76,7 @@ public class ImportCardviewsPresenter implements View.OnClickListener {
                 break;
             case R.id.importFromAccountButtonId:
             case R.id.importFromAccountDismissButtonId:
-                SharedPrefHelper.getInstance(new WeakReference<>(context.get()))
+                SharedPrefHelper.getInstance(context.get())
                         .setValue(IMPORT_ACCOUNT_NOTIFIED, true);
                 hideViewAnimator(importFromAccountCardviewLayout);
 //                recyclerView.scrollToPosition(0);
@@ -130,11 +133,11 @@ public class ImportCardviewsPresenter implements View.OnClickListener {
         importFromKeepDismissButton.setOnClickListener(this);
         importFromAccountButton.setOnClickListener(this);
         importFromAccountDismissButton.setOnClickListener(this);
-        if ((boolean) SharedPrefHelper.getInstance(new WeakReference<>(context.get()))
+        if ((boolean) SharedPrefHelper.getInstance(context.get())
                 .getValue(IMPORT_KEEP_NOTIFIED, false)) {
             importFromKeepCardviewLayout.setVisibility(View.GONE);
         }
-        if ((boolean) SharedPrefHelper.getInstance(new WeakReference<>(context.get()))
+        if ((boolean) SharedPrefHelper.getInstance(context.get())
                 .getValue(IMPORT_ACCOUNT_NOTIFIED, false)) {
             importFromAccountCardviewLayout.setVisibility(View.GONE);
         }

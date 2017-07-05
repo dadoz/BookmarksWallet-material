@@ -121,6 +121,10 @@ public class SearchManager implements Filterable,
         this.list = list;
     }
 
+    public interface SearchManagerPublishResultCallbackInterface {
+        void publishResultCb(CharSequence query, List<TreeNodeInterface> filteredList);
+    }
+
 
     /**
      * filter class handled by search
@@ -156,8 +160,8 @@ public class SearchManager implements Filterable,
                 }
             }
 
-            if (listener.get() != null)
-                listener.get().publishResultCb(query, filteredList);
+//            if (listener.get() != null)
+//                listener.get().publishResultCb(query, filteredList);
         }
 
     }
@@ -168,6 +172,5 @@ public class SearchManager implements Filterable,
     public interface SearchManagerCallbackInterface {
         void onOpenSearchView();
         void onCloseSearchView();
-        void publishResultCb(CharSequence query, List<TreeNodeInterface> filteredList);
     }
 }

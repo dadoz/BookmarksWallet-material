@@ -11,7 +11,6 @@ import android.widget.ListView;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.SettingListAdapter;
-import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.models.Setting;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
@@ -89,9 +88,9 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView.getTag() != null) {
             sharedPrefHelper.setValue(buttonView.getTag().toString(), isChecked);
-            if (SharedPrefHelper.isNightModeTag(buttonView.getTag().toString())) {
-                NightModeHelper.getInstance(getActivity()).toggle();
-            }
+//            if (SharedPrefHelper.isNightModeTag(buttonView.getTag().toString())) {
+//                NightModeHelper.getInstance(getActivity()).toggle();
+//            }
         }
     }
 

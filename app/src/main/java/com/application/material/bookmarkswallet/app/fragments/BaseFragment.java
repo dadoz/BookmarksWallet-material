@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 
-import java.lang.ref.WeakReference;
-
 /**
  * Created by davide on 12/06/2017.
  */
@@ -29,7 +27,7 @@ public class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstance) {
         View mainView = inflater.inflate(layoutId, container, false);
-        sharedPrefHelper = SharedPrefHelper.getInstance(new WeakReference<>(getContext()));
+        sharedPrefHelper = SharedPrefHelper.getInstance(getContext());
         return mainView;
     }
 
