@@ -81,6 +81,10 @@ public class BreadCrumbsView extends RecyclerView implements BreadCrumbsAdapter.
         this.lst = lst;
     }
 
+    public void setRootNode() {
+        onItemClick(null, 0);
+    }
+
     /**
      * on pop back stack cb
      */

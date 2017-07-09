@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -81,6 +83,7 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
         presenter.initSearchView(menu, ((MaterialSearchView) getView().getRootView()
                 .findViewById(R.id.searchViewId)));
         super.onCreateOptionsMenu(menu, inflater);
@@ -100,8 +103,19 @@ public class BookmarkListFragment extends Fragment
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                notifyToUser("about message");
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onRefresh() {
         //init view -> sync
+        breadCrumbsView.setRootNode();
         treeNodeView.initOnRootNode();
         mSwipeRefreshLayout.setRefreshing(false);
     }
@@ -156,7 +170,6 @@ public class BookmarkListFragment extends Fragment
 //        updateGridLayoutManager();
     }
 
-
     @Override
     public boolean handleBackPressed() {
         return treeNodeView.onBackPressed();
@@ -205,7 +218,6 @@ public class BookmarkListFragment extends Fragment
         addBookmarkMenuFab.collapse();
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -230,8 +242,11 @@ public class BookmarkListFragment extends Fragment
      * @param message
      */
     private void notifyToUser(String message) {
-        if (getView() != null)
-            Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+        if (getView() != null) {
+            Snackbar snackbar = Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT);
+            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_50));
+            snackbar.show();
+        }
     }
 
     @Override
