@@ -27,6 +27,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 import com.lib.davidelm.filetreevisitorlibrary.views.BreadCrumbsView;
+import com.lib.davidelm.filetreevisitorlibrary.views.OnFolderNavigationCallbacks;
 import com.lib.davidelm.filetreevisitorlibrary.views.TreeNodeView;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
@@ -41,7 +42,7 @@ import static com.application.material.bookmarkswallet.app.BuildConfig.KOFI_DAVE
 public class BookmarkListFragment extends Fragment
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, SearchManagerCallbackInterface,
         BaseActivity.OnBackPressedHandlerInterface, OnMultipleSelectorCallback, OnActionModeCallbacks,
-        AddFolderView.AddFolderCallbacks, BookmarkListView {
+        AddFolderView.AddFolderCallbacks, BookmarkListView, OnFolderNavigationCallbacks {
     public static final String FRAG_TAG = "LinksListFragment";
     @BindView(R.id.addBookmarkMenuFabId)
     FloatingActionsMenu addBookmarkMenuFab;
@@ -51,8 +52,6 @@ public class BookmarkListFragment extends Fragment
     FloatingActionButton offerMeACoffeeFab;
     @BindView(R.id.mainContainerViewId)
     SwipeRefreshLayout mSwipeRefreshLayout;
-//    @BindView(R.id.emptyLinkListViewId)
-//    View importDefaultBookmarksButton;
     @BindView(R.id.treeNodeViewId)
     TreeNodeView treeNodeView;
     @BindView(R.id.breadCrumbsViewId)
@@ -82,9 +81,6 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(NightModeHelper.getInstance().isNightMode() ? R.menu.menu_main_night :
-//                R.menu.menu_main, menu);
-
         presenter.initSearchView(menu, ((MaterialSearchView) getView().getRootView()
                 .findViewById(R.id.searchViewId)));
         super.onCreateOptionsMenu(menu, inflater);
@@ -137,6 +133,8 @@ public class BookmarkListFragment extends Fragment
         //add buton
         addBookmarkFab.setOnClickListener(this);
         offerMeACoffeeFab.setOnClickListener(this);
+
+        treeNodeView.addFolderNavigationCbListener(this);
 
         //add folder view
         addFolderView.setListener(new WeakReference<>(this));
@@ -234,5 +232,15 @@ public class BookmarkListFragment extends Fragment
     private void notifyToUser(String message) {
         if (getView() != null)
             Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFolderNodeClickCb(int position, TreeNodeInterface node) {
+        addFolderView.setCollapsed();
+        addBookmarkMenuFab.setVisibility(!node.isRoot() ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void onFolderNodeLongClickCb(int position, TreeNodeInterface item) {
     }
 }

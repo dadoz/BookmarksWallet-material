@@ -177,6 +177,10 @@ public class AddFolderView extends CoordinatorLayout implements View.OnClickList
         }
     };
 
+    public void hide() {
+        setVisibility(GONE);
+    }
+
     public interface AddFolderCallbacks {
         void addFolderActionCb(String v);
 

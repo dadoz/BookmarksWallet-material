@@ -44,6 +44,7 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
     private EmptyRecyclerView treeNodeFolderRecyclerView;
     private EmptyRecyclerView treeNodeFilesRecyclerView;
     private WeakReference<OnItemsChangedCallbacks> lst2;
+    private WeakReference<OnFolderNavigationCallbacks> lst3;
 
     public TreeNodeView(@NonNull Context context) {
         super(context);
@@ -75,8 +76,15 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
      * set listener on cb
      * @param lst
      */
-    public void setNavigationCallbacksListener(WeakReference<OnNavigationCallbacks> lst) {
+    public void addNavigationCbListener(WeakReference<OnNavigationCallbacks> lst) {
         this.lst = lst;
+    }
+    /**
+     * set listener on cb
+     * @param lst
+     */
+    public void addFolderNavigationCbListener(OnFolderNavigationCallbacks lst) {
+        this.lst3 = new WeakReference<OnFolderNavigationCallbacks>(lst);
     }
 
     public void initOnRootNode() {
@@ -212,8 +220,8 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
         treeNodeFolderRecyclerView.getAdapter().notifyDataSetChanged();
         treeNodeFilesRecyclerView.getAdapter().notifyDataSetChanged();
 
-        if (lst != null && lst.get() != null)
-            lst.get().onFolderNodeClickCb(position, node);
+        if (lst3 != null && lst3.get() != null)
+            lst3.get().onFolderNodeClickCb(position, node);
     }
 
     /**
@@ -243,8 +251,8 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
 
     @Override
     public void onFolderNodeLongCLick(View v, int position, TreeNodeInterface item) {
-        if (lst != null && lst.get() != null)
-            lst.get().onFolderNodeLongClickCb(position, item);
+        if (lst3 != null && lst3.get() != null)
+            lst3.get().onFolderNodeLongClickCb(position, item);
     }
 
     @Override
@@ -316,6 +324,9 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
         addNodes(currentNode.getChildren());
         treeNodeFolderRecyclerView.getAdapter().notifyDataSetChanged();
         treeNodeFilesRecyclerView.getAdapter().notifyDataSetChanged();
+
+        if (lst3 != null && lst3.get() != null)
+            lst3.get().onFolderNodeClickCb(position, currentNode);
     }
 
     /**
