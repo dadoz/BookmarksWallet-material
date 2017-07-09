@@ -3,6 +3,7 @@ package com.application.material.bookmarkswallet.app.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 
@@ -147,7 +148,7 @@ public class BookmarkListPresenter {
      */
     public void addBookmarksAction(Intent data) {
         SparseArrayParcelable searchParamsArray = ((SparseArrayParcelable) data.getExtras()
-                .get("search_params_add_bookmark"));
+                .get(Utils.SEARCH_PARAMS));
 
         treeNodeView.addFile(Utils.createContentNode(searchParamsArray),
                 Integer.valueOf(searchParamsArray.get(3).toString()));
@@ -156,10 +157,9 @@ public class BookmarkListPresenter {
     /**
      *
      */
-    public void addBookmark() {
+    public void addBookmark(Fragment frag) {
         Intent intent = new Intent(context.get(), AddBookmarkActivity.class);
-        if (activity.get() != null)
-            activity.get().startActivityForResult(intent, Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE);
+        frag.startActivityForResult(intent, Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE);
     }
 
     /**

@@ -27,6 +27,7 @@ import butterknife.Unbinder;
 import icepick.Icepick;
 
 import static com.application.material.bookmarkswallet.app.utlis.Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE;
+import static com.application.material.bookmarkswallet.app.utlis.Utils.SEARCH_PARAMS;
 
 public class AddBookmarkResultFragment extends Fragment implements
         View.OnClickListener,
@@ -151,7 +152,7 @@ public class AddBookmarkResultFragment extends Fragment implements
     private void addBookmark() {
         if (getActivity() != null) {
             Intent intent = new Intent();
-            intent.putExtra("search_params_add_bookmark", searchParamsArray);
+            intent.putExtra(SEARCH_PARAMS, searchParamsArray);
             getActivity().setResult(ADD_BOOKMARK_ACTIVITY_REQ_CODE, intent);
             getActivity().finish();
         }
@@ -162,25 +163,19 @@ public class AddBookmarkResultFragment extends Fragment implements
      */
     @Override
     public void onRetrieveIconSuccess(final String url) {
-        if (getActivity() == null) {
-            return;
-        }
-
-        getActivity().runOnUiThread(() -> {
-            refreshLayout.setRefreshing(false);
-            addBookmarkResultView.setIconByUrl(url);
-            searchParamsArray.put(2, url);
-        });
+        if (getActivity() != null)
+            getActivity().runOnUiThread(() -> {
+                refreshLayout.setRefreshing(false);
+                addBookmarkResultView.setIconByUrl(url);
+                searchParamsArray.put(2, url);
+            });
     }
 
     @Override
     public void onRetrieveTitleSuccess(final String title) {
-        if (getActivity() == null) {
-            return;
-        }
-
-        searchParamsArray.put(1, title);
-        getActivity().runOnUiThread(() -> addBookmarkResultView.setTitle(title));
+        searchParamsArray.put(1, title.equals("") ? getString(R.string.no_title) : title);
+        if (getActivity() != null)
+            getActivity().runOnUiThread(() -> addBookmarkResultView.setTitle(title));
     }
 
     @Override

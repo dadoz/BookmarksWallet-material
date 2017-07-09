@@ -8,7 +8,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.fragments.AddBookmarkSearchFragment;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.lib.davidelm.filetreevisitorlibrary.views.FolderCardviewView;
@@ -61,7 +60,8 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCar
         SparseArrayParcelable<String> searchParamsArray = new SparseArrayParcelable<>();
         searchParamsArray.put(0, Utils.buildUrl(searchCardviewBox.getUrl(),
                 searchCardviewBox.isHttpsChecked()));
-        searchParamsArray.put(1, searchCardviewBox.getTitle());
+        searchParamsArray.put(1, searchCardviewBox.getTitle().equals("") ?
+                getContext().getString(R.string.no_title) : searchCardviewBox.getTitle());
         searchParamsArray.put(2, null);//pos 2 empty to set icon url
         searchParamsArray.put(3, Integer.toString(addBookmarkFolderCardview.getFolderListView()
                 .getSelectedNodeId()));

@@ -320,7 +320,7 @@ public class Utils {
 
             @Override
             public String getFileUri() {
-                return searchParamsArray.get(2).toString();
+                return searchParamsArray.get(2) != null ? searchParamsArray.get(2).toString() : null;
             }
 
             @Override
@@ -339,4 +339,6 @@ public class Utils {
             }
         };
     }
+
+    public static final String SEARCH_PARAMS = "search_params_add_bookmark";
 }

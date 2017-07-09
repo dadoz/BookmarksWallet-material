@@ -218,7 +218,7 @@ public class BookmarkListFragment extends Fragment
                 break;
             case R.id.addBookmarkFabId:
                 addBookmarkMenuFab.collapseImmediately();
-                presenter.addBookmark();
+                presenter.addBookmark(this);
                 break;
             case R.id.offerMeACoffeeFabId:
                 addBookmarkMenuFab.collapse();
