@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.navigationDrawer;
+package com.application.material.bookmarkswallet.app;
 
 /**
  * Created by davide on 25/04/2017.
@@ -6,20 +6,19 @@ package com.application.material.bookmarkswallet.app.navigationDrawer;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.application.material.bookmarkswallet.app.BaseActivity;
-import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.fragments.ExportFragment;
 import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
+import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
+import com.application.material.bookmarkswallet.app.utlis.ActivityUtils;
 import com.application.material.bookmarkswallet.app.utlis.BrowserUtils;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
@@ -36,18 +35,20 @@ import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.application.material.bookmarkswallet.app.BuildConfig.KOFI_DAVE_URL;
+import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.NIGHT_MODE;
 
 
 public abstract class NavigationDrawerActivity extends BaseActivity {
     private static final String TAG = "BaseActivity";
     private final int resourceLayoutId;
-    @BindView(R.id.drawerLayoutId)
-    DrawerLayout mDrawerLayout;
+//    @BindView(R.id.drawerLayoutId)
+//    DrawerLayout mDrawerLayout;
     @BindView(R.id.toolbarId)
     Toolbar toolbar;
-    @BindView(R.id.drawerNavigationViewId)
-    NavigationView drawerNavigationView;
+//    @BindView(R.id.drawerNavigationViewId)
+//    NavigationView drawerNavigationView;
     private Unbinder unbinder;
+    private Drawer drawerBuilder;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -101,7 +102,8 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
      * init view
      */
     private void initNavigationView() {
-        new DrawerBuilder().withActivity(this)
+        drawerBuilder = new DrawerBuilder()
+                .withActivity(this)
                 .withCloseOnClick(true)
                 .withAccountHeader(getHeaderView())
                 .withDrawerItems(getMenuList())
@@ -112,6 +114,9 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
                 .withToolbar(toolbar)
                 .withOnDrawerItemClickListener((view, position, drawerItem) -> onItemMenuSelected(position))
                 .build();
+
+        //set night day item
+        setNightDayItem();
     }
 
 
@@ -160,13 +165,6 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
                 .withIdentifier(1)
                 .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
                 .withIcon(R.drawable.ic_archive_black_48dp)
-                .withSelectedTextColorRes(R.color.indigo_600)
-                .withSelectedColorRes(R.color.grey_100));
-        menuList.add(new PrimaryDrawerItem()
-                .withName(R.string.setting_night_mode)
-                .withSelectable(false)
-                .withIcon(R.mipmap.ic_night_mode)
-                .withIdentifier(4)
                 .withSelectedTextColorRes(R.color.indigo_600)
                 .withSelectedColorRes(R.color.grey_100));
         menuList.add(new PrimaryDrawerItem()
@@ -221,7 +219,6 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
         return menuList;
     }
 
-
     /**
      * base selected item menu
      * @param position
@@ -235,6 +232,10 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
             case 2:
                 ActivityUtils.onChangeFragment(getSupportFragmentManager(), new ExportFragment(),
                         ExportFragment.FRAG_TAG);
+                break;
+            case 3:
+                SharedPrefHelper.getInstance(getApplicationContext()).setValue(NIGHT_MODE, !isNightMode());
+                drawerBuilder.resetDrawerContent();
                 break;
             case 4:
                 startActivity(Saguaro.getSendFeedbackIntent(getApplicationContext()));
@@ -250,4 +251,40 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
         return false;
     }
 
+    public void setNightDayItem() {
+        drawerBuilder.addItemAtPosition(isNightMode() ? getNightItem() : getDayItem(), 4);
+    }
+
+    boolean isNightMode() {
+        return SharedPrefHelper.getInstance(getApplicationContext()).getBoolValue(NIGHT_MODE, false);
+    }
+
+    /**
+     *
+     * @return
+     */
+    PrimaryDrawerItem getNightItem() {
+        return new PrimaryDrawerItem()
+                .withName(R.string.setting_night_mode)
+                .withSelectable(false)
+                .withIcon(R.mipmap.ic_night_mode)
+                .withIdentifier(4)
+                .withSelectedTextColorRes(R.color.indigo_600)
+                .withSelectedColorRes(R.color.grey_100);
+    }
+
+    /**
+     *
+     * @return
+     */
+    PrimaryDrawerItem getDayItem() {
+        return new PrimaryDrawerItem()
+                .withName(R.string.setting_actionbar_title)
+                .withSelectable(false)
+                .withIcon(R.mipmap.ic_file)
+                .withIdentifier(4)
+                .withSelectedTextColorRes(R.color.indigo_600)
+                .withSelectedColorRes(R.color.grey_100);
+
+    }
 }

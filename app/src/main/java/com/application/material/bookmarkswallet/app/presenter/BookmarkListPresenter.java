@@ -18,7 +18,7 @@ import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.SearchManager.SearchManagerCallbackInterface;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
-import com.application.material.bookmarkswallet.app.navigationDrawer.ActivityUtils;
+import com.application.material.bookmarkswallet.app.utlis.ActivityUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.lib.davidelm.filetreevisitorlibrary.views.BreadCrumbsView;
 import com.lib.davidelm.filetreevisitorlibrary.views.TreeNodeView;

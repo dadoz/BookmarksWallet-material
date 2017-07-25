@@ -13,7 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
-import com.application.material.bookmarkswallet.app.navigationDrawer.ActivityUtils;
+import com.application.material.bookmarkswallet.app.utlis.ActivityUtils;
 import com.application.material.bookmarkswallet.app.utlis.FlurryUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 

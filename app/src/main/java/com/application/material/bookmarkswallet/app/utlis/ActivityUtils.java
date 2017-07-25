@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.navigationDrawer;
+package com.application.material.bookmarkswallet.app.utlis;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

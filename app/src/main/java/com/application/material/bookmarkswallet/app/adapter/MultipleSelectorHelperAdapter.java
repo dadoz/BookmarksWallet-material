@@ -1,5 +1,4 @@
 package com.application.material.bookmarkswallet.app.adapter;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.util.SparseIntArray;
 import android.view.View;
@@ -54,7 +53,7 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
         super.onBindViewHolder(holder, position);
 
         int selectedColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.indigo_300);
-        holder.itemView.setBackgroundColor(isSelectedPos(position) ? selectedColor : Color.WHITE);
+//        holder.itemView.setBackgroundColor(isSelectedPos(position) ? selectedColor : Color.WHITE);
     }
 
     /**
@@ -68,7 +67,6 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
     private void setSelectedItemPos(int id, int position) {
         multipleSelector.setSelectedId(id, position);
     }
-
 
     /**
      *

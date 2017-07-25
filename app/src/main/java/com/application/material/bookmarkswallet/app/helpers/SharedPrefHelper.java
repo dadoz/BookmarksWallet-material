@@ -12,6 +12,12 @@ public class SharedPrefHelper {
         return SharedPrefKeysEnum.valueOf(s).equals(SharedPrefKeysEnum.NIGHT_MODE);
     }
 
+    public boolean getBoolValue(SharedPrefKeysEnum key, boolean defValue) {
+        if (getValue(key, defValue) instanceof Boolean)
+            return getBoolValue(key, defValue);
+        return false;
+    }
+
     public enum SharedPrefKeysEnum {TUTORIAL_DONE, SYNC_STATUS, NO_FAVICON_MODE, SEARCH_URL_MODE, IMPORT_KEEP_NOTIFIED,
         IMPORT_ACCOUNT_NOTIFIED, EXPANDED_GRIDVIEW, CLOUD_SYNC, NIGHT_MODE
     }
