@@ -14,7 +14,7 @@ public class SharedPrefHelper {
 
     public boolean getBoolValue(SharedPrefKeysEnum key, boolean defValue) {
         if (getValue(key, defValue) instanceof Boolean)
-            return getBoolValue(key, defValue);
+            return (boolean) getValue(key, defValue);
         return false;
     }
 

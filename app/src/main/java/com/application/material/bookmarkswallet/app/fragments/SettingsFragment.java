@@ -1,5 +1,6 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
+import android.app.UiModeManager;
 import android.content.ActivityNotFoundException;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +12,7 @@ import android.widget.ListView;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.adapter.SettingListAdapter;
-import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
+import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.models.Setting;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
@@ -21,6 +22,10 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.NIGHT_MODE;
+import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE;
+import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE;
 
 /**
  * Created by davide on 12/06/2017.
@@ -33,6 +38,7 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
     @BindView(R.id.extraFeatureSettingListViewId)
     public ListView extraFeatureSettingListView;
     private Unbinder unbinder;
+    private boolean isNightMode;
 
     {
         layoutId = R.layout.settings_layout;
@@ -42,6 +48,8 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
+        isNightMode = new NightModeHelper(getContext()).isNightMode();
+
         onInitView();
     }
 
@@ -88,10 +96,17 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView.getTag() != null) {
             sharedPrefHelper.setValue(buttonView.getTag().toString(), isChecked);
-//            if (SharedPrefHelper.isNightModeTag(buttonView.getTag().toString())) {
-//                NightModeHelper.getInstance(getActivity()).toggle();
-//            }
         }
+        handleCustomActionInterceptor(buttonView);
+    }
+
+    /**
+     *
+     * @param buttonView
+     */
+    private void handleCustomActionInterceptor(CompoundButton buttonView) {
+        if (buttonView.getTag() != null && buttonView.getTag().equals(NIGHT_MODE.name()))
+            new NightModeHelper(getActivity()).setMode(isNightMode ? UiModeManager.MODE_NIGHT_NO : UiModeManager.MODE_NIGHT_YES);
     }
 
 
@@ -105,13 +120,15 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
 
         settingList.add(new Setting(getResources().getString(R.string.setting_url_search_label),
                 getResources().getString(R.string.setting_url_search_description),
-                SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE, View.VISIBLE,
-                (Boolean) sharedPrefHelper.getValue(SharedPrefHelper.SharedPrefKeysEnum.SEARCH_URL_MODE, false)));
+                SEARCH_URL_MODE, View.VISIBLE, sharedPrefHelper.getBoolValue(SEARCH_URL_MODE, false)));
 
         settingList.add(new Setting(getResources().getString(R.string.setting_no_favicon),
                 getResources().getString(R.string.setting_no_favicon_description),
-                SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE, View.VISIBLE,
-                (Boolean) sharedPrefHelper.getValue(SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE, false)));
+                NO_FAVICON_MODE, View.VISIBLE, sharedPrefHelper.getBoolValue(NO_FAVICON_MODE, false)));
+
+        settingList.add(new Setting(getResources().getString(isNightMode ? R.string.setting_night_mode : R.string.setting_day_mode),
+                getResources().getString(R.string.setting_night_mode_description),
+                NIGHT_MODE, View.VISIBLE, sharedPrefHelper.getBoolValue(NIGHT_MODE, false)));
 
         return settingList;
     }
@@ -127,6 +144,10 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<Setting> getGeneralSettingList() {
         ArrayList<Setting> settingList = new ArrayList<>();
         settingList.add(new Setting(getResources().getString(R.string.setting_rate_label), null,
@@ -136,6 +157,5 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
                 null, View.GONE, false));
 
         return settingList;
-
     }
 }

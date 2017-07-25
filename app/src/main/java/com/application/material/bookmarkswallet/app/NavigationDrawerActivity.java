@@ -13,7 +13,6 @@ import android.view.View;
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.fragments.ExportFragment;
 import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
-import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.application.material.bookmarkswallet.app.utlis.ActivityUtils;
 import com.application.material.bookmarkswallet.app.utlis.BrowserUtils;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -35,20 +34,15 @@ import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.application.material.bookmarkswallet.app.BuildConfig.KOFI_DAVE_URL;
-import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.NIGHT_MODE;
 
 
 public abstract class NavigationDrawerActivity extends BaseActivity {
     private static final String TAG = "BaseActivity";
     private final int resourceLayoutId;
-//    @BindView(R.id.drawerLayoutId)
-//    DrawerLayout mDrawerLayout;
     @BindView(R.id.toolbarId)
     Toolbar toolbar;
-//    @BindView(R.id.drawerNavigationViewId)
-//    NavigationView drawerNavigationView;
     private Unbinder unbinder;
-    private Drawer drawerBuilder;
+    private Drawer drawer;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -102,7 +96,7 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
      * init view
      */
     private void initNavigationView() {
-        drawerBuilder = new DrawerBuilder()
+        drawer = new DrawerBuilder()
                 .withActivity(this)
                 .withCloseOnClick(true)
                 .withAccountHeader(getHeaderView())
@@ -114,9 +108,6 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
                 .withToolbar(toolbar)
                 .withOnDrawerItemClickListener((view, position, drawerItem) -> onItemMenuSelected(position))
                 .build();
-
-        //set night day item
-        setNightDayItem();
     }
 
 
@@ -234,57 +225,18 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
                         ExportFragment.FRAG_TAG);
                 break;
             case 3:
-                SharedPrefHelper.getInstance(getApplicationContext()).setValue(NIGHT_MODE, !isNightMode());
-                drawerBuilder.resetDrawerContent();
-                break;
-            case 4:
                 startActivity(Saguaro.getSendFeedbackIntent(getApplicationContext()));
                 break;
-            case 8:
+            case 7:
                 ActivityUtils.onChangeFragment(getSupportFragmentManager(), new SettingsFragment(),
                         SettingsFragment.FRAG_TAG);
                 break;
-            case 10:
+            case 9:
                 BrowserUtils.openUrl(KOFI_DAVE_URL, getApplicationContext());
                 break;
         }
         return false;
     }
 
-    public void setNightDayItem() {
-        drawerBuilder.addItemAtPosition(isNightMode() ? getNightItem() : getDayItem(), 4);
-    }
 
-    boolean isNightMode() {
-        return SharedPrefHelper.getInstance(getApplicationContext()).getBoolValue(NIGHT_MODE, false);
-    }
-
-    /**
-     *
-     * @return
-     */
-    PrimaryDrawerItem getNightItem() {
-        return new PrimaryDrawerItem()
-                .withName(R.string.setting_night_mode)
-                .withSelectable(false)
-                .withIcon(R.mipmap.ic_night_mode)
-                .withIdentifier(4)
-                .withSelectedTextColorRes(R.color.indigo_600)
-                .withSelectedColorRes(R.color.grey_100);
-    }
-
-    /**
-     *
-     * @return
-     */
-    PrimaryDrawerItem getDayItem() {
-        return new PrimaryDrawerItem()
-                .withName(R.string.setting_actionbar_title)
-                .withSelectable(false)
-                .withIcon(R.mipmap.ic_file)
-                .withIdentifier(4)
-                .withSelectedTextColorRes(R.color.indigo_600)
-                .withSelectedColorRes(R.color.grey_100);
-
-    }
 }

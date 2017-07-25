@@ -38,7 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         FlurryUtils.flurryStartSession(getApplicationContext());
 
         //nightmode
-        NightModeHelper.setMode(UiModeManager.MODE_NIGHT_NO, getApplicationContext());
+        new NightModeHelper(getApplicationContext()).setMode(UiModeManager.MODE_NIGHT_YES);
 
         //then handleSharedIntent
         if (handleSharedIntent() != null) {

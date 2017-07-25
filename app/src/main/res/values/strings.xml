@@ -71,6 +71,7 @@
     <string name="add_new_bookmark_title">Add new</string>
     <string name="generic_error_message">Ops! Something went wrong!</string>
     <string name="setting_night_mode_description">Enabling night mode</string>
+    <string name="setting_day_mode">Day Mode</string>
     <string name="setting_night_mode">Night Mode</string>
     <string name="no_title">No title</string>
     <string name="action_add_folder">add folder</string>

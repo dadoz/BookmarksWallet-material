@@ -39,6 +39,7 @@ public class BreadCrumbsView extends RecyclerView implements BreadCrumbsAdapter.
      * init view setting up root breadcrumb
      */
     private void initView() {
+        //get color from attribute
         setBackgroundColor(ContextCompat.getColor(getContext(), R.color.yellow_300));
         ArrayList<String> list = new ArrayList<>();
         list.add("root");

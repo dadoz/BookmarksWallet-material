@@ -62,6 +62,9 @@
     <style name="settingsBackgroundStyle">
         <item name="android:background">@color/grey_50</item>
     </style>
+    <style name="CustomMaterialDrawerTheme" parent="MaterialDrawerTheme">
+        <item name="material_drawer_background">@color/grey_800</item>
+    </style>
 
 
 </resources>
