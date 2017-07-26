@@ -10,6 +10,6 @@
             <!--<enum name="left" value="0"/>-->
             <!--<enum name="right" value="1"/>-->
         <!--</attr>-->
-        <attr name="backgroundColor" format="reference"/>
+        <attr name="backgroundColor" format="color"/>
     </declare-styleable>
 </resources>

@@ -1,52 +1,72 @@
 package com.lib.davidelm.filetreevisitorlibrary.views;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
-
-
 import com.lib.davidelm.filetreevisitorlibrary.R;
+
 import com.lib.davidelm.filetreevisitorlibrary.adapter.BreadCrumbsAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class BreadCrumbsView extends RecyclerView implements BreadCrumbsAdapter.OnSelectedItemClickListener {
-
-
     private WeakReference<OnPopBackStackInterface> lst;
-
+    private int DEFAULT_BACKGROUND_COLOR = R.color.yellow_300;
     public BreadCrumbsView(Context context) {
         super(context);
-        initView();
+        initView(null);
     }
 
     public BreadCrumbsView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        initView();
+        initView(attrs);
     }
 
     public BreadCrumbsView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        initView();
+        initView(attrs);
     }
 
     /**
      * init view setting up root breadcrumb
+     * @param attrs
      */
-    private void initView() {
+    private void initView(AttributeSet attrs) {
         //get color from attribute
-        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.yellow_300));
+        setBackgroundColorByAttrs(attrs);
+
         ArrayList<String> list = new ArrayList<>();
         list.add("root");
 
         //set layout manager and adapter
         setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         setAdapter(new BreadCrumbsAdapter(list, new WeakReference<>(this)));
+    }
+
+    /**
+     *
+     * @param attrs
+     */
+    private void setBackgroundColorByAttrs(AttributeSet attrs) {
+        if (attrs == null) {
+            setBackgroundColor(ContextCompat.getColor(getContext(), DEFAULT_BACKGROUND_COLOR));
+            return;
+        }
+
+        TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.BreadCrumbsView, 0, 0);
+        try {
+            int color = typedArray.getResourceId(R.styleable.BreadCrumbsView_backgroundColor, DEFAULT_BACKGROUND_COLOR);
+            setBackgroundColor(ContextCompat.getColor(getContext(), color));
+        } catch (Exception e) {
+            setBackgroundColor(ContextCompat.getColor(getContext(), DEFAULT_BACKGROUND_COLOR));
+            e.printStackTrace();
+        }
     }
 
     /**
