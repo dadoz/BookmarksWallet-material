@@ -17,7 +17,6 @@ import com.application.material.bookmarkswallet.app.utlis.ActivityUtils;
 import com.application.material.bookmarkswallet.app.utlis.BrowserUtils;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
@@ -42,7 +41,6 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
     @BindView(R.id.toolbarId)
     Toolbar toolbar;
     private Unbinder unbinder;
-    private Drawer drawer;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -96,7 +94,7 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
      * init view
      */
     private void initNavigationView() {
-        drawer = new DrawerBuilder()
+        new DrawerBuilder()
                 .withActivity(this)
                 .withCloseOnClick(true)
                 .withAccountHeader(getHeaderView())

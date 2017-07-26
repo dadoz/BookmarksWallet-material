@@ -51,7 +51,7 @@
             android:id="@+id/pasteClipboardFabId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/grey_100"
+            style="@style/SearchMaterialButtonStyle"
             android:text="@string/paste_clipboard"/>
 
         <android.support.design.widget.TextInputLayout

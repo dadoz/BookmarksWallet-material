@@ -21,7 +21,7 @@
         android:layout_above="@id/addBookmarkSearchButtonId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/yellow_400">
+        style="@style/RevealViewStyle">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
