@@ -1,6 +1,5 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
-import android.app.UiModeManager;
 import android.content.ActivityNotFoundException;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,7 +37,7 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
     @BindView(R.id.extraFeatureSettingListViewId)
     public ListView extraFeatureSettingListView;
     private Unbinder unbinder;
-    private boolean isNightMode;
+    private NightModeHelper nightModeHelper;
 
     {
         layoutId = R.layout.settings_layout;
@@ -48,7 +47,7 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
-        isNightMode = new NightModeHelper(getContext()).isNightMode();
+        nightModeHelper = new NightModeHelper(getContext());
 
         onInitView();
     }
@@ -106,9 +105,8 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
      */
     private void handleCustomActionInterceptor(CompoundButton buttonView) {
         if (buttonView.getTag() != null && buttonView.getTag().equals(NIGHT_MODE.name()))
-            new NightModeHelper(getActivity()).setMode(isNightMode ? UiModeManager.MODE_NIGHT_NO : UiModeManager.MODE_NIGHT_YES);
+            nightModeHelper.setMode();
     }
-
 
     /**
      * mv PRESENTER
@@ -126,7 +124,8 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
                 getResources().getString(R.string.setting_no_favicon_description),
                 NO_FAVICON_MODE, View.VISIBLE, sharedPrefHelper.getBoolValue(NO_FAVICON_MODE, false)));
 
-        settingList.add(new Setting(getResources().getString(isNightMode ? R.string.setting_night_mode : R.string.setting_day_mode),
+        settingList.add(new Setting(getResources()
+                .getString(nightModeHelper.isNightModeSharedPref() ? R.string.setting_night_mode : R.string.setting_day_mode),
                 getResources().getString(R.string.setting_night_mode_description),
                 NIGHT_MODE, View.VISIBLE, sharedPrefHelper.getBoolValue(NIGHT_MODE, false)));
 

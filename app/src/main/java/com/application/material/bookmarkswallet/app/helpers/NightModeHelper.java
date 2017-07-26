@@ -5,6 +5,8 @@ import android.content.Context;
 
 import java.lang.ref.WeakReference;
 
+import static android.app.UiModeManager.MODE_NIGHT_NO;
+import static android.app.UiModeManager.MODE_NIGHT_YES;
 import static android.content.Context.UI_MODE_SERVICE;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.NIGHT_MODE;
 
@@ -19,6 +21,16 @@ public class NightModeHelper {
         this.context = new WeakReference<>(context);
     }
 
+    /**
+     *
+     */
+    public void setMode() {
+        setMode(isNightModeSharedPref() ? MODE_NIGHT_YES : MODE_NIGHT_NO);
+    }
+    /**
+     *
+     * @param mode
+     */
     public void setMode(int mode) {
         if (context.get() != null) {
             UiModeManager uiModeManager = (UiModeManager) context.get().getSystemService(UI_MODE_SERVICE);
@@ -27,15 +39,20 @@ public class NightModeHelper {
         }
     }
 
-    public boolean isNightMode() {
+    /**
+     *
+     * @return
+     */
+    public boolean isNightModeSharedPref() {
         return context.get() != null &&
                 SharedPrefHelper.getInstance(context.get()).getBoolValue(NIGHT_MODE, false);
     }
 
-    public void setNighMode() {
+    /**
+     * setNight
+     */
+    public void setNightModeSharedPref() {
         if (context.get() != null)
-            SharedPrefHelper.getInstance(context.get()).setValue(NIGHT_MODE, !isNightMode());
+            SharedPrefHelper.getInstance(context.get()).setValue(NIGHT_MODE, !isNightModeSharedPref());
     }
-
-
 }

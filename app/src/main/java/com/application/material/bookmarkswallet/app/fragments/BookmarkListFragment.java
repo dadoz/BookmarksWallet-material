@@ -44,7 +44,7 @@ import static com.application.material.bookmarkswallet.app.BuildConfig.KOFI_DAVE
 public class BookmarkListFragment extends Fragment
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, SearchManagerCallbackInterface,
         BaseActivity.OnBackPressedHandlerInterface, OnMultipleSelectorCallback, OnActionModeCallbacks,
-        AddFolderView.AddFolderCallbacks, BookmarkListView, OnFolderNavigationCallbacks {
+        AddFolderView.AddFolderCallbacks, OnFolderNavigationCallbacks, BookmarkListView {
     public static final String FRAG_TAG = "LinksListFragment";
     @BindView(R.id.addBookmarkMenuFabId)
     FloatingActionsMenu addBookmarkMenuFab;

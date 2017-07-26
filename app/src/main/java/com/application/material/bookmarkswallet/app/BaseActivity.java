@@ -4,7 +4,6 @@ package com.application.material.bookmarkswallet.app;
  * Created by davide on 25/04/2017.
  */
 
-import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,7 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         FlurryUtils.flurryStartSession(getApplicationContext());
 
         //nightmode
-        new NightModeHelper(getApplicationContext()).setMode(UiModeManager.MODE_NIGHT_YES);
+        new NightModeHelper(getApplicationContext()).setMode();
 
         //then handleSharedIntent
         if (handleSharedIntent() != null) {
