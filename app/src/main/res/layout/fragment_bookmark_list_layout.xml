@@ -14,9 +14,9 @@
         <!-- breadcrumbs -->
         <com.lib.davidelm.filetreevisitorlibrary.views.BreadCrumbsView
             android:id="@+id/breadCrumbsViewId"
+            style="@style/BreadCrumbsViewStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:backgroundColor="@color/indigo_600"/>
+            android:layout_height="wrap_content"/>
 
         <!-- swipe view-->
         <android.support.v4.widget.SwipeRefreshLayout

@@ -66,5 +66,8 @@
         <item name="material_drawer_background">@color/grey_800</item>
     </style>
 
+    <style name="BreadCrumbsViewStyle">
+        <item name="backgroundColor">@color/yellow_300</item>
+    </style>
 
 </resources>

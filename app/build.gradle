@@ -28,7 +28,6 @@ android {
         versionCode 11
         versionName "3.6.${versionBuildDate}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
     }
 
     signingConfigs {
@@ -120,7 +119,6 @@ dependencies {
     compile('com.mikepenz:materialdrawer:5.8.1@aar') {
         transitive = true
     }
-    compile 'com.android.support:multidex:1.0.1'
 
     testCompile 'junit:junit:4.12'
     compile project(path: ':filetreevisitorlibrary')

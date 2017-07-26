@@ -95,4 +95,8 @@
     <style name="settingsBackgroundStyle">
         <item name="android:background">@color/grey_50</item>
     </style>
+    <style name="BreadCrumbsViewStyle">
+        <item name="backgroundColor">@color/yellow_300</item>
+    </style>
+
 </resources>
