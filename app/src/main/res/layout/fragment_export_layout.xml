@@ -42,11 +42,10 @@
         <Button
             android:layout_alignParentBottom="true"
             android:id="@+id/exportCardviewButtonId"
-            android:backgroundTint="@color/amber_600"
+            style="@style/CustomMaterialButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_18"
-            android:textColor="@color/grey_50"
             android:text="@string/export_button_label"/>
 
     </RelativeLayout>

@@ -71,7 +71,7 @@
     </style>
 
     <!-- BUTTON STYLE-->
-    <style name="customMaterialButtonStyle" parent="@style/Widget.AppCompat.Button.Colored">
+    <style name="CustomMaterialButtonStyle" parent="@style/Widget.AppCompat.Button.Colored">
         <item name="backgroundTint">@color/amber_600</item>
         <item name="android:textColor">@color/grey_50</item>
     </style>
@@ -97,6 +97,14 @@
     </style>
     <style name="BreadCrumbsViewStyle">
         <item name="backgroundColor">@color/yellow_300</item>
+    </style>
+
+    <style name="AddFolderViewStyle">
+        <item name="android:background">@color/grey_50</item>
+    </style>
+
+    <style name="BookmarkCheckboxesStyle">
+        <item name="android:background">@color/yellow_300</item>
     </style>
 
 </resources>

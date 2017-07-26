@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:padding="@dimen/padding_16"
     android:layout_height="wrap_content"
-    android:background="@color/yellow_300">
+    style="@style/BookmarkCheckboxesStyle">
 
 
     <android.support.v7.widget.AppCompatCheckBox

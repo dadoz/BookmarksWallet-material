@@ -37,7 +37,7 @@ public class ExportFragment extends BaseFragment implements View.OnClickListener
     private ExportStrategy exportStrategy;
 
     {
-        layoutId = R.layout.export_layout;
+        layoutId = R.layout.fragment_export_layout;
     }
 
     @Override

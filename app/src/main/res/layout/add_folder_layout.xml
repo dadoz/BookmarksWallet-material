@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:clipToPadding="true"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-    android:background="@color/grey_50">
+    style="@style/AddFolderViewStyle">
     <RelativeLayout
         android:id="@+id/bottomSheetContainerLayoutId"
         android:paddingTop="@dimen/padding_16"
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/action_add_folder"
-            android:backgroundTint="@color/amber_600"
+            style="@style/CustomMaterialButtonStyle"
             android:layout_alignParentRight="true"
             android:textColor="@color/grey_50"/>
     </RelativeLayout>

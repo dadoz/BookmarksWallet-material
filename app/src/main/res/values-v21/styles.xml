@@ -69,5 +69,11 @@
     <style name="BreadCrumbsViewStyle">
         <item name="backgroundColor">@color/yellow_300</item>
     </style>
+    <style name="AddFolderViewStyle">
+        <item name="android:background">@color/grey_50</item>
+    </style>
+    <style name="BookmarkCheckboxesStyle">
+        <item name="android:background">@color/yellow_300</item>
+    </style>
 
 </resources>
