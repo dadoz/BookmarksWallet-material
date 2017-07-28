@@ -5,7 +5,7 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.application.material.bookmarkswallet.app.R;
 
@@ -13,7 +13,7 @@ import com.application.material.bookmarkswallet.app.R;
  * Created by davide on 18/06/2017.
  */
 
-public class ExportInfoView extends FrameLayout {
+public class ExportInfoView extends LinearLayout {
     public ExportInfoView(@NonNull Context context) {
         super(context);
         initView();
