@@ -3,6 +3,8 @@ package com.application.material.bookmarkswallet.app.helpers;
 import android.app.UiModeManager;
 import android.content.Context;
 
+import com.application.material.bookmarkswallet.app.R;
+
 import java.lang.ref.WeakReference;
 
 import static android.app.UiModeManager.MODE_NIGHT_NO;
@@ -21,6 +23,11 @@ public class NightModeHelper {
         this.context = new WeakReference<>(context);
     }
 
+    boolean isNightMode() {
+        return context.get() != null &&
+                ((UiModeManager) context.get().getSystemService(UI_MODE_SERVICE))
+                        .getNightMode() == UiModeManager.MODE_NIGHT_YES;
+    }
     /**
      *
      */
@@ -35,7 +42,6 @@ public class NightModeHelper {
         if (context.get() != null) {
             UiModeManager uiModeManager = (UiModeManager) context.get().getSystemService(UI_MODE_SERVICE);
             uiModeManager.setNightMode(mode);//UiModeManager.MODE_NIGHT_YES
-
         }
     }
 
@@ -54,5 +60,13 @@ public class NightModeHelper {
     public void setNightModeSharedPref() {
         if (context.get() != null)
             SharedPrefHelper.getInstance(context.get()).setValue(NIGHT_MODE, !isNightModeSharedPref());
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getDefaultColorRes() {
+        return isNightMode() ? R.color.grey_50 : R.color.grey_800;
     }
 }

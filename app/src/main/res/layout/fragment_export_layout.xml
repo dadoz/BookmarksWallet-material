@@ -32,7 +32,7 @@
                 android:id="@+id/downloadBookamrksimageViewId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_bookmark_outline_black_48dp"/>
+                android:src="@drawable/production3_1x"/>
             <com.application.material.bookmarkswallet.app.views.ExportInfoView
                 android:id="@+id/exportBookmarksInfoLayoutId"
                 android:layout_height="wrap_content"

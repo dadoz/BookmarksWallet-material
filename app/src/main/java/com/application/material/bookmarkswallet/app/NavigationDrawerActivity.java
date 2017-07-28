@@ -6,13 +6,13 @@ package com.application.material.bookmarkswallet.app;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.fragments.ExportFragment;
 import com.application.material.bookmarkswallet.app.fragments.SettingsFragment;
+import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.utlis.ActivityUtils;
 import com.application.material.bookmarkswallet.app.utlis.BrowserUtils;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -41,6 +41,7 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
     @BindView(R.id.toolbarId)
     Toolbar toolbar;
     private Unbinder unbinder;
+    private NightModeHelper nightModeHelper;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -60,6 +61,7 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(resourceLayoutId);
         unbinder = ButterKnife.bind(this);
+        nightModeHelper = new NightModeHelper(this);
 
         //first handle frag
         ActivityUtils.onChangeFragment(getSupportFragmentManager(),
@@ -118,10 +120,7 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
         AccountHeader accountHeader = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.header)
-                .addProfiles(new ProfileDrawerItem()
-                        .withTextColorRes(R.color.md_white_1000)
-                        .withDisabledTextColorRes(R.color.md_white_1000)
-                        .withNameShown(false))
+                .addProfiles(new ProfileDrawerItem().withNameShown(false))
                 .withSelectionListEnabledForSingleProfile(false) //ADD multiple profile
                 .withTextColorRes(R.color.indigo_600)
                 .withDividerBelowHeader(true)
@@ -143,68 +142,57 @@ public abstract class NavigationDrawerActivity extends BaseActivity {
                 .withName(R.string.bookmark_list_label)
                 .withSelectable(true)
                 .withIdentifier(0)
-                .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
+                .withIconColor(nightModeHelper.getDefaultColorRes())
                 .withIcon(R.mipmap.ic_bookmark_border_dark)
-                .withSelectedTextColorRes(R.color.indigo_600)
-                .withSelectedColorRes(R.color.grey_100));
+                .withSelectedTextColorRes(R.color.indigo_600));
         menuList.add(new PrimaryDrawerItem()
                 .withName(R.string.export_bookmarks)
                 .withSelectable(true)
                 .withDescriptionTextColorRes(R.color.grey_400)
                 .withIdentifier(1)
-                .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
-                .withIcon(R.drawable.ic_archive_black_48dp)
-                .withSelectedTextColorRes(R.color.indigo_600)
-                .withSelectedColorRes(R.color.grey_100));
+                .withIconColor(nightModeHelper.getDefaultColorRes())
+                .withIcon(R.drawable.ic_archive_black_48dp));
         menuList.add(new PrimaryDrawerItem()
                 .withName(R.string.send_feedback_label)
                 .withSelectable(false)
                 .withIcon(R.mipmap.ic_feedback)
-                .withIdentifier(5)
-                .withSelectedTextColorRes(R.color.indigo_600)
-                .withSelectedColorRes(R.color.grey_100));
+                .withIdentifier(5));
         menuList.add(new PrimaryDrawerItem()
                 .withName(R.string.history)
                 .withSelectable(false)
                 .withEnabled(false)
-                .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.grey_200))
+                .withDisabledTextColor(nightModeHelper.getDefaultColorRes())
+                .withIconColor(nightModeHelper.getDefaultColorRes())
                 .withIcon(R.mipmap.ic_history)
                 .withDescription(R.string.available_soon)
                 .withDescriptionTextColorRes(R.color.grey_400)
-                .withIdentifier(6)
-                .withSelectedTextColorRes(R.color.indigo_600)
-                .withSelectedColorRes(R.color.grey_100));
+                .withIdentifier(6));
         menuList.add(new PrimaryDrawerItem()
                 .withName(R.string.setting_cloud_sync)
                 .withSelectable(false)
                 .withEnabled(false)
+                .withDisabledTextColor(nightModeHelper.getDefaultColorRes())
                 .withDescription(R.string.available_soon)
                 .withIcon(R.drawable.ic_cloud_off_black_48dp)
-                .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.grey_200))
+                .withIconColor(nightModeHelper.getDefaultColorRes())
                 .withDescriptionTextColorRes(R.color.grey_400)
-                .withIdentifier(7)
-                .withSelectedTextColorRes(R.color.indigo_600)
-                .withSelectedColorRes(R.color.grey_100));
+                .withIdentifier(7));
         menuList.add(new DividerDrawerItem());
         menuList.add(new PrimaryDrawerItem()
                 .withName(R.string.settings)
                 .withSelectable(true)
                 .withIcon(R.drawable.ic_settings_black_48dp)
-                .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
+                .withIconColor(nightModeHelper.getDefaultColorRes())
                 .withDescriptionTextColorRes(R.color.grey_400)
-                .withIdentifier(8)
-                .withSelectedTextColorRes(R.color.indigo_600)
-                .withSelectedColorRes(R.color.grey_100));
+                .withIdentifier(8));
         menuList.add(new DividerDrawerItem());
         menuList.add(new PrimaryDrawerItem()
                 .withName(R.string.offer_me_coffee)
                 .withSelectable(false)
-                .withIconColor(ContextCompat.getColor(getApplicationContext(), R.color.indigo_600))
+                .withIconColor(nightModeHelper.getDefaultColorRes())
                 .withIcon(R.mipmap.ic_local_cafe)
                 .withDescriptionTextColorRes(R.color.grey_400)
-                .withIdentifier(9)
-                .withSelectedTextColorRes(R.color.indigo_600)
-                .withSelectedColorRes(R.color.grey_100));
+                .withIdentifier(9));
         return menuList;
     }
 
