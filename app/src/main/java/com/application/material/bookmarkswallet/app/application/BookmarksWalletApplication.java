@@ -6,6 +6,7 @@ import android.util.SparseArray;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.realm.migrations.BookmarkRealmMigration;
 import com.flurry.android.FlurryAgent;
+import com.squareup.leakcanary.LeakCanary;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -18,6 +19,13 @@ public class BookmarksWalletApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
+        // Normal app init code...
 
         new FlurryAgent.Builder()
                 .withLogEnabled(false)
@@ -30,6 +38,7 @@ public class BookmarksWalletApplication extends Application {
                 .build());
 
         setRealmDefaultConfiguration();
+
     }
 
     /**

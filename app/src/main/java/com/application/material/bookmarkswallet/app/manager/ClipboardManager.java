@@ -10,10 +10,12 @@ import java.lang.ref.WeakReference;
 
 public class ClipboardManager {
     private static final String TAG = "ClipboardManager";
-    private static ClipboardManager instance;
-    private static android.content.ClipboardManager clipboardService;
+    private static ClipboardManager instance; //TODO take care - can cause leak
+    private final WeakReference<Context> contextRef;
+    private android.content.ClipboardManager clipboardService;
 
-    private ClipboardManager() {
+    private ClipboardManager(Context context) {
+        this.contextRef = new WeakReference<>(context);
     }
 
     /**
@@ -22,9 +24,7 @@ public class ClipboardManager {
      * @return
      */
     public static ClipboardManager getInstance(WeakReference<Context> contextRef) {
-        clipboardService = (android.content.ClipboardManager) contextRef.get().
-                getSystemService(Context.CLIPBOARD_SERVICE);
-        return instance == null ? instance = new ClipboardManager() : instance;
+        return instance == null ? instance = new ClipboardManager(contextRef.get()) : instance;
     }
 
     /**
@@ -42,16 +42,15 @@ public class ClipboardManager {
      * @return
      */
     public String getTextFromClipboard() {
+        clipboardService = (android.content.ClipboardManager) contextRef.get().
+                getSystemService(Context.CLIPBOARD_SERVICE);
         if (clipboardService.getPrimaryClip() == null) {
             return null;
         }
+
         ClipData.Item item = clipboardService.getPrimaryClip().getItemAt(0);
         CharSequence pasteData = item.getText();
-        if (pasteData != null) {
-            return pasteData.toString();
-        }
-
-        return null;
+        return pasteData != null ? pasteData.toString() : null;
     }
 
     /**
