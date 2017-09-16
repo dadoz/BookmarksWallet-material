@@ -39,6 +39,7 @@
             android:layout_centerHorizontal="true"
             android:layout_below="@id/exportSuccessImageId"
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_18"
             android:text="@string/export_bookmarks_success"/>
