@@ -97,7 +97,7 @@ public class ExportDialog implements DialogInterface.OnClickListener,
      */
     private void successUI() {
         Utils.setSnackbar(view, ctx, ctx.get().getString(R.string.downloaded_with_success), false,
-                ctx.get().getString(R.string.open), new WeakReference<View.OnClickListener>(this));
+                ctx.get().getString(R.string.open), new WeakReference<>(this));
     }
 
     @Override
@@ -111,7 +111,7 @@ public class ExportDialog implements DialogInterface.OnClickListener,
     }
 
     @Override
-    public void onExportResultSuccess(String message) {
+    public void onExportResultSuccess() {
         successUI();
     }
 

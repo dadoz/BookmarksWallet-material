@@ -1,11 +1,10 @@
 package com.application.material.bookmarkswallet.app.strategies;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
 import com.application.material.bookmarkswallet.app.helpers.OnExportResultCallback;
-import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -21,7 +20,7 @@ public class ExportStrategy {
      *
      * @param list
      */
-    public void createFile(List<Bookmark> list) {
+    public void createFile(List<TreeNodeInterface> list) {
         exportInstance.createFile(list);
     }
 

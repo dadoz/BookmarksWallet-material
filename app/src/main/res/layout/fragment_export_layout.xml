@@ -2,51 +2,45 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
     <com.application.material.bookmarkswallet.app.views.ExportCheckboxesView
         android:id="@+id/exportCheckboxesViewId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-
-    <RelativeLayout
-        android:layout_below="@id/exportCheckboxesViewId"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/downloadBookamrksimageViewId"
+        android:layout_centerInParent="true"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/production3"/>
+    <com.application.material.bookmarkswallet.app.views.ExportInfoView
+        android:layout_below="@id/downloadBookamrksimageViewId"
+        android:id="@+id/exportBookmarksInfoLayoutId"
+        android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/padding_16">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
+    <RelativeLayout
+        android:visibility="invisible"
+        android:id="@+id/rippedFrameLayoutId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/BookmarkCheckboxesStyle">
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/exportSuccessImageId"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
             android:layout_centerInParent="true"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-            <TextView
-                android:visibility="gone"
-                android:layout_margin="@dimen/margin_16"
-                android:textAlignment="center"
-                android:id="@+id/exportDescriptionTextId"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_16"
-                android:text="@string/export_description"/>
-            <ImageView
-                android:id="@+id/downloadBookamrksimageViewId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_bookmark_outline_black_48dp"/>
-            <com.application.material.bookmarkswallet.app.views.ExportInfoView
-                android:id="@+id/exportBookmarksInfoLayoutId"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"/>
-        </LinearLayout>
-
-        <Button
-            android:layout_alignParentBottom="true"
-            android:id="@+id/exportCardviewButtonId"
-            style="@style/CustomMaterialButtonStyle"
-            android:layout_width="match_parent"
+            android:layout_marginBottom="@dimen/margin_16"
+            android:src="@mipmap/ic_done_success"/>
+        <TextView
+            android:id="@+id/exportSuccessTextId"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/exportSuccessImageId"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_18"
-            android:text="@string/export_button_label"/>
-
+            android:text="@string/export_bookmarks_success"/>
     </RelativeLayout>
 </RelativeLayout>

@@ -93,10 +93,8 @@ dependencies {
 
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 
-    compile 'io.reactivex:rxandroid:1.2.1'
-    // Because RxAndroid releases are few and far between, it is recommended you also
-    // explicitly depend on RxJava's latest version for bug fixes and new features.
-    compile 'io.reactivex:rxjava:1.1.6'
+    compile "io.reactivex.rxjava2:rxandroid:$reactive_version"
+    compile "io.reactivex.rxjava2:rxjava:$rxjava_version"
 
     compile 'frankiesardo:icepick:3.2.0'
     provided 'frankiesardo:icepick-processor:3.2.0'

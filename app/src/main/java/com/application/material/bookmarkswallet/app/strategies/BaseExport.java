@@ -65,7 +65,7 @@ public abstract class BaseExport {
             ArrayList<Bookmark> list = null;
             if (createFile(list)) {
                 if (listener.get() != null)
-                    listener.get().onExportResultSuccess("EXPORT with success");
+                    listener.get().onExportResultSuccess();
                 return;
             }
             //error handler

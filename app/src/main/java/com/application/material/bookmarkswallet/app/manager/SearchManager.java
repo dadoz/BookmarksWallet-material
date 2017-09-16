@@ -12,16 +12,18 @@ import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observable;
 
 public class SearchManager implements Filterable,
         MaterialSearchView.OnQueryTextListener, MaterialSearchView.SearchViewListener {
     private static SearchManager instance;
     private MenuItem searchItem;
     private WeakReference<SearchManagerCallbackInterface> listener;
+    private WeakReference<SearchManagerPublishResultCallbackInterface> listener2;
     private MaterialSearchView searchView;
-    private List<Object> list;
+    private List<TreeNodeInterface> list;
 
     /**
      * 
@@ -117,7 +119,7 @@ public class SearchManager implements Filterable,
         return searchView;
     }
 
-    public void setList(List<Object> list) {
+    public void setList(List<TreeNodeInterface> list) {
         this.list = list;
     }
 
@@ -145,23 +147,14 @@ public class SearchManager implements Filterable,
 
         @Override
         protected void publishResults(CharSequence query, FilterResults results) {
-            //replace with rx
-            List<TreeNodeInterface> filteredList = new ArrayList<>();
-            if (list != null) {
-                Object[] items = list.stream()
-                        .filter(item -> ((TreeNodeInterface) item).getNodeContent().getName().contains(query))
-                        .toArray();
-
-                if (items.length > 0)
-                    filteredList.clear();
-
-                for (Object item : items) {
-                    filteredList.add((TreeNodeInterface) item);
-                }
-            }
-
-//            if (listener.get() != null)
-//                listener.get().publishResultCb(query, filteredList);
+            Observable.just(list)
+                    .flatMap(Observable::fromIterable)
+                    .filter(item -> item.getNodeContent().getName().contains(query))
+                    .toList()
+                    .subscribe(list -> {
+                        if (listener2 != null)
+                            listener2.get().publishResultCb(query, list);
+                    });
         }
 
     }

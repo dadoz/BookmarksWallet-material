@@ -93,4 +93,5 @@
     <string name="general">General</string>
     <string name="empty_folder">Empty folder name</string>
     <string name="add_folder">Add new folder</string>
+    <string name="bookmarks_stored">bookmarks stored!</string>
 </resources>

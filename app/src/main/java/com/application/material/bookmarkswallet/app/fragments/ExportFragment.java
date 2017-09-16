@@ -1,18 +1,23 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.helpers.OnExportResultCallback;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.views.ExportCheckboxesView;
+import com.lib.davidelm.filetreevisitorlibrary.manager.NodeListManager;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,13 +32,20 @@ import static com.application.material.bookmarkswallet.app.strategies.BaseExport
 /**
  * Created by davide on 12/06/2017.
  */
-public class ExportFragment extends BaseFragment implements View.OnClickListener, OnExportResultCallback {
+public class ExportFragment extends BaseFragment implements ExportCheckboxesView.OnExportClickListener,
+        OnExportResultCallback {
     public static String FRAG_TAG = "ExportFragment";
     private Unbinder unbinder;
     @BindView(R.id.exportCheckboxesViewId)
     ExportCheckboxesView exportCheckboxesView;
-    @BindView(R.id.exportCardviewButtonId)
-    View exportCardviewButton;
+    @BindView(R.id.rippedFrameLayoutId)
+    View rippedFrameLayout;
+    @BindView(R.id.exportSuccessTextId)
+    View exportSuccessText;
+    @BindView(R.id.exportSuccessImageId)
+    View exportSuccessImage;
+//    @BindView(R.id.exportCardviewButtonId)
+//    View exportCardviewButton;
     private ExportStrategy exportStrategy;
 
     {
@@ -71,11 +83,13 @@ public class ExportFragment extends BaseFragment implements View.OnClickListener
      * init view
      */
     private void onInitView() {
-        exportCardviewButton.setOnClickListener(this);
+        exportCheckboxesView.setExportListener(this);
+//        exportCardviewButton.setOnClickListener(this);
+//        exportCardviewButton.setOnClickListener(this);
     }
 
     @Override
-    public void onClick(View v) {
+    public void onExportClick(View v) {
         requestWriteExternalStoragePermissions();
     }
 
@@ -90,28 +104,10 @@ public class ExportFragment extends BaseFragment implements View.OnClickListener
                 MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE);
     }
 
-    /**
-     * TODO move in presenter
-     * handle export action
-     */
-    private void handleExportAction() {
-        try {
-            //get bookmarkList
-            //component.getBookmarksList();
-            ArrayList list = new ArrayList<>();
-
-            exportStrategy.setExportStrategy(exportCheckboxesView.getStatus());
-            exportStrategy.createFile(list);
-            onExportResultSuccess(getString(R.string.export_bookmarks_success));
-        } catch (Exception e) {
-            onExportResultError(e.getMessage());
-        }
-    }
 
     @Override
-    public void onExportResultSuccess(String message) {
-        if (getView() != null)
-            Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+    public void onExportResultSuccess() {
+        revealEffect();
     }
 
     @Override
@@ -119,4 +115,66 @@ public class ExportFragment extends BaseFragment implements View.OnClickListener
         if (getView() != null)
             Snackbar.make(getView(), "Oh Snap, " + message, Snackbar.LENGTH_SHORT).show();
     }
+
+
+    /**
+     * TODO move in presenter
+     * handle export action
+     */
+    private void handleExportAction() {
+        //get bookmarks from view
+        List<TreeNodeInterface> bookmarksList = NodeListManager.getInstance(getContext()).getNodeList();
+
+        //check empty
+        if (bookmarksList.size() == 0) {
+            onExportResultError("empty list");
+            return;
+        }
+
+        //handle bookmarks export
+        try {
+            exportStrategy.setExportStrategy(exportCheckboxesView.getStatus());
+            exportStrategy.createFile(bookmarksList);
+            onExportResultSuccess();
+        } catch (Exception e) {
+            onExportResultError(e.getMessage());
+        }
+    }
+    /**
+     * todo move in a presenter
+     */
+    public void revealEffect() {
+        // get the center for the clipping circle
+        int cx = rippedFrameLayout.getWidth() / 2;
+        int cy = rippedFrameLayout.getHeight() / 2;
+
+        // get the final radius for the clipping circle
+        float finalRadius = (float) Math.hypot(cx, cy);
+
+        // create the animator for this view (the start radius is zero)
+        Animator anim =
+                ViewAnimationUtils.createCircularReveal(rippedFrameLayout, cx, cy, 0, finalRadius);
+
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationEnd(animation);
+                exportSuccessText.setVisibility(View.GONE);
+                exportSuccessImage.setVisibility(View.GONE);
+            }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                exportSuccessText.setVisibility(View.VISIBLE);
+                exportSuccessImage.setVisibility(View.VISIBLE);
+            }
+        });
+
+        //start
+        // make the view visible and start the animation
+        rippedFrameLayout.setVisibility(View.VISIBLE);
+        anim.start();
+    }
+
+
 }

@@ -1,5 +1,7 @@
 package com.lib.davidelm.filetreevisitorlibrary.manager;
 
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
+
 import java.util.List;
 
 /**
@@ -7,5 +9,5 @@ import java.util.List;
  */
 
 interface NodeListInterface {
-    List<Object> getNodeList();
+    List<TreeNodeInterface> getNodeList();
 }

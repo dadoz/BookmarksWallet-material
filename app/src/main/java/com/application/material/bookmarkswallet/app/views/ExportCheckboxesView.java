@@ -5,6 +5,7 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -20,8 +21,10 @@ import java.lang.ref.WeakReference;
 
 public class ExportCheckboxesView extends FrameLayout implements CompoundButton.OnCheckedChangeListener {
     private WeakReference<OnCheckCSVorHTMLCallbacks> lst;
+    private WeakReference<OnExportClickListener> lst2;
     private CheckBox exportCSVCheckbox;
     private CheckBox exportHTMLCheckbox;
+    private View exportButton;
     private ExportStrategy.ExportTypeEnum status = ExportStrategy.ExportTypeEnum.HTML; //DEFAULT
 
     public ExportStrategy.ExportTypeEnum getStatus() {
@@ -47,12 +50,17 @@ public class ExportCheckboxesView extends FrameLayout implements CompoundButton.
         inflate(getContext(), R.layout.export_bookmarks_checkboxes_layout, this);
         exportCSVCheckbox = (CheckBox) findViewById(R.id.exportCSVCheckboxId);
         exportHTMLCheckbox = (CheckBox) findViewById(R.id.exportHTMLCheckboxId);
+        exportButton = findViewById(R.id.exportButtonId);
+        exportButton.setOnClickListener(v -> lst2.get().onExportClick(v));
         exportCSVCheckbox.setOnCheckedChangeListener(this);
         exportHTMLCheckbox.setOnCheckedChangeListener(this);
     }
 
     public void setListener(OnCheckCSVorHTMLCallbacks lst) {
         this.lst = new WeakReference<>(lst);
+    }
+    public void setExportListener(OnExportClickListener lst2) {
+        this.lst2 = new WeakReference<>(lst2);
     }
 
     @Override
@@ -85,9 +93,16 @@ public class ExportCheckboxesView extends FrameLayout implements CompoundButton.
         checkbox.setOnCheckedChangeListener(this);
     }
 
+    public void setExportButtonVisible(boolean isVisible) {
+        exportButton.setVisibility(isVisible ? VISIBLE : INVISIBLE);
+    }
+
     public interface OnCheckCSVorHTMLCallbacks {
         void onCheckCSVCallback();
         void onCheckHTMLCallback();
     }
 
+    public interface OnExportClickListener {
+        void onExportClick(View view);
+    }
 }
