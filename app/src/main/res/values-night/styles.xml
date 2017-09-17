@@ -155,6 +155,6 @@
         <item name="android:background">@color/indigo_500</item>
     </style>
     <style name="SearchMaterialButtonStyle">
-        <item name="backgroundTint">@color/grey_800</item>
+        <item name="backgroundTint">@color/grey_900</item>
     </style>
 </resources>

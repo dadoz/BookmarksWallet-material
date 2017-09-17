@@ -131,7 +131,7 @@ public class AnimationBuilder {
     }
 
     public Animator buildCollapseAnimator(final View view, boolean isDelay) {
-        Animator animation = getYTranslation(view, 0, -300, 0);
+        Animator animation = getYTranslation(view, 0, -200, 0);
         animation.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -156,7 +156,7 @@ public class AnimationBuilder {
     }
 
     public Animator buildExpandAnimator(View view, boolean b) {
-        Animator animation = getYTranslation(view, -300, 0, 0);
+        Animator animation = getYTranslation(view, -200, 0, 0);
         animation.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
