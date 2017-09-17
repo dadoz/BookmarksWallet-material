@@ -228,7 +228,8 @@ public class BookmarkListFragment extends Fragment
                 break;
             case R.id.addBookmarkFabId:
                 addBookmarkMenuFab.collapseImmediately();
-                presenter.addBookmark(this, treeNodeView.getCurrentNodeId());
+                presenter.addBookmark(this, new String[] {Integer.toString(treeNodeView.getCurrentNodeId()),
+                        treeNodeView.getCurrentNodeName()});
                 break;
             case R.id.offerMeACoffeeFabId:
                 addBookmarkMenuFab.collapse();

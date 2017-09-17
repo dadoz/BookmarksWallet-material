@@ -36,6 +36,8 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
     private Unbinder unbinder;
     @State
     int folderNodeId = -1;
+    @State
+    String folderNodeName;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstance) {
@@ -70,12 +72,14 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
      *
      */
     public void initView() {
+        handleArguments();
+
+        //init view
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setColorSchemeResources(R.color.indigo_600, R.color.yellow_400);
         addBookmarkSearchLayout.setOnEditorActionLst(this);
         addBookmarkSearchButton.setOnClickListener(this);
-        addBookmarkSearchLayout.setSelectedFolder("Hey bla", "Yeah");
-        handleArguments();
+        addBookmarkSearchLayout.setSelectedFolder(folderNodeName, "description");
     }
 
     /**
@@ -90,6 +94,7 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
             if (getArguments().getString(MainActivity.FOLDER_EXTRA_KEY) != null) {
                 //do smthing with folderId
                 folderNodeId = Integer.parseInt(getArguments().getString(MainActivity.FOLDER_EXTRA_KEY));
+                folderNodeName = getArguments().getString(MainActivity.FOLDER_NAME_EXTRA_KEY);
             }
         }
     }

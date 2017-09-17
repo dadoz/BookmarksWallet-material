@@ -33,6 +33,7 @@ import java.util.List;
 
 public class TreeNodeView extends FrameLayout implements OnNodeClickListener, OnNodeVisitCompleted,
         BreadCrumbsView.OnPopBackStackInterface, OnFolderMenuItemClickListener {
+    private static final String NO_NAME_FOLDER = "Folder";
     @NonNull
     private String TAG = "TAG";
     @Nullable
@@ -473,6 +474,10 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
 
     public List<TreeNodeInterface> searchNode(String searchValue, boolean caseSensitive) {
         return currentNode.getChildren();
+    }
+
+    public String getCurrentNodeName() {
+        return currentNode != null ? currentNode.getNodeContent().getName() : NO_NAME_FOLDER;
     }
 
     /**

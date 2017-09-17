@@ -66,6 +66,11 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCar
         return searchParamsArray;
     }
 
+    /**
+     * set selected folder
+     * @param title
+     * @param description
+     */
     public void setSelectedFolder(String title, String description) {
         selectedFolderTitleTextView.setText(title);
         selectedFolderDescriptionTextView.setText(description);
