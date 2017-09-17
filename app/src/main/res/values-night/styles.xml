@@ -114,6 +114,11 @@
         <item name="backgroundTint">@color/grey_50</item>
         <item name="android:textColor">@color/indigo_600</item>
     </style>
+    <!-- FAB STYLE-->
+    <style name="customMaterialFabInvertedStyle" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="backgroundTint">@color/grey_50</item>
+        <item name="android:src">@mipmap/ic_chevron_right</item>
+    </style>
 
     <!--add bookmark text input style-->
     <style name="TextInputLayoutStyle">
