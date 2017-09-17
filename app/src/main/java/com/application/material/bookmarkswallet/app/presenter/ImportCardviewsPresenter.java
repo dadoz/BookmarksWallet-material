@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
+import com.application.material.bookmarkswallet.app.animator.AnimationBuilder;
 import com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper;
 import com.flurry.android.FlurryAgent;
 
@@ -97,7 +97,7 @@ public class ImportCardviewsPresenter implements View.OnClickListener {
      * @param view
      */
     private void hideViewAnimator(final View view) {
-        Animator animator = AnimatorBuilder.getInstance(new WeakReference<>(context.get()))
+        Animator animator = AnimationBuilder.getInstance(context.get())
                 .getYTranslation(view, 0, -view.getMeasuredHeight(), 0);
         animator.addListener(new Animator.AnimatorListener() {
             @Override

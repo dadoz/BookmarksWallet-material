@@ -8,30 +8,26 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import java.lang.ref.WeakReference;
-
 /**
  * Created by davide on 24/10/15.
  */
-public class AnimatorBuilder {
+public class AnimationBuilder {
     private static final String TRANSLATION_Y = "translationY";
     private static final String ALPHA = "alpha";
     private static final long START_DELAY = 300;
-    private static WeakReference<Context> ctx;
     private final int duration;
 
     /**
      *
-     * @param contextWeakReference
+     * @param context
      * @return
      */
-    public static AnimatorBuilder getInstance(WeakReference<Context> contextWeakReference) {
-        ctx = contextWeakReference;
-        return new AnimatorBuilder(contextWeakReference.get().
-                getResources().getInteger(android.R.integer.config_mediumAnimTime));
+    public static AnimationBuilder getInstance(Context context) {
+        return new AnimationBuilder(context.getResources()
+                .getInteger(android.R.integer.config_mediumAnimTime));
     }
 
-    private AnimatorBuilder(int duration) {
+    private AnimationBuilder(int duration) {
         this.duration = duration;
     }
 
@@ -134,6 +130,55 @@ public class AnimatorBuilder {
         return animator;
     }
 
+    public Animator buildCollapseAnimator(final View view, boolean isDelay) {
+        Animator animation = getYTranslation(view, 0, -300, 0);
+        animation.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                view.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        return animation;
+    }
+
+    public Animator buildExpandAnimator(View view, boolean b) {
+        Animator animation = getYTranslation(view, -300, 0, 0);
+        animation.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                view.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        return animation;
+    }
+
     /**
      *
      */
@@ -141,18 +186,18 @@ public class AnimatorBuilder {
         void omRevealAnimationEnd();
     }
 
-    /**
-     *
-     * @param fab
-     * @param collapsing
-     */
-    public void collapseViews(View fab, final boolean collapsing) {
-        Animator fabAnimator = collapsing ?
-                AnimatorBuilder.getInstance(ctx)
-                        .buildHideAnimator(fab, false) :
-                AnimatorBuilder.getInstance(ctx)
-                        .buildShowAnimator(fab, false);
-        fabAnimator.start();
-    }
+//    /**
+//     *
+//     * @param fab
+//     * @param collapsing
+//     */
+//    public void collapseViews(View fab, final boolean collapsing) {
+//        Animator fabAnimator = collapsing ?
+//                AnimationBuilder.getInstance(ctx)
+//                        .buildHideAnimator(fab, false) :
+//                AnimationBuilder.getInstance(ctx)
+//                        .buildShowAnimator(fab, false);
+//        fabAnimator.start();
+//    }
 
 }

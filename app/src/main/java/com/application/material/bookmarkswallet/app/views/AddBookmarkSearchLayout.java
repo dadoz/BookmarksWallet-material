@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.animator.AnimationBuilder;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
@@ -20,6 +21,7 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCar
     private TextView selectedFolderTitleTextView;
     private TextView selectedFolderDescriptionTextView;
     private View selectedFolderContainer;
+    private AnimationBuilder animationBuilder;
 
 
     public AddBookmarkSearchLayout(Context context) {
@@ -49,6 +51,9 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCar
 
         searchCardviewBox = (SearchCardviewBoxView) findViewById(R.id.addBookmarkSearchCardviewBoxId);
         searchCardviewBox.setListenerCb(new WeakReference<>(this));
+
+        //animation builder
+        animationBuilder = AnimationBuilder.getInstance(getContext());
     }
 
     /**
@@ -79,7 +84,12 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCar
     @Override
     public void onTextChangedCb(CharSequence charSequence) {
         addBookmarkSearchButton.setVisibility(charSequence.length() == 0 ? GONE : VISIBLE);
-        selectedFolderContainer.setVisibility(charSequence.length() == 0 ? VISIBLE : GONE);//TODO please toggle it
+        if (charSequence.length() != 0) {
+            animationBuilder.buildCollapseAnimator(selectedFolderContainer, false).start();
+        } else {
+            animationBuilder.buildExpandAnimator(selectedFolderContainer, false).start();
+
+        }
     }
 
     @Override

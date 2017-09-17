@@ -20,6 +20,7 @@
             android:textSize="@dimen/text_size_24"
             android:text="@string/selected_folder"/>
         <android.support.v7.widget.CardView
+            android:id="@+id/selectedFolderCardId"
             android:layout_below="@id/selectedFolderTitleId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
