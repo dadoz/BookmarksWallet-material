@@ -1,7 +1,6 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,20 +18,10 @@ public class BaseFragment extends Fragment {
     public static String FRAG_TAG = "BaseFragment";
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstance) {
         View mainView = inflater.inflate(layoutId, container, false);
         sharedPrefHelper = SharedPrefHelper.getInstance(getContext());
         return mainView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 }

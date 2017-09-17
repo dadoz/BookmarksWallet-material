@@ -28,6 +28,8 @@
         android:textSize="@dimen/text_size_12"
         android:text="node name"/>
     <com.lib.davidelm.filetreevisitorlibrary.views.ExclusiveSelectionButton
+        android:visibility="gone"
+
         android:id="@+id/nodeMoreSelectButtonId"
         android:layout_alignParentRight="true"
         android:layout_width="@dimen/small_folder_icon_width"

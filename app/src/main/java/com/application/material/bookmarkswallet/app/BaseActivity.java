@@ -23,6 +23,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class BaseActivity extends AppCompatActivity {
     public static String SHARED_URL_EXTRA_KEY = "SHARED_URL_EXTRA_KEY";
+    public static String FOLDER_EXTRA_KEY = "FOLDER_EXTRA_KEY";
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -97,8 +98,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
         FlurryUtils.flurryStopSession(getApplicationContext());
     }
 

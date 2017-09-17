@@ -20,6 +20,7 @@ import com.application.material.bookmarkswallet.app.views.AddBookmarkSearchLayou
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import icepick.Icepick;
 
 public class AddBookmarkSearchFragment extends Fragment implements View.OnClickListener,
@@ -31,6 +32,8 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.addBookmarkSearchButtonId)
     View addBookmarkSearchButton;
+    private Unbinder unbinder;
+    private int folderNodeId = -1;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstance) {
@@ -48,34 +51,41 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstance) {
         View mainView = inflater.inflate(R.layout.fragment_add_bookmark_layout, container, false);
-        ButterKnife.bind(this, mainView);
+        unbinder = ButterKnife.bind(this, mainView);
         setHasOptionsMenu(true);
         initView();
         return mainView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (unbinder != null)
+            unbinder.unbind();
     }
 
     /**
      *
      */
     public void initView() {
-        addBookmarkSearchLayout.setOnEditorActionLst(this);
-
-        //init view
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setColorSchemeResources(R.color.indigo_600, R.color.yellow_400);
+        addBookmarkSearchLayout.setOnEditorActionLst(this);
         addBookmarkSearchButton.setOnClickListener(this);
-        if (getArguments() != null) {
-            handleArguments();
-        }
+        handleArguments();
     }
 
     /**
      *
      */
     private void handleArguments() {
-        if (getArguments().getString(MainActivity.SHARED_URL_EXTRA_KEY) != null) {
-            String sharedUrl = getArguments().getString(MainActivity.SHARED_URL_EXTRA_KEY);
-            addBookmarkSearchLayout.setUrl(sharedUrl);
+        if (getArguments() != null &&
+                getArguments().getString(MainActivity.SHARED_URL_EXTRA_KEY) != null) {
+            addBookmarkSearchLayout.setUrl(getArguments()
+                    .getString(MainActivity.SHARED_URL_EXTRA_KEY));
+            //do smthing with folderId
+            String folderId = getArguments()
+                    .getString(MainActivity.FOLDER_EXTRA_KEY);
         }
     }
 
@@ -90,11 +100,11 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
 
 
     /**
-     * search action triggerd by view
+     * search action triggered by view
      */
     public void searchAction() {
+        SparseArrayParcelable<String> searchParamsArray = addBookmarkSearchLayout.getSearchParamsArray(folderNodeId);
         boolean isConnected = ConnectionUtils.isConnected(getContext());
-        SparseArrayParcelable<String> searchParamsArray = addBookmarkSearchLayout.getSearchParamsArray();
 
         //handle error
         if (!isConnected ||
@@ -125,7 +135,10 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
      * @param searchParamsArray
      */
     private void onSearchSuccess(SparseArrayParcelable<String> searchParamsArray) {
+        //set mode
         StatusManager.getInstance().setOnResultMode();
+
+        //set params on application
         ((MaterialBookmarkApplication) getActivity().getApplication())
                 .setSearchParamsArray(searchParamsArray);
 

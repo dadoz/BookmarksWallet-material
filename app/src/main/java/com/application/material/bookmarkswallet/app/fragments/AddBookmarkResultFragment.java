@@ -1,6 +1,5 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,12 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.application.material.bookmarkswallet.app.BaseActivity;
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.application.MaterialBookmarkApplication;
 import com.application.material.bookmarkswallet.app.helpers.RetrieveIconHelper;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
-import com.application.material.bookmarkswallet.app.BaseActivity;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.views.AddBookmarkResultLayout;
 
@@ -43,7 +42,7 @@ public class AddBookmarkResultFragment extends Fragment implements
 
     private StatusManager statusManager;
     private RetrieveIconHelper retrieveIconHelper;
-    private SparseArrayParcelable<String> searchParamsArray; //TODO?? LEAK
+    private SparseArrayParcelable<String> searchParamsArray;
     private Unbinder unbinder;
 
     @Override
@@ -61,11 +60,6 @@ public class AddBookmarkResultFragment extends Fragment implements
                 .getInstance(new WeakReference<>(this));
         searchParamsArray = ((MaterialBookmarkApplication) getActivity().getApplication())
                 .getSearchParamsArray();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
     }
 
     @Override
@@ -95,15 +89,14 @@ public class AddBookmarkResultFragment extends Fragment implements
     private void onInitView(Bundle savedInstanceState) {
         refreshLayout.setRefreshing(true);
         statusManager.setOnResultMode();
-        Utils.hideKeyboard(getActivity());
         addBookmarkResultView.initView(searchParamsArray);
         addBookmarkDoneButton.setOnClickListener(this);
         retrieveIcon();
         retrieveTitle();
-
-        if (savedInstanceState != null) {
-            initResultViewOnConfigChanged();
-        }
+        //init result on view changed
+        initResultViewOnConfigChanged(savedInstanceState);
+        //hide keyobard
+        Utils.hideKeyboard(getActivity());
     }
 
     @Override
@@ -118,9 +111,11 @@ public class AddBookmarkResultFragment extends Fragment implements
 
     /**
      *
+     * @param savedInstanceState
      */
-    private void initResultViewOnConfigChanged() {
-        if (statusManager.isOnResultMode()) {
+    private void initResultViewOnConfigChanged(Bundle savedInstanceState) {
+        if (savedInstanceState != null &&
+                statusManager.isOnResultMode()) {
             addBookmarkResultView.initView(searchParamsArray);
         }
     }
@@ -129,9 +124,8 @@ public class AddBookmarkResultFragment extends Fragment implements
      * retrieve icon from gallery or url
      */
     private void retrieveIcon() {
-        String url = searchParamsArray.get(0);
         refreshLayout.setRefreshing(true);
-        retrieveIconHelper.retrieveIcon(url);
+        retrieveIconHelper.retrieveIcon(searchParamsArray.get(0));
     }
 
     /**
@@ -139,10 +133,10 @@ public class AddBookmarkResultFragment extends Fragment implements
      */
     private void retrieveTitle() {
         String title = searchParamsArray.get(1);
-
+        String url = searchParamsArray.get(0);
         if (title != null &&
                 title.compareTo("") == 0) {
-            retrieveIconHelper.retrieveTitle(searchParamsArray.get(0));
+            retrieveIconHelper.retrieveTitle(url);
         }
     }
 
