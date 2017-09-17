@@ -5,17 +5,6 @@
     android:layout_height="match_parent"
     android:id="@+id/addBookmarkMainLayoutId"
     style="@style/RevealViewStyle">
-    <!--<TextView-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:visibility="gone"-->
-    <!--android:background="@color/amber_600"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:textSize="@dimen/text_size_18"-->
-    <!--android:gravity="right"-->
-    <!--android:textColor="@color/grey_50"-->
-    <!--android:padding="@dimen/margin_16"-->
-    <!--android:text="@string/search_label"/>-->
 
     <RelativeLayout
         android:id="@+id/selectedFolderContainerId"

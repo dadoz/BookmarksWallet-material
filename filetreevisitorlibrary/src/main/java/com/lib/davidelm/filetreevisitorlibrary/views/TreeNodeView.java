@@ -460,6 +460,9 @@ public class TreeNodeView extends FrameLayout implements OnNodeClickListener, On
         return null;
     }
 
+    public int getCurrentNodeId() {
+        return currentNode != null ? currentNode.getId() : -1;
+    }
     public void setOnItemsChangedCallbacksListener(OnItemsChangedCallbacks lst2) {
         this.lst2 = new WeakReference<>(lst2);
         RecyclerView.Adapter adapter = treeNodeFilesRecyclerView.getAdapter();

@@ -22,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import icepick.Icepick;
+import icepick.State;
 
 public class AddBookmarkSearchFragment extends Fragment implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener, AddBookmarkSearchLayout.OnEditorActionListenerCallbacks {
@@ -33,7 +34,8 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
     @BindView(R.id.addBookmarkSearchButtonId)
     View addBookmarkSearchButton;
     private Unbinder unbinder;
-    private int folderNodeId = -1;
+    @State
+    int folderNodeId = -1;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstance) {
@@ -72,6 +74,7 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
         refreshLayout.setColorSchemeResources(R.color.indigo_600, R.color.yellow_400);
         addBookmarkSearchLayout.setOnEditorActionLst(this);
         addBookmarkSearchButton.setOnClickListener(this);
+        addBookmarkSearchLayout.setSelectedFolder("Hey bla", "Yeah");
         handleArguments();
     }
 
@@ -79,13 +82,15 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
      *
      */
     private void handleArguments() {
-        if (getArguments() != null &&
-                getArguments().getString(MainActivity.SHARED_URL_EXTRA_KEY) != null) {
-            addBookmarkSearchLayout.setUrl(getArguments()
-                    .getString(MainActivity.SHARED_URL_EXTRA_KEY));
-            //do smthing with folderId
-            String folderId = getArguments()
-                    .getString(MainActivity.FOLDER_EXTRA_KEY);
+        if (getArguments() != null) {
+            if (getArguments().getString(MainActivity.SHARED_URL_EXTRA_KEY) != null) {
+                addBookmarkSearchLayout.setUrl(getArguments()
+                        .getString(MainActivity.SHARED_URL_EXTRA_KEY));
+            }
+            if (getArguments().getString(MainActivity.FOLDER_EXTRA_KEY) != null) {
+                //do smthing with folderId
+                folderNodeId = Integer.parseInt(getArguments().getString(MainActivity.FOLDER_EXTRA_KEY));
+            }
         }
     }
 

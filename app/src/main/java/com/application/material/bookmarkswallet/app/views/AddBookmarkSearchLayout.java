@@ -17,6 +17,8 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCar
     private View addBookmarkSearchButton;
     private SearchCardviewBoxView searchCardviewBox;
     private WeakReference<OnEditorActionListenerCallbacks> onEditorActionLst;
+    private TextView selectedFolderTitleTextView;
+    private TextView selectedFolderDescriptionTextView;
 
 
     public AddBookmarkSearchLayout(Context context) {
@@ -39,6 +41,8 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCar
      */
     private void initView() {
         inflate(getContext(), R.layout.add_bookmark_search_layout, this);
+        selectedFolderTitleTextView = (TextView) findViewById(R.id.nodeLabelTextId);
+        selectedFolderDescriptionTextView = (TextView) findViewById(R.id.nodeDescriptionTextId);
         addBookmarkSearchButton = findViewById(R.id.addBookmarkSearchButtonId);
         searchCardviewBox = (SearchCardviewBoxView) findViewById(R.id.addBookmarkSearchCardviewBoxId);
         searchCardviewBox.setListenerCb(new WeakReference<>(this));
@@ -59,6 +63,11 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCar
         return searchParamsArray;
     }
 
+    public void setSelectedFolder(String title, String description) {
+        selectedFolderTitleTextView.setText(title);
+        selectedFolderDescriptionTextView.setText(description);
+
+    }
 
     @Override
     public void onTextChangedCb(CharSequence charSequence) {

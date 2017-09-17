@@ -26,6 +26,7 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.lang.ref.WeakReference;
 
+import static com.application.material.bookmarkswallet.app.BaseActivity.FOLDER_EXTRA_KEY;
 import static com.application.material.bookmarkswallet.app.helpers.SharedPrefHelper.SharedPrefKeysEnum.NO_FAVICON_MODE;
 
 /**
@@ -157,8 +158,9 @@ public class BookmarkListPresenter {
     /**
      *
      */
-    public void addBookmark(Fragment frag) {
+    public void addBookmark(Fragment frag, int nodeId) {
         Intent intent = new Intent(context.get(), AddBookmarkActivity.class);
+        intent.putExtra(FOLDER_EXTRA_KEY, Integer.toString(nodeId));
         frag.startActivityForResult(intent, Utils.ADD_BOOKMARK_ACTIVITY_REQ_CODE);
     }
 

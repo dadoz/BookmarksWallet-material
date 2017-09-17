@@ -228,7 +228,7 @@ public class BookmarkListFragment extends Fragment
                 break;
             case R.id.addBookmarkFabId:
                 addBookmarkMenuFab.collapseImmediately();
-                presenter.addBookmark(this);
+                presenter.addBookmark(this, treeNodeView.getCurrentNodeId());
                 break;
             case R.id.offerMeACoffeeFabId:
                 addBookmarkMenuFab.collapse();
@@ -252,7 +252,7 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onFolderNodeClickCb(int position, TreeNodeInterface node) {
         addFolderView.setCollapsed();
-        addBookmarkMenuFab.setVisibility(!node.isRoot() ? View.GONE : View.VISIBLE);
+//        addBookmarkMenuFab.setVisibility(!node.isRoot() ? View.GONE : View.VISIBLE);
     }
 
     @Override
