@@ -7,7 +7,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.animator.AnimationBuilder;
 import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
@@ -20,8 +19,6 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCar
     private WeakReference<OnEditorActionListenerCallbacks> onEditorActionLst;
     private TextView selectedFolderTitleTextView;
     private TextView selectedFolderDescriptionTextView;
-    private View selectedFolderContainer;
-    private AnimationBuilder animationBuilder;
 
 
     public AddBookmarkSearchLayout(Context context) {
@@ -46,14 +43,10 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCar
         inflate(getContext(), R.layout.add_bookmark_search_layout, this);
         selectedFolderTitleTextView = (TextView) findViewById(R.id.nodeLabelTextId);
         selectedFolderDescriptionTextView = (TextView) findViewById(R.id.nodeDescriptionTextId);
-        selectedFolderContainer = findViewById(R.id.selectedFolderContainerId);
         addBookmarkSearchButton = findViewById(R.id.addBookmarkSearchButtonId);
 
         searchCardviewBox = (SearchCardviewBoxView) findViewById(R.id.addBookmarkSearchCardviewBoxId);
         searchCardviewBox.setListenerCb(new WeakReference<>(this));
-
-        //animation builder
-        animationBuilder = AnimationBuilder.getInstance(getContext());
     }
 
     /**
@@ -84,12 +77,6 @@ public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCar
     @Override
     public void onTextChangedCb(CharSequence charSequence) {
         addBookmarkSearchButton.setVisibility(charSequence.length() == 0 ? GONE : VISIBLE);
-        if (charSequence.length() != 0) {
-            animationBuilder.buildCollapseAnimator(selectedFolderContainer, false).start();
-        } else {
-            animationBuilder.buildExpandAnimator(selectedFolderContainer, false).start();
-
-        }
     }
 
     @Override

@@ -6,40 +6,34 @@
     android:id="@+id/addBookmarkMainLayoutId"
     style="@style/RevealViewStyle">
 
-    <RelativeLayout
-        android:id="@+id/selectedFolderContainerId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/selectedFolderTitleId"
-            android:layout_marginTop="@dimen/margin_16"
-            android:layout_marginLeft="@dimen/margin_16"
-            android:layout_marginRight="@dimen/margin_16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_24"
-            android:text="@string/selected_folder"/>
-        <android.support.v7.widget.CardView
-            android:id="@+id/selectedFolderCardId"
-            android:layout_below="@id/selectedFolderTitleId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_16">
-            <include layout="@layout/linear_node_item"/>
-        </android.support.v7.widget.CardView>
-    </RelativeLayout>
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/selectedFolderContainerId">
-        <LinearLayout
+        android:layout_height="match_parent">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/selectedFolderTitleId"
+                android:layout_marginTop="@dimen/margin_16"
+                android:layout_marginLeft="@dimen/margin_16"
+                android:layout_marginRight="@dimen/margin_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_24"
+                android:text="@string/selected_folder"/>
+            <android.support.v7.widget.CardView
+                android:id="@+id/selectedFolderCardId"
+                android:layout_below="@id/selectedFolderTitleId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_16">
+                <include layout="@layout/linear_node_item"/>
+            </android.support.v7.widget.CardView>
 
             <!--folder view-->
             <TextView
+                android:layout_below="@id/selectedFolderCardId"
                 android:id="@+id/addBookmarkFolderTitleTextId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -50,10 +44,11 @@
                 android:text="@string/search_bookmark"/>
 
             <com.application.material.bookmarkswallet.app.views.SearchCardviewBoxView
+                android:layout_below="@id/addBookmarkFolderTitleTextId"
                 android:id="@+id/addBookmarkSearchCardviewBoxId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-        </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
 
     <android.support.design.widget.FloatingActionButton
