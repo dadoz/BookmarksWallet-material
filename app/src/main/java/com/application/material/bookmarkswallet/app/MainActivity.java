@@ -1,31 +1,21 @@
 package com.application.material.bookmarkswallet.app;
 
-import android.animation.ObjectAnimator;
-import android.animation.StateListAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
-import android.support.annotation.NonNull;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.v4.view.ViewCompat;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
 import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
-import com.application.material.bookmarkswallet.app.fragments.BookmarkListFragment;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.flurry.android.FlurryAgent;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.lang.ref.WeakReference;
 
