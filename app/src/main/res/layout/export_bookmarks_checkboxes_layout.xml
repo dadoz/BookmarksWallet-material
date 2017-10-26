@@ -1,0 +1,60 @@
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/exportFrameLayoutId"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/BookmarkCheckboxesStyle">
+    <RelativeLayout
+        android:id="@+id/exportFrameContainerId"
+        android:layout_width="match_parent"
+        android:paddingLeft="@dimen/padding_16"
+        android:paddingRight="@dimen/padding_16"
+        android:paddingTop="@dimen/padding_16"
+        android:layout_height="wrap_content">
+
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/exportHTMLCheckboxId"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"/>
+        <TextView
+            android:id="@+id/exportHTMLTextViewId"
+            android:layout_toRightOf="@id/exportHTMLCheckboxId"
+            android:layout_alignBaseline="@id/exportHTMLCheckboxId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_8"
+            android:text="HTML"/>
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_toRightOf="@id/exportHTMLTextViewId"
+            android:id="@+id/exportCSVCheckboxId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"/>
+        <TextView
+            android:id="@+id/exportCSVTextViewId"
+            android:layout_marginLeft="@dimen/margin_8"
+            android:layout_alignBaseline="@id/exportCSVCheckboxId"
+            android:layout_toRightOf="@id/exportCSVCheckboxId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CSV"/>
+
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/exportButtonId"
+        android:layout_alignParentRight="true"
+        android:padding="@dimen/margin_16"
+        android:layout_below="@id/exportFrameContainerId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_18"
+        android:background="?attr/selectableItemBackground"
+        android:text="@string/export_button_label"/>
+
+</RelativeLayout>

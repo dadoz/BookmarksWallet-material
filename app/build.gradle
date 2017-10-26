@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'realm-android'
+apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
     jcenter()
@@ -22,11 +22,11 @@ android {
     defaultConfig {
         applicationId "com.application.material.bookmarkswallet.app"
         vectorDrawables.useSupportLibrary = true
-        minSdkVersion 19 //cut off jellybean support
+        minSdkVersion 21 //cut off jellybean support
         targetSdkVersion 25
-
         versionCode 11
         versionName "3.6.${versionBuildDate}"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -44,60 +44,81 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
+
+            buildConfigField "String", "KOFI_DAVE_URL", "\"https://ko-fi.com/A5431GAR\""
+            buildConfigField "String", "FONT_PATH", "\"fonts/Helvetica-Neue-47-Light-Condensed.otf\""
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             zipAlignEnabled true
+
+            buildConfigField "String", "KOFI_DAVE_URL", "\"https://ko-fi.com/A5431GAR\""
+            buildConfigField "String", "FONT_PATH", "\"fonts/Helvetica-Neue-47-Light-Condensed.otf\""
         }
     }
     lintOptions {
         abortOnError false
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+
 }
 
 
 dependencies {
-    compile 'com.jakewharton:butterknife:8.4.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'com.flurry.android:analytics:6.3.1'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 
-    compile 'joda-time:joda-time:2.7'
+    compile "com.jakewharton:butterknife:$butterknife_version"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife_version"
 
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile "com.flurry.android:analytics:$flurry_version"
 
-    compile 'org.jsoup:jsoup:1.8.1'
+    compile "joda-time:joda-time:$jodatime_version"
 
+    compile "com.squareup.picasso:picasso:$picasso_version"
+
+    compile "org.jsoup:jsoup:$jsoup_version"
+
+    //please replace with the one on linkedin https://github.com/linkedin/shaky-android
     compile 'com.willowtreeapps.saguaro:saguaro-android:1.0.0'
 
     compile 'com.github.hotchemi:android-rate:0.5.0'
 
-    compile 'io.realm:android-adapters:1.3.0'
+    compile "io.realm:android-adapters:$realm_adapter_version"
 
     compile 'org.apache.commons:commons-csv:1.4'
 
-    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+    compile "uk.co.chrisjenx:calligraphy:$calligraphy_version"
 
-    compile 'io.reactivex:rxandroid:1.2.1'
-    // Because RxAndroid releases are few and far between, it is recommended you also
-    // explicitly depend on RxJava's latest version for bug fixes and new features.
-    compile 'io.reactivex:rxjava:1.1.6'
+    compile "io.reactivex.rxjava2:rxandroid:$reactive_version"
+    compile "io.reactivex.rxjava2:rxjava:$rxjava_version"
 
-    //reveal effect api < 21
-    compile ('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
-        transitive = true;
-    }
-    compile 'frankiesardo:icepick:3.2.0'
-    provided 'frankiesardo:icepick-processor:3.2.0'
+    compile "frankiesardo:icepick:$icepick_version"
+    provided "frankiesardo:icepick-processor:$icepick_version"
 
     //material search view
-    compile 'com.miguelcatalan:materialsearchview:1.4.0'
+    compile "com.miguelcatalan:materialsearchview:$materialsearch_version"
 
-    compile 'com.android.support:appcompat-v7:25.3.0'
-    compile 'com.android.support:cardview-v7:25.3.0'
-    compile 'com.android.support:recyclerview-v7:25.3.0'
-    compile 'com.android.support:design:25.3.0'
-    compile 'com.google.android.gms:play-services-appindexing:9.8.0' //8.4.0'
-    compile 'com.squareup.leakcanary:leakcanary-android:1.5.2'
+    //appcompact
+    compile "com.android.support:appcompat-v7:$appcompat_version"
+    compile "com.android.support:cardview-v7:$appcompat_version"
+    compile "com.android.support:recyclerview-v7:$appcompat_version"
+    compile "com.android.support:design:$appcompat_version"
+
+//    //easypermission
+    compile "pub.devrel:easypermissions:$easypermission_version"
+
+    //menu drawer
+    compile('com.mikepenz:materialdrawer:5.8.1@aar') {
+        transitive = true
+    }
+
+    testCompile 'junit:junit:4.12'
+    compile project(path: ':filetreevisitorlibrary')
 }

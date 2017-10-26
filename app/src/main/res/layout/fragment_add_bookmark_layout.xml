@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/addBookmarkRelativeLayoutId"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -12,7 +11,7 @@
         android:layout_below="@id/addBookmarkMainContainerLayoutId"
         android:layout_width="match_parent"
         android:layout_height="@dimen/add_bookmark_background_margin">
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>
@@ -22,14 +21,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/pasteClipboardFabId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="32dp"
-        app:elevation="4dp"
-        app:borderWidth="0dp"
-        style="@style/PasteClipboardButtonStyle"
-        app:fabSize="mini"/>
-</RelativeLayout>
+</FrameLayout>

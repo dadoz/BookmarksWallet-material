@@ -1,82 +1,71 @@
 package com.application.material.bookmarkswallet.app.adapter;
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.util.SparseBooleanArray;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.support.v4.content.ContextCompat;
+import android.util.SparseIntArray;
+import android.view.View;
 
-import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.realm.adapter.RealmRecyclerViewAdapter;
+import com.application.material.bookmarkswallet.app.R;
+import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
+import com.lib.davidelm.filetreevisitorlibrary.adapter.TreeNodeAdapter;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import io.realm.RealmObject;
-import io.realm.RealmResults;
 
 public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> extends
-        RealmRecyclerViewAdapter<Bookmark> {
+        TreeNodeAdapter implements OnNodeClickListener {
     private final MultipleSelector multipleSelector;
+    private WeakReference<OnMultipleSelectorCallback> lst;
 
-    MultipleSelectorHelperAdapter(WeakReference<Context> ctx) {
-        super(ctx);
+    /**
+     *
+     * @param lst
+     * @param noFaviconMode
+     */
+    MultipleSelectorHelperAdapter(OnMultipleSelectorCallback lst, boolean noFaviconMode) {
+        super(new ArrayList<>(), noFaviconMode);
+        this.lst = new WeakReference<>(lst);
         multipleSelector = new MultipleSelector();
+        setOnNodeClickListener(this);
     }
 
-    /**
-     *
-     * @param position
-     */
-    public void setSelectedItemPos(int position) {
-        multipleSelector.setSelectedPos(position, !multipleSelector.isSelectedPos(position));
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean isEmptySelectedPosArray() {
-        return multipleSelector.getSelectedPosArraySize() == 0;
-    }
-
-    /**
-     *
-     */
-    public void notifyRemovedSelectedItems() {
-        for (int i = 0; i < multipleSelector.getSelectedPosArraySize(); i++) {
-            int itemPos = multipleSelector.getSelectedPosArray().keyAt(i);
-            notifyItemRemoved(itemPos);
-        }
-    }
 
     /**
      *
      */
     public void clearSelectedItemPosArray() {
-        multipleSelector.clearSelectedItemPosArray();
+        multipleSelector.clearSelectedItemIdArray();
     }
 
     /**
      *
      * @return
      */
-    public ArrayList<Bookmark> getSelectedItemList() {
-        ArrayList<Bookmark> selectedItemList = new ArrayList<>();
-        //inside multiple selector
-        for (int i = 0; i < multipleSelector.getSelectedPosArraySize(); i++) {
-            int itemPos = multipleSelector.getSelectedPosArray().keyAt(i);
-            selectedItemList.add(getItem(itemPos));
-        }
-        return selectedItemList.size() != 0 ? selectedItemList : null;
+    public SparseIntArray getSelectedItemIdArray() {
+        return multipleSelector.getSelectedIdArray();
+    }
+
+
+
+    @Override
+    public void onBindViewHolder(TreeNodeAdapter.ViewHolder holder, int position) {
+        super.onBindViewHolder(holder, position);
+
+        int selectedColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.indigo_300);
+//        holder.itemView.setBackgroundColor(isSelectedPos(position) ? selectedColor : Color.WHITE);
     }
 
     /**
      *
-     * @return
+     * @param id
      */
-    public Bookmark getSelectedItem() {
-        int itemPos = multipleSelector.getSelectedPosArray().keyAt(0);
-        return getItem(itemPos);
+    public void toggleSelectedItemPos(int id, int position) {
+        multipleSelector.toggleSelectedId(id, position);
+    }
+
+    private void setSelectedItemPos(int id, int position) {
+        multipleSelector.setSelectedId(id, position);
     }
 
     /**
@@ -84,69 +73,112 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
      * @return
      */
     public int getSelectedItemListSize() {
-        return multipleSelector.getSelectedPosArraySize();
+        return multipleSelector.getSelectedIdArraySize();
     }
 
     /**
      *
+     * @param files
      */
-    public void setSelectedAllItemPos() {
-        for (int i = 0; i < getItemCount(); i++) {
-            multipleSelector.setSelectedPos(i, true);
+    public void setSelectedAllItemPos(ArrayList<TreeNodeInterface> files) {
+        if (files != null)
+            for (int i = 0; i < files.size(); i++) {
+                setSelectedItemPos(files.get(i).getId(), i);
+            }
+    }
+
+
+    /**
+     *
+     * @param position
+     */
+    public boolean isSelectedPos(int position) {
+        return multipleSelector.isSelectedPos(position);
+    }
+
+
+    /**
+     *
+     * @param v
+     * @param position
+     * @param node
+     */
+    public void onFileNodeCLick(View v, int position, TreeNodeInterface node) {
+        if (getSelectedItemListSize() != 0) {
+            onFileNodeLongCLick(v, position, node);
+            return;
         }
+
+        if (lst != null && lst.get() != null)
+            lst.get().onFileNodeClickCb(v, position, node);
     }
 
     /**
      *
-     * @param pos
+     * @param v
+     * @param position
+     * @param item
      */
-    public boolean isSelectedPos(int pos) {
-        return multipleSelector.isSelectedPos(pos);
+    public void onFileNodeLongCLick(View v, int position, TreeNodeInterface item) {
+        toggleSelectedItemPos(item.getId(), position);
+        notifyDataSetChanged();
+        if (lst != null && lst.get() != null)
+            lst.get().onFileNodeLongClickCb(v, position, item);
     }
 
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+    public void onFolderNodeCLick(View v, int position, TreeNodeInterface node) {
     }
 
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onFolderNodeLongCLick(View v, int position, TreeNodeInterface item) {
+    }
 
+    public void onMoreSettingsClick(View v, int position, TreeNodeInterface item) {
+    }
+
+    public void onSelectButtonClick(View v, int position, TreeNodeInterface item) {
     }
 
     /**
      * multiple selector handler
      */
     private class MultipleSelector {
-        SparseBooleanArray selectedPosArray = new SparseBooleanArray();
+        SparseIntArray selectedPosArray = new SparseIntArray();
 
         /**
          *
-         * @param pos
-         * @param selected
+         * @param id
+         * @param position
          */
-        protected void setSelectedPos(int pos, boolean selected) {
-            if (!selected) {
-                selectedPosArray.delete(pos);
+        protected void toggleSelectedId(int id, int position) {
+            if (!isSelectedId(id)) {
+                selectedPosArray.put(id, position);
                 return;
             }
-            selectedPosArray.put(pos, true);
+            selectedPosArray.delete(id);
+        }
+        /**
+         *
+         * @param id
+         * @param position
+         */
+        protected void setSelectedId(int id, int position) {
+            selectedPosArray.put(id, position);
         }
 
         /**
          *
-         * @param pos
+         * @param id
          * @return
          */
-        boolean isSelectedPos(int pos) {
-            return selectedPosArray.get(pos, false);
+        boolean isSelectedId(int id) {
+            return selectedPosArray.get(id, -1) != -1;
         }
 
         /**
          *
          * @return
          */
-        private int getSelectedPosArraySize() {
+        private int getSelectedIdArraySize() {
             return selectedPosArray.size();
         }
 
@@ -154,15 +186,19 @@ public abstract class MultipleSelectorHelperAdapter<T extends RealmObject> exten
          *
          * @return
          */
-        private SparseBooleanArray getSelectedPosArray() {
+        private SparseIntArray getSelectedIdArray() {
             return selectedPosArray;
         }
 
         /**
          *
          */
-        private void clearSelectedItemPosArray() {
+        private void clearSelectedItemIdArray() {
             selectedPosArray.clear();
+        }
+
+        public boolean isSelectedPos(int position) {
+            return selectedPosArray.indexOfValue(position) != -1;
         }
     }
 }

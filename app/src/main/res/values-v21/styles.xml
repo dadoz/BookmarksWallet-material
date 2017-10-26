@@ -59,5 +59,20 @@
         <item name="android:textColor">@color/indigo_400</item>
     </style>
 
+    <style name="settingsBackgroundStyle">
+        <item name="android:background">@color/grey_50</item>
+    </style>
+    <style name="BreadCrumbsViewStyle">
+        <item name="backgroundColor">@color/yellow_300</item>
+    </style>
+    <style name="AddFolderViewStyle">
+        <item name="android:background">@color/grey_50</item>
+    </style>
+    <style name="BookmarkCheckboxesStyle">
+        <item name="android:background">@color/yellow_300</item>
+    </style>
+    <style name="SearchMaterialButtonStyle">
+        <item name="backgroundTint">@color/grey_100</item>
+    </style>
 
 </resources>

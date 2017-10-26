@@ -1,0 +1,44 @@
+package com.lib.davidelm.filetreevisitorlibrary.strategies;
+
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeRealm;
+
+import java.lang.ref.WeakReference;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
+
+public class RealmPersistence implements PersistenceStrategyInterface {
+    private static final String TAG = "RealmPersistence";
+
+    RealmPersistence(@NonNull WeakReference<Context> context) {
+        Realm.init(context.get());
+    }
+    /**
+     * reading on local storage
+     */
+    @Nullable
+    @Override
+    public TreeNodeInterface getPersistentNode() {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<TreeNodeRealm> resultList = realm.where(TreeNodeRealm.class).findAll();
+        return resultList.size() != 0 ? realm.copyFromRealm(resultList).get(0) : null;
+    }
+
+    /**
+     * saving on local storage
+     */
+
+    @Override
+    public void setPersistentNode(TreeNodeInterface node) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(((TreeNodeRealm) node));
+        realm.commitTransaction();
+    }
+
+}

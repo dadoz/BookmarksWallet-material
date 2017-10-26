@@ -1,161 +1,104 @@
 package com.application.material.bookmarkswallet.app.views;
 
 import android.content.Context;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.util.SparseArray;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.WebView;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
-import icepick.State;
+import java.lang.ref.WeakReference;
 
-public class AddBookmarkSearchLayout extends RelativeLayout implements View.OnClickListener, TextWatcher {
+public class AddBookmarkSearchLayout extends RelativeLayout implements SearchCardviewBoxView.OnTextChangedCb {
 
-    @State
-    public boolean isTitleViewVisible = false;
     private View addBookmarkSearchButton;
-    private EditText urlEditText;
-    private TextInputLayout addBookmarkUrlTextInput;
-    private EditText addBookmarkTitleEditText;
-    private CheckBox addBookmarkHttpsCheckbox;
-    private ViewSwitcher toggleNameViewSwitcher;
-    private TextInputLayout addBookmarkTitleTextInput;
+    private SearchCardviewBoxView searchCardviewBox;
+    private WeakReference<OnEditorActionListenerCallbacks> onEditorActionLst;
+    private TextView selectedFolderTitleTextView;
+    private TextView selectedFolderDescriptionTextView;
 
 
     public AddBookmarkSearchLayout(Context context) {
         super(context);
-        initializeViews(context);
+        initView();
     }
 
     public AddBookmarkSearchLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initializeViews(context);
+        initView();
     }
 
     public AddBookmarkSearchLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initializeViews(context);
+        initView();
     }
 
     /**
      * initialize view
-     * @param context
      */
-    private void initializeViews(Context context){
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.add_bookmark_search_layout, this);
-        urlEditText = (EditText) view.findViewById(R.id.urlEditTextId);
-        addBookmarkUrlTextInput = (TextInputLayout) view.findViewById(R.id.addBookmarkUrlTextInputId);
-        addBookmarkTitleEditText = (EditText) view.findViewById(R.id.titleEditTextId);
-        addBookmarkHttpsCheckbox = (CheckBox) view.findViewById(R.id.addBookmarkHttpsCheckboxId);
-        toggleNameViewSwitcher = (ViewSwitcher) view.findViewById(R.id.toggleNameViewSwitcherId);
-        addBookmarkTitleTextInput = (TextInputLayout) view.findViewById(R.id.addBookmarkTitleTextInputId);
-        addBookmarkSearchButton = view.findViewById(R.id.addBookmarkSearchButtonId);
+    private void initView() {
+        inflate(getContext(), R.layout.add_bookmark_search_layout, this);
+        selectedFolderTitleTextView = (TextView) findViewById(R.id.nodeLabelTextId);
+        selectedFolderDescriptionTextView = (TextView) findViewById(R.id.nodeDescriptionTextId);
+        addBookmarkSearchButton = findViewById(R.id.addBookmarkSearchButtonId);
 
+        searchCardviewBox = (SearchCardviewBoxView) findViewById(R.id.addBookmarkSearchCardviewBoxId);
+        searchCardviewBox.setListenerCb(new WeakReference<>(this));
     }
-
-    /**
-     *
-     * @param savedInstanceState
-     */
-    public void initView(Bundle savedInstanceState) {
-//        searchBookmarkHelper.init(new View[] { urlEditText, pasteClipboardFab,
-//                addBookmarkSearchButton, addBookmarkUrlTextInput });
-        addBookmarkSearchButton.setOnClickListener(this);
-        toggleNameViewSwitcher.setOnClickListener(this);
-        urlEditText.addTextChangedListener(this);
-    }
-
 
     /**
      * get search params
+     * @param folderNodeId
      */
-    public SparseArray<String> getSearchParamsArray() {
-        SparseArray<String> searchParamsArray = new SparseArray<>();
-        searchParamsArray.put(0, Utils.buildUrl(urlEditText.getText().toString(), addBookmarkHttpsCheckbox.isChecked()));
-        searchParamsArray.put(1, addBookmarkTitleEditText.getText().toString());
+    public SparseArrayParcelable<String> getSearchParamsArray(int folderNodeId) {
+        SparseArrayParcelable<String> searchParamsArray = new SparseArrayParcelable<>();
+        searchParamsArray.put(0, Utils.buildUrl(searchCardviewBox.getUrl(),
+                searchCardviewBox.isHttpsChecked()));
+        searchParamsArray.put(1, searchCardviewBox.getTitle().equals("") ?
+                getContext().getString(R.string.no_title) : searchCardviewBox.getTitle());
+        searchParamsArray.put(2, null);//pos 2 empty to set icon url
+        searchParamsArray.put(3, Integer.toString(folderNodeId)); //folder nodeId
         return searchParamsArray;
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.toggleNameViewSwitcherId:
-                toggleTitleVisibility();
-                break;
-        }
-
-    }
-
     /**
-     * toggle title
+     * set selected folder
+     * @param title
+     * @param description
      */
-    private void toggleTitleVisibility() {
-        //set titleView visible status
-        isTitleViewVisible = addBookmarkTitleTextInput.getVisibility() == View.VISIBLE;
-        initSearchTitleView(!isTitleViewVisible);
-    }
-
-    /**
-     *
-     * @param isVisible
-     */
-    public void initSearchTitleView(boolean isVisible) {
-        addBookmarkHttpsCheckbox.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        addBookmarkTitleTextInput.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        toggleNameViewSwitcher.getCurrentView().setVisibility(!isVisible ? View.VISIBLE : View.GONE);
-        toggleNameViewSwitcher.getNextView().setVisibility(!isVisible ? View.GONE : View.VISIBLE);
-        addBookmarkHttpsCheckbox.setChecked(false);
-        addBookmarkTitleEditText.setText("");
-    }
-
-
-
-    @Override
-    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    public void setSelectedFolder(String title, String description) {
+        selectedFolderTitleTextView.setText(title);
+        selectedFolderDescriptionTextView.setText(description);
     }
 
     @Override
-    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        showErrorOnUrlEditText(false);
-        boolean isQueryEmpty = charSequence.length() == 0;
-//        clipboardFabButton.setVisibility(isQueryEmpty ? View.VISIBLE : View.GONE);
-        addBookmarkSearchButton.setVisibility(isQueryEmpty ? View.GONE : View.VISIBLE);
+    public void onTextChangedCb(CharSequence charSequence) {
+        addBookmarkSearchButton.setVisibility(charSequence.length() == 0 ? GONE : VISIBLE);
     }
 
     @Override
-    public void afterTextChanged(Editable editable) {
+    public void onEditorActionCb(TextView textView) {
+        if (onEditorActionLst != null &&
+                onEditorActionLst.get() != null)
+            onEditorActionLst.get().onEditorActionCb(textView);
     }
 
-    /**
-     *
-     * @param showError
-     */
-    public void showErrorOnUrlEditText(boolean showError) {
-        addBookmarkUrlTextInput.setError(!showError ? null : "wrong error");
+    public void setUrl(String url) {
+        searchCardviewBox.setUrl(url);
     }
 
-    public EditText getUrlEditTextView() {
-        return urlEditText;
+    public void showErrorOnUrlEditText(boolean b) {
+        searchCardviewBox.showErrorOnUrlEditText(b);
+    }
+
+    public void setOnEditorActionLst(OnEditorActionListenerCallbacks onEditorActionLst) {
+        this.onEditorActionLst = new WeakReference<>(onEditorActionLst);
+    }
+
+    public interface OnEditorActionListenerCallbacks {
+        void onEditorActionCb(TextView textView);
     }
 }

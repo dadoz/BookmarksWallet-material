@@ -3,60 +3,56 @@ package com.application.material.bookmarkswallet.app.strategies;
 import android.content.Context;
 import android.view.View;
 
-import com.application.material.bookmarkswallet.app.helpers.CSVExportHelper;
-import com.application.material.bookmarkswallet.app.helpers.ExportHelper;
-import com.application.material.bookmarkswallet.app.helpers.HtmlExportHelper;
+import com.application.material.bookmarkswallet.app.helpers.OnExportResultCallback;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 public class ExportStrategy {
     private static WeakReference<Context> context;
-    private static ExportTypeEnum defaultType = ExportStrategy.ExportTypeEnum.HTML;
-    private static ExportHelper exportInstance;
+    private static BaseExport exportInstance;
     private static ExportStrategy instance;
     private static View view;
+    public enum ExportTypeEnum { CSV, HTML}
 
     /**
      *
+     * @param list
      */
-    public enum ExportTypeEnum { CSV, HTML}
+    public void createFile(List<TreeNodeInterface> list) {
+        exportInstance.createFile(list);
+    }
+
+    /**
+     *
+     * @param listener
+     */
+    public void createFileAsync(OnExportResultCallback listener) {
+        WeakReference<OnExportResultCallback> lst = new WeakReference<>(listener);
+        exportInstance.createFileAsync(lst);
+    }
 
     /**
      *
      *  TODO follow sm pattern
      * @return
      */
-    public static ExportHelper buildInstance(WeakReference<Context> ctx, View v) {
-        instance = new ExportStrategy();
+    public static ExportStrategy getInstance(WeakReference<Context> ctx, View v) {
+        instance = instance == null ? new ExportStrategy() : instance;
         context =  ctx;
         view = v;
-        return setExportStrategy(defaultType);
-    }
-
-    /**
-     *
-     * @param type
-     * @return
-     */
-    public static ExportHelper setExportStrategy(ExportTypeEnum type) {
-        return exportInstance = getExportHelper(type);
+        return instance;
     }
 
     /**
      *
      * @return
      */
-    public static ExportHelper getInstance(WeakReference<Context> ctx) {
+    public static ExportStrategy getInstance(WeakReference<Context> ctx) {
+        instance = instance == null ? new ExportStrategy() : instance;
         context =  ctx;
-        return instance.getExportInstance();
-    }
-
-    /**
-     *
-     * @return
-     */
-    private ExportHelper getExportInstance() {
-        return exportInstance;
+        return instance;
     }
 
 
@@ -65,13 +61,14 @@ public class ExportStrategy {
      * @param type
      * @return
      */
-    private static ExportHelper getExportHelper(ExportTypeEnum type) {
+    public void setExportStrategy(ExportTypeEnum type) {
         if (type.name().compareTo(ExportTypeEnum.CSV.name()) == 0) {
-            return new CSVExportHelper(context, view);
+            exportInstance = new CSVExport(context, view);
         } else if (type.name().compareTo(ExportTypeEnum.HTML.name()) == 0) {
-            return new HtmlExportHelper(context, view);
+            exportInstance = new HtmlExport(context, view);
+        } else {
+            //default case
+            exportInstance = new HtmlExport(context, view);
         }
-        return new CSVExportHelper(context, view);
     }
-
 }

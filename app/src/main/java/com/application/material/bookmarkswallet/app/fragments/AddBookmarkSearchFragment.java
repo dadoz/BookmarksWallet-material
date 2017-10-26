@@ -1,11 +1,8 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.SparseArray;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,31 +10,34 @@ import android.widget.TextView;
 
 import com.application.material.bookmarkswallet.app.MainActivity;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.application.BookmarksWalletApplication;
-import com.application.material.bookmarkswallet.app.manager.ClipboardManager;
+import com.application.material.bookmarkswallet.app.application.MaterialBookmarkApplication;
 import com.application.material.bookmarkswallet.app.manager.SearchManager;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
+import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
 import com.application.material.bookmarkswallet.app.utlis.ConnectionUtils;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.application.material.bookmarkswallet.app.views.AddBookmarkSearchLayout;
 
-import java.lang.ref.WeakReference;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import icepick.Icepick;
+import icepick.State;
 
 public class AddBookmarkSearchFragment extends Fragment implements View.OnClickListener,
-        SwipeRefreshLayout.OnRefreshListener, TextView.OnEditorActionListener {
+        SwipeRefreshLayout.OnRefreshListener, AddBookmarkSearchLayout.OnEditorActionListenerCallbacks {
     public final static String FRAG_TAG = "AddBookmarkSearchFragment";
     @BindView(R.id.addBookmarkSearchLayoutId)
     AddBookmarkSearchLayout addBookmarkSearchLayout;
-    @BindView(R.id.pasteClipboardFabId)
-    FloatingActionButton pasteClipboardFab;
     @BindView(R.id.addBookmarkRefreshLayoutId)
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.addBookmarkSearchButtonId)
     View addBookmarkSearchButton;
+    private Unbinder unbinder;
+    @State
+    int folderNodeId = -1;
+    @State
+    String folderNodeName;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstance) {
@@ -55,35 +55,47 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstance) {
         View mainView = inflater.inflate(R.layout.fragment_add_bookmark_layout, container, false);
-        ButterKnife.bind(this, mainView);
+        unbinder = ButterKnife.bind(this, mainView);
         setHasOptionsMenu(true);
-        initView(savedInstance);
+        initView();
         return mainView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (unbinder != null)
+            unbinder.unbind();
     }
 
     /**
      *
-     * @param savedInstanceState
      */
-    public void initView(Bundle savedInstanceState) {
-        addBookmarkSearchLayout.initView(savedInstanceState);
-        pasteClipboardFab.setOnClickListener(this);
-        addBookmarkSearchLayout.getUrlEditTextView().setOnEditorActionListener(this);
+    public void initView() {
+        handleArguments();
+
+        //init view
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setColorSchemeResources(R.color.indigo_600, R.color.yellow_400);
+        addBookmarkSearchLayout.setOnEditorActionLst(this);
         addBookmarkSearchButton.setOnClickListener(this);
-        if (getArguments() != null) {
-            handleArguments();
-        }
+        addBookmarkSearchLayout.setSelectedFolder(folderNodeName, "description");
     }
 
     /**
      *
      */
     private void handleArguments() {
-        if (getArguments().getString(MainActivity.SHARED_URL_EXTRA_KEY) != null) {
-            String sharedUrl = getArguments().getString(MainActivity.SHARED_URL_EXTRA_KEY);
-            addBookmarkSearchLayout.getUrlEditTextView().setText(sharedUrl);
+        if (getArguments() != null) {
+            if (getArguments().getString(MainActivity.SHARED_URL_EXTRA_KEY) != null) {
+                addBookmarkSearchLayout.setUrl(getArguments()
+                        .getString(MainActivity.SHARED_URL_EXTRA_KEY));
+            }
+            if (getArguments().getString(MainActivity.FOLDER_EXTRA_KEY) != null) {
+                //do smthing with folderId
+                folderNodeId = Integer.parseInt(getArguments().getString(MainActivity.FOLDER_EXTRA_KEY));
+                folderNodeName = getArguments().getString(MainActivity.FOLDER_NAME_EXTRA_KEY);
+            }
         }
     }
 
@@ -93,34 +105,26 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
             case R.id.addBookmarkSearchButtonId:
                 searchAction();
                 break;
-            case R.id.pasteClipboardFabId:
-                String url = ClipboardManager.getInstance(new WeakReference<>(getContext()))
-                        .getTextFromClipboard();
-                addBookmarkSearchLayout.getUrlEditTextView().setText(url);
-                break;
         }
-    }
-
-    @Override
-    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-        searchAction();
-        return true;
     }
 
 
     /**
-     * search action triggerd by view
+     * search action triggered by view
      */
     public void searchAction() {
+        SparseArrayParcelable<String> searchParamsArray = addBookmarkSearchLayout.getSearchParamsArray(folderNodeId);
         boolean isConnected = ConnectionUtils.isConnected(getContext());
-        SparseArray<String> searchParamsArray = addBookmarkSearchLayout.getSearchParamsArray();
-        if (isConnected &&
-                SearchManager.search(searchParamsArray.get(0))) {
-            onSearchSuccess(searchParamsArray);
+
+        //handle error
+        if (!isConnected ||
+                !SearchManager.isSearchValid(searchParamsArray.get(0))) {
+            onSearchError(isConnected);
             return;
         }
 
-        onSearchError(isConnected);
+        //handle success
+        onSearchSuccess(searchParamsArray);
     }
 
     /**
@@ -140,9 +144,12 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
      * search success ui
      * @param searchParamsArray
      */
-    private void onSearchSuccess(SparseArray<String> searchParamsArray) {
+    private void onSearchSuccess(SparseArrayParcelable<String> searchParamsArray) {
+        //set mode
         StatusManager.getInstance().setOnResultMode();
-        ((BookmarksWalletApplication) getActivity().getApplication())
+
+        //set params on application
+        ((MaterialBookmarkApplication) getActivity().getApplication())
                 .setSearchParamsArray(searchParamsArray);
 
         //change frag
@@ -157,5 +164,10 @@ public class AddBookmarkSearchFragment extends Fragment implements View.OnClickL
     @Override
     public void onRefresh() {
         refreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onEditorActionCb(TextView textView) {
+        searchAction();
     }
 }

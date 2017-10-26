@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?attr/selectableItemBackground">
+    <RelativeLayout
+        android:padding="@dimen/margin_16"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/nodeIconImageId"
+            android:layout_width="@dimen/small_folder_icon_width"
+            android:layout_height="@dimen/small_folder_icon_width"
+            android:src="@mipmap/ic_folder"/>
+        <TextView
+            android:id="@+id/nodeLabelTextId"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_toRightOf="@id/nodeIconImageId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_18"
+            android:text="node name"/>
+        <TextView
+            android:id="@+id/nodeDescriptionTextId"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_toRightOf="@id/nodeIconImageId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nodeLabelTextId"
+            android:textSize="@dimen/text_size_12"
+            android:text="node name"/>
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

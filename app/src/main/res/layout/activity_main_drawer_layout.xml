@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawerLayoutId"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--main injected view-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragmentContainerFrameLayoutId"
+        android:layout_marginTop="?attr/actionBarSize"/>
+
+    <!--toolbar-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarId"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            style="@style/ToolbarCustomStyle"/>
+        <com.miguelcatalan.materialsearchview.MaterialSearchView
+            style="@style/MaterialSearchViewStyle"
+            android:id="@+id/searchViewId"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"/>
+    </FrameLayout>
+
+</RelativeLayout>

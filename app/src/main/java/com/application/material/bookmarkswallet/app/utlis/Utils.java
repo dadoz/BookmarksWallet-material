@@ -20,6 +20,8 @@ import android.widget.ImageView;
 
 import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.models.Bookmark;
+import com.application.material.bookmarkswallet.app.models.SparseArrayParcelable;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -30,8 +32,6 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Utils {
     public static final int ADD_BOOKMARK_ACTIVITY_REQ_CODE = 99;
@@ -41,19 +41,7 @@ public class Utils {
     private static final String HTTPS_PROTOCOL = "https://";
     public static final int MAX_CARD_COUNT= 2;
 
-    /**
-     * @param url
-     * @return
-     */
-    public static boolean isValidUrl(String url) {
-        Pattern p = Pattern.
-                compile("(@)?(href=')?(HREF=')?(HREF=\")?(href=\")?(http://)?(https://)?(ftp://)?[a-zA-Z_0-9\\-]+(\\.\\w[a-zA-Z_0-9\\-]+)+(/([#&\\n\\-=?\\+\\%/\\.\\w]+)?)?");
 
-        Matcher m = p.matcher(url);
-        return ! url.equals("") &&
-                m.matches();
-
-    }
 
     /**
      * hide Keyboard
@@ -312,4 +300,45 @@ public class Utils {
                         R.color.red_400 : R.color.indigo_600));
         return snackbar;
     }
+
+    /**
+     *
+     * @param searchParamsArray
+     * @return
+     */
+    public static TreeNodeContent createContentNode(SparseArrayParcelable searchParamsArray) {
+       return new TreeNodeContent() {
+            @Override
+            public String getName() {
+                return searchParamsArray.get(1).toString();
+            }
+
+            @Override
+            public String getDescription() {
+                return searchParamsArray.get(0).toString();
+            }
+
+            @Override
+            public String getFileUri() {
+                return searchParamsArray.get(2) != null ? searchParamsArray.get(2).toString() : null;
+            }
+
+            @Override
+            public byte[] getFileBlob() {
+                return null;
+            }
+
+            @Override
+            public int getFileResource() {
+                return 0;
+            }
+
+            @Override
+            public int getFolderResource() {
+                return 0;
+            }
+        };
+    }
+
+    public static final String SEARCH_PARAMS = "search_params_add_bookmark";
 }

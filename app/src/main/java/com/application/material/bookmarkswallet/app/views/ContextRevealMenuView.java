@@ -1,23 +1,21 @@
 package com.application.material.bookmarkswallet.app.views;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.application.material.bookmarkswallet.app.R;
+import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper;
 import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper.ActionMenuRevealCallbacks;
 import com.application.material.bookmarkswallet.app.helpers.ActionbarHelper;
-import com.application.material.bookmarkswallet.app.helpers.NightModeHelper;
-import com.application.material.bookmarkswallet.app.helpers.ActionMenuRevealHelper;
-import com.application.material.bookmarkswallet.app.utlis.Utils;
 import com.flurry.android.FlurryAgent;
 
 import java.lang.ref.WeakReference;
-
-public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout implements View.OnClickListener {
+@Deprecated
+public class ContextRevealMenuView extends FrameLayout implements View.OnClickListener {
     private ImageView exportIcon;
     private ImageView settingsIcon;
     private ImageView gridviewResizeIcon;
@@ -52,18 +50,18 @@ public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout 
         exportIcon.setOnClickListener(this);
         settingsIcon.setOnClickListener(this);
         gridviewResizeIcon.setOnClickListener(this);
-        setColorByNightMode();
+//        setColorByNightMode();
     }
 
     /**
      *
      */
-    private void setColorByNightMode() {
-        int color = NightModeHelper.getInstance().isNightMode() ? R.color.grey_50 : R.color.indigo_600;
-        for (ImageView view : new ImageView[] {exportIcon, settingsIcon, gridviewResizeIcon}) {
-            view.setImageDrawable(Utils.getColoredIcon(getContext(), view.getDrawable(), color));
-        }
-    }
+//    private void setColorByNightMode() {
+//        int color = NightModeHelper.getInstance().isNightMode() ? R.color.grey_50 : R.color.indigo_600;
+//        for (ImageView view : new ImageView[] {exportIcon, settingsIcon, gridviewResizeIcon}) {
+//            view.setImageDrawable(Utils.getColoredIcon(getContext(), view.getDrawable(), color));
+//        }
+//    }
 
     /**
      *
@@ -106,8 +104,8 @@ public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout 
                 expandedGridview ? R.drawable.ic_view_quilt_black_48dp :
                         R.drawable.ic_view_stream_black_48dp));
 
-        gridviewResizeIcon.setImageDrawable(Utils.getColoredIcon(getContext(), gridviewResizeIcon.getDrawable(),
-                NightModeHelper.getInstance().isNightMode() ? R.color.grey_50 : R.color.indigo_600));
+//        gridviewResizeIcon.setImageDrawable(Utils.getColoredIcon(getContext(), gridviewResizeIcon.getDrawable(),
+//                NightModeHelper.getInstance().isNightMode() ? R.color.grey_50 : R.color.indigo_600));
 
     }
 

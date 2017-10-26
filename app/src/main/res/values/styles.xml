@@ -60,7 +60,7 @@
     </style>
 
     <style name="PasteClipboardButtonStyle">
-        <item name="backgroundTint">@color/indigo_600</item>
+        <item name="backgroundTint">@color/amber_600</item>
         <item name="android:src">@drawable/ic_content_paste_white_18dp</item>
     </style>
 
@@ -69,11 +69,17 @@
         <item name="backgroundTint">@color/indigo_600</item>
         <item name="android:textColor">@color/grey_50</item>
     </style>
+    <!-- FAB STYLE-->
+    <style name="customMaterialFabInvertedStyle" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="backgroundTint">@color/amber_600</item>
+        <item name="android:src">@mipmap/ic_chevron_right_white</item>
+    </style>
+
 
     <!-- BUTTON STYLE-->
-    <style name="customMaterialButtonStyle" parent="@style/Widget.AppCompat.Button.Colored">
-        <item name="backgroundTint">@color/yellow_400</item>
-        <item name="android:textColor">@color/indigo_600</item>
+    <style name="CustomMaterialButtonStyle" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="backgroundTint">@color/amber_600</item>
+        <item name="android:textColor">@color/grey_50</item>
     </style>
 
     <style name="AddBookmarkSearchBoxCollapseIcons">
@@ -90,5 +96,24 @@
         <item name="android:textColor">@color/grey_900</item>
         <!-- Change hint text color for edit text -->
         <item name="android:textColorHint">@color/indigo_600</item>
+    </style>
+
+    <style name="settingsBackgroundStyle">
+        <item name="android:background">@color/grey_50</item>
+    </style>
+    <style name="BreadCrumbsViewStyle">
+        <item name="backgroundColor">@color/yellow_300</item>
+    </style>
+
+    <style name="AddFolderViewStyle">
+        <item name="android:background">@color/grey_50</item>
+    </style>
+
+    <style name="BookmarkCheckboxesStyle">
+        <item name="android:background">@color/yellow_300</item>
+    </style>
+
+    <style name="SearchMaterialButtonStyle">
+        <item name="backgroundTint">@color/grey_100</item>
     </style>
 </resources>

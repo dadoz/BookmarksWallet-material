@@ -9,11 +9,11 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.animator.AnimatorBuilder;
+import com.application.material.bookmarkswallet.app.animator.AnimationBuilder;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 
 import java.lang.ref.WeakReference;
-
+@Deprecated
 public class SearchResultPresenter implements ViewTreeObserver.OnGlobalLayoutListener {
     private static final long MIN_DELAY = 1000;
     private static View resultLayout;
@@ -96,7 +96,7 @@ public class SearchResultPresenter implements ViewTreeObserver.OnGlobalLayoutLis
     private Animator slideToBottomMainLayout(boolean isSlidingBottom) {
         int startY = isSlidingBottom ? 0 : viewHeight;
         int endY = isSlidingBottom ? viewHeight : 0;
-        return AnimatorBuilder.getInstance(context)
+        return AnimationBuilder.getInstance(context.get())
                 .getYTranslation(searchCardViewLayout, startY, endY, 0);
     }
 
@@ -107,7 +107,7 @@ public class SearchResultPresenter implements ViewTreeObserver.OnGlobalLayoutLis
     public Animator slideToTopResultLayout(boolean slideToTop) {
         int startY = slideToTop ? viewHeight : 0;
         int endY = slideToTop? 0 : viewHeight;
-        Animator animator = AnimatorBuilder.getInstance(context).getYTranslation(resultLayout, startY, endY, 0);
+        Animator animator = AnimationBuilder.getInstance(context.get()).getYTranslation(resultLayout, startY, endY, 0);
         animator.setStartDelay(slideToTop ? MIN_DELAY : 0);
         return animator;
     }
@@ -128,7 +128,7 @@ public class SearchResultPresenter implements ViewTreeObserver.OnGlobalLayoutLis
     public ValueAnimator setBackgroundColorToFrameLayout(boolean isToBeColored) {
         int startColor = isToBeColored ? grey : yellow;
         int endColor = isToBeColored ? yellow : grey;
-        return AnimatorBuilder.getInstance(context).buildColorAnimator(frameLayout, startColor, endColor);
+        return AnimationBuilder.getInstance(context.get()).buildColorAnimator(frameLayout, startColor, endColor);
     }
 
     @Override

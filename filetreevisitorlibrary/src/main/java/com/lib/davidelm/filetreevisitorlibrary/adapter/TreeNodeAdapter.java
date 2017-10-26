@@ -1,0 +1,332 @@
+package com.lib.davidelm.filetreevisitorlibrary.adapter;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.Volley;
+import com.lib.davidelm.filetreevisitorlibrary.OnNodeClickListener;
+import com.lib.davidelm.filetreevisitorlibrary.R;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeContent;
+import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
+import com.lib.davidelm.filetreevisitorlibrary.views.ExclusiveSelectionButton;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
+
+
+public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHolder> {
+    private final List<TreeNodeInterface> items;
+    private RequestQueue volleyQueue;
+    private WeakReference<OnNodeClickListener> lst;
+    private boolean showMoreSettingButton;
+    private final boolean noFaviconMode;
+
+    public TreeNodeAdapter(List<TreeNodeInterface> list, WeakReference<OnNodeClickListener> lst,
+                           Context context, boolean showMoreSettingButton, boolean noFaviconMode) {
+        this.items = list;
+        this.lst = lst;
+        this.noFaviconMode = noFaviconMode;
+        this.showMoreSettingButton = showMoreSettingButton;
+        volleyQueue = Volley.newRequestQueue(context);
+
+    }
+
+    public TreeNodeAdapter(List<TreeNodeInterface> list, boolean noFaviconMode) {
+        this.items = list;
+        this.noFaviconMode = noFaviconMode;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        int nodeLayoutRes = viewType == 0 ? R.layout.linear_node_item : R.layout.cardview_node_item;
+        View view = View.inflate(parent.getContext(), nodeLayoutRes, null);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return items.get(position).isFolder() ? 0 : 1;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        TreeNodeInterface item = items.get(position);
+        TreeNodeContent nodeContent = item.getNodeContent();
+
+        holder.nodeLabelText.setText(nodeContent.getName());
+
+        holder.nodeDescriptionText.setVisibility(nodeContent.getDescription() == null ? View.GONE : View.VISIBLE);
+        holder.nodeDescriptionText.setText(nodeContent.getDescription());
+        setIcon(holder.nodeIconImage, holder.itemView.getContext(), items.get(position).isFolder(), nodeContent);
+
+        //set long click listner
+        setLongClickListener(holder, position, item);
+
+        //set click listner
+        setClickListener(holder, position, item);
+
+        //set on more setting button click - only on linear views
+        setMoreSettingClickListener(holder, position, item);
+
+        //handle set select button click
+        setSelectClickListener(holder, position, item);
+    }
+
+    /**
+     *
+     * @param lst
+     */
+    public void setOnNodeClickListener(OnNodeClickListener lst) {
+        this.lst = new WeakReference<>(lst);
+    }
+
+    /**
+     *
+     * @param holder
+     * @param position
+     * @param item
+     */
+    private void setSelectClickListener(@NonNull ViewHolder holder, final int position, @NonNull TreeNodeInterface item) {
+        if (getItemViewType(position) == 0) {
+            holder.nodeSelectButton.setVisibility(!showMoreSettingButton ?View.VISIBLE : View.GONE);
+            holder.nodeSelectButton.setSelected(item.isSelected());
+
+            holder.nodeSelectButton.setOnClickListener(v -> {
+                exclusiveItemToggleSelection(item);
+                notifyDataSetChanged();
+
+                //set cbs
+                if (lst != null && lst.get() != null)
+                    lst.get().onSelectButtonClick(v, position, item);
+            });
+        }
+    }
+
+    /**
+     *
+     * @param item
+     */
+    private void exclusiveItemToggleSelection(@NonNull TreeNodeInterface item) {
+        //unslect the others
+        for (TreeNodeInterface temp : items)
+            if (item.getId() != temp.getId())
+                temp.setSelected(false);
+
+        //select current item
+        item.toggleSelected();
+    }
+
+    /**
+     *
+     * @param holder
+     * @param position
+     * @param item
+     */
+    private void setMoreSettingClickListener(@NonNull ViewHolder holder, int position, TreeNodeInterface item) {
+        if (getItemViewType(position) == 0) {
+            holder.nodeMoreSettingsButton.setVisibility(showMoreSettingButton ?View.VISIBLE : View.GONE);
+            holder.nodeMoreSettingsButton.setOnClickListener(v -> {
+                if (lst != null && lst.get() != null)
+                    lst.get().onMoreSettingsClick(v, position, item);
+            });
+        }
+
+    }
+
+    /**
+     *
+     * @param holder
+     * @param position
+     * @param item
+     */
+    private void setClickListener(@NonNull ViewHolder holder, int position, @NonNull TreeNodeInterface item) {
+        holder.itemView.setOnClickListener(v -> {
+            if (lst != null && lst.get() != null) {
+                if (item.isFolder())
+                    lst.get().onFolderNodeCLick(v, position, item);
+                else
+                    lst.get().onFileNodeCLick(v, position, item);
+            }
+        });
+
+    }
+
+    /**
+     *
+     * @param holder
+     * @param position
+     * @param item
+     */
+    private void setLongClickListener(@NonNull ViewHolder holder, int position, @NonNull TreeNodeInterface item) {
+        holder.itemView.setOnLongClickListener(v -> {
+            if (lst != null && lst.get() != null) {
+                if (item.isFolder())
+                    lst.get().onFolderNodeLongCLick(v, position, item);
+                else
+                    lst.get().onFileNodeLongCLick(v, position, item);
+            }
+            return true;
+        });
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return items != null ? items.size() : 0;
+    }
+
+    /**
+     *
+     * @param position
+     * @return
+     */
+    public TreeNodeInterface getItem(int position) {
+        return items.get(position);
+    }
+
+    /**
+     * add single item
+     * @param node
+     */
+    public void addItem(TreeNodeInterface node) {
+        items.add(node);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * add items
+     * @param list
+     */
+    public void addItems(@NonNull List<TreeNodeInterface> list) {
+        items.clear(); //TODO fix it THIS IS WRONG
+        items.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    /**
+     *
+     */
+    public void clearItems() {
+        items.clear();
+        notifyDataSetChanged();
+    }
+
+    /**
+     * remove item
+     * @param childNode
+     */
+    public void removeItem(TreeNodeInterface childNode) {
+        int position = items.indexOf(childNode);
+        items.remove(position);
+        notifyDataSetChanged();
+    }
+
+    /**
+     *
+     * @param position
+     */
+    public void removeItem(int position) {
+        items.remove(position);
+        notifyDataSetChanged();
+    }
+
+    /**
+     *
+     * @param imageView
+     * @param context
+     * @param isFolder
+     * @param nodeContent
+     */
+    private void setIcon(@NonNull ImageView imageView, @NonNull Context context, boolean isFolder, @NonNull TreeNodeContent nodeContent) {
+        try {
+            imageView.setImageDrawable(isFolder ? ContextCompat.getDrawable(context, R.mipmap.ic_folder) :
+                    getFileIcon(nodeContent, context));
+
+            //update image with icon one
+            if (!noFaviconMode &&
+                    !isFolder &&
+                    nodeContent.getFileUri() != null) {
+                volleyIconRequest(context, nodeContent, imageView);
+            }
+
+        } catch (Exception e) {
+            imageView.setImageDrawable(ContextCompat.getDrawable(context,
+                    isFolder ? R.mipmap.ic_folder : R.mipmap.ic_bookmark_border_dark));
+        }
+    }
+
+    /**
+     *
+     * @throws Exception
+     */
+    private void volleyIconRequest(Context context, TreeNodeContent nodeContent, ImageView imageView) throws Exception {
+        volleyQueue.add(new ImageRequest(nodeContent.getFileUri(),
+                imageView::setImageBitmap,
+                0, 0, ImageView.ScaleType.CENTER_CROP,
+                Bitmap.Config.ARGB_8888,
+                error -> imageView.setImageDrawable(ContextCompat.getDrawable(context,
+                        R.mipmap.ic_bookmark_border_dark))));
+    }
+
+    /***
+     *  @param nodeContent
+     * @param context
+     */
+    private Drawable getFileIcon(TreeNodeContent nodeContent, Context context) throws Exception {
+        if (nodeContent.getFileResource() != -1 &&
+                nodeContent.getFileResource() != 0) {
+            return ContextCompat.getDrawable(context, nodeContent.getFileResource());
+        }
+        return ContextCompat.getDrawable(context, R.mipmap.ic_bookmark_border_dark);
+    }
+
+    /**
+     *
+     */
+    public void clearSelectedItem() {
+        for (TreeNodeInterface item : items)
+            item.setSelected(false);
+        notifyDataSetChanged();
+    }
+
+
+    /**
+     * view holder
+     */
+    protected class ViewHolder extends RecyclerView.ViewHolder {
+        @NonNull
+        private final TextView nodeLabelText;
+        @NonNull
+        private final ImageView nodeIconImage;
+        @NonNull
+        private final TextView nodeDescriptionText;
+        @NonNull
+        private final ImageView nodeMoreSettingsButton;
+        @NonNull
+        private final ExclusiveSelectionButton nodeSelectButton;
+
+        ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            nodeSelectButton = (ExclusiveSelectionButton) itemView.findViewById(R.id.nodeMoreSelectButtonId);
+            nodeMoreSettingsButton = (ImageView) itemView.findViewById(R.id.nodeMoreSettingsButtonId);
+            nodeIconImage = (ImageView) itemView.findViewById(R.id.nodeIconImageId);
+            nodeDescriptionText = (TextView) itemView.findViewById(R.id.nodeDescriptionTextId);
+            nodeLabelText = (TextView) itemView.findViewById(R.id.nodeLabelTextId);
+        }
+    }
+
+    public List<TreeNodeInterface> getItems() {
+        return items;
+    }
+
+}

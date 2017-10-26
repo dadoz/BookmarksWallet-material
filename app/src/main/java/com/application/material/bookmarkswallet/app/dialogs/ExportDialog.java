@@ -9,19 +9,12 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.helpers.CSVExportHelper;
-import com.application.material.bookmarkswallet.app.helpers.HtmlExportHelper;
 import com.application.material.bookmarkswallet.app.helpers.OnExportResultCallback;
-import com.application.material.bookmarkswallet.app.models.Bookmark;
-import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 public class ExportDialog implements DialogInterface.OnClickListener,
         CompoundButton.OnCheckedChangeListener, OnExportResultCallback, View.OnClickListener {
@@ -32,7 +25,6 @@ public class ExportDialog implements DialogInterface.OnClickListener,
 
     public ExportDialog(WeakReference<Context> context, View v) {
         ctx = context;
-//        exportBookmarkList = list;
         view = v;
     }
 
@@ -42,7 +34,7 @@ public class ExportDialog implements DialogInterface.OnClickListener,
     public void dialogHandler() {
         AlertDialog dialog = new AlertDialog.Builder(ctx.get(), R.style.CustomLollipopDialogStyle)
                 .setTitle(ctx.get().getString(R.string.export_dialog_title))
-                .setView(R.layout.dialog_export_bookmarks_layout)
+                .setView(R.layout.export_bookmarks_checkboxes_layout)
                 .setNegativeButton(ctx.get().getString(android.R.string.cancel), this)
                 .setPositiveButton(ctx.get().getString(android.R.string.yes), this)
                 .create();
@@ -82,15 +74,15 @@ public class ExportDialog implements DialogInterface.OnClickListener,
      * TODO async
      */
     private void handlePositiveButton() {
-        if (csvCheckbox.isChecked()) {
-            ((CSVExportHelper) ExportStrategy
-                    .setExportStrategy(ExportStrategy.ExportTypeEnum.CSV))
-                    .createFileAsync(new WeakReference<OnExportResultCallback>(this));
-            return;
-        }
-        ((HtmlExportHelper) ExportStrategy
-                .setExportStrategy(ExportStrategy.ExportTypeEnum.HTML))
-                .createFileAsync(new WeakReference<OnExportResultCallback>(this));
+//        if (csvCheckbox.isChecked()) {
+//            ((CSVExport) ExportStrategy
+//                    .setExportStrategy(ExportStrategy.ExportTypeEnum.CSV))
+//                    .createFileAsync(new WeakReference<OnExportResultCallback>(this));
+//            return;
+//        }
+//        ((HtmlExport) ExportStrategy
+//                .setExportStrategy(ExportStrategy.ExportTypeEnum.HTML))
+//                .createFileAsync(new WeakReference<OnExportResultCallback>(this));
     }
 
     /**
@@ -105,7 +97,7 @@ public class ExportDialog implements DialogInterface.OnClickListener,
      */
     private void successUI() {
         Utils.setSnackbar(view, ctx, ctx.get().getString(R.string.downloaded_with_success), false,
-                ctx.get().getString(R.string.open), new WeakReference<View.OnClickListener>(this));
+                ctx.get().getString(R.string.open), new WeakReference<>(this));
     }
 
     @Override
@@ -119,7 +111,7 @@ public class ExportDialog implements DialogInterface.OnClickListener,
     }
 
     @Override
-    public void onExportResultSuccess(String message) {
+    public void onExportResultSuccess() {
         successUI();
     }
 
@@ -131,6 +123,7 @@ public class ExportDialog implements DialogInterface.OnClickListener,
     @Override
     public void onClick(View view) {
         //TODO switch on ids
-        ctx.get().startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+        if (ctx.get() != null)
+            ctx.get().startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
     }
 }

@@ -20,6 +20,11 @@
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
         <item name="colorControlNormal">@color/grey_50</item>
 
+        <!--drawer layout (dont change on dark mode)-->
+        <item name="material_drawer_background">@color/grey_800</item>
+        <item name="material_drawer_primary_text">@color/grey_50</item>
+        <item name="material_drawer_selected">@color/grey_700</item>
+        <item name="material_drawer_selected_text">@color/grey_50</item>
     </style>
 
     <!-- MENU TEXT APPEARANCE-->
@@ -99,7 +104,7 @@
     </style>
 
     <!-- BUTTON STYLE-->
-    <style name="customMaterialButtonStyle" parent="@style/Widget.AppCompat.Button.Colored">
+    <style name="CustomMaterialButtonStyle" parent="@style/Widget.AppCompat.Button.Colored">
         <item name="backgroundTint">@color/indigo_600</item>
         <item name="android:textColor">@color/grey_50</item>
     </style>
@@ -108,6 +113,11 @@
     <style name="customMaterialButtonInvertedStyle" parent="@style/Widget.AppCompat.Button.Colored">
         <item name="backgroundTint">@color/grey_50</item>
         <item name="android:textColor">@color/indigo_600</item>
+    </style>
+    <!-- FAB STYLE-->
+    <style name="customMaterialFabInvertedStyle" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="backgroundTint">@color/grey_50</item>
+        <item name="android:src">@mipmap/ic_chevron_right</item>
     </style>
 
     <!--add bookmark text input style-->
@@ -131,4 +141,20 @@
         <item name="android:src">@drawable/ic_keyboard_arrow_up_white_24dp</item>
     </style>
 
+    <style name="settingsBackgroundStyle">
+        <item name="android:background">@color/grey_900</item>
+    </style>
+
+    <style name="BreadCrumbsViewStyle">
+        <item name="backgroundColor">@color/indigo_500</item>
+    </style>
+    <style name="AddFolderViewStyle">
+        <item name="android:background">@color/grey_800</item>
+    </style>
+    <style name="BookmarkCheckboxesStyle">
+        <item name="android:background">@color/indigo_500</item>
+    </style>
+    <style name="SearchMaterialButtonStyle">
+        <item name="backgroundTint">@color/grey_900</item>
+    </style>
 </resources>

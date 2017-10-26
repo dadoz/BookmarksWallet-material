@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.Index;
@@ -19,7 +21,7 @@ import java.util.UUID;
 public class Bookmark extends RealmObject {
 
     @PrimaryKey
-    private long id;
+    private int id;
     private long timestamp;
     private long lastUpdate;
     @Nullable
@@ -62,7 +64,7 @@ public class Bookmark extends RealmObject {
         this.name = value;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
@@ -86,7 +88,7 @@ public class Bookmark extends RealmObject {
         this.timestamp = timestamp;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -1,9 +1,7 @@
 package com.application.material.bookmarkswallet.app.helpers;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.application.material.bookmarkswallet.app.models.Bookmark;
 import com.application.material.bookmarkswallet.app.utlis.Utils;
 
 import org.jsoup.Jsoup;
@@ -12,8 +10,7 @@ import org.jsoup.select.Elements;
 
 import java.lang.ref.WeakReference;
 
-import static com.google.common.collect.ComparisonChain.start;
-
+//TODO not properly helper
 public class RetrieveIconHelper {
 
     private static RetrieveIconHelper instance;
@@ -21,7 +18,7 @@ public class RetrieveIconHelper {
     private RetrieveIconThread threadIcon;
     private RetrieveIconThread threadTitle;
 
-    private enum JobTypeEnum {BOOKMARK_ICON_URL, BOOKMARK_TITLE};
+    private enum JobTypeEnum {BOOKMARK_ICON_URL, BOOKMARK_TITLE}
 
     public static RetrieveIconHelper getInstance(WeakReference<OnRetrieveIconInterface> lst) {
         listener = lst;

@@ -4,20 +4,26 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.application.material.bookmarkswallet.app.utlis.Utils;
-
-import java.lang.ref.WeakReference;
-
 public class SharedPrefHelper {
     private static SharedPrefHelper instance;
     private static SharedPreferences sharedPref;
+
+    public static boolean isNightModeTag(String s) {
+        return SharedPrefKeysEnum.valueOf(s).equals(SharedPrefKeysEnum.NIGHT_MODE);
+    }
+
+    public boolean getBoolValue(SharedPrefKeysEnum key, boolean defValue) {
+        if (getValue(key, defValue) instanceof Boolean)
+            return (boolean) getValue(key, defValue);
+        return false;
+    }
 
     public enum SharedPrefKeysEnum {TUTORIAL_DONE, SYNC_STATUS, NO_FAVICON_MODE, SEARCH_URL_MODE, IMPORT_KEEP_NOTIFIED,
         IMPORT_ACCOUNT_NOTIFIED, EXPANDED_GRIDVIEW, CLOUD_SYNC, NIGHT_MODE
     }
 
-    private SharedPrefHelper(WeakReference<Context> ctx) {
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctx.get());
+    private SharedPrefHelper(Context ctx) {
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctx);
     }
 
     /**
@@ -25,7 +31,7 @@ public class SharedPrefHelper {
      * @param ctx
      * @return
      */
-    public static SharedPrefHelper getInstance(WeakReference<Context> ctx) {
+    public static SharedPrefHelper getInstance(Context ctx) {
         return instance == null ?
                 instance = new SharedPrefHelper(ctx) : instance;
     }
@@ -46,10 +52,20 @@ public class SharedPrefHelper {
     }
 
     /**
+     * @param tag
+     * @param value
+     */
+    public void setValue(String tag, Object value) {
+        SharedPrefKeysEnum key = SharedPrefKeysEnum.valueOf(tag);
+        setValue(key, value);
+    }
+
+    /**
+     *
      * @param key
      * @param value
      */
-    public void setValue(SharedPrefKeysEnum key, Object value) {
+    public void setValue(SharedPrefHelper.SharedPrefKeysEnum key, Object value) {
         //TODO check type
         SharedPreferences.Editor editor = sharedPref.edit();
         if (value instanceof Boolean) {

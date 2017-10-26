@@ -1,0 +1,53 @@
+Applications Memory Usage (in Kilobytes):
+Uptime: 14597861 Realtime: 14597861
+
+** MEMINFO in pid 30719 [com.application.material.bookmarkswallet.app] **
+                   Pss  Private  Private  SwapPss     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------
+  Native Heap    12494    12360        0        0    26624    23021     3602
+  Dalvik Heap    10685    10504        0        0    15309    11218     4091
+ Dalvik Other     3176     3172        0        0                           
+        Stack      340      340        0        0                           
+       Ashmem        2        0        0        0                           
+    Other dev        4        0        4        0                           
+     .so mmap     2593      200     1124        0                           
+    .apk mmap     2635     2128      120        0                           
+    .ttf mmap       24        0        0        0                           
+    .dex mmap     6441     6372       56        0                           
+    .oat mmap     3271        0      672        0                           
+    .art mmap     1736     1032       20        0                           
+   Other mmap       90        4       60        0                           
+      Unknown      297      292        0        0                           
+        TOTAL    43788    36404     2056        0    41933    34239     7693
+ 
+ App Summary
+                       Pss(KB)
+                        ------
+           Java Heap:    11556
+         Native Heap:    12360
+                Code:    10672
+               Stack:      340
+            Graphics:        0
+       Private Other:     3532
+              System:     5328
+ 
+               TOTAL:    43788       TOTAL SWAP PSS:        0
+ 
+ Objects
+               Views:      229         ViewRootImpl:        2
+         AppContexts:        3           Activities:        2
+              Assets:        4        AssetManagers:        2
+       Local Binders:       15        Proxy Binders:       22
+       Parcel memory:        3         Parcel count:       17
+    Death Recipients:        0      OpenSSL Sockets:        1
+            WebViews:        0
+ 
+ SQL
+         MEMORY_USED:        0
+  PAGECACHE_OVERFLOW:        0          MALLOC_SIZE:        0
+ 
+ 
+ Asset Allocations
+    zip:/data/app/com.application.material.bookmarkswallet.app-2/base.apk:/assets/fonts/Helvetica-Neue-47-Light-Condensed.otf: 19K
+    zip:/data/app/com.application.material.bookmarkswallet.app-2/base.apk:/assets/fonts/materialdrawerfont-font-v5.0.0.ttf: 2K
