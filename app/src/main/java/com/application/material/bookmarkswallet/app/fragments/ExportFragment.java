@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -16,6 +15,7 @@ import com.application.material.bookmarkswallet.app.R;
 import com.application.material.bookmarkswallet.app.helpers.OnExportResultCallback;
 import com.application.material.bookmarkswallet.app.strategies.ExportStrategy;
 import com.application.material.bookmarkswallet.app.views.ExportCheckboxesView;
+import com.application.material.bookmarkswallet.app.views.ExportInfoView;
 import com.lib.davidelm.filetreevisitorlibrary.manager.NodeListManager;
 import com.lib.davidelm.filetreevisitorlibrary.models.TreeNodeInterface;
 
@@ -46,9 +46,12 @@ public class ExportFragment extends BaseFragment implements ExportCheckboxesView
     View exportSuccessText;
     @BindView(R.id.exportSuccessImageId)
     View exportSuccessImage;
+    @BindView(R.id.exportBookmarksInfoLayoutId)
+    ExportInfoView exportInfoView;
 //    @BindView(R.id.exportCardviewButtonId)
 //    View exportCardviewButton;
     private ExportStrategy exportStrategy;
+    private List<TreeNodeInterface> bookmarksList;
 
     {
         layoutId = R.layout.fragment_export_layout;
@@ -65,6 +68,8 @@ public class ExportFragment extends BaseFragment implements ExportCheckboxesView
                              Bundle savedInstance) {
         View view = super.onCreateView(inflater, container, savedInstance);
         unbinder = ButterKnife.bind(this, view);
+        //get bookmarks from view
+        bookmarksList = NodeListManager.getInstance(getContext()).getNodeList();
         return view;
     }
 
@@ -86,8 +91,7 @@ public class ExportFragment extends BaseFragment implements ExportCheckboxesView
      */
     private void onInitView() {
         exportCheckboxesView.setExportListener(this);
-//        exportCardviewButton.setOnClickListener(this);
-//        exportCardviewButton.setOnClickListener(this);
+        exportInfoView.setTotBookmarkToBeExported(bookmarksList != null ? bookmarksList.size() : 0);
     }
 
     @Override
@@ -102,7 +106,7 @@ public class ExportFragment extends BaseFragment implements ExportCheckboxesView
             return;
         }
 
-        EasyPermissions.requestPermissions(this, getString(R.string.action_rename),
+        EasyPermissions.requestPermissions(this, getString(R.string.handle_permission),
                 MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE);
     }
 
@@ -116,7 +120,6 @@ public class ExportFragment extends BaseFragment implements ExportCheckboxesView
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> list) {
-        Log.e(getClass().getName(), "hey permission granted");
         handleExportAction();
     }
 
@@ -142,8 +145,6 @@ public class ExportFragment extends BaseFragment implements ExportCheckboxesView
      * handle export action
      */
     private void handleExportAction() {
-        //get bookmarks from view
-        List<TreeNodeInterface> bookmarksList = NodeListManager.getInstance(getContext()).getNodeList();
 
         //check empty
         if (bookmarksList.size() == 0) {

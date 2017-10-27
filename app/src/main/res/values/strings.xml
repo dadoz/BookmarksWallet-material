@@ -97,4 +97,5 @@
     <string name="folder_bookmark">Selected Folder</string>
     <string name="selected_folder">Selected folder</string>
     <string name="preview">PREVIEW</string>
+    <string name="handle_permission">Would you add Write External Permission?</string>
 </resources>

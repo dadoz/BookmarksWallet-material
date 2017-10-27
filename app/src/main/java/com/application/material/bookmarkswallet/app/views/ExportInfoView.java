@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.application.material.bookmarkswallet.app.R;
 
@@ -31,6 +32,10 @@ public class ExportInfoView extends RelativeLayout {
 
     private void initView() {
         inflate(getContext(), R.layout.export_bookmarks_info_layout, this);
+    }
+
+    public void setTotBookmarkToBeExported(int tot) {
+        ((TextView) findViewById(R.id.totBookmarksExportedTextViewId)).setText(Integer.toString(tot));
     }
 
 }
