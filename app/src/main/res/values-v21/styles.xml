@@ -16,10 +16,11 @@
         <item name="android:itemTextAppearance">@style/customMenuTextAppearance</item>
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
         <item name="android:windowBackground">@color/grey_200</item>
+
     </style>
     <!-- MENU APPEARANCE-->
     <style name="customMenuTextAppearance">
-        <item name="android:textColor">@color/grey_200</item>
+        <item name="android:textColor">@color/indigo_900</item>
     </style>
 
     <!-- ACTION MODE-->

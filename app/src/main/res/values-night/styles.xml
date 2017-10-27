@@ -25,11 +25,12 @@
         <item name="material_drawer_primary_text">@color/grey_50</item>
         <item name="material_drawer_selected">@color/grey_700</item>
         <item name="material_drawer_selected_text">@color/grey_50</item>
+
     </style>
 
     <!-- MENU TEXT APPEARANCE-->
     <style name="customMenuTextAppearance">
-        <item name="android:textColor">@color/grey_900</item>
+        <item name="android:textColor">@color/green_50</item>
     </style>
 
     <!-- ACTION MODE-->
