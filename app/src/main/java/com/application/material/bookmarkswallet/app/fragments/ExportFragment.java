@@ -4,7 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -33,7 +35,7 @@ import static com.application.material.bookmarkswallet.app.strategies.BaseExport
  * Created by davide on 12/06/2017.
  */
 public class ExportFragment extends BaseFragment implements ExportCheckboxesView.OnExportClickListener,
-        OnExportResultCallback {
+        OnExportResultCallback, EasyPermissions.PermissionCallbacks {
     public static String FRAG_TAG = "ExportFragment";
     private Unbinder unbinder;
     @BindView(R.id.exportCheckboxesViewId)
@@ -100,10 +102,28 @@ public class ExportFragment extends BaseFragment implements ExportCheckboxesView
             return;
         }
 
-        EasyPermissions.requestPermissions(getActivity(), getString(R.string.action_rename),
+        EasyPermissions.requestPermissions(this, getString(R.string.action_rename),
                 MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> list) {
+        Log.e(getClass().getName(), "hey permission granted");
+        handleExportAction();
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> list) {
+        onExportResultError("no permission granted");
+    }
 
     @Override
     public void onExportResultSuccess() {
