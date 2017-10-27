@@ -158,5 +158,7 @@
         <item name="backgroundTint">@color/grey_900</item>
     </style>
 
-    <style name="customMaterialFabStyle"></style>
+    <style name="customMaterialFabStyle">
+        <item name="backgroundTint">@color/indigo_600</item>
+    </style>
 </resources>

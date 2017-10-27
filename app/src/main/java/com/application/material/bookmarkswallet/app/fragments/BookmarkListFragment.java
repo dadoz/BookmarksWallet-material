@@ -219,7 +219,6 @@ public class BookmarkListFragment extends Fragment
 //                        mEmptyLinkListView, mSwipeRefreshLayout, recyclerView);
                 break;
             case R.id.addBookmarkFabId:
-                addBookmarkFab.setVisibility(View.GONE);
                 presenter.addBookmark(this, new String[] {Integer.toString(treeNodeView.getCurrentNodeId()),
                         treeNodeView.getCurrentNodeName()});
                 break;
