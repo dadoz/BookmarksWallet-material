@@ -10,8 +10,8 @@ repositories {
 def versionBuildDate = Integer.parseInt(new Date().format("yyMMdd", TimeZone.getTimeZone("UTC")))
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
 
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
@@ -23,10 +23,15 @@ android {
         applicationId "com.application.material.bookmarkswallet.app"
         vectorDrawables.useSupportLibrary = true
         minSdkVersion 21 //cut off jellybean support
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 11
         versionName "3.6.${versionBuildDate}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath false
+            }
+        }
     }
 
     signingConfigs {

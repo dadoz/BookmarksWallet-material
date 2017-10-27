@@ -4,7 +4,7 @@ buildscript {
     ext {
         rxjava_version = "2.1.0"
         reactive_version = "2.0.1"
-        appcompat_version = "25.3.1"
+        appcompat_version = "26.1.0"
         butterknife_version = "8.4.0"
         flurry_version = "6.3.1"
         jodatime_version = "2.7"
@@ -15,18 +15,16 @@ buildscript {
         icepick_version = "3.2.0"
         materialsearch_version = "1.4.0"
         easypermission_version = "0.4.2"
+        gson_version = "2.8.0"
     }
     repositories {
         jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath "io.realm:realm-gradle-plugin:2.3.0"
-        classpath 'me.tatarka:gradle-retrolambda:3.6.0'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:3.0.0'
+        classpath "io.realm:realm-gradle-plugin:3.4.0"
+        classpath 'me.tatarka:gradle-retrolambda:3.7.0'
     }
 }
 
@@ -36,6 +34,9 @@ allprojects {
         mavenCentral()
         maven {
             url "https://jitpack.io"
+        }
+        maven {
+            url "https://maven.google.com"
         }
     }
 }

@@ -75,4 +75,6 @@
         <item name="backgroundTint">@color/grey_100</item>
     </style>
 
+    <style name="customMaterialFabStyle"></style>
+
 </resources>
