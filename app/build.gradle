@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
     jcenter()
@@ -10,8 +9,8 @@ repositories {
 def versionBuildDate = Integer.parseInt(new Date().format("yyMMdd", TimeZone.getTimeZone("UTC")))
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
@@ -23,7 +22,7 @@ android {
         applicationId "com.application.material.bookmarkswallet.app"
         vectorDrawables.useSupportLibrary = true
         minSdkVersion 21 //cut off jellybean support
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 11
         versionName "3.6.${versionBuildDate}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -67,63 +66,63 @@ android {
         abortOnError false
     }
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
 }
 
 
 dependencies {
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile "com.jakewharton:butterknife:$butterknife_version"
+    implementation "com.jakewharton:butterknife:$butterknife_version"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife_version"
 
-    compile "com.flurry.android:analytics:$flurry_version"
+    implementation "com.flurry.android:analytics:$flurry_version"
 
-    compile "joda-time:joda-time:$jodatime_version"
+    implementation "joda-time:joda-time:$jodatime_version"
 
-    compile "com.squareup.picasso:picasso:$picasso_version"
+    implementation "com.squareup.picasso:picasso:$picasso_version"
 
-    compile "org.jsoup:jsoup:$jsoup_version"
+    implementation "org.jsoup:jsoup:$jsoup_version"
 
     //please replace with the one on linkedin https://github.com/linkedin/shaky-android
-    compile 'com.willowtreeapps.saguaro:saguaro-android:1.0.0'
+    implementation 'com.willowtreeapps.saguaro:saguaro-android:1.0.0'
 
-    compile 'com.github.hotchemi:android-rate:0.5.0'
+    implementation 'com.github.hotchemi:android-rate:0.5.0'
 
-    compile "io.realm:android-adapters:$realm_adapter_version"
+    implementation "io.realm:android-adapters:$realm_adapter_version"
 
-    compile 'org.apache.commons:commons-csv:1.4'
+    implementation 'org.apache.commons:commons-csv:1.4'
 
-    compile "uk.co.chrisjenx:calligraphy:$calligraphy_version"
+    implementation "uk.co.chrisjenx:calligraphy:$calligraphy_version"
 
-    compile "io.reactivex.rxjava2:rxandroid:$reactive_version"
-    compile "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    implementation "io.reactivex.rxjava2:rxandroid:$reactive_version"
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
 
-    compile "frankiesardo:icepick:$icepick_version"
-    provided "frankiesardo:icepick-processor:$icepick_version"
+    implementation "frankiesardo:icepick:$icepick_version"
+    compileOnly "frankiesardo:icepick-processor:$icepick_version"
 
     //material search view
-    compile "com.miguelcatalan:materialsearchview:$materialsearch_version"
+    implementation "com.miguelcatalan:materialsearchview:$materialsearch_version"
 
     //appcompact
-    compile "com.android.support:appcompat-v7:$appcompat_version"
-    compile "com.android.support:cardview-v7:$appcompat_version"
-    compile "com.android.support:recyclerview-v7:$appcompat_version"
-    compile "com.android.support:design:$appcompat_version"
+    implementation "com.android.support:appcompat-v7:$appcompat_version"
+    implementation "com.android.support:cardview-v7:$appcompat_version"
+    implementation "com.android.support:recyclerview-v7:$appcompat_version"
+    implementation "com.android.support:design:$appcompat_version"
 
 //    //easypermission
-    compile "pub.devrel:easypermissions:$easypermission_version"
+    implementation "pub.devrel:easypermissions:$easypermission_version"
 
     //menu drawer
-    compile('com.mikepenz:materialdrawer:5.8.1@aar') {
+    implementation('com.mikepenz:materialdrawer:5.8.1@aar') {
         transitive = true
     }
 
-    testCompile 'junit:junit:4.12'
-    compile project(path: ':filetreevisitorlibrary')
+    testImplementation 'junit:junit:4.12'
+    implementation project(path: ':filetreevisitorlibrary')
 }

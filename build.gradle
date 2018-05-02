@@ -3,9 +3,9 @@
 buildscript {
     ext {
         rxjava_version = "2.1.0"
-        reactive_version = "2.0.1"
-        appcompat_version = "26.1.0"
-        butterknife_version = "8.4.0"
+        reactive_version = "2.0.2"
+        appcompat_version = "27.1.1"
+        butterknife_version = "8.8.1"
         flurry_version = "6.3.1"
         jodatime_version = "2.7"
         picasso_version = "2.5.2"
@@ -20,11 +20,11 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         classpath "io.realm:realm-gradle-plugin:3.4.0"
-        classpath 'me.tatarka:gradle-retrolambda:3.7.0'
     }
 }
 
@@ -38,5 +38,6 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
+        google()
     }
 }
