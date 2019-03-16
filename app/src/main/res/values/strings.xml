@@ -10,8 +10,6 @@
     <string name="search_hint">type bookmark name</string>
 
     <string name="FLURRY_API_KEY">KQ2Y8SXVGPBSKY9BCYW8</string>
-    <string name="ANDROID_FEEDBACK_KEY">AF-EB325C27D659-03</string>
-    <string name="banner_ad_unit_id">ca-app-pub-3777798024824179/7880605447</string>
     <string name="main_title">Bookmarks</string>
     <string name="setting_rate_label">Rate us on Play Store</string>
     <string name="setting_url_search_label">Search on URL</string>
