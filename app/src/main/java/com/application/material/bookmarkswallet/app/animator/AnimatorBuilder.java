@@ -9,12 +9,12 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import java.lang.ref.WeakReference;
 
-import io.codetail.animation.ViewAnimationUtils;
 
 /**
  * Created by davide on 24/10/15.

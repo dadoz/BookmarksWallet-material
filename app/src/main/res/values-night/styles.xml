@@ -5,11 +5,11 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:textColorPrimary">@color/grey_50</item>
         <item name="android:textColorSecondary">@color/grey_50</item>
-        <item name="android:textColor">@color/grey_200</item>
+        <!--<item name="android:textColor">@color/grey_200</item>-->
 
         <!--text-->
         <item name="colorPrimary">@color/indigo_600</item>
-        <item name="colorPrimaryDark">@color/indigo_800</item>
+        <item name="colorPrimaryDark">@color/indigo_600</item>
 
         <!--actionmode-->
         <item name="colorControlActivated">@color/grey_50</item>
@@ -29,7 +29,7 @@
 
     <!-- ACTION MODE-->
     <style name="ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-        <item name="background">@color/indigo_400</item>
+        <item name="background">@color/indigo_600</item>
     </style>
 
     <!-- COLOR CONTROL LIGHT-->
@@ -50,7 +50,7 @@
     <!--MATERIAL search view -->
     <style name="MaterialSearchViewStyle">
         <!-- Background for the search bar -->
-        <item name="searchBackground">@color/indigo_900</item>
+        <item name="searchBackground">@color/indigo_600</item>
 
         <!-- Change voice icon -->
         <item name="searchVoiceIcon">@drawable/ic_action_voice_search_inverted</item>
@@ -68,7 +68,7 @@
         <item name="searchSuggestionBackground">@android:color/white</item>
 
         <!-- Change text color for edit text. This will also be the color of the cursor -->
-        <item name="android:textColor">@color/indigo_200</item>
+        <item name="android:textColor">@color/indigo_400</item>
 
         <!-- Change hint text color for edit text -->
         <item name="android:textColorHint">@color/grey_50</item>
@@ -120,7 +120,7 @@
     </style>
 
     <style name="DescriptionSecondaryTextColorStyle">
-        <item name="android:textColor">@color/grey_400</item>
+        <item name="android:textColor">@color/grey_300</item>
     </style>
 
     <style name="AddBookmarkSearchBoxCollapseIcons">

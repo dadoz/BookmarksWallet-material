@@ -4,19 +4,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/fragmentBookmarkListMainFrameLayoutId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/mbTitleBookmarkListId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_32"
+            android:textSize="@dimen/text_size_30"
+            android:text="Bookmarks"/>
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/mainContainerViewId"
-            android:layout_margin="@dimen/padding_8"
+            android:layout_below="@+id/mbTitleBookmarkListId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/bookmarkRecyclerViewId"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+
                 android:paddingBottom="@dimen/fab_margin"
                 android:clipToPadding="false"
                 android:scrollbars="vertical"/>
@@ -33,16 +41,18 @@
             android:src="@drawable/ic_add_white_48dp"
             app:elevation="4dp"
             app:borderWidth="0dp"
-            android:layout_gravity="bottom|right"
+            android:layout_gravity="bottom|end"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             app:layout_behavior="com.application.material.bookmarkswallet.app.behavior.FloatingActionButtonBehavior"
             app:backgroundTint="@color/indigo_600"
             app:fabSize="normal"/>
 
-    </FrameLayout>
-    <com.application.material.bookmarkswallet.app.views.ContextRevealMenuView
-        android:id="@+id/optionMenuContainerRevealLayoutId"
-        android:visibility="invisible"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    </RelativeLayout>
+    <!--<com.application.material.bookmarkswallet.app.views.ContextRevealMenuView-->
+        <!--android:id="@+id/optionMenuContainerRevealLayoutId"-->
+        <!--android:visibility="invisible"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"/>-->
 
 </android.support.design.widget.CoordinatorLayout>

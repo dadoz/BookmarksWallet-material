@@ -15,7 +15,7 @@
     <dimen name="link_row_height">100dip</dimen>
     <dimen name="big_padding">30dip</dimen>
     <dimen name="row_timestamp_width">60dip</dimen>
-    <dimen name="icon_size">48dp</dimen>
+    <dimen name="icon_size">40dp</dimen>
     <dimen name="text_size_30">30sp</dimen>
     <dimen name="text_size_24">24sp</dimen>
     <dimen name="import_label_width">130dip</dimen>
@@ -48,4 +48,5 @@
     <dimen name="padding_8">8dp</dimen>
     <dimen name="padding_2">2dp</dimen>
     <dimen name="add_bookmark_background_margin">100dp</dimen>
+    <dimen name="padding_4">4dp</dimen>
 </resources>

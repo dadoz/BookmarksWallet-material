@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <android.support.v7.widget.CardView
+    <android.support.design.card.MaterialCardView
         android:id="@+id/importFromKeepCardviewLayoutId"
         android:layout_margin="@dimen/padding_16"
         android:layout_width="match_parent"
@@ -51,5 +51,5 @@
                 android:text="@string/export_button_label"/>
 
         </RelativeLayout>
-    </android.support.v7.widget.CardView>
+    </android.support.design.card.MaterialCardView>
 </RelativeLayout>

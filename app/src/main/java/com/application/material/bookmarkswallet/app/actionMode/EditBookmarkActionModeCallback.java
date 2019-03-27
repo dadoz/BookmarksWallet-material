@@ -33,7 +33,7 @@ public class EditBookmarkActionModeCallback implements ActionMode.Callback {
         adapter = adp;
         mBookmarkActionSingleton = BookmarkActionHelper.getInstance(context);
         statusHelper = StatusManager.getInstance(); 
-        colorPrimaryDark = ContextCompat.getColor(ctx.get(), R.color.yellow_600);
+        colorPrimaryDark = ContextCompat.getColor(ctx.get(), R.color.yellow_400);
         colorPrimaryDarkSelected = ContextCompat.getColor(ctx.get(), R.color.yellow_400);
     }
 

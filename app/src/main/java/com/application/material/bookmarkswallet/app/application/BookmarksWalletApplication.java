@@ -25,7 +25,7 @@ public class BookmarksWalletApplication extends Application {
 
         //calligraphy
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Helvetica-Neue-47-Light-Condensed.otf")
+                .setDefaultFontPath("fonts/Helvetica-Neue-LT-Std-37-Thin-Condensed_22517.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
 

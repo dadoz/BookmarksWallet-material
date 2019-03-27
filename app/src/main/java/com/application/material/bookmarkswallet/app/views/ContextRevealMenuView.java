@@ -17,7 +17,7 @@ import com.flurry.android.FlurryAgent;
 
 import java.lang.ref.WeakReference;
 
-public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout implements View.OnClickListener {
+public class ContextRevealMenuView extends View implements View.OnClickListener { //extends io.codetail.widget.RevealFrameLayout
     private ImageView exportIcon;
     private ImageView settingsIcon;
     private ImageView gridviewResizeIcon;
@@ -44,7 +44,8 @@ public class ContextRevealMenuView extends io.codetail.widget.RevealFrameLayout 
      *
      */
     private void initView() {
-        View view = inflate(getContext(), R.layout.context_menu_layout, this);
+//        View view = inflate(getContext(), R.layout.context_menu_layout, this);
+        View view = null;
         exportIcon = (ImageView) view.findViewById(R.id.actionMenuExportId);
         settingsIcon = (ImageView) view.findViewById(R.id.actionMenuSettingsId);
         gridviewResizeIcon = (ImageView) view.findViewById(R.id.actionMenuGridviewResizeId);

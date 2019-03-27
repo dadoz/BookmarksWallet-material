@@ -53,7 +53,7 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         initColors();
         setIsFaviconIsEnabled(ctx);
         defaultIcon = BitmapFactory.decodeResource(context.get().getResources(),
-                R.drawable.ic_bookmark_black_48dp);
+                R.drawable.ic_bookmark);
     }
 
     /**
@@ -66,7 +66,7 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
 
     private void initColors() {
         lightGrey = Color.WHITE;
-        darkGrey = ContextCompat.getColor(context.get(), R.color.yellow_50);
+        darkGrey = ContextCompat.getColor(context.get(), R.color.yellow_400);
         lightGreyNight = ContextCompat.getColor(context.get(), R.color.grey_800);
         darkGreyNight = ContextCompat.getColor(context.get(), R.color.grey_700);
 
@@ -130,10 +130,10 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         private ViewHolder(View v, WeakReference<OnActionListenerInterface> lst) {
             super(v);
             listener = lst;
-            iconView = (ImageView) v.findViewById(R.id.linkIconId);
-            labelView = (TextView) v.findViewById(R.id.linkTitleId);
-            urlView = (TextView) v.findViewById(R.id.linkUrlId);
-            timestampView = (TextView) v.findViewById(R.id.linkTimestampId);
+            iconView = v.findViewById(R.id.linkIconId);
+            labelView = v.findViewById(R.id.linkTitleId);
+            urlView = v.findViewById(R.id.linkUrlId);
+            timestampView = v.findViewById(R.id.linkTimestampId);
             itemView.setOnLongClickListener(this);
             itemView.setOnClickListener(this);
         }
@@ -155,7 +155,7 @@ public class BookmarkRecyclerViewAdapter extends MultipleSelectorHelperAdapter i
         void selectItem(boolean selected) {
             int darkColor = NightModeHelper.getInstance().isNightMode() ? darkGreyNight : darkGrey;
             int lightColor = NightModeHelper.getInstance().isNightMode() ? lightGreyNight : lightGrey;
-            itemView.setBackgroundColor(selected ? darkColor : lightColor);
+//            itemView.setBackgroundColor(selected ? darkColor : lightColor);
         }
 
         /**

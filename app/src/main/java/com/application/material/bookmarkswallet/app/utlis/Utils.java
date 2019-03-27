@@ -178,7 +178,7 @@ public class Utils {
         return url == null ||
                 url.contains("http://") ||
                 url.contains("https://") ?
-                url : (isHttps ? HTTPS_PROTOCOL : HTTP_PROTOCOL) + url.trim();
+                url : HTTPS_PROTOCOL + url.trim();
     }
 
 
@@ -217,7 +217,7 @@ public class Utils {
     public static void setSnackbar(View view, final WeakReference<Context> ctx, String message, boolean isError,
                                    String actionLabel, WeakReference<View.OnClickListener> actionListener) {
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(ctx.get(), isError ? R.color.red_400 : R.color.teal_400));
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(ctx.get(), isError ? R.color.red_400 : R.color.grey_400));
         if (actionListener != null) {
             snackbar.setAction(actionLabel, actionListener.get());
             snackbar.setActionTextColor(ContextCompat.getColor(ctx.get(), R.color.grey_50));

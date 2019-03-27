@@ -73,10 +73,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarId);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle(R.string.bookmark_list_title);
+//        getSupportActionBar().setTitle(R.string.bookmark_list_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        ActionbarHelper.setElevationOnVIew(findViewById(R.id.appBarLayoutId), true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        ActionbarHelper.setElevationOnVIew(findViewById(R.id.appBarLayoutId), true);
     }
 
     /**

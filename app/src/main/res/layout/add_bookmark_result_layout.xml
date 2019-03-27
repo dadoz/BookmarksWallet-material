@@ -15,73 +15,66 @@
         android:layout_marginBottom="@dimen/padding_16"
         android:text="@string/save_new_bookmark"/>
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/addBookmarkCardLayoutId"
-        android:layout_margin="@dimen/padding_16"
-        android:layout_above="@id/addBookmarkDoneButtonId"
+    <RelativeLayout
+        android:id="@+id/addBookmarkMainContainerLayoutId"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-        <RelativeLayout
-            android:id="@+id/addBookmarkMainContainerLayoutId"
+        android:layout_height="match_parent"
+        android:padding="@dimen/padding_16">
+        <ImageView
+            android:id="@+id/addBookmarkIconImageId"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/padding_8"
+            android:src="@drawable/ic_bookmark_black_48dp"/>
+
+        <TextView
+            android:id="@+id/titleTextViewId"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/padding_16">
-            <ImageView
-                android:id="@+id/addBookmarkIconImageId"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
-                android:layout_alignParentRight="true"
-                android:layout_margin="@dimen/padding_8"
-                android:src="@drawable/ic_bookmark_black_48dp"/>
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/addBookmarkIconImageId"
+            android:textSize="@dimen/text_size_24"
+            android:maxLines="1"
+            android:text="...">
+        </TextView>
+        <TextView
+            android:id="@+id/urlTextViewId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleTextViewId"
+            android:layout_marginBottom="@dimen/medium_padding"
+            android:layout_marginTop="@dimen/padding_8"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_toLeftOf="@id/addBookmarkIconImageId"
+            android:textSize="@dimen/text_size_18"
+            android:text="blabla.it"
+            android:maxLength="50"
+            android:maxLines="2"/>
+        <RelativeLayout
+            android:id="@+id/addBookmarkDivisorLineId"
+            android:layout_below="@id/urlTextViewId"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_300"/>
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/addBookmarkToggleWebViewButtonId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/addBookmarkDivisorLineId"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_keyboard_arrow_down_black_24dp"/>
 
-            <TextView
-                android:id="@+id/titleTextViewId"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/addBookmarkIconImageId"
-                android:textSize="@dimen/text_size_24"
-                android:maxLines="1"
-                android:text="...">
-            </TextView>
-            <TextView
-                android:id="@+id/urlTextViewId"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/titleTextViewId"
-                android:layout_marginBottom="@dimen/medium_padding"
-                android:layout_marginTop="@dimen/padding_8"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:layout_toLeftOf="@id/addBookmarkIconImageId"
-                android:textSize="@dimen/text_size_18"
-                android:text="blabla.it"
-                android:maxLength="50"
-                android:maxLines="2"/>
-            <RelativeLayout
-                android:id="@+id/addBookmarkDivisorLineId"
-                android:layout_below="@id/urlTextViewId"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/grey_300"/>
-            <ImageView
-                android:visibility="gone"
-                android:id="@+id/addBookmarkToggleWebViewButtonId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/addBookmarkDivisorLineId"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_keyboard_arrow_down_black_24dp"/>
-
-            <!--take care this slow down rendering page-->
-            <WebView
-                android:id="@+id/addBookmarkWebViewId"
-                android:layout_below="@id/addBookmarkDivisorLineId"
-                android:layout_marginTop="@dimen/padding_32"
-                android:layout_marginBottom="@dimen/padding_16"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
+        <!--take care this slow down rendering page-->
+        <WebView
+            android:id="@+id/addBookmarkWebViewId"
+            android:layout_below="@id/addBookmarkDivisorLineId"
+            android:layout_marginTop="@dimen/padding_32"
+            android:layout_marginBottom="@dimen/padding_16"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
 </RelativeLayout>

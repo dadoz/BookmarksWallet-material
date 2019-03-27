@@ -5,18 +5,18 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:textColorPrimary">@color/indigo_600</item>
         <item name="android:textColorSecondary">@color/indigo_600</item>
-        <item name="android:textColor">@color/indigo_900</item>
-        <item name="colorPrimaryDark">@color/yellow_600</item>
+        <item name="android:textColor">@color/indigo_600</item>
+        <item name="colorPrimaryDark">@color/grey_300</item>
         <item name="colorPrimary">@color/yellow_400</item>
         <item name="colorControlActivated">@color/indigo_400</item>
         <item name="windowActionModeOverlay">true</item>
 
-        <item name="android:icon">@color/indigo_800</item>
+        <item name="android:icon">@color/indigo_600</item>
 
         <item name="actionModeStyle">@style/ActionMode</item>
         <item name="android:itemTextAppearance">@style/customMenuTextAppearance</item>
         <item name="android:alertDialogTheme">@style/CustomLollipopDialogStyle</item>
-        <item name="android:windowBackground">@color/grey_200</item>
+        <!--<item name="android:windowBackground">@color/grey_200</item>-->
     </style>
 
     <!-- MENU TEXT APPEARANCE-->
@@ -26,7 +26,7 @@
 
     <!-- ACTION MODE-->
     <style name="ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-        <item name="background">@color/yellow_200</item>
+        <item name="background">@color/yellow_400</item>
     </style>
 
     <!-- COLOR CONTROL LIGHT-->
@@ -47,11 +47,12 @@
     <!-- ADD bookmark search background-->
     <style name="AddFrameLayoutStyle">
         <item name="elevation">4dp</item>
-        <item name="android:background">@color/yellow_400</item>
+        <!--<item name="android:background">@color/yellow_200</item>-->
     </style>
 
     <style name="ToolbarCustomStyle" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <item name="android:background">@color/yellow_400</item>
+        <item name="android:background">#fff</item>
+        <item name="elevation">0dp</item>
     </style>
 
     <!--REVEAL menu STYLE-->
