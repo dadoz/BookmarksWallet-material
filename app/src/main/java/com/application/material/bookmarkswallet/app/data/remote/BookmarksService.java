@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.api.network;
+package com.application.material.bookmarkswallet.app.data.remote;
 
 import com.application.material.bookmarkswallet.app.BuildConfig;
 import com.google.gson.Gson;

@@ -1,4 +1,4 @@
-package com.application.material.bookmarkswallet.app.api.models;
+package com.application.material.bookmarkswallet.app.data.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

@@ -1,6 +1,5 @@
 package com.application.material.bookmarkswallet.app.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,7 +11,7 @@ import android.widget.Button;
 
 import com.application.material.bookmarkswallet.app.AddBookmarkActivity;
 import com.application.material.bookmarkswallet.app.R;
-import com.application.material.bookmarkswallet.app.api.network.BookmarksService;
+import com.application.material.bookmarkswallet.app.data.remote.BookmarksService;
 import com.application.material.bookmarkswallet.app.application.BookmarksWalletApplication;
 import com.application.material.bookmarkswallet.app.manager.StatusManager;
 import com.application.material.bookmarkswallet.app.presenter.AddBookmarkResultPresenter;

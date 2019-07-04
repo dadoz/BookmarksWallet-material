@@ -1,14 +1,10 @@
 package com.application.material.bookmarkswallet.app.presenter;
 
-import android.util.Log;
-
-import com.application.material.bookmarkswallet.app.api.models.BookmarkMetadata;
-import com.application.material.bookmarkswallet.app.api.network.BookmarksService;
-import com.application.material.bookmarkswallet.app.api.network.FaviconFinderRetrofitService;
-import com.application.material.bookmarkswallet.app.api.network.TagsByUrlRetrofitService;
+import com.application.material.bookmarkswallet.app.data.models.BookmarkMetadata;
+import com.application.material.bookmarkswallet.app.data.remote.FaviconFinderRetrofitService;
+import com.application.material.bookmarkswallet.app.data.remote.TagsByUrlRetrofitService;
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -16,6 +12,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -55,6 +52,18 @@ public class AddBookmarkResultPresenter {
                 .map(res -> new Gson().fromJson(tableToJson(res.string()), BookmarkMetadata.class))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
+                .flatMap(metadata -> {
+                    if (metadata.getImage() == null) {
+                        return
+                    }
+                    return Observable.just(metadata);
+                })
+                .map(metadata -> {
+                    if (metadata.getImage() == null) {
+
+                    }
+                    return metadata;
+                })
                 .subscribe(bookmarkMetadata -> {
                             view.onRetrieveTitleSuccess(bookmarkMetadata.getSiteName());
                             view.onRetrieveIconSuccess(bookmarkMetadata.getImage());
