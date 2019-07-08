@@ -54,19 +54,19 @@ public class AddBookmarkResultPresenter {
                 .subscribeOn(Schedulers.newThread())
                 .flatMap(metadata -> {
                     if (metadata.getImage() == null) {
-                        return
+                        return null;
                     }
                     return Observable.just(metadata);
                 })
                 .map(metadata -> {
-                    if (metadata.getImage() == null) {
-
-                    }
+//                    if (metadata.getImage() == null) {
+//
+//                    }
                     return metadata;
                 })
                 .subscribe(bookmarkMetadata -> {
-                            view.onRetrieveTitleSuccess(bookmarkMetadata.getSiteName());
-                            view.onRetrieveIconSuccess(bookmarkMetadata.getImage());
+                            view.onRetrieveTitleSuccess("");
+                            view.onRetrieveIconSuccess("");
                         },
                         error -> view.onRetrieveIconFailure(error.getMessage()));
     }
